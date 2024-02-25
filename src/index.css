@@ -1,0 +1,144 @@
+@import url('https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.3.0/css/flag-icon.min.css');
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700');
+
+@import '~admin-lte/plugins/fontawesome-free/css/all.min.css';
+@import '~admin-lte/plugins/icheck-bootstrap/icheck-bootstrap.min.css';
+@import '~admin-lte/dist/css/adminlte.min.css';
+
+#root {
+    width: 100vw;
+    height: 100vh;
+    overflow-x: hidden;
+}
+
+
+/*body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}*/
+
+.wrapper .content-wrapper {
+    min-height: calc(100vh - calc(3.5rem + 1px));
+}
+
+.content-wrapper > .content{
+    padding: 0.5rem;
+}
+
+
+.main-header .navbar-nav .nav-item .nav-link {
+    background: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
+}
+
+.content-header-text-color {
+    color: #1672AD;
+}
+
+.btn-add {
+    color: white;
+    background-color: #3E98F1;
+    border-color: #3E98F1;
+}
+
+.container-fluid-border {
+    border: solid 2px #BCCCDC;
+    border-radius: 20px;
+    padding: 1rem;
+}
+
+.search {
+    border: solid 2px #BDBDBD;
+    border-radius: 20px;
+    color: #BDBDBD;
+}
+
+    .search input {
+        border: none;
+        outline: none;
+        box-shadow: none;
+        background: none;
+        width: 100%;
+        padding: 1px 1em;
+        font-size: 1rem;
+    }
+
+.machineIOT-col-border-l, .sop-col-border-l, .sop-col-border-r {
+    border: solid 2px #BDBDBD;
+    border-radius: 20px;
+    padding: 1rem;
+    background-color: white;
+}
+
+.machineIOT-col-border-r {
+    border: solid 2px #BDBDBD;
+    border-radius: 20px;
+    padding: 1rem 1.5rem 1rem 1rem;
+    background-color: white;
+    height: 60vh;
+    overflow-y: auto;
+}
+
+    .machineIOT-col-border-r::-webkit-scrollbar {
+        width: 14px;
+    }
+
+    .machineIOT-col-border-r::-webkit-scrollbar-thumb {
+        border: 4px solid rgba(0, 0, 0, 0);
+        background-clip: padding-box;
+        border-radius: 9999px;
+        background-color: #AAAAAA;
+    }
+
+.machineIOT-topic {
+    border: solid 2px #BDBDBD;
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+.machineIOT-topic-btn-add {
+    width: 100%;
+    color: white;
+    background-color: #3E98F1;
+    border-color: #3E98F1;
+}
+
+.sop-col-border-r {
+   min-height: 80vh;
+}
+
+.sop-model-col, .sop-model-col-add {
+    border: 2px solid #BDBDBD;
+    border-radius: 10px;
+    background-color: #f4f6f9;
+    position: relative;
+    width: 5rem;
+    height: 5rem;
+    cursor: pointer;
+}
+
+.sop-model-col-add {
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sop-file-view {
+    border: 2px solid #BDBDBD;
+    border-radius: 10px;
+    min-height: 250px;
+    overflow: hidden;
+}
