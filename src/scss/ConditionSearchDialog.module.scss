@@ -1,0 +1,514 @@
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: 9999;
+}
+.modalCondition {
+  position: relative;
+  top: 50%;
+  left: 52%;
+  transform: translate(-50%, -50%);
+  padding: 20px 0;
+  background-color: #fff;
+  width: 60%;
+  height: 78%;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  flex-flow: row wrap;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* 水平偏移，垂直偏移，模糊距離，顏色 */
+  overflow: hidden; /* 確保內部的元件不會超出這個視窗 */
+}
+.modalTitleCondition {
+  font-size: 25px;
+  margin-bottom: 10px;
+}
+.modal {
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 20px;
+  padding-left: 0;
+  padding-right: 0;
+  background-color: #fff;
+  width: 30vw;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.5); /* 水平偏移，垂直偏移，模糊距離，顏色 */
+}
+.modalTitle-SOP {
+  font-size: 25px;
+  margin-bottom: 10px;
+}
+
+.modal > *:not(.titleLine2) {
+  padding-left: 25px;
+  padding-right: 25px;
+}
+
+.modalCondition > *:not(.title-line2) {
+  padding-left: 25px;
+  padding-right: 25px;
+}
+.closeModalBtn {
+  position: absolute;
+  top: 10px;
+  right: 5px;
+  background: none;
+  color: #757575;
+  border: none;
+  font-size: 30px;
+  cursor: pointer;
+}
+.modalTitleMachine {
+  font-size: 25px;
+  margin-bottom: 10px;
+}
+
+.leftBoxCondition,
+.rightBoxCondition {
+  flex: 0 0 100%;
+  width: 100%;
+  margin: 0;
+}
+
+.rightBoxCondition {
+  margin-top: 20px;
+}
+
+/* 現有的CSS樣式（含優化） */
+.leftBoxCondition,
+.rightBoxCondition {
+  flex-flow: row wrap;
+  flex: 0 0 48%;
+  width: 49%;
+  margin: 0 4%;
+  height: 80%;
+}
+
+.leftBoxCondition {
+  margin-left: 8%;
+  position: relative;
+  margin-top: 5vh;
+}
+
+.leftBoxCondition p {
+  color: rgb(100, 100, 100);
+  margin-left: 7px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  font-size: 18px;
+}
+
+.rightBoxCondition {
+  height: 100%;
+  margin-left: 51%;
+  margin-top: -54.5vh;
+  padding: 10px;
+}
+
+.boxCondition1,
+.boxCondition2 {
+  width: 90%;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.boxCondition1 {
+  height: 80%;
+  border: 1px solid #ccc;
+  border-bottom: 3px solid #ccc;
+}
+
+.boxCondition2 {
+  width: 100%;
+  height: 70%;
+  border: none;
+}
+.scrollBox {
+  overflow-y: scroll;
+  height: 87.8%;
+  background-color: #ffffff;
+  border: 1px solid #a3a3a3;
+  border-radius: 5px;
+}
+
+.conditionItem {
+  border: 1px solid #b9b9b9;
+  padding: 3px 0px 0px 10px;
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  font-size: 16px;
+  color: black;
+}
+
+.conditionItem:hover {
+  background-color: #e4e4e4;
+  transition: background-color 0.2s;
+}
+.icon {
+  cursor: grab;
+  color: #a0a0a0;
+  width: 5%;
+  font-size: 25px;
+  padding: 0px 25px 0px 0px;
+}
+
+.icon:active {
+  cursor: grabbing;
+}
+
+.search {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 5px;
+  border: 1px solid #a3a3a3;
+  background-color: #f0f0f0;
+  border-radius: 5px;
+  outline: none;
+  font-size: 16px;
+}
+
+.formGroupCondition {
+  display: flex;
+  align-items: center; /* 這將確保標籤和欄位在垂直方向上居中對齊 */
+  margin-bottom: 16px; /* 调整垂直间距的大小 */
+}
+
+.formGroupCondition label {
+  display: inline-block;
+  width: 6vw; /* 這個寬度可以根據您的需求進行調整，以確保所有的標籤都對齊 */
+  font-size: 17px;
+}
+
+.box-condition-alarm2 .formGroupCondition {
+  position: relative; /* 如果需要的話 */
+  padding-left: 20px; /* 根據實際情況調整，為 minus-icon 騰出空間 */
+}
+
+.customSelectCondition {
+  width: calc(100% - 100px); /* 調整寬度，減去<label>的寬度 */
+  display: inline-block;
+  position: relative;
+  width: 60%;
+}
+
+.dropDownArrow-alarm {
+  margin-left: 0px;
+  position: relative;
+  top: -10px; /* 微调上移，数值根据实际情况调整 */
+  transform: translateY(-50%);
+  font-size: 14px;
+  color: #4b4b4b;
+  cursor: pointer; /* 添加鼠标指针样式 */
+  transition: background-color 0.3s, border 0.3s; /* 添加过渡效果 */
+}
+
+.dropDownArrow {
+  position: absolute;
+  top: 50%;
+  right: 5px;
+  transform: translateY(-50%);
+  font-size: 14px;
+  color: #4b4b4b;
+  cursor: pointer; /* 添加鼠标指针样式 */
+  transition: background-color 0.3s, border 0.3s; /* 添加过渡效果 */
+}
+.faultInfo {
+  width: 100%;
+  padding: 7px;
+  border-radius: 5px;
+  border: 1px solid #a3a3a3;
+  font-size: 14px;
+  color: #000;
+  background-color: white;
+}
+
+.customDatalist {
+  display: none;
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.4);
+  position: absolute;
+  /* top: calc(55%); /* 调整下拉选项列表的垂直位置 */
+  top: 100%; /* 更改位置以确保下拉菜单紧接在输入框下方 */
+  height: 8em;
+  left: 0;
+  z-index: 1;
+  list-style: none;
+  padding: 0px;
+  background-color: white; /* 设置背景色为白色 */
+  max-height: 200px; /* 设置最大高度 */
+  overflow-y: auto; /* 超出时显示滚动条 */
+  cursor: pointer;
+  margin-bottom: 10px;
+  bottom: 100%; /* 或根据需要调整 */
+}
+
+.customDatalist.active {
+  display: block; /* 當激活時顯示 */
+}
+
+/* 下拉选项列表中的每个选项样式 */
+.customDatalist li {
+  font-size: medium;
+  padding: 6px;
+  cursor: pointer;
+  background-color: #fff;
+  border-bottom: 1px solid #ccc;
+  border-radius: 3px;
+  color: #000;
+  min-height: 20px; /* 最小高度，确保内容可见 */
+  line-height: 20px; /* 行高与高度一致，垂直居中对齐文本 */
+}
+
+/* 去掉最后一个选项的下边框 */
+.customDatalist li:last-child {
+  border-bottom: none;
+}
+
+/* 鼠标悬停时选项的样式 */
+.customDatalist li:hover {
+  background-color: #d4d4d4;
+  transition: background-color 0.3s;
+  border: 1px solid #7c7c7c;
+}
+
+.customDatalist-alarm {
+  display: none; /* 默认隐藏 */
+  top: 0;
+  left: 0;
+  list-style: none; /* 去掉列表的默认样式 */
+  padding: 0; /* 去掉列表的内边距 */
+  margin: 0; /* 去掉列表的外边距 */
+  font-weight: bold;
+  color: #8f8f8f;
+  overflow-y: auto; /* 啟用垂直滾動條 */
+  max-height: 100px; /* 設置最大高度，可根據需要調整 */
+  text-align: center;
+}
+
+/* 鼠标悬停效果 */
+.customDatalist-alarm li:hover {
+  border-radius: 5px;
+  cursor: pointer; /* 鼠标指针样式为手型 */
+  background-color: rgb(233, 233, 233);
+  color: #8f8f8f;
+  border: 2px solid #8f8f8f;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+.customDatalist-alarm.active {
+  display: block; /* 当添加 active 类时显示 */
+}
+
+.customDatalist-alarm li {
+  width: 150px;
+  overflow: hidden;
+  text-decoration: none;
+  padding: 0px 10px; /* 根据需要调整列表项的内边距 */
+  margin-bottom: 3px;
+  cursor: pointer; /* 鼠标指针样式为手型 */
+  white-space: nowrap; /* 防止文本换行 */
+  overflow: hidden;
+  text-overflow: ellipsis; /* 显示省略号 */
+  text-decoration: none;
+}
+
+.buttonsCondition {
+  position: relative;
+  top: -20vh; /* 將按鈕上移 */
+  margin-left: auto;
+  right: 3vw;
+  display: flex;
+  justify-content: flex-end;
+  padding-right: 20px;
+}
+
+.buttonsCondition-alarm {
+  position: relative;
+  right: 1vw;
+  top: 3.5vh;
+  display: flex;
+  justify-content: flex-end;
+  padding-right: 20px;
+}
+
+.titleLine2 {
+  padding: 0px;
+  border: 0;
+  border-top: 1px solid #d3d3d3;
+  width: 100%; /* 設定寬度為全介面 */
+  left: 0; /* 設定從頁面左側開始 */
+  margin-left: 0;
+  margin-right: 0;
+}
+.inputField {
+  margin-bottom: 15px;
+  margin-top: 15px;
+}
+.inputAccount {
+  background-color: #f0f0f0; /* 灰色背景 */
+  border: 1px solid #ccc;
+  padding: 10px;
+  width: 100%;
+  border-radius: 5px;
+}
+.formGroup {
+  margin-bottom: 5px; /* 调整垂直间距的大小 */
+}
+
+.redStar {
+  position: relative; /* 讓偽元素的絕對定位參考此元素 */
+}
+.redStar::before {
+  content: "★"; /* 使用星星符號 */
+  position: absolute;
+  left: -12px;
+  top: -2px;
+  color: red; /* 設定顏色為紅色 */
+  font-size: 12px; /* 設定字體大小 */
+}
+.redStar {
+  position: relative; /* 讓偽元素的絕對定位參考此元素 */
+}
+.redStar::before {
+  content: "★"; /* 使用星星符號 */
+  position: absolute;
+  left: -12px;
+  top: -2px;
+  color: red; /* 設定顏色為紅色 */
+  font-size: 12px; /* 設定字體大小 */
+}
+.redStar-branch::before {
+  content: "★"; /* 使用星星符號 */
+  position: absolute;
+  left: -12px;
+  top: 2px;
+  color: red; /* 設定顏色為紅色 */
+  font-size: 12px; /* 設定字體大小 */
+}
+
+.customSelect {
+  position: relative;
+}
+.machineInfo {
+  width: 100%;
+  padding: 7px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  color: #000;
+  background-color: white; /* 确保背景色为白色 */
+  position: relative;
+}
+.dropDownArrow {
+  position: absolute;
+  top: 50%;
+  right: 5px;
+  transform: translateY(-50%);
+  font-size: 14px;
+  color: #4b4b4b;
+  cursor: pointer; /* 添加鼠标指针样式 */
+  transition: background-color 0.3s, border 0.3s; /* 添加过渡效果 */
+}
+.inputField {
+  margin-bottom: 15px;
+  margin-top: 15px;
+}
+.buttonsMachine {
+  position: relative;
+  top: 0em; /* 將按鈕上移 */
+  margin-left: 0em;
+  display: flex;
+  justify-content: flex-end;
+  padding-right: 20px;
+  width: 100%;
+}
+
+.customDatalist {
+  display: none;
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.4);
+  position: absolute;
+  /* top: calc(55%); /* 调整下拉选项列表的垂直位置 */
+  top: 100%; /* 更改位置以确保下拉菜单紧接在输入框下方 */
+  height: 8em;
+  left: 0;
+  z-index: 1;
+  list-style: none;
+  padding: 0px;
+  background-color: white; /* 设置背景色为白色 */
+  max-height: 200px; /* 设置最大高度 */
+  overflow-y: auto; /* 超出时显示滚动条 */
+  cursor: pointer;
+  margin-bottom: 10px;
+  bottom: 100%; /* 或根据需要调整 */
+}
+.customDatalist.active {
+  display: block; /* 當激活時顯示 */
+}
+/* 下拉选项列表中的每个选项样式 */
+.customDatalist li {
+  font-size: medium;
+  padding: 6px;
+  cursor: pointer;
+  background-color: #fff;
+  border-bottom: 1px solid #ccc;
+  border-radius: 3px;
+  color: #000;
+  min-height: 20px; /* 最小高度，确保内容可见 */
+  line-height: 20px; /* 行高与高度一致，垂直居中对齐文本 */
+}
+/* 去掉最后一个选项的下边框 */
+.customDatalist li:last-child {
+  border-bottom: none;
+}
+/* 鼠标悬停时选项的样式 */
+.customDatalist li:hover {
+  background-color: #d4d4d4;
+  transition: background-color 0.3s;
+  border: 1px solid #7c7c7c;
+}
+
+.btnSave,
+.btnCancel,
+.btn-preview {
+  display: inline-block; /* 使按鈕可行內展示，且可以設定寬高 */
+  font-size: 16px;
+  margin-left: 5px;
+  padding: 4px 12px;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+.btnSave {
+  background-color: #266df7;
+  color: white;
+  border: 2px solid #266df7;
+}
+.btnSave:hover {
+  background-color: #194aa9;
+  transition: width 0.3s ease-in-out; /* 平滑過渡效果 */
+  border: 2px solid #194aa9;
+}
+.btnCancel {
+  background-color: #f44336;
+  color: white;
+  border: 2px solid #f44336;
+}

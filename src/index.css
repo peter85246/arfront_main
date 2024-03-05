@@ -26,7 +26,10 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }*/
-
+.active {
+    background-color: #266df7;
+    transition: all 0.3s;
+}
 .wrapper .content-wrapper {
     min-height: calc(100vh - calc(3.5rem + 1px));
 }
@@ -35,7 +38,9 @@ code {
     padding: 0.5rem;
 }
 
-
+.nav-item {
+    border-radius: 5px;
+}
 .main-header .navbar-nav .nav-item .nav-link {
     background: transparent;
     border: none;
@@ -141,4 +146,7 @@ code {
     border-radius: 10px;
     min-height: 250px;
     overflow: hidden;
+}
+hr {
+    margin: 0;
 }
