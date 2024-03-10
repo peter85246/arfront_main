@@ -8,7 +8,6 @@ import {
   Navigate,
 } from "react-router-dom";
 import PrivateRoute from "./utils/PrivateRoute"; //Private Route
-import "./index.css";
 import Login from "./pages/Login";
 import Home from "./pages/Home";
 import Machine from "./pages/Machine";
@@ -18,8 +17,14 @@ import SOP from "./pages/SOP";
 import MachineIOTList from "./pages/MachineIOTList";
 import MachineIOT from "./pages/MachineIOT";
 import Knowledge from "./pages/Knowledge";
-import "./App.css";
+import Database from "./pages/Database";
 import Alarm from "./pages/Alarm";
+
+import "./App.css";
+import "./index.css";
+import { RepairDocument } from "./components/RepairDocument";
+import { DocumentEditor } from "./components/DocumentEditor";
+import GPT from "./pages/GPT";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -84,10 +89,42 @@ root.render(
           }
         />
         <Route
+          path="/database"
+          element={
+            <Home>
+                <Database />
+            </Home>
+          }
+        />
+        <Route
+          path="/repairDocument"
+          element={
+            <Home>
+                <RepairDocument />
+            </Home>
+          }
+        />
+        <Route
+          path="/document-editor"
+          element={
+            <Home>
+                <DocumentEditor />
+            </Home>
+          }
+        />
+        <Route
           path="/alarm"
           element={
             <Home>
                 <Alarm />
+            </Home>
+          }
+        />
+        <Route
+          path="/gpt"
+          element={
+            <Home>
+                <GPT />
             </Home>
           }
         />

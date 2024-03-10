@@ -1,0 +1,141 @@
+@charset "UTF-8";
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+h2 {
+  margin: 0; /* 增加下邊距來與下方內容分隔 */
+  padding: 10px 0 0 0 !important;
+}
+
+.container-gpt {
+  display: flex; /* 使用flex佈局 */
+  justify-content: center;
+  border-radius: 10px;
+  margin-bottom: 50px; /* 預留的底部空間 */
+}
+
+.content-wrapper-gpt {
+  border: 2px solid #b7bfcf;
+  border-radius: 20px;
+  padding: 10px;
+  margin: 2% auto; /* 上下左右邊距設為視口寬度的 2%，自動居中 */
+  height: auto; /* 或根據需要設定一個最大高度 */
+  max-height: 80vh; /* 例如 */
+  width: 96%;
+}
+
+/* 左側聊天區域的樣式 */
+.chat-area {
+  width: 30%; /* 占總寬度的30% */
+  margin: 10px; /* 外邊距為10px */
+  padding: 10px; /* 內邊距為10px */
+  border: 1px solid #ddd; /* 邊框樣式 */
+  display: flex;
+  flex-direction: column; /* 子元素垂直排列 */
+  height: calc(78vh - 30px); /* 計算整體高度，減去上下外邊距 */
+}
+
+/* 右側GPT回應區域的樣式 */
+.gpt-response-area {
+  width: 70%; /* 占總寬度的70% */
+  margin: 10px; /* 外邊距為10px */
+  padding: 10px; /* 內邊距為10px */
+  border: 1px solid #ddd; /* 邊框樣式 */
+  display: flex;
+  flex-direction: column; /* 子元素垂直排列 */
+  height: calc(78vh - 30px); /* 計算整體高度，減去上下外邊距 */
+}
+
+/* 聊天輸入框的樣式 */
+.chat-input {
+  width: 100%; /* 寬度與父元素一致 */
+  height: 420px; /* 高度為300px */
+  margin-bottom: 10px; /* 與下一個元素的間距為10px */
+  resize: none; /* 禁止調整大小 */
+  border-radius: 3px;
+  padding: 8px; /* 內部文本的間距（包括 placeholder） */
+  box-sizing: border-box; /* 確保 padding 不會影響到總寬高 */
+  overflow-y: auto; /* 添加滾動條 */
+  font-size: 16px;
+}
+
+/* 下拉選單的樣式 */
+.prompt-select {
+  width: 100%; /* 寬度與父元素一致 */
+  height: 8vh; /* 高度設為45px */
+  margin-bottom: 10px; /* 與下一個元素的間距為10px */
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* 針對下拉選單中的選項進行樣式設定 */
+.prompt-select option {
+  height: auto; /* 設置每個選項的高度 */
+  padding: 15px 10px; /* 上下左右的內邊距 */
+  margin: 15px 10px;
+  font-size: 14px; /* 增加字體大小以提高可讀性 */
+  border-radius: 0px;
+}
+
+/* 控制按鈕的容器樣式，將按鈕垂直排列 */
+.chat-controls {
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-controls button:hover {
+  background-color: #d8d8d8;
+  transition: left 0.5s ease; /* 添加過渡效果 */
+}
+
+/* 控制按鈕的樣式 */
+.chat-controls button {
+  width: 100%; /* 寬度與父元素一致 */
+  height: 45px; /* 高度設為45px */
+  margin-bottom: 5px; /* 與下一個按鈕的間距為5px */
+  text-align: center; /* 文字置中 */
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* 用戶問題展示區的樣式 */
+.user-question {
+  background-color: #e7e7e7; /* 背景色 */
+  padding: 10px; /* 內邊距 */
+  margin-bottom: 10px; /* 與下一個元素的間距 */
+  height: 8em;
+  border-radius: 5px;
+}
+
+.user-question p {
+  color: black;
+  font-size: 16px;
+  text-align: left; /* 文字對齊左側 */
+}
+
+/* GPT回應展示區的樣式 */
+.gpt-response {
+  background-color: #cbcbcb; /* 背景色 */
+  padding: 10px; /* 內邊距 */
+  flex: 1; /* 占滿所有可用空間 */
+  overflow-y: auto; /* 超出部分顯示滾動條 */
+  border-radius: 5px;
+}
+
+.gpt-response p {
+  color: black;
+  text-align: left; /* 文字對齊左側 */
+}
+
+.gptLabel {
+  font-size: 16px;
+  text-align: left; /* 文字對齊左側 */
+}
+
+.gptContent {
+  font-size: 16px;
+  text-align: left; /* 文字對齊左側 */
+}/*# sourceMappingURL=GPT.css.map */

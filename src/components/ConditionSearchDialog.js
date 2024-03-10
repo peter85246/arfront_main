@@ -198,7 +198,7 @@ export function ConditionSearchDialog({ onClose }) {
         </div>
 
         <div className={styles.buttonsCondition}>
-          <a href="./firstPage.html" className={classNames(styles.button, styles.btnCancel)}>
+          <a href="/knowledge" className={classNames(styles.button, styles.btnCancel)}>
             取消
           </a>
           <a

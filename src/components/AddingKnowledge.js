@@ -50,7 +50,7 @@ export function AddingKnowledge({ onClose }) {
           </div>
           
           <div className={styles.buttonsMachine}>
-            <a href="firstPage.html" className={classNames(styles.button, styles.btnCancel)}>取消</a>
+            <a href="knowledge" className={classNames(styles.button, styles.btnCancel)}>取消</a>
             <a href="#" className={classNames(styles.button, styles.btnSave)} id="openModalBtn-machine" type="button">儲存</a>
           </div> 
       </div>
