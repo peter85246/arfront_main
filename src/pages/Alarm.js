@@ -1,11 +1,13 @@
+import { useCallback, useState } from 'react';
 import classNames from 'classnames';
 import styles from '../scss/global.module.scss';
-import { useState } from 'react';
+import { MindMap } from '../components/MindMap';
 
 export default function Alarm() {
 
   const [alarmValue, setAlarmValue] = useState('待新增');
   const [dropMenuOpen, setDropMenuOpen] = useState(false);
+
   return (
     <main>
       <h2 id="title-alarm">故障庫</h2>
@@ -40,7 +42,7 @@ export default function Alarm() {
       <div className={styles["content-box"]} style={{ paddingTop: 0, gap: '5px' }}>
         {/* <!-- 編輯按鈕容器 --> */}
         <div className={styles["edit-container"]}>
-          <button id="edit-button">編輯</button>
+          <button className={styles["edit-button"]}>編輯</button>
         </div>
         <div className={styles["content-box-left-alarm"]}>
           {/* <!-- 標題 --> */}
@@ -76,11 +78,12 @@ export default function Alarm() {
           <p className={styles["mark-text"]}>▶ 點擊即可展開心智圖</p>
           {/* <!-- 內容待添加 --> */}
           <div className={styles["mindmap"]}>
-            <div className={styles["node central-node"]} id="central-node">
+            {/* <div className={styles["node central-node"]} id="central-node"> */}
               {/* <!-- <div className={styles["add-btn left">+</div> --> */}
-              <span>心智圖</span>
+              {/* <span>心智圖</span> */}
               {/* <!-- <div className={styles["add-btn right">+</div> --> */}
-            </div>
+            {/* </div> */}
+            <MindMap />
           </div>
         </div>
       </div>

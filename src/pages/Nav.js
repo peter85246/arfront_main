@@ -5,6 +5,8 @@ import { Link, NavLink } from "react-router-dom";
 function Nav() {
   const { myUser } = useContext(MyUserContext);
   const [dropMenuOpen, setDropMenuOpen] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+  const [isHoveredAlarm, setIsHoveredAlarm] = useState(false);
   
   return (
     <aside className="main-sidebar elevation-4 sidebar-dark-primary">
@@ -48,12 +50,29 @@ function Nav() {
 
             <li
               className={"nav-item"}
-              style={{ cursor: "pointer", background: dropMenuOpen ? '#266DF7' : '' }}
-              onClick={() => setDropMenuOpen(prev => !prev)}
+              style={{
+                cursor: "pointer",
+                background: dropMenuOpen ? "#266DF7" : "",
+              }}
+              onClick={() => setDropMenuOpen((prev) => !prev)}
             >
               <span className="nav-link">
-                <i style={{ color: dropMenuOpen ? 'white' : '#c2c7d0' }} className="fas fa-microchip"></i>&nbsp;
-                <p style={{ color: dropMenuOpen ? 'white' : '#c2c7d0' }}>知識管理</p>
+                <i
+                  style={{
+                    color: dropMenuOpen ? "white" : "#c2c1c1",
+                    paddingLeft: "1px",
+                  }}
+                  className="fa fa-database"
+                ></i>
+                &nbsp;
+                <p
+                  style={{
+                    color: dropMenuOpen ? "white" : "#c2c1c1",
+                    paddingLeft: "1px",
+                  }}
+                >
+                  知識管理
+                </p>
               </span>
             </li>
             {dropMenuOpen && (
@@ -63,8 +82,19 @@ function Nav() {
                     navData.isActive ? "nav-link " : "nav-link"
                   }
                   to="/knowledge"
-                  style={{ cursor: "pointer", paddingLeft: '40px', fontSize: '14px' }}
+                  style={{
+                    cursor: "pointer",
+                    paddingLeft: "25px",
+                    fontSize: "14px",
+                    color: isHovered ? "#ffffff" : "#c2c1c1", // 懸停時改為白色，非懸停時保持繼承的顏色
+                  }}
+                  onMouseEnter={() => setIsHovered(true)}
+                  onMouseLeave={() => setIsHovered(false)}
                 >
+                  <i
+                    className="fas fa-angle-right"
+                    style={{ marginRight: "8px" }}
+                  ></i>
                   <p>知識庫</p>
                 </NavLink>
                 <NavLink
@@ -72,8 +102,19 @@ function Nav() {
                     navData.isActive ? "nav-link " : "nav-link"
                   }
                   to="/alarm"
-                  style={{ cursor: "pointer", paddingLeft: '40px', fontSize: '14px' }}
+                  style={{
+                    cursor: "pointer",
+                    paddingLeft: "25px",
+                    fontSize: "14px",
+                    color: isHoveredAlarm ? "#ffffff" : "#c2c1c1", // 懸停時改為白色，非懸停時保持繼承的顏色
+                  }}
+                  onMouseEnter={() => setIsHoveredAlarm(true)}
+                  onMouseLeave={() => setIsHoveredAlarm(false)}
                 >
+                  <i
+                    className="fas fa-angle-right"
+                    style={{ marginRight: "8px" }}
+                  ></i>
                   <p>故障庫</p>
                 </NavLink>
               </li>

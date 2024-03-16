@@ -2343,7 +2343,7 @@ img {
 .edit-container {
   position: fixed; /* 固定定位 */
   width: 17vw; /* 設定與 .content-box-left-alarm 相同的寬度 */
-  top: 16vh; /* 距離框框上邊的距離，可以根據需要調整 */
+  top: 15vh; /* 距離框框上邊的距離，可以根據需要調整 */
   left: 22vw;
   right: 2.5em; /* 設定與 .content-box-left-alarm 左邊距相同的值 */
   display: flex;
@@ -2387,17 +2387,20 @@ img {
   transition: width 0.5s ease-in-out; /* 平滑過渡效果 */
 }
 
-#edit-button {
+.edit-button {
   cursor: pointer; /* 鼠標樣式 */
+  color: #1d6faa;
   padding: 3px 5px; /* 按鈕內邊距 */
   border: 1px solid #1d6faa; /* 按鈕邊框樣式 */
-  right: 0;
+  border-radius: 8px;
+  font-size: 14px;
+  margin-left: 4px;
 }
 
-#edit-button-click {
+.edit-button-click {
   cursor: pointer; /* 鼠標樣式 */
   padding: 3px 5px; /* 按鈕內邊距 */
-  border: 1px solid #1d6faa; /* 按鈕邊框樣式 */
+  border: 1px solid .1d6faa; /* 按鈕邊框樣式 */
 }
 
 #save-button {
@@ -3361,3 +3364,4 @@ img {
     margin-left: 5px;
   }
 }
+
