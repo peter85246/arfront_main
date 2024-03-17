@@ -1,16 +1,18 @@
 import classNames from "classnames";
 import styles from "../scss/global.module.scss";
+import { useTranslation } from "react-i18next"; //語系
+import { Link } from "react-router-dom";
 
 export default function Database() {
-
   return (
     <>
       <main>
         <h2>資料庫</h2>
         <div className={styles["back-page"]}>
-          <a href="knowledge" classNames={styles["back-text"]}>
-            &#x3C; 知識庫
-          </a>
+          <Link to="/knowledge" className={"fas fa-angle-left"}>
+            {" "}
+            知識庫
+          </Link>
         </div>
         <div className={styles["buttons-container"]}>
           <a

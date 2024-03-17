@@ -19,7 +19,6 @@ export function MindMap() {
       id: "1",
       data: { label: "Hello" },
       position: { x: -200, y: 50 },
-
     },
     {
       id: "2",
@@ -44,10 +43,10 @@ export function MindMap() {
   );
 
   return (
-    <ReactFlow 
-      nodes={nodes} 
+    <ReactFlow
+      nodes={nodes}
       edges={edges}
-      onNodesChange={onNodesChange} 
+      onNodesChange={onNodesChange}
       onEdgesChange={onEdgesChange}
       fitView
     >

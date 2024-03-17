@@ -1,8 +1,8 @@
 import classNames from "classnames";
 import styles from "../scss/global.module.scss";
+import { Link } from "react-router-dom";
 
 export function RepairDocument() {
-
   return (
     <main>
       <h2>維修說明檔案</h2>
@@ -15,12 +15,14 @@ export function RepairDocument() {
         </button>
       </div>
       <div className={styles["back-page"]}>
-        <a href="/knowledge" className={styles["back-text"]}>
-          &#x3C; 知識庫
-        </a>
-        <a href="/database" className={styles["back-text"]}>
-          &#x3C; 資料庫
-        </a>
+        <Link to="/knowledge" className={"fas fa-angle-left"}>
+          {" "}
+          知識庫
+        </Link>
+        <Link to="/database" className={"fas fa-angle-left"}>
+          {" "}
+          資料庫
+        </Link>
       </div>
 
       <div className={styles["content-box"]}>

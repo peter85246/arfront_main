@@ -265,7 +265,8 @@ header p:hover {
 }
 
 .list-search input {
-  padding: 8px;
+  padding: 5px;
+  padding-left: 12px;
   color: #000000;
   border: 2px solid #c3c3c3;
   border-radius: 50px;
@@ -273,7 +274,7 @@ header p:hover {
 }
 
 .button {
-  padding: 8px 25px; //按鈕內的空間調整 (順序 →上右下左)
+  padding: 8px 20px; //按鈕內的空間調整 (順序 →上右下左)
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -292,18 +293,6 @@ header p:hover {
   justify-content: right; /* 使元素對齊到右側 */
   gap: 0px; /* 設定元素之間的間距 */
   margin-top: 2.5em;
-}
-
-.buttons-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: absolute;
-  padding-top: 1.5em;
-  right: 2.1vw;
-  display: block;
-  gap: 2px;
-  top: 6vh;
 }
 
 .knowledge-btn {
@@ -428,6 +417,7 @@ table th {
   background-color: #ffffff;
   color: #000000;
   padding: 10px;
+  text-align: center;
 }
 
 table td {
@@ -480,7 +470,7 @@ table th {
 .buttons-container-item {
   position: absolute; /* 絕對定位 */
   padding-top: 2.5em; /* 距離框框上邊的距離，可以根據需要調整 */
-  right: 1.8%; /* 距離框框右邊的距離，可以根據需要調整 */
+  right: 1.5%; /* 距離框框右邊的距離，可以根據需要調整 */
   display: flex;
   gap: 2px;
   top: 6.5vh;
@@ -492,12 +482,11 @@ table th {
   align-items: center; /* 垂直居中對齊 */
   position: absolute; /* 絕對定位 */
   padding-top: 1.5em; /* 距離框框上邊的距離，可以根據需要調整 */
-  right: 2.1vw; /* 距離框框右邊的距離，可以根據需要調整 */
+  right: 1.5vw; /* 距離框框右邊的距離，可以根據需要調整 */
   display: block;
   gap: 2px;
   top: 6vh;
 }
-
 
 .btn-save,
 .btn-cancel,
@@ -523,6 +512,7 @@ table th {
   background-color: #194aa9;
   transition: width 0.3s ease-in-out; /* 平滑過渡效果 */
   border: 2px solid #194aa9;
+  color: #fff;
 }
 
 .btn-cancel {
@@ -535,6 +525,7 @@ table th {
   background-color: #be3127;
   transition: width 0.3s ease-in-out; /* 平滑過渡效果 */
   border: 2px solid #be3127;
+  color: #fff;
 }
 
 .btn-preview {
@@ -547,6 +538,7 @@ table th {
   background-color: rgb(105, 105, 105);
   transition: width 0.3s ease-in-out; /* 平滑過渡效果 */
   border: 2px solid rgb(105, 105, 105);
+  color: #fff;
 }
 
 .btn-edit,
@@ -604,7 +596,7 @@ table th {
   width: 100%; /* 确保父容器充满可用空间 */
   gap: 35px; /* 旁邊的空格，根據需要調整 */
   border-radius: 20px;
-  padding: 20px 30px;
+  padding: 20px;
   height: 100%;
   overflow-y: auto; /* 當內容超過容器高度時顯示滾動條 */
 }
@@ -710,19 +702,6 @@ table th {
   background-clip: padding-box;
 }
 
-.red-star {
-  position: relative; /* 讓偽元素的絕對定位參考此元素 */
-}
-
-.red-star::before {
-  content: "★"; /* 使用星星符號 */
-  position: absolute;
-  left: -12px;
-  top: -2px;
-  color: red; /* 設定顏色為紅色 */
-  font-size: 12px; /* 設定字體大小 */
-}
-
 .text-box {
   width: 98%;
   height: 30%;
@@ -741,10 +720,10 @@ table th {
 }
 
 .red-star::before {
-  content: "★"; /* 使用星星符號 */
+  content: '★'; /* 使用星星符號 */
   position: absolute;
   left: -12px;
-  top: -2px;
+  top: 2px;
   color: red; /* 設定顏色為紅色 */
   font-size: 12px; /* 設定字體大小 */
 }
@@ -821,6 +800,7 @@ table th {
 .delete-btn-position {
   background-color: #f44336;
   color: white;
+  margin-left: 3px;
 }
 
 .delete-btn:hover,
@@ -960,7 +940,7 @@ table th {
 
 .showMachine {
   display: flex;
-  justify-content: flex-end; /* 將子元素對齊到右邊 */
+  justify-content:center; /* 將子元素對齊到右邊 */
   /* 確保容器滿寬度展開 */
   width: 100%;
 }
@@ -980,7 +960,7 @@ table th {
   background-color: #ffffff;
   color: #8f8f8f;
   border: 2px solid #8f8f8f;
-  width: 13.5vw;
+  width: 100%;
   text-align: center;
   overflow: hidden; /* 隐藏超出部分 */
   text-overflow: ellipsis; /* 超出部分显示省略号 */
@@ -1618,7 +1598,7 @@ img {
 
 /* 垂直分隔線 */
 .content-section:not(:last-child)::after {
-  content: "";
+  content: '';
   border-right: 1px solid #000;
   position: absolute;
   top: 0;
@@ -2296,9 +2276,8 @@ img {
   position: relative; /* 使框框具有相對定位 */
   padding: 8px 10px 10px 20px;
   padding-right: 0px; /* 或更多的像素，視需要而定 */
-  width: 56.4vw;
+  width: 71%;
   left: 2em;
-  transition: width 0.3s ease-in-out; /* 平滑過渡效果 */
   border: 1px solid #b7bfcf;
   border-radius: 15px;
   background-color: transparent; /* 或者設置為父容器的背景色 */
@@ -2306,13 +2285,14 @@ img {
   top: 1em; /* 要釘選的位置，例如在頁面頂部 */
   overflow: none; /* 當內容超出容器時顯示垂直滾動條 */
   box-sizing: border-box; /* 確保 padding 和 border 被包括在元素的總寬度和高度內 */
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
   cursor: pointer;
   z-index: inherit;
 }
 
 .content-box-right-alarm:hover {
   background-color: #e6e6e6;
+  transition: width 0.3s ease-in-out; /* 平滑過渡效果 */
 }
 
 /* 保持特定元素可交互 */
@@ -2342,10 +2322,9 @@ img {
 
 .edit-container {
   position: fixed; /* 固定定位 */
-  width: 17vw; /* 設定與 .content-box-left-alarm 相同的寬度 */
+  width: 15.8vw; /* 設定與 .content-box-left-alarm 相同的寬度 */
   top: 15vh; /* 距離框框上邊的距離，可以根據需要調整 */
   left: 22vw;
-  right: 2.5em; /* 設定與 .content-box-left-alarm 左邊距相同的值 */
   display: flex;
   justify-content: flex-end; /* 添加此行以將按鈕對齊到右側 */
   gap: 2px;
@@ -2400,7 +2379,7 @@ img {
 .edit-button-click {
   cursor: pointer; /* 鼠標樣式 */
   padding: 3px 5px; /* 按鈕內邊距 */
-  border: 1px solid .1d6faa; /* 按鈕邊框樣式 */
+  border: 1px solid 0.1d6faa; /* 按鈕邊框樣式 */
 }
 
 #save-button {
@@ -2561,7 +2540,7 @@ img {
   background-color: #ffffff;
   z-index: 1;
   margin-bottom: 4px;
-  margin-right: 22px;
+  margin-right: 2em;
 }
 
 .btn-new {
@@ -3201,7 +3180,7 @@ img {
 }
 
 .red-star-branch::before {
-  content: "★"; /* 使用星星符號 */
+  content: '★'; /* 使用星星符號 */
   position: absolute;
   left: -12px;
   top: 2px;
@@ -3308,7 +3287,7 @@ img {
 
   .buttons-container {
     top: 5vh;
-    right: 2.1vw; /* 距離框框右邊的距離，可以根據需要調整 */
+    right: 1.5vw; /* 距離框框右邊的距離，可以根據需要調整 */
     padding-top: 1.2em; /* 距離框框上邊的距離，可以根據需要調整 */
   }
 
@@ -3360,8 +3339,7 @@ img {
   }
 
   .btn-showMachine {
-    width: 10.6vw;
+    width: 10vw;
     margin-left: 5px;
   }
 }
-

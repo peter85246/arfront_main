@@ -1,0 +1,238 @@
+.content {
+  width: 100%;
+  height: 100%;
+  background-color: #f4f6f9;
+  flex: 1;
+}
+
+.buttonContainer {
+  position: absolute;
+  top: 0px; /* 按鈕的頂部將會被置於 contentBoxLeft2 的頂部以上 */
+  right: 61.8vw; /* 靠右對齊 */
+  z-index: 10; /* 確保按鈕不會被其他元素遮擋 */
+  @media (min-width: 1700px) {
+    right: 68.5vw;
+  }
+}
+
+.editButton,
+.saveButton {
+  cursor: pointer; /* 鼠標樣式 */
+  color: #1d6faa;
+  padding: 0px 5px; /* 按鈕內邊距 */
+  border: 1px solid #1d6faa; /* 按鈕邊框樣式 */
+  border-radius: 8px;
+  right: 0;
+  font-size: 14px;
+  margin-left: 4px;
+}
+
+.editButton:hover,
+.saveButton:hover {
+  background-color: #d6e6f1; /* 背景顏色 */
+  color: #1d6faa;
+  transition: width 0.5s ease-in-out; /* 平滑過渡效果 */
+}
+
+.deleteButton {
+  cursor: pointer; /* 鼠標樣式 */
+  color: #aa1d1d;
+  padding: 3px 5px; /* 按鈕內邊距 */
+  border: 1px solid #aa1d1d; /* 按鈕邊框樣式 */
+  border-radius: 8px;
+  right: 0;
+  font-size: 14px;
+  margin-left: 4px;
+}
+
+.deleteButton:hover {
+  background-color: #f1d8d8; /* 背景顏色 */
+  color: #aa1d1d;
+  transition: width 0.5s ease-in-out; /* 平滑過渡效果 */
+}
+
+.contentBoxAlarm {
+  position: relative; /* 使得子元素可以相對於此定位 */
+  display: flex;
+  width: 100%; /* 确保父容器充满可用空间 */
+  gap: 35px; /* 旁邊的空格，根據需要調整 */
+  border-radius: 20px;
+  padding: 0px 30px;
+  padding-top: 15px;
+  height: 100%;
+  overflow-y: auto; /* 當內容超過容器高度時顯示滾動條 */
+}
+
+.contentBoxLeft2 {
+  width: 25em;
+  height: 75vh;
+  transition: width 0.3s ease-in-out; /* 平滑過渡效果 */
+  border: 2px solid #b7bfcf;
+  border-radius: 15px;
+  background-color: #ffffff;
+  overflow-y: auto; /* 當內容超出容器時顯示垂直滾動條 */
+  position: relative;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  @media (min-width: 1700px) {
+    height: 80vh;
+  }
+}
+
+.contentBoxLeft2::-webkit-scrollbar {
+  width: 13px;
+  margin-top: 5px;
+}
+
+.contentBoxLeft2::-webkit-scrollbar-thumb {
+  background-color: #8b8b8b;
+  border: 3px solid transparent;
+  border-radius: 20px;
+  -webkit-background-clip: padding-box;
+}
+
+.contentBoxLeft2::-webkit-scrollbar-track {
+  background-color: #f0f0f0;
+  border: 3px solid transparent;
+  border-radius: 20px;
+  -webkit-background-clip: padding-box;
+}
+
+.titleBar {
+  display: flex; /* 橫排顯示標題和編輯按鈕 */
+  justify-content: space-between; /* 空間平均分配 */
+  align-items: center; /* 垂直置中 */
+  background-color: #1d6faa; /* 背景顏色 */
+  padding: 10px 0px 10px 10px; /* 內邊距 */
+}
+
+.titleBar h5 {
+  margin: 0px;
+  padding: 0px;
+  color: white;
+}
+
+.markText {
+  text-align: left;
+  font-size: 15px;
+  margin: 0; /* 移除默認的邊距 */
+  margin-bottom: 3px;
+  color: #497a9d;
+  text-shadow: 2px 2px 5px #b2b2b2;
+}
+
+.contentBoxRight2 {
+  position: relative; /* 使框框具有相對定位 */
+  padding: 10px;
+  padding-right: 0px; /* 或更多的像素，視需要而定 */
+  width: 100%;
+  transition: width 0.3s ease-in-out; /* 平滑過渡效果 */
+  border: 2px solid #b7bfcf;
+  border-radius: 15px;
+  background-color: #f4f6f9;
+  height: 75vh;
+  overflow-y: auto; /* 當內容超出容器時顯示垂直滾動條 */
+  box-sizing: border-box; /* 確保 padding 和 border 被包括在元素的總寬度和高度內 */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  @media (min-width: 1700px) {
+    height: 80vh;
+  }
+}
+
+.contentBoxRight2:hover {
+  background-color: #e7e7e7;
+  border: 2px solid #a7a6a6;
+  transition: background-color 0.4s;
+  cursor: pointer;
+}
+
+.contentBoxRight2 p {
+  width: 98%;
+  height: 71vh;
+
+  @media (min-width: 1700px) {
+    height: 77vh;
+  }
+}
+
+/*------------------------------------------ MindMap ------------------------------------------*/
+
+.contentBoxMindMap {
+  position: relative; /* 使框框具有相對定位 */
+  min-height: 100vh;
+  padding: 10px;
+  margin-bottom: 10px;
+  width: 100%;
+  border: 2px solid #b7bfcf;
+  border-radius: 15px;
+  background-color: #f4f6f9;
+  overflow-y: auto; /* 當內容超出容器時顯示垂直滾動條 */
+  box-sizing: border-box; /* 確保 padding 和 border 被包括在元素的總寬度和高度內 */
+  box-shadow: 0px 5px 5px 5px rgba(0, 0, 0, 0.137);
+}
+
+.buttonsContainerMindMap {
+  display: flex; /* 設為彈性容器 */
+  justify-content: space-between; /* 子元素均勻分布 */
+  align-items: center; /* 垂直居中對齊 */
+  position: absolute; /* 絕對定位 */
+  padding-top: 3em; /* 距離框框上邊的距離，可以根據需要調整 */
+  padding-right: 1vw; /* 距離框框右邊的距離，可以根據需要調整 */
+  display: block;
+  gap: 2px;
+  top: 8vh;
+  right: 1.2vw; /* 調整右邊距 */
+
+  /* 適用於寬度大於 1200px 的螢幕 */
+  @media (min-width: 1800px) {
+    padding-top: 2em; /* 距離框框上邊的距離，可以根據需要調整 */
+    padding-right: 0.5vw; /* 距離框框右邊的距離，可以根據需要調整 */
+    top: 8vh; /* 調整上邊距 */
+    right: 1.2vw; /* 調整右邊距 */
+  }
+}
+
+.btnEditMindMap,
+.btnCancelMindMap {
+  display: inline-block; /* 使按鈕可行內展示，且可以設定寬高 */
+  font-size: 16px;
+  margin-left: 5px;
+  margin-top: 1vh;
+  padding: 4px 12px;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+
+  @media (min-width: 1300px) {
+    right: 1vw; /* 調整右邊距 */
+  }
+}
+
+.btnEditMindMap {
+  background-color: #266df7;
+  color: white;
+  border: 2px solid #266df7;
+}
+
+.btnEditMindMap:hover {
+  background-color: #194aa9;
+  transition: width 0.3s ease-in-out; /* 平滑過渡效果 */
+  border: 2px solid #194aa9;
+  color: white;
+}
+
+.btnCancelMindMap {
+  background-color: #f44336;
+  color: white;
+  border: 2px solid #f44336;
+}
+
+.btnCancelMindMap:hover {
+  background-color: #be3127;
+  transition: width 0.3s ease-in-out; /* 平滑過渡效果 */
+  border: 2px solid #be3127;
+  color: white;
+}

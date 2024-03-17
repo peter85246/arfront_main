@@ -113,8 +113,8 @@ export default function Knowledge() {
         item.fixedStatus.toLowerCase().includes(searchInput) ||
         item.fixedCategory.toLowerCase().includes(searchInput) ||
         item.fileNumber.toLowerCase().includes(searchInput)
-      )
-    })
+      );
+    });
 
     const rows = 5;
     const SlicedData = [];
@@ -123,7 +123,7 @@ export default function Knowledge() {
       SlicedData.push(filteredData.slice(i, i + rows));
     }
     setGroupedData(SlicedData);
-  }
+  };
 
   useEffect(() => {
     // 分切資料
@@ -153,19 +153,34 @@ export default function Knowledge() {
               className={classNames(styles["button"], styles["knowledge-btn"])}
               onClick={() => setIsAddingKnowledge((prev) => !prev)}
             >
+              <i
+                class="fa fa-plus"
+                aria-hidden="true"
+                style={{ marginRight: "6px", fontSize: "15px" }}
+              ></i>
               新增知識
             </button>
             <button
               className={classNames(styles["button"], styles["condition-btn"])}
               onClick={() => setIsConditionSearch((prev) => !prev)}
             >
+              <i
+                class="fa fa-search"
+                aria-hidden="true"
+                style={{ marginRight: "4.5px", fontSize: "15px" }}
+              ></i>
               條件查詢
             </button>
             {/* <!-- ... 其他的按鈕 ... --> */}
           </div>
           <div className={styles["content-wrapper"]}>
             <div className={styles["list-search"]}>
-              <input type="text" id="searchInput" placeholder="請輸入關鍵字" onChange={filterData} />
+              <input
+                type="text"
+                id="searchInput"
+                placeholder="請輸入關鍵字"
+                onChange={filterData}
+              />
             </div>
 
             <table>

@@ -1,13 +1,59 @@
-﻿import React, { useContext, useState, useRef } from "react";
+﻿import React, { useContext, useState, useEffect, useRef } from "react";
 import { MyUserContext } from "../contexts/MyUserContext";
 import { Link, NavLink } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 function Nav() {
   const { myUser } = useContext(MyUserContext);
   const [dropMenuOpen, setDropMenuOpen] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
-  const [isHoveredAlarm, setIsHoveredAlarm] = useState(false);
-  
+  const [selectedItem, setSelectedItem] = useState(null); // 新增狀態來記錄當前被選中的選項
+  const location = useLocation(); // 使用 useLocation 鉤子來獲取當前的路由位置
+
+  useEffect(() => {
+    // 根據當前的路由位置來設置 selectedItem
+    const path = location.pathname;
+    if (path.includes("/machine")) {
+      setSelectedItem("machine");
+      setDropMenuOpen(false);
+    } else if (path.includes("/userManage")) {
+      setSelectedItem("userManage");
+      setDropMenuOpen(false);
+    } else if (
+      path.includes("/knowledge") ||
+      path.includes("/alarm") ||
+      path.includes("/pageMindMap") ||
+      path.includes("/document-editor") ||
+      path.includes("/sop2") ||
+      path.includes("/database") ||
+      path.includes("/repairDocument")
+    ) {
+      setDropMenuOpen(true); // 保持下拉菜單打開
+      if (
+        path.includes("/knowledge") ||
+        path.includes("/document-editor") ||
+        path.includes("/sop2") ||
+        path.includes("/database") ||
+        path.includes("/repairDocument")
+      ) {
+        setSelectedItem("knowledge");
+      } else {
+        setSelectedItem("alarm");
+      }
+    } else if (path.includes("/gpt")) {
+      setSelectedItem("gpt");
+      setDropMenuOpen(false);
+    } else {
+      setSelectedItem(null);
+      setDropMenuOpen(false); // 關閉下拉菜單
+    }
+  }, [location]); // 當 location 變化時重新運行此效果
+
+  // 新增函數來處理導航項目的點擊事件
+  const handleNavClick = (item) => {
+    setSelectedItem(item);
+    setDropMenuOpen(false); // 關閉下拉菜單
+  };
+
   return (
     <aside className="main-sidebar elevation-4 sidebar-dark-primary">
       <Link to="/machine" className="brand-link">
@@ -16,7 +62,6 @@ function Nav() {
       <div className="sidebar">
         <nav className="mt-2">
           <ul className="nav nav-pills nav-sidebar flex-column" role="menu">
-
             <li className="nav-item">
               <NavLink
                 className={(navData) =>
@@ -24,6 +69,7 @@ function Nav() {
                 }
                 to="/machine"
                 style={{ cursor: "pointer" }}
+                onClick={() => handleNavClick("machine")} // 使用 handleNavClick 函數
               >
                 <i className="fas fa-microchip"></i>&nbsp;
                 <p>機器管理</p>
@@ -39,6 +85,7 @@ function Nav() {
                   }
                   to="/userManage"
                   style={{ cursor: "pointer" }}
+                  onClick={() => handleNavClick("userManage")} // 使用 handleNavClick 函數
                 >
                   <i className="fas fa-users"></i>&nbsp;
                   <p>使用者管理</p>
@@ -76,7 +123,7 @@ function Nav() {
               </span>
             </li>
             {dropMenuOpen && (
-              <li style={{ background: '#4a4c5b', borderRadius: '5px' }}>
+              <li style={{ background: "#4a4c5b", borderRadius: "5px" }}>
                 <NavLink
                   className={(navData) =>
                     navData.isActive ? "nav-link " : "nav-link"
@@ -86,10 +133,9 @@ function Nav() {
                     cursor: "pointer",
                     paddingLeft: "25px",
                     fontSize: "14px",
-                    color: isHovered ? "#ffffff" : "#c2c1c1", // 懸停時改為白色，非懸停時保持繼承的顏色
+                    color: selectedItem === "knowledge" ? "#ffffff" : "#c2c1c1", // 根據選中狀態來控制顏色
                   }}
-                  onMouseEnter={() => setIsHovered(true)}
-                  onMouseLeave={() => setIsHovered(false)}
+                  onClick={() => setSelectedItem("knowledge")} // 設置選中狀態
                 >
                   <i
                     className="fas fa-angle-right"
@@ -106,10 +152,9 @@ function Nav() {
                     cursor: "pointer",
                     paddingLeft: "25px",
                     fontSize: "14px",
-                    color: isHoveredAlarm ? "#ffffff" : "#c2c1c1", // 懸停時改為白色，非懸停時保持繼承的顏色
+                    color: selectedItem === "alarm" ? "#ffffff" : "#c2c1c1", // 根據選中狀態來控制顏色
                   }}
-                  onMouseEnter={() => setIsHoveredAlarm(true)}
-                  onMouseLeave={() => setIsHoveredAlarm(false)}
+                  onClick={() => setSelectedItem("alarm")} // 設置選中狀態
                 >
                   <i
                     className="fas fa-angle-right"
@@ -119,6 +164,7 @@ function Nav() {
                 </NavLink>
               </li>
             )}
+
             <li className="nav-item">
               <NavLink
                 className={(navData) =>
@@ -126,12 +172,12 @@ function Nav() {
                 }
                 to="/gpt"
                 style={{ cursor: "pointer" }}
+                onClick={() => handleNavClick("gpt")} // 使用 handleNavClick 函數
               >
-                <i className="fas fa-microchip"></i>&nbsp;
+                <i className="fa fa-comment"></i>&nbsp;
                 <p>GPT系統</p>
               </NavLink>
             </li>
-
           </ul>
         </nav>
       </div>
