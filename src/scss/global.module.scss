@@ -1180,15 +1180,14 @@ table th {
   flex-direction: column;
   align-items: stretch;
   padding: 20px;
-  margin: 0px;
-  width: 83.7vw;
+  margin-top: -10px;
+  width: 100%;
   height: 80vh;
   transition: width 0.3s ease-in-out;
   border: 2px solid #b7bfcf;
   border-radius: 15px;
   background-color: #ffffff;
   left: 5px;
-  top: 1em;
   overflow-y: auto;
   position: relative;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -2239,10 +2238,9 @@ img {
 /* ----------------- Alarm Page ----------------- */
 .content-box-left-alarm {
   padding: 0px;
-  width: 18.6vw; /* 使用視口寬度的百分比 */
+  width: 27vw; /* 使用視口寬度的百分比 */
   height: 80vh;
   left: 1em;
-  right: 1em; /* 設定與 .edit-container 相同的右邊距 */
   margin-top: 0;
   transition: width 0.3s ease-in-out; /* 平滑過渡效果 */
   border-radius: 15px;
@@ -2274,10 +2272,9 @@ img {
 
 .content-box-right-alarm {
   position: relative; /* 使框框具有相對定位 */
-  padding: 8px 10px 10px 20px;
-  padding-right: 0px; /* 或更多的像素，視需要而定 */
-  width: 71%;
-  left: 2em;
+  padding: 10px;
+  margin:0px 2em 0px 3em;
+  width: 100%;
   border: 1px solid #b7bfcf;
   border-radius: 15px;
   background-color: transparent; /* 或者設置為父容器的背景色 */
@@ -3228,7 +3225,7 @@ img {
 .content-box-middle,
 .content-box-middle-alarm,
 .content-box-left-alarm {
-  height: 77vh;
+  height: 76vh;
   top: 0;
 }
 
@@ -3267,7 +3264,17 @@ img {
   .content-box-middle,
   .content-box-middle-alarm,
   .content-box-left-alarm {
-    height: 82vh;
+    height: 81vh;
+  }
+
+  .content-box-left-alarm {
+    padding: 0px;
+    width: 22vw; /* 使用視口寬度的百分比 */
+  }
+
+  .content-box-right-alarm {
+    position: relative; /* 使框框具有相對定位 */
+    width: 100%;
   }
 
   .content-box-middle {

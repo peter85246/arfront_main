@@ -109,7 +109,7 @@ export function DocumentEditor() {
                     styles["knowledge-input"]
                   )}
                   type="text"
-                  name="KnowledgeBaseDeviceType"
+                  name="KnowledgeDeviceType"
                   id="invoice-number1"
                   autocomplete="off"
                 />
@@ -137,7 +137,7 @@ export function DocumentEditor() {
                     styles["fault-Info"],
                     styles["knowledge-input"]
                   )}
-                  name="KnowledgeBaseDeviceParts"
+                  name="KnowledgeDeviceParts"
                   id="invoice-number2"
                   autocomplete="off"
                 />
@@ -165,7 +165,7 @@ export function DocumentEditor() {
                     styles["fault-Info"],
                     styles["knowledge-input"]
                   )}
-                  name="KnowledgeBaseRepairItems"
+                  name="KnowledgeRepairItems"
                   id="invoice-number3"
                   autocomplete="off"
                 />
@@ -194,7 +194,7 @@ export function DocumentEditor() {
                       styles["fault-Info"],
                       styles["knowledge-input"]
                     )}
-                    name="KnowledgeBaseRepairType"
+                    name="KnowledgeRepairType"
                     id="invoice-number4"
                     autocomplete="off"
                   />
@@ -211,7 +211,7 @@ export function DocumentEditor() {
               </div>
             </div>
             <div className={styles["form-group"]}>
-              <label for="invoice-title">檔案編號：</label>
+              <label className={styles["red-star"]} for="invoice-title">檔案編號：</label>
               <input
                 type="text"
                 className={classNames(
@@ -219,7 +219,7 @@ export function DocumentEditor() {
                   styles["knowledge-input"]
                 )}
                 data-key="invoice-number5"
-                name="KnowledgeBaseFileNo"
+                name="KnowledgeFileNumber"
                 id="invoice-number5"
                 autocomplete="off"
               />
@@ -233,7 +233,7 @@ export function DocumentEditor() {
                   styles["knowledge-input"]
                 )}
                 data-key="invoice-number6"
-                name="KnowledgeBaseAlarmCode"
+                name="KnowledgeAlarmCode"
                 id="invoice-number6"
                 autocomplete="off"
               />
@@ -246,7 +246,7 @@ export function DocumentEditor() {
                   styles["fault-Info"],
                   styles["knowledge-input"]
                 )}
-                name="KnowledgeBaseSpec"
+                name="KnowledgeSpecification"
                 id="invoice-number7"
                 autocomplete="off"
               />
@@ -259,7 +259,7 @@ export function DocumentEditor() {
                   styles["fault-Info"],
                   styles["knowledge-input"]
                 )}
-                name="KnowledgeBaseSystem"
+                name="KnowledgeSystem"
                 id="invoice-number8"
                 autocomplete="off"
               />
@@ -272,7 +272,7 @@ export function DocumentEditor() {
                   styles["fault-Info"],
                   styles["knowledge-input"]
                 )}
-                name="KnowledgeBaseProductName"
+                name="KnowledgeProductName"
                 id="invoice-number9"
                 autocomplete="off"
               />
@@ -289,7 +289,7 @@ export function DocumentEditor() {
               styles["text-box"],
               styles["knowledge-input"]
             )}
-            name="KnowledgeBaseAlarmCause"
+            name="KnowledgeAlarmCause"
             id="invoice-number10"
           ></textarea>
           <p></p>
@@ -302,7 +302,7 @@ export function DocumentEditor() {
               styles["text-box"],
               styles["knowledge-input"]
             )}
-            name="KnowledgeBaseAlarmDesc"
+            name="KnowledgeAlarmDescription"
             id="invoice-number11"
           ></textarea>
           <p></p>
@@ -315,7 +315,7 @@ export function DocumentEditor() {
               styles["text-box"],
               styles["knowledge-input"]
             )}
-            name="KnowledgeBaseAlarmOccasion"
+            name="KnowledgeAlarmOccasion"
             id="invoice-number12"
           ></textarea>
           <p></p>
@@ -340,7 +340,7 @@ export function DocumentEditor() {
             <div className={styles["image-actions"]}>
               <input
                 type="file"
-                name="KnowledgeBaseModelImage"
+                name="KnowledgeModelImage"
                 id="modelImage-image-input"
                 className={styles["image-input"]}
                 hidden
@@ -382,7 +382,7 @@ export function DocumentEditor() {
             <div className={styles["image-actions"]}>
               <input
                 type="file"
-                name="KnowledgeBaseToolsImage"
+                name="KnowledgeToolsImage"
                 id="toolsImage-image-input"
                 className={styles["image-input"]}
                 hidden
@@ -424,7 +424,7 @@ export function DocumentEditor() {
             <div className={styles["image-actions"]}>
               <input
                 type="file"
-                name="KnowledgeBasePositionImage"
+                name="KnowledgePositionImage"
                 id="positionImage-image-input"
                 className={styles["image-input"]}
                 hidden

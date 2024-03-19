@@ -7,91 +7,97 @@ import classNames from "classnames";
 const DataArray = [
   {
     id: 1,
-    machineCategory: "銑床",
-    part: "冷卻系統",
-    fixedStatus: "主軸油冷機故障:1004",
-    fixedCategory: "機械故障",
-    fileNumber: "TS31103",
+    KnowledgeDeviceType: "銑床",
+    KnowledgeDeviceParts: "冷卻系統",
+    RepairItem: "主軸油冷機故障:1004",
+    KnowledgeRepairType: "機械故障",
+    KnowledgeFileNumber: "TS31103",
   },
   {
     id: 2,
-    machineCategory: "車床",
-    part: "主軸",
-    fixedStatus: "機械目前處於是車工件的狀態:2014",
-    fixedCategory: "電控層面",
-    fileNumber: "TS31103",
+    KnowledgeDeviceType: "車床",
+    KnowledgeDeviceParts: "主軸",
+    RepairItem: "機械目前處於是車工件的狀態:2014",
+    KnowledgeRepairType: "電控層面",
+    KnowledgeFileNumber: "TS23001",
   },
   {
     id: 3,
-    machineCategory: "(Item3)",
-    part: "(Item3)",
-    fixedStatus: "(Item3)",
-    fixedCategory: "(Item3)",
-    fileNumber: "TS31103",
+    KnowledgeDeviceType: "等離子切割機",
+    KnowledgeDeviceParts: "保養調教",
+    RepairItem: "電線鬆脫:3021",
+    KnowledgeRepairType: "零組件",
+    KnowledgeFileNumber: "TS18331",
   },
   {
     id: 4,
-    machineCategory: "銑床",
-    part: "冷卻系統",
-    fixedStatus: "主軸油冷機故障:1004",
-    fixedCategory: "機械故障",
-    fileNumber: "TS31103",
+    KnowledgeDeviceType: "銑床",
+    KnowledgeDeviceParts: "冷卻系統",
+    RepairItem: "主軸油冷機故障:1004",
+    KnowledgeRepairType: "機械故障",
+    KnowledgeFileNumber: "TS31103",
   },
   {
     id: 5,
-    machineCategory: "車床",
-    part: "主軸",
-    fixedStatus: "機械目前處於是車工件的狀態:2014",
-    fixedCategory: "電控層面",
-    fileNumber: "TS31103",
+    KnowledgeDeviceType: "車床",
+    KnowledgeDeviceParts: "主軸",
+    RepairItem: "機械目前處於是車工件的狀態:2014",
+    KnowledgeRepairType: "電控層面",
+    KnowledgeFileNumber: "TS23001",
   },
   {
     id: 6,
-    machineCategory: "(Item3)",
-    part: "(Item3)",
-    fixedStatus: "(Item3)",
-    fixedCategory: "(Item3)",
-    fileNumber: "TS31103",
-  },
-  {
+    KnowledgeDeviceType: "等離子切割機",
+    KnowledgeDeviceParts: "保養調教",
+    RepairItem: "電線鬆脫:3021",
+    KnowledgeRepairType: "零組件",
+    KnowledgeFileNumber: "TS18331",
+  },{
     id: 7,
-    machineCategory: "銑床",
-    part: "冷卻系統",
-    fixedStatus: "主軸油冷機故障:1004",
-    fixedCategory: "機械故障",
-    fileNumber: "TS31103",
+    KnowledgeDeviceType: "銑床",
+    KnowledgeDeviceParts: "冷卻系統",
+    RepairItem: "主軸油冷機故障:1004",
+    KnowledgeRepairType: "機械故障",
+    KnowledgeFileNumber: "TS31103",
   },
   {
     id: 8,
-    machineCategory: "車床",
-    part: "主軸",
-    fixedStatus: "機械目前處於是車工件的狀態:2014",
-    fixedCategory: "電控層面",
-    fileNumber: "TS31103",
+    KnowledgeDeviceType: "車床",
+    KnowledgeDeviceParts: "主軸",
+    RepairItem: "機械目前處於是車工件的狀態:2014",
+    KnowledgeRepairType: "電控層面",
+    KnowledgeFileNumber: "TS23001",
   },
   {
     id: 9,
-    machineCategory: "(Item3)",
-    part: "(Item3)",
-    fixedStatus: "(Item3)",
-    fixedCategory: "(Item3)",
-    fileNumber: "TS31103",
+    KnowledgeDeviceType: "等離子切割機",
+    KnowledgeDeviceParts: "保養調教",
+    RepairItem: "電線鬆脫:3021",
+    KnowledgeRepairType: "零組件",
+    KnowledgeFileNumber: "TS18331",
+  },{
+    id: 10,
+    KnowledgeDeviceType: "銑床",
+    KnowledgeDeviceParts: "冷卻系統",
+    RepairItem: "主軸油冷機故障:1004",
+    KnowledgeRepairType: "機械故障",
+    KnowledgeFileNumber: "TS31103",
   },
   {
-    id: 10,
-    machineCategory: "車床",
-    part: "主軸",
-    fixedStatus: "機械目前處於是車工件的狀態:2014",
-    fixedCategory: "電控層面",
-    fileNumber: "TS31103",
+    id: 11,
+    KnowledgeDeviceType: "車床",
+    KnowledgeDeviceParts: "主軸",
+    RepairItem: "機械目前處於是車工件的狀態:2014",
+    KnowledgeRepairType: "電控層面",
+    KnowledgeFileNumber: "TS23001",
   },
   {
-    id: 10,
-    machineCategory: "車床",
-    part: "主軸",
-    fixedStatus: "機械目前處於是車工件的狀態:2014",
-    fixedCategory: "電控層面",
-    fileNumber: "TS31103",
+    id: 12,
+    KnowledgeDeviceType: "等離子切割機",
+    KnowledgeDeviceParts: "保養調教",
+    RepairItem: "電線鬆脫:3021",
+    KnowledgeRepairType: "零組件",
+    KnowledgeFileNumber: "TS18331",
   },
 ];
 
@@ -109,10 +115,10 @@ export default function Knowledge() {
     const filteredData = DataArray.filter((item) => {
       return (
         item.machineCategory.toLowerCase().includes(searchInput) ||
-        item.part.toLowerCase().includes(searchInput) ||
-        item.fixedStatus.toLowerCase().includes(searchInput) ||
-        item.fixedCategory.toLowerCase().includes(searchInput) ||
-        item.fileNumber.toLowerCase().includes(searchInput)
+        item.KnowledgeDeviceParts.toLowerCase().includes(searchInput) ||
+        item.RepairItem.toLowerCase().includes(searchInput) ||
+        item.KnowledgeRepairType.toLowerCase().includes(searchInput) ||
+        item.KnowledgeFileNumber.toLowerCase().includes(searchInput)
       );
     });
 
@@ -202,11 +208,11 @@ export default function Knowledge() {
                     onClick={() => (window.location = "/database")}
                   >
                     <td>{item.id}</td>
-                    <td>{item.machineCategory}</td>
-                    <td>{item.part}</td>
-                    <td>{item.fixedStatus}</td>
-                    <td>{item.fixedCategory}</td>
-                    <td>{item.fileNumber}</td>
+                    <td>{item.KnowledgeDeviceType}</td>
+                    <td>{item.KnowledgeDeviceParts}</td>
+                    <td>{item.RepairItem}</td>
+                    <td>{item.KnowledgeRepairType}</td>
+                    <td>{item.KnowledgeFileNumber}</td>
                   </tr>
                 ))}
               </tbody>
