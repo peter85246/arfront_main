@@ -40,6 +40,10 @@ function SOP2() {
   const videoSrcRef = useRef(null); //input File類型的影片
   const [videoError, setVideoError] = useState(""); //影片格式錯誤
 
+  const inputRemarksImageRef = useRef(null); // input File類型的備註圖片
+  const [remarksImageError, setRemarksImageError] = useState(""); // 備註圖片格式錯誤
+
+
   const [saveSOPLoading, setSaveSOPLoading] = useState(false); //SOP儲存的轉圈圈
 
   const [selectDeleteSOPIndex, setSelectDeleteSOPIndex] = useState(-1); //要刪除的topic的index
@@ -101,6 +105,11 @@ function SOP2() {
       sopImage: "",
       sopImageObj: null,
       isDeletedSOPImage: false,
+      /* 新增：sopRemarksMessage、sopRemarksImage、sopRemarksImageObj 三元素 */
+      sopRemarksMessage: "",
+      sopRemarksImage: "",
+      sopRemarksImageObj: null,
+      isDeletedSOPRemarksImage: false,
       sopVideo: "",
       sopVideoObj: null,
       isDeletedSOPVideo: false,
@@ -170,7 +179,7 @@ function SOP2() {
   };
   //#endregion
 
-  //#region 上傳圖片按鈕
+  //#region 上傳步驟片按鈕
   const handleUploadImageBtn = (e) => {
     e.preventDefault();
     inputImageRef.current.click();
@@ -265,6 +274,60 @@ function SOP2() {
   };
   //#endregion
 
+  //#region 上傳備註圖片按鈕
+const handleUploadRemarksImageBtn = (e) => {
+  e.preventDefault();
+  inputRemarksImageRef.current.click();
+};
+//#endregion
+
+//#region 上傳備註圖片Change事件
+const onRemarksImageChange = (e) => {
+  var file;
+  file = e.target.files[0];
+  let newSelectSOP = { ...selectSOP };
+  if (file != null) {
+    var fileExtension = file.name
+      .substr(file.name.lastIndexOf(".") + 1 - file.name.length)
+      .toLowerCase();
+    if (
+      !(
+        fileExtension == "png" ||
+        fileExtension == "jpg" ||
+        fileExtension == "jpeg"
+      )
+    ) {
+      setRemarksImageError("format");
+    } else {
+      var img = new Image();
+      var objectUrl = URL.createObjectURL(file);
+      img.onload = function () {
+        newSelectSOP.sopRemarksImageObj = file;
+        if (newSelectSOP.sopRemarksImage != "") {
+          newSelectSOP.isDeletedSOPRemarksImage = true;
+        }
+        setSelectSOP(newSelectSOP);
+      };
+      img.src = objectUrl;
+    }
+  }
+};
+//#endregion
+
+//#region 移除備註圖片按鈕
+const handleRemoveRemarksImageBtn = (e) => {
+  e.preventDefault();
+  let newSelectSOP = { ...selectSOP };
+
+  newSelectSOP.sopRemarksImage = "";
+  newSelectSOP.sopRemarksImageObj = null;
+  newSelectSOP.isDeletedSOPRemarksImage = true;
+
+  setSelectSOP(newSelectSOP);
+};
+//#endregion
+
+
   //#region 更新SOPs
   useEffect(() => {
     console.log(selectSOP);
@@ -347,6 +410,13 @@ function SOP2() {
       formData.append(
         `sops[${i}].isDeletedSOPImage`,
         sops[i].isDeletedSOPImage
+      );
+      formData.append(`sops[${i}].sopRemarksMessage`, sops[i].sopRemarksMessage);
+      formData.append(`sops[${i}].sopRemarksImage`, sops[i].sopRemarksImage);
+      formData.append(`sops[${i}].sopRemarksImageObj`, sops[i].sopRemarksImageObj);
+      formData.append(
+        `sops[${i}].isDeletedSOPRemarksImage`,
+        sops[i].isDeletedSOPRemarksImage
       );
       formData.append(`sops[${i}].sopVideo`, sops[i].sopVideo);
       formData.append(`sops[${i}].sopVideoObj`, sops[i].sopVideoObj);
@@ -783,17 +853,31 @@ function SOP2() {
                               onChange={(e) => handleSelectSOPChange(e)}
                             ></textarea>
                           </div>
+                          <div className="form-group">
+                            <label>
+                              {t("sop.sopRemarksMessage")}
+                              {/*備註資訊*/}
+                            </label>
+                            <textarea
+                              className="form-control"
+                              rows="8"
+                              name="sopRemarksMessage"
+                              maxLength="1000"
+                              value={selectSOP.sopRemarksMessage}
+                              onChange={(e) => handleSelectSOPChange(e)}
+                            ></textarea>
+                          </div>
                         </div>
                       </div>
                       <div className="row mb-3">
                         <div className="col-sm-12 col-md-6">
                           <div
                             className="form-group"
-                            style={{ minHeight: "300px" }}
+                            style={{ minHeight: "150px" }}
                           >
                             <label>
                               {t("sop.sopVideo")}
-                              {/*影片*/}
+                              {/*步驟影片*/}
                             </label>
                             <div className="d-flex align-items-center justify-content-center sop-file-view">
                               {selectSOP.sopVideo != "" ||
@@ -858,11 +942,11 @@ function SOP2() {
                         <div className="col-sm-12 col-md-6">
                           <div
                             className="form-group"
-                            style={{ minHeight: "300px" }}
+                            style={{ minHeight: "150px" }}
                           >
                             <label>
                               {t("sop.sopImage")}
-                              {/*圖片*/}
+                              {/*步驟圖片*/}
                             </label>
                             <div className="d-flex align-items-center justify-content-center sop-file-view">
                               {selectSOP.sopImage != "" ||
@@ -919,6 +1003,74 @@ function SOP2() {
                               onClick={(e) => handleRemoveImageBtn(e)}
                             >
                               {t("sop.btn.removeSopImage")}
+                              {/*移除圖片*/}
+                            </button>
+                          </div>
+                        </div>
+                        <div className="col-sm-12 col-md-6">
+                          <div
+                            className="form-group"
+                            style={{ minHeight: "150px", marginTop: "20px"}}
+                          >
+                            <label>
+                              {t("sop.sopRemarksImage")}
+                              {/*備註圖片*/}
+                            </label>
+                            <div className="d-flex align-items-center justify-content-center sop-file-view">
+                              {selectSOP.sopRemarksImage != "" ||
+                              selectSOP.sopRemarksImageObj != null ? (
+                                <img
+                                  alt="not found"
+                                  src={
+                                    selectSOP.sopRemarksImageObj != null
+                                      ? URL.createObjectURL(
+                                          selectSOP.sopRemarksImageObj
+                                        )
+                                      : selectSOP.sopRemarksImage
+                                  }
+                                  style={{ width: "100%" }}
+                                />
+                              ) : (
+                                <></>
+                              )}
+                            </div>
+                            {(() => {
+                              switch (imageError) {
+                                case "format":
+                                  return (
+                                    <div className="invalid-feedback d-block">
+                                      <i className="fas fa-exclamation-circle"></i>{" "}
+                                      {t("helpWord.imageFormat")}
+                                      {/*圖片格式不正確*/}
+                                    </div>
+                                  );
+                                default:
+                                  return null;
+                              }
+                            })()}
+                          </div>
+                          <div className="mt-3">
+                            <button
+                              className="btn btn-primary"
+                              onClick={(e) => handleUploadRemarksImageBtn(e)}
+                            >
+                              {t("sop.btn.uploadSopRemarksImage")}
+                              {/*上傳圖片*/}
+                            </button>
+                            <input
+                              type="file"
+                              className="form-control d-none"
+                              name="sopImage"
+                              ref={inputRemarksImageRef}
+                              onChange={(e) => onRemarksImageChange(e)}
+                              autoComplete="off"
+                              accept="image/png, image/jpeg"
+                            />{" "}
+                            <button
+                              className="btn btn-danger"
+                              onClick={(e) => handleRemoveRemarksImageBtn(e)}
+                            >
+                              {t("sop.btn.removeSopRemarksImage")}
                               {/*移除圖片*/}
                             </button>
                           </div>

@@ -11,7 +11,7 @@ export const knowledge = [
                         machineName: "CNC-55688",
                         KnowledgeDeviceType: "車床",
                         KnowledgeDeviceParts: "主軸",
-                        RepairItem: KnowledgeRepairItem + KnowledgeAlarmCode, /*機械目前處於是車工件的狀態:2014*/ 
+                        RepairItem: `${KnowledgeRepairItem}: ${KnowledgeAlarmCode}`, /*機械目前處於是車工件的狀態:2014*/ 
                         KnowledgeRepairType: "電控層面",
                         KnowledgeFileNumber: "TS31103"
                     }
@@ -30,13 +30,14 @@ export const knowledge = [
                 sopImage: "",
                 sopImageObj: null,
                 isDeletedSOPImage: false,
-                sopVideo: "",
-                sopVideoObj: null,
-                isDeletedSOPVideo: false,
                 /* 新增：sopRemarksMessage、sopRemarksImage、sopRemarksImageObj 三元素 */
                 sopRemarksMessage: "",
                 sopRemarksImage: "",
                 sopRemarksImageObj: null,
+                isDeletedSOPRemarksImage: false,
+                sopVideo: "",
+                sopVideoObj: null,
+                isDeletedSOPVideo: false,
                 sopplC1: "",
                 sopplC2: "",
                 sopplC3: "",
