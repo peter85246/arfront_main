@@ -72,7 +72,7 @@ export function AddingKnowledge({ onClose }) {
         </div>
 
         <div className={styles.inputField}>
-          <label className={styles.redStar}>機台型號</label>
+          <label className={styles.redStar}>機台名稱</label>
           <input
             type="text"
             placeholder="請輸入名稱資訊"

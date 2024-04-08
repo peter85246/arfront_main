@@ -7,97 +7,99 @@ import classNames from "classnames";
 const DataArray = [
   {
     id: 1,
-    KnowledgeDeviceType: "銑床",
-    KnowledgeDeviceParts: "冷卻系統",
+    KnowledgeBaseDeviceType: "銑床",
+    KnowledgeBaseDeviceParts: "冷卻系統",
     RepairItem: "主軸油冷機故障:1004",
-    KnowledgeRepairType: "機械故障",
-    KnowledgeFileNumber: "TS31103",
+    KnowledgeBaseRepairType: "機械故障",
+    KnowledgeBaseFileNo: "TS31103",
   },
   {
     id: 2,
-    KnowledgeDeviceType: "車床",
-    KnowledgeDeviceParts: "主軸",
+    KnowledgeBaseDeviceType: "車床",
+    KnowledgeBaseDeviceParts: "主軸",
     RepairItem: "機械目前處於是車工件的狀態:2014",
-    KnowledgeRepairType: "電控層面",
-    KnowledgeFileNumber: "TS23001",
+    KnowledgeBaseRepairType: "電控層面",
+    KnowledgeBaseFileNo: "TS23001",
   },
   {
     id: 3,
-    KnowledgeDeviceType: "等離子切割機",
-    KnowledgeDeviceParts: "保養調教",
+    KnowledgeBaseDeviceType: "等離子切割機",
+    KnowledgeBaseDeviceParts: "保養調教",
     RepairItem: "電線鬆脫:3021",
-    KnowledgeRepairType: "零組件",
-    KnowledgeFileNumber: "TS18331",
+    KnowledgeBaseRepairType: "零組件",
+    KnowledgeBaseFileNo: "TS18331",
   },
   {
     id: 4,
-    KnowledgeDeviceType: "銑床",
-    KnowledgeDeviceParts: "冷卻系統",
+    KnowledgeBaseDeviceType: "銑床",
+    KnowledgeBaseDeviceParts: "冷卻系統",
     RepairItem: "主軸油冷機故障:1004",
-    KnowledgeRepairType: "機械故障",
-    KnowledgeFileNumber: "TS31103",
+    KnowledgeBaseRepairType: "機械故障",
+    KnowledgeBaseFileNo: "TS31103",
   },
   {
     id: 5,
-    KnowledgeDeviceType: "車床",
-    KnowledgeDeviceParts: "主軸",
+    KnowledgeBaseDeviceType: "車床",
+    KnowledgeBaseDeviceParts: "主軸",
     RepairItem: "機械目前處於是車工件的狀態:2014",
-    KnowledgeRepairType: "電控層面",
-    KnowledgeFileNumber: "TS23001",
+    KnowledgeBaseRepairType: "電控層面",
+    KnowledgeBaseFileNo: "TS23001",
   },
   {
     id: 6,
-    KnowledgeDeviceType: "等離子切割機",
-    KnowledgeDeviceParts: "保養調教",
+    KnowledgeBaseDeviceType: "等離子切割機",
+    KnowledgeBaseDeviceParts: "保養調教",
     RepairItem: "電線鬆脫:3021",
-    KnowledgeRepairType: "零組件",
-    KnowledgeFileNumber: "TS18331",
-  },{
+    KnowledgeBaseRepairType: "零組件",
+    KnowledgeBaseFileNo: "TS18331",
+  },
+  {
     id: 7,
-    KnowledgeDeviceType: "銑床",
-    KnowledgeDeviceParts: "冷卻系統",
+    KnowledgeBaseDeviceType: "銑床",
+    KnowledgeBaseDeviceParts: "冷卻系統",
     RepairItem: "主軸油冷機故障:1004",
-    KnowledgeRepairType: "機械故障",
-    KnowledgeFileNumber: "TS31103",
+    KnowledgeBaseRepairType: "機械故障",
+    KnowledgeBaseFileNo: "TS31103",
   },
   {
     id: 8,
-    KnowledgeDeviceType: "車床",
-    KnowledgeDeviceParts: "主軸",
+    KnowledgeBaseDeviceType: "車床",
+    KnowledgeBaseDeviceParts: "主軸",
     RepairItem: "機械目前處於是車工件的狀態:2014",
-    KnowledgeRepairType: "電控層面",
-    KnowledgeFileNumber: "TS23001",
+    KnowledgeBaseRepairType: "電控層面",
+    KnowledgeBaseFileNo: "TS23001",
   },
   {
     id: 9,
-    KnowledgeDeviceType: "等離子切割機",
-    KnowledgeDeviceParts: "保養調教",
+    KnowledgeBaseDeviceType: "等離子切割機",
+    KnowledgeBaseDeviceParts: "保養調教",
     RepairItem: "電線鬆脫:3021",
-    KnowledgeRepairType: "零組件",
-    KnowledgeFileNumber: "TS18331",
-  },{
+    KnowledgeBaseRepairType: "零組件",
+    KnowledgeBaseFileNo: "TS18331",
+  },
+  {
     id: 10,
-    KnowledgeDeviceType: "銑床",
-    KnowledgeDeviceParts: "冷卻系統",
+    KnowledgeBaseDeviceType: "銑床",
+    KnowledgeBaseDeviceParts: "冷卻系統",
     RepairItem: "主軸油冷機故障:1004",
-    KnowledgeRepairType: "機械故障",
-    KnowledgeFileNumber: "TS31103",
+    KnowledgeBaseRepairType: "機械故障",
+    KnowledgeBaseFileNo: "TS31103",
   },
   {
     id: 11,
-    KnowledgeDeviceType: "車床",
-    KnowledgeDeviceParts: "主軸",
+    KnowledgeBaseDeviceType: "車床",
+    KnowledgeBaseDeviceParts: "主軸",
     RepairItem: "機械目前處於是車工件的狀態:2014",
-    KnowledgeRepairType: "電控層面",
-    KnowledgeFileNumber: "TS23001",
+    KnowledgeBaseRepairType: "電控層面",
+    KnowledgeBaseFileNo: "TS23001",
   },
   {
     id: 12,
-    KnowledgeDeviceType: "等離子切割機",
-    KnowledgeDeviceParts: "保養調教",
+    KnowledgeBaseDeviceType: "等離子切割機",
+    KnowledgeBaseDeviceParts: "保養調教",
     RepairItem: "電線鬆脫:3021",
-    KnowledgeRepairType: "零組件",
-    KnowledgeFileNumber: "TS18331",
+    KnowledgeBaseRepairType: "零組件",
+    KnowledgeBaseFileNo: "TS18331",
   },
 ];
 
@@ -115,10 +117,10 @@ export default function Knowledge() {
     const filteredData = DataArray.filter((item) => {
       return (
         item.machineCategory.toLowerCase().includes(searchInput) ||
-        item.KnowledgeDeviceParts.toLowerCase().includes(searchInput) ||
+        item.KnowledgeBaseDeviceParts.toLowerCase().includes(searchInput) ||
         item.RepairItem.toLowerCase().includes(searchInput) ||
-        item.KnowledgeRepairType.toLowerCase().includes(searchInput) ||
-        item.KnowledgeFileNumber.toLowerCase().includes(searchInput)
+        item.KnowledgeBaseRepairType.toLowerCase().includes(searchInput) ||
+        item.KnowledgeBaseFileNo.toLowerCase().includes(searchInput)
       );
     });
 
@@ -208,11 +210,11 @@ export default function Knowledge() {
                     onClick={() => (window.location = "/database")}
                   >
                     <td>{item.id}</td>
-                    <td>{item.KnowledgeDeviceType}</td>
-                    <td>{item.KnowledgeDeviceParts}</td>
+                    <td>{item.KnowledgeBaseDeviceType}</td>
+                    <td>{item.KnowledgeBaseDeviceParts}</td>
                     <td>{item.RepairItem}</td>
-                    <td>{item.KnowledgeRepairType}</td>
-                    <td>{item.KnowledgeFileNumber}</td>
+                    <td>{item.KnowledgeBaseRepairType}</td>
+                    <td>{item.KnowledgeBaseFileNo}</td>
                   </tr>
                 ))}
               </tbody>
