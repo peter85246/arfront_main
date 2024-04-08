@@ -842,7 +842,7 @@ const handleRemoveRemarksImageBtn = (e) => {
                           <div className="form-group">
                             <label>
                               {t("sop.sopMessage")}
-                              {/*步驟資訊*/}
+                              {/*步驟說明*/}
                             </label>
                             <textarea
                               className="form-control"
@@ -856,7 +856,7 @@ const handleRemoveRemarksImageBtn = (e) => {
                           <div className="form-group">
                             <label>
                               {t("sop.sopRemarksMessage")}
-                              {/*備註資訊*/}
+                              {/*備註說明*/}
                             </label>
                             <textarea
                               className="form-control"

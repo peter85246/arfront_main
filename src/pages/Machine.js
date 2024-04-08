@@ -32,6 +32,8 @@ function Machine() {
     const [machineInfo, setMachineInfo] = useState({ //新增以及修改內容
         machineId: 0,
         machineCode: "", //機台ID
+        machineType: "", //機台種類
+        modelSeries: "", //型號系列
         machineName: "", //機台名稱
         machineSpec: "",    //機台規格
         machineImage: "",    //機台圖片路徑
@@ -43,6 +45,8 @@ function Machine() {
     });
     const [machineInfoErrors, setMachineInfoErrors] = useState({ //錯誤訊息
         machineCode: "", //機台ID
+        machineType: "", //機台種類
+        modelSeries: "", //型號系列
         machineName: "", //機台名稱
         machineSpec: "",    //機台規格
         machineImage: "",    //機台圖片路徑
@@ -138,6 +142,8 @@ function Machine() {
             setMachineInfo({
                 machineId: 0,
                 machineCode: "", //機台ID
+                machineType: "", //機台種類
+                modelSeries: "", //型號系列
                 machineName: "", //機台名稱
                 machineSpec: "",    //機台規格
                 machineImage: "",    //機台圖片路徑
@@ -164,6 +170,8 @@ function Machine() {
 
         setMachineInfoErrors({ //錯誤訊息
             machineCode: "", //機台ID
+            machineType: "", //機台種類
+            modelSeries: "", //型號系列
             machineName: "", //機台名稱
             machineSpec: "",    //機台規格
             machineImage: "",    //機台圖片檔名
@@ -214,6 +222,34 @@ function Machine() {
             }
             else {
                 newMachineInfoErrors.machineCode = "";
+            }
+        }
+
+        if (name == "machineType" || name == "") {
+            if (!validator.check(machineInfo.machineType, "required")) {
+                newMachineInfoErrors.machineType = "required";
+                result = false;
+            }
+            else if (!validator.check(machineInfo.machineType, "max:100")) {
+                newMachineInfoErrors.machineType = "max";
+                result = false;
+            }
+            else {
+                newMachineInfoErrors.machineType = "";
+            }
+        }
+
+        if (name == "modelSeries" || name == "") {
+            if (!validator.check(machineInfo.modelSeries, "required")) {
+                newMachineInfoErrors.modelSeries = "required";
+                result = false;
+            }
+            else if (!validator.check(machineInfo.modelSeries, "max:100")) {
+                newMachineInfoErrors.modelSeries = "max";
+                result = false;
+            }
+            else {
+                newMachineInfoErrors.modelSeries = "";
             }
         }
 
@@ -389,6 +425,8 @@ function Machine() {
             var formData = new FormData();
             formData.append('machineId', newMachineInfo.machineId);
             formData.append('machineCode', newMachineInfo.machineCode);
+            formData.append('machineType', newMachineInfo.machineType);
+            formData.append('modelSeries', newMachineInfo.modelSeries);
             formData.append('machineName', newMachineInfo.machineName);
             formData.append('machineSpec', newMachineInfo.machineSpec);
             formData.append('machineImage', newMachineInfo.machineImage);
@@ -768,6 +806,51 @@ function Machine() {
                                     }
                                 })()}
                             </div>
+                            <div className="col-12 form-group">
+                                <label className="form-label"><span className="text-danger">*</span>{t("machine.machineType")}{/*機台種類*/}</label>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    name="machineType"
+                                    value={machineInfo.machineType}
+                                    onChange={(e) => handleEditChange(e)}
+                                    onBlur={(e) => handleEditBlur(e)}
+                                    autoComplete="off"
+                                />
+                                {(() => {
+                                    switch (machineInfoErrors.machineType) {
+                                        case 'required':
+                                            return <div className="invalid-feedback d-block"><i className="fas fa-exclamation-circle"></i> {t("helpWord.required")}{/*不得空白*/}</div>
+                                        case 'max':
+                                            return <div className="invalid-feedback d-block"><i className="fas fa-exclamation-circle"></i> {t("helpWord.max", { e: 100 })}{/*超過上限{{e}}個字元*/}</div>
+                                        default:
+                                            return null
+                                    }
+                                })()}
+                            </div>
+                            <div className="col-12 form-group">
+                                <label className="form-label"><span className="text-danger">*</span>{t("machine.modelSeries")}{/*型號系列*/}</label>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    name="modelSeries"
+                                    value={machineInfo.modelSeries}
+                                    onChange={(e) => handleEditChange(e)}
+                                    onBlur={(e) => handleEditBlur(e)}
+                                    autoComplete="off"
+                                />
+                                {(() => {
+                                    switch (machineInfoErrors.modelSeries) {
+                                        case 'required':
+                                            return <div className="invalid-feedback d-block"><i className="fas fa-exclamation-circle"></i> {t("helpWord.required")}{/*不得空白*/}</div>
+                                        case 'max':
+                                            return <div className="invalid-feedback d-block"><i className="fas fa-exclamation-circle"></i> {t("helpWord.max", { e: 100 })}{/*超過上限{{e}}個字元*/}</div>
+                                        default:
+                                            return null
+                                    }
+                                })()}
+                            </div>
+
                             <div className="col-12 form-group">
                                 <label className="form-label"><span className="text-danger">*</span>{t("machine.machineName")}{/*機台名稱*/}</label>
                                 <input

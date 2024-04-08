@@ -95,6 +95,8 @@
   "machine.addTitle": "新增機台",
   "machine.editTitle": "編輯機台",
   "machine.machineCode": "機台ID",
+  "machine.machineType": "機台種類",
+  "machine.modelSeries": "型號系列",
   "machine.machineName": "機台名稱",
   "machine.machineSpec": "機台規格",
   "machine.machineImage": "機台圖片",
