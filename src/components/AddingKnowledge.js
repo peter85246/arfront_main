@@ -28,6 +28,7 @@ export function AddingKnowledge({ onClose }) {
         </div>
 
         <div className={styles.formGroup}>
+          
           <label className={styles.redStar} for="invoice-number">
             機台種類
           </label>
@@ -73,6 +74,9 @@ export function AddingKnowledge({ onClose }) {
 
         <div className={styles.inputField}>
           <label className={styles.redStar}>機台名稱</label>
+          <div
+            className={classNames(styles.customSelect, styles.equipmentField)}
+          >
           <input
             type="text"
             placeholder="請輸入名稱資訊"
@@ -80,7 +84,15 @@ export function AddingKnowledge({ onClose }) {
             id="machineModel"
             required
           />
+          <span className={styles.dropDownArrow}>▼</span>
+            <ul className={styles.customDatalist} id="invoice-options">
+              <li data-value="選項1">選項1</li>
+              <li data-value="選項2">選項2</li>
+              <li data-value="選項3">選項3</li>
+            </ul>
         </div>
+        </div>
+
 
         <div className={styles.buttonsMachine}>
           <a
