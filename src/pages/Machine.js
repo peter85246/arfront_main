@@ -870,8 +870,6 @@ function Machine() {
           </Pagination>
         </div>
       </section>
-
-<<<<<<< HEAD
                     <div className="row">
                         {machineList && machineList.length > 0 ?
                             showMachineList && showMachineList.length > 0 ?
@@ -923,7 +921,6 @@ function Machine() {
                         }
                     </div>
                     <Pagination className="d-flex justify-content-center">{pages}</Pagination>
-=======
       <ToastContainer />
 
       {/*machine modal - start*/}
@@ -1175,7 +1172,7 @@ function Machine() {
                       {/*上傳圖片*/}
                     </span>
                   )}
->>>>>>> fc2eefc4cc38c7e7fe3d809f36fe612718ee997b
+
                 </div>
                 {(() => {
                   switch (machineInfoErrors.machineImage) {

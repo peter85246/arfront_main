@@ -4,6 +4,26 @@ import styles from '../scss/gpt.module.scss';
 // 設定一個模擬的 fetchGPTResponse 函數
 const fetchGPTResponse = async (input) => {
   // return `這是對於問題「${input}」的模擬回應。`;
+  try {
+    const response = await fetch('http://localhost:5000/conversation', {
+      method: 'POST',
+      headers: {
+        // 'Access-Control-Request-Method' : 'POST',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ query: input })
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      return data.response;
+    } else {
+      throw new Error('Network response was not ok.');
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    return 'Failed to fetch response';
+  }
 };
 
 function ChatArea({ input, onInputChange, onSubmit, handleTerminate, handleNewChat, handleClear }) {
@@ -85,12 +105,15 @@ export default function GPT() {
   }, []);
 
   // 處理送出按鈕
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     setQuestion(input);
-    // 假設 fetchGPTResponse 是獲取回應的函數
-    fetchGPTResponse(input).then(res => {
+    try {
+      const res = await fetchGPTResponse(input);
       setResponse(res);
-    });
+    } catch (error) {
+      console.error('Error fetching response:', error);
+      setResponse('Failed to fetch response');
+    }
   };
 
   // 處理中止按鈕
@@ -109,8 +132,14 @@ export default function GPT() {
 
   // 處理 Clear 按鈕
   const handleClear = () => {
-    setResponse('');
-    console.log('Response after clear:', response);
+    // 將回應分割成段落，通常段落是通過換行符分隔
+    let paragraphs = response.split('\n');
+
+    // 移除最後一個段落
+    paragraphs.pop();
+
+    // 將其餘段落重新組合成一個新的字串
+    setResponse(paragraphs.join('\n'));
   };
 
   return (
@@ -121,20 +150,12 @@ export default function GPT() {
         <div className={styles["content-wrapper-gpt"]}>
           <div className={styles["container-gpt"]}>
             <ChatArea 
-              input={input} 
-              onInputChange={setInput} 
-              onSubmit={() => setQuestion(input)} 
-              handleTerminate={() => {
-                setIsTerminated(true);
-                setResponse('對話已中止....');
-              }}
-              handleNewChat={() => {
-                setInput('');
-                setQuestion('');
-                setResponse('');
-                setIsTerminated(false);
-              }}
-              handleClear={() => setResponse('')}
+            input={input} 
+            onInputChange={setInput} 
+            onSubmit={handleSubmit} 
+            handleTerminate={handleTerminate}
+            handleNewChat={handleNewChat}
+            handleClear={handleClear}
             />
             <GPTResponse 
               question={question} 
