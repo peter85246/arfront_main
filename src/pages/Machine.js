@@ -753,6 +753,8 @@ function Machine() {
                                                     <h3 className="mb-0"></h3>
                                                     <h4 className="mb-0">{item.machineName}</h4>
                                                     <h4 className="mb-0">{item.machineSpec}</h4>
+                                                    <h4 className="mb-0">{item.machineType}</h4>
+                                                    <h4 className="mb-0">{item.modelSeries}</h4>
                                                 </div>
                                                 <div className="card-footer">
                                                     <div className="text-muted row justify-content-center">

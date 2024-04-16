@@ -116,7 +116,7 @@ export default function Knowledge() {
     const searchInput = e.target.value?.toLowerCase();
     const filteredData = DataArray.filter((item) => {
       return (
-        item.machineCategory.toLowerCase().includes(searchInput) ||
+        item.KnowledgeBaseDeviceType.toLowerCase().includes(searchInput) ||
         item.KnowledgeBaseDeviceParts.toLowerCase().includes(searchInput) ||
         item.RepairItem.toLowerCase().includes(searchInput) ||
         item.KnowledgeBaseRepairType.toLowerCase().includes(searchInput) ||
