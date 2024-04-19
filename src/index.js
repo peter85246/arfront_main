@@ -28,6 +28,7 @@ import { RepairDocument } from "./components/RepairDocument";
 import { DocumentEditor } from "./components/DocumentEditor";
 import GPT from "./pages/GPT";
 import Assistant from "./components/Assistant";
+import Demo from "./pages/Demo";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -35,6 +36,14 @@ root.render(
     <Routes>
       <Route path="/" element={<Login />} />
       {/* <Route element={<PrivateRoute />}> */}
+      <Route
+        path="/demo"
+        element={
+          <Home>
+            <Demo />
+          </Home>
+        }
+      />
       <Route
         path="/machine"
         element={
