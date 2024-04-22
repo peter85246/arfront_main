@@ -1,3 +1,4 @@
+import React from 'react';  // 確保 React 已被導入
 import { useState, useEffect } from 'react';
 import styles from '../scss/gpt.module.scss';
 import { type } from '@testing-library/user-event/dist/type';
@@ -80,8 +81,8 @@ function LoadingIndicator() {
 }
 
 
-// 修改typeWritter函數以接受完成時的回調
-const typeWritter = (text, idx, setResponseFunc, onFinish, shouldContinue, signal, delay = 50) => {
+// 修改typeWritter函數以接受完成時的回調與段落切割
+const typeWritter = (text, idx, setResponseFunc, onFinish, shouldContinue, signal, delay = 100) => {
   if (signal.aborted || !shouldContinue) {
     // 如果收到中止信號，立即停止
     if (onFinish) onFinish();
@@ -89,37 +90,59 @@ const typeWritter = (text, idx, setResponseFunc, onFinish, shouldContinue, signa
   }
 
   if (idx < text.length) {
-    setResponseFunc(prev => prev + text.charAt(idx));
-    setTimeout(() => typeWritter(text, idx + 1, setResponseFunc, onFinish, shouldContinue, signal, delay), delay);
+    let insertBreak = false;
+    let nextIdx = idx + 1; // 預設下一個索引
+
+    // 匹配 "步驟如下：" 或 "步驟 X：" 並確保它是新段落的開頭，考慮格式可能的異常如"步 驟"
+    const sectionStartMatch = text.substring(idx).match(/^(步驟如下：|步\s*驟\s*\d+：)/);
+    if (sectionStartMatch) {
+      const sectionStart = sectionStartMatch[0];
+      if (idx !== 0 && !text.substring(0, idx).endsWith("<br /><br />")) {
+        setResponseFunc(prev => `${prev}<br /><br />${sectionStart}`);
+        insertBreak = true;
+      } else if (idx === 0) {
+        setResponseFunc(prev => `${prev}${sectionStart}`);
+      }
+      nextIdx = idx + sectionStart.length; // 更新下一個字符的索引
+    } else {
+      // 當前字符加入到暫存的回應中
+      setResponseFunc(prev => `${prev}${text[idx]}`);
+    }
+
+    // 設置超時以繼續打字效果
+    setTimeout(() => typeWritter(text, nextIdx, setResponseFunc, onFinish, shouldContinue, signal, delay), insertBreak ? 500 : delay);
   } else {
     if (onFinish) onFinish();
   }
 };
 
 
-function GPTResponse({ question, response, isTerminated, isLoading}) {
+function GPTResponse({ question, response, isTerminated, isLoading }) {
+  // 解析HTML標籤的函數
+  const createMarkup = (htmlContent) => {
+    return { __html: htmlContent };
+  };
+
+  // 使用正則表達式 split 來分割響應成段落，並移除空字符串
+  const paragraphs = response.split(/<br \/><br \/>/).filter(p => p.trim() !== '');
+
   return (
     <div className={styles["gpt-response-area"]}>
       <div className={styles["user-question"]}>
-        {/* <p>請介紹貴公司??</p> */}
         <p>{question}</p>
       </div>
       <div className={styles["gpt-response"]}>
-          {/* 德川GPT回答： */}
-        <p className={styles["gptContent"]}>
-          {response}
-          {/* 公司介紹影片[https://www.youtube.com/watch?v=GzUDqPUih5A] <br />
-          德川公司是一間專業的數控旋轉工作台製造廠，本著誠信、務實、專精及恆心的理念，不斷的研究與創新，並有嚴格之品質管制機制，以確保出廠的產品都有著高水準的品質。德川擁有多位工具機械機床設計的人員，整合分度盤與機床的搭配，讓德川的每個工作台都能發揮最大的實質效能，為世界各國各大工具機製造商所信賴。除此之外，您可以點選【德川網站
-          https://www.detron-rotary.com/tw/index.html】來查閱其他德川相關的資訊。 */}
-        </p>
-        
-        {/* 在回應容器內顯示加載指示器 */}
-        {isLoading && <LoadingIndicator />}
-        {isTerminated}
+        {paragraphs.map((paragraph, idx) => (
+          // 使用dangerouslySetInnerHTML來解析HTML標籤
+          <p key={idx} className={styles["gptContent"]} dangerouslySetInnerHTML={createMarkup(paragraph)}></p>
+        ))}
+        {isTerminated && <p className={styles["gptContent"]}>對話已中止...</p>}
+        {isLoading && !isTerminated && <LoadingIndicator />}
       </div>
     </div>
   );
 }
+
 
 export default function GPT() {
   const [input, setInput] = useState('');
@@ -135,8 +158,8 @@ export default function GPT() {
   const handleSubmit = async () => {
     setIsTerminated(false);  // 確保終止狀態被重置
     setIsLoading(true);  // 啟動載入標誌
-    setResponse('');
-    setQuestion(input);
+    setResponse(''); // 回應欄位
+    setQuestion(input); // 送出問題欄位
     setShouldContinueTyping(true);  // 允許新的輸入開始逐字顯示
     fetchController.abort();  // 終止之前的請求
     fetchController = new AbortController();  // 重新創建控制器
@@ -158,7 +181,7 @@ export default function GPT() {
     setShouldContinueTyping(false);  // 立即停止逐字顯示
     setIsTerminated(true);
     setIsLoading(false);
-    setResponse('對話已中止....');
+    setResponse('');
   };
 
   // 處理 new chat 按鈕
