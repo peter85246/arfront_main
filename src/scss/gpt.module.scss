@@ -54,31 +54,13 @@ h2 {
 .chat-input {
   width: 100%; /* 寬度與父元素一致 */
   height: 420px; /* 高度為300px */
-  margin-bottom: 10px; /* 與下一個元素的間距為10px */
   resize: none; /* 禁止調整大小 */
   border-radius: 3px;
   padding: 8px; /* 內部文本的間距（包括 placeholder） */
   box-sizing: border-box; /* 確保 padding 不會影響到總寬高 */
   overflow-y: auto; /* 添加滾動條 */
   font-size: 16px;
-}
-
-/* 下拉選單的樣式 */
-.prompt-select {
-  width: 100%; /* 寬度與父元素一致 */
-  height: 8vh; /* 高度設為45px */
-  margin-bottom: 10px; /* 與下一個元素的間距為10px */
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-/* 針對下拉選單中的選項進行樣式設定 */
-.prompt-select option {
-  height: auto; /* 設置每個選項的高度 */
-  padding: 15px 10px; /* 上下左右的內邊距 */
-  margin: 15px 10px;
-  font-size: 14px; /* 增加字體大小以提高可讀性 */
-  border-radius: 0px;
+  border: 1px solid #000000; /* 邊框樣式 */
 }
 
 /* 控制按鈕的容器樣式，將按鈕垂直排列 */
@@ -103,6 +85,7 @@ h2 {
   text-align: center; /* 文字置中 */
   border-radius: 5px;
   cursor: pointer;
+  border: solid 1px black;
 }
 
 /* 用戶問題展示區的樣式 */
@@ -112,7 +95,7 @@ h2 {
   margin-bottom: 10px; /* 與下一個元素的間距 */
   height: 8em;
   border-radius: 5px;
-  border: 2px solid #ddd; /* 邊框樣式 */
+  border: 1px solid #ddd; /* 邊框樣式 */
   overflow-y: auto; /* 超出部分顯示滾動條 */
   justify-content: space-between; /* 平均分配子元素 */
 }
@@ -125,26 +108,46 @@ h2 {
 }
 
 .user-question:hover {
-  border: 2px solid #aaaaaa; /* 邊框樣式 */
+  border: 1px solid #000000; /* 邊框樣式 */
 }
 
 /* GPT回應展示區的樣式 */
 .gpt-response {
   background-color: #cbcbcb; /* 背景色 */
-  padding: 10px; /* 內邊距 */
+  padding: 5px 15px; /* 內邊距 */
   flex: 1; /* 占滿所有可用空間 */
   overflow-y: auto; /* 超出部分顯示滾動條 */
   border-radius: 5px;
-  border: 2px solid #cbcbcb; /* 邊框樣式 */
+  border: 1px solid #cbcbcb; /* 邊框樣式 */
 }
 
 .gpt-response p {
+  padding: 0px; /* 內邊距 */
+  margin: 10px 0px;
   color: black;
   text-align: left; /* 文字對齊左側 */
+  font-size: 16px;
+}
+
+// 添加列表元素的樣式，以確保正確對齊
+.gpt-response ul {
+  list-style-position: inside;
+  padding-left: 0; // 移除預設的內邊距以保持對齊
+}
+
+.gpt-response li {
+  text-align: left; // 確保文字對齊左側
+  margin-left: 16px; // 或根據您的需求調整，以實現所需的對齊
+}
+
+// 添加標題的樣式，以使其更顯眼
+.gpt-response h1 {
+  font-size: 30px; // 或根據您的需求調整
+  font-weight: bold; // 使文字顯示為粗體
 }
 
 .gpt-response:hover {
-  border: 2px solid #aaaaaa; /* 邊框樣式 */
+  border: 1px solid #000000; /* 邊框樣式 */
 }
 
 .gptLabel {
@@ -157,3 +160,11 @@ h2 {
   font-size: 16px;
   text-align: left; /* 文字對齊左側 */
 }/*# sourceMappingURL=GPT.css.map */
+
+// 自定義 h2 標題的樣式
+.custom-header {
+  font-weight: bold; // 粗體
+  font-size: 1.5em; // 較大的字體大小
+  // 可以根據需求增加更多樣式，例如邊距、顏色等
+}
+
