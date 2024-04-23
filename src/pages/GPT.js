@@ -1,5 +1,5 @@
 import React from 'react';  // 確保 React 已被導入
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import styles from '../scss/gpt.module.scss';
 import { type } from '@testing-library/user-event/dist/type';
 import ReactMarkdown from 'react-markdown';
@@ -42,12 +42,16 @@ const fetchGPTResponse = async (input, handleNewChunk, setLoadingFalse) => {
   }
 };
 
-function ChatArea({ input, onInputChange, onSubmit, handleTerminate, handleNewChat, handleClear }) {
+function ChatArea({ input, onInputChange, onSubmit, handleTerminate, handleNewChat, handleClear, setQuestion }) {
   
   // 處理 Q&A 選項變更並提交
-  const handleSelectChange = (selectedOption) => {
+  const handleSelectChange = async (selectedOption) => {
     onInputChange(selectedOption.value); // 將選擇的 option 值設定為輸入框的值
-    onSubmit(); // 觸發按鈕提交函數
+    setQuestion(selectedOption.value); // 同時更新顯示的問題
+    
+    // 使用異步函數等待狀態更新後提交
+    await new Promise(resolve => setTimeout(resolve, 0)); // 微小的延遲確保狀態更新
+    onSubmit(selectedOption.value); // 直接傳遞選項的值進行提交
   }
 
   const options_data = [
@@ -68,14 +72,14 @@ function ChatArea({ input, onInputChange, onSubmit, handleTerminate, handleNewCh
   container: (provided) => ({
     ...provided,
     width: '100%',
-    margin: '5px 0px',
+    margin: '7px 0px',
     border: 'solid 1px black',
     borderRadius: '5px',
   }),
   control: (provided) => ({
     ...provided,
     color: 'white',
-    height: '45px',
+    height: '6vh',
     borderRadius: '5px',
     textAlignLast: 'center',
     fontSize: '16px',
@@ -109,7 +113,7 @@ function ChatArea({ input, onInputChange, onSubmit, handleTerminate, handleNewCh
         placeholder="Select the Question"
       />
       <div className={styles["chat-controls"]}>
-        <button id="send" onClick={onSubmit}>Submit</button>
+        <button id="send" onClick={() => onSubmit(input)}>Submit</button>
         <button id="cancel" onClick={handleTerminate}>Stop</button>
         <button id="new-chat" onClick={handleNewChat}>New Chat</button>
         <button id="clear" onClick={handleClear}>Clear Response</button>
@@ -159,6 +163,15 @@ const typeWritter = (text, idx, setResponseFunc, onFinish, shouldContinue, signa
 };
 
 function GPTResponse({ question, response, isTerminated, isLoading }) {
+  const responseEndRef = useRef(null); // 創建一個 ref
+
+  // 每次 response 更新時，自動滾動到底部
+  useEffect(() => {
+    if (responseEndRef.current) {
+        responseEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [response]); // 依賴於 response 的更新
+
   // 定義一個自定義渲染方法
   const renderers = {
     // 當解析到 h2 標籤時，使用以下元素和樣式
@@ -204,6 +217,8 @@ function GPTResponse({ question, response, isTerminated, isLoading }) {
         />
         {isTerminated && <p className={styles["gptContent"]}>對話已中止...</p>}
         {isLoading && !isTerminated && <LoadingIndicator />}
+        {/* 空 div 作為滾動定位元素 */}
+        <div ref={responseEndRef} /> 
       </div>
     </div>
   );
@@ -228,14 +243,14 @@ export default function GPT() {
   }, []);
 
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (inputValue) => {
     setIsLoading(true);
     setError(null);
-    setQuestion(input);
+    setQuestion(inputValue); // 配合setQuestion選取option_data功能，修改直接設定問題為傳入的值
     let fullText = '';
 
     try {
-      await fetchGPTResponse(input, (chunk) => {
+      await fetchGPTResponse(inputValue, (chunk) => {
         fullText += chunk; // 累積數據
         setResponse(fullText); // 更新響應
       }, () => setIsLoading(false));
@@ -287,6 +302,7 @@ export default function GPT() {
             handleTerminate={handleTerminate}
             handleNewChat={handleNewChat}
             handleClear={handleClear}
+            setQuestion={setQuestion}  // 傳遞 setQuestion 給 ChatArea
             />
             <GPTResponse 
               question={question} 
