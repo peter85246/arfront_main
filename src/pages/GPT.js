@@ -43,16 +43,31 @@ const fetchGPTResponse = async (input, signal, handleNewChunk, setLoadingFalse) 
   }
 };
 
-function ChatArea({ input, onInputChange, onSubmit, handleTerminate, handleNewChat, handleClear, setQuestion }) {
+function ChatArea({ input, onInputChange, onSubmit, handleNewChat, handleClear, setQuestion, setResponse, setIsLoading }) {
+  const [selectedOption, setSelectedOption] = useState(null); // 新增狀態來追蹤Option選中的選項
   
   // 處理 Q&A 選項變更並提交
   const handleSelectChange = async (selectedOption) => {
-    onInputChange(selectedOption.value); // 將選擇的 option 值設定為輸入框的值
-    setQuestion(selectedOption.value); // 同時更新顯示的問題
+    setSelectedOption(selectedOption); // 更新選中的選項
+    setResponse('');  // 重置回應內容
+    setIsLoading(true);  // 保留加載狀態
+    onInputChange(selectedOption.value); // 更新輸入值
+    setQuestion(selectedOption.value); // 更新問題顯示
     
     // 使用異步函數等待狀態更新後提交
     await new Promise(resolve => setTimeout(resolve, 0)); // 微小的延遲確保狀態更新
     onSubmit(selectedOption.value); // 直接傳遞選項的值進行提交
+  }
+
+  // 新增重置Option選項的處理
+  const resetSelect = () => {
+    setSelectedOption(null); // 重置選中的選項
+  }
+
+  // 修改 handleNewChat 的定義以包含重置 Select
+  const modifiedHandleNewChat = () => {
+    handleNewChat();
+    resetSelect();
   }
 
   const options_data = [
@@ -109,14 +124,14 @@ function ChatArea({ input, onInputChange, onSubmit, handleTerminate, handleNewCh
       <Select
         id="prompt-select"
         styles={customStyles}
+        value={selectedOption}
         options={options_data}
         onChange={handleSelectChange} // 為選單添加 onChange 事件處理器
         placeholder="Select the Question"
       />
       <div className={styles["chat-controls"]}>
         <button id="send" onClick={() => onSubmit(input)}>Submit</button>
-        <button id="cancel" onClick={handleTerminate}>Stop</button>
-        <button id="new-chat" onClick={handleNewChat}>New Chat</button>
+        <button id="new-chat" onClick={modifiedHandleNewChat}>New Chat</button>
         <button id="clear" onClick={handleClear}>Clear Response</button>
       </div>
     </div>
@@ -217,8 +232,8 @@ function GPTResponse({ question, response, isTerminated, isLoading }) {
           rehypePlugins={[rehypeRaw]}
           components={renderers}  // 使用自定義渲染器來顯示Markdown內容
         />
-        {isTerminated && <p className={styles["gptContent"]}>對話已中止...</p>}
-        {isLoading && !isTerminated && <LoadingIndicator />}
+        {!isLoading && isTerminated && <p className={styles["gptContent"]}>對話已中止...</p>}
+        {isLoading && <LoadingIndicator />}
         {/* 空 div 作為滾動定位元素 */}
         <div ref={responseEndRef} /> 
       </div>
@@ -233,9 +248,7 @@ export default function GPT() {
   const [response, setResponse] = useState('');
   const [isTerminated, setIsTerminated] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [shouldContinueTyping, setShouldContinueTyping] = useState(true); // 控制button中止response回應顯示
   const [error, setError] = useState(null);
-
   const [fetchController, setFetchController] = useState(new AbortController());// 創建一個全局控制器
 
   useEffect(() => {
@@ -262,7 +275,6 @@ export default function GPT() {
         fullText += chunk; // 累積數據
         setResponse(fullText); // 更新響應
       }, () => setIsLoading(false));
-      setIsLoading(false);
     } catch (error) {
       if (error.name !== 'AbortError') {
         setError('Failed to fetch response');
@@ -272,16 +284,12 @@ export default function GPT() {
   };
   
 
-  // 處理中止按鈕
-  const handleTerminate = () => {
-    fetchController.abort();  // 中止fetch請求
-    setIsTerminated(true);    // 標記為已終止
-    setIsLoading(false);      // 停止加載狀態
-  };
-
   // 處理 new chat 按鈕
   const handleNewChat = () => {
     fetchController.abort();  // 確保中止現有操作
+    const newController = new AbortController(); // 創建一個新的控制器
+    setFetchController(newController); // 更新控制器狀態
+
     setInput('');             // 清空輸入
     setQuestion('');          // 清空問題
     setResponse('');          // 清空回應
@@ -294,6 +302,7 @@ export default function GPT() {
     fetchController.abort();  // 確保中止現有操作
     setResponse('');          // 清空回應
     setIsTerminated(false);   // 重置終止狀態
+    setIsLoading(false);      // 停止加载动画
   };
 
   return (
@@ -307,10 +316,11 @@ export default function GPT() {
             input={input} 
             onInputChange={setInput} 
             onSubmit={handleSubmit} 
-            handleTerminate={handleTerminate}
             handleNewChat={handleNewChat}
             handleClear={handleClear}
             setQuestion={setQuestion}  // 傳遞 setQuestion 給 ChatArea
+            setResponse={setResponse}  // 傳遞 setResponse
+            setIsLoading={setIsLoading}  // 傳遞 setIsLoading
             />
             <GPTResponse 
               question={question} 
