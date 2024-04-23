@@ -10,14 +10,15 @@ import Select from 'react-select';
 import { Background } from 'reactflow';
 
 // 設定一個模擬的 fetchGPTResponse 函數
-const fetchGPTResponse = async (input, handleNewChunk, setLoadingFalse) => {
+const fetchGPTResponse = async (input, signal, handleNewChunk, setLoadingFalse) => {
   try {
     const response = await fetch('http://localhost:5000/conversation', {
       method: 'POST',
       headers: {
           'Content-Type':'application/json',
       },
-      body: JSON.stringify({ query: input })
+      body: JSON.stringify({ query: input }),
+      signal: signal
     });
 
     if (response.ok) {
@@ -207,7 +208,8 @@ function GPTResponse({ question, response, isTerminated, isLoading }) {
   return (
     <div className={styles["gpt-response-area"]}>
       <div className={styles["user-question"]}>
-        <p>{question}</p>
+        {/* 只有當 question 非空時顯示 "發問：" */}
+        {question && <p>發問：{question}</p>}
       </div>
       <div className={styles["gpt-response"]}>
         <ReactMarkdown 
@@ -234,7 +236,7 @@ export default function GPT() {
   const [shouldContinueTyping, setShouldContinueTyping] = useState(true); // 控制button中止response回應顯示
   const [error, setError] = useState(null);
 
-  let fetchController = new AbortController();  // 創建一個全局控制器
+  const [fetchController, setFetchController] = useState(new AbortController());// 創建一個全局控制器
 
   useEffect(() => {
     return () => {
@@ -247,16 +249,24 @@ export default function GPT() {
     setIsLoading(true);
     setError(null);
     setQuestion(inputValue); // 配合setQuestion選取option_data功能，修改直接設定問題為傳入的值
+
+    // 中止之前的請求並創建一個新的控制器
+    fetchController.abort();
+    const newController = new AbortController(); // 創建一個新的控制器
+    setFetchController(newController);  // 更新控制器狀態
+
     let fullText = '';
 
     try {
-      await fetchGPTResponse(inputValue, (chunk) => {
+      await fetchGPTResponse(inputValue, newController.signal, (chunk) => {
         fullText += chunk; // 累積數據
         setResponse(fullText); // 更新響應
       }, () => setIsLoading(false));
       setIsLoading(false);
     } catch (error) {
-      setError('Failed to fetch response');
+      if (error.name !== 'AbortError') {
+        setError('Failed to fetch response');
+      }
       setIsLoading(false);
     }
   };
@@ -265,27 +275,25 @@ export default function GPT() {
   // 處理中止按鈕
   const handleTerminate = () => {
     fetchController.abort();  // 中止fetch請求
-    setShouldContinueTyping(false);  // 立即停止逐字顯示
-    setIsTerminated(true);
-    setIsLoading(false);
-    setResponse('');
+    setIsTerminated(true);    // 標記為已終止
+    setIsLoading(false);      // 停止加載狀態
   };
 
   // 處理 new chat 按鈕
   const handleNewChat = () => {
     fetchController.abort();  // 確保中止現有操作
-    setShouldContinueTyping(false);
-    setInput('');
-    setQuestion('');
-    setResponse('');
-    setIsTerminated(false);
-    setIsLoading(false);
+    setInput('');             // 清空輸入
+    setQuestion('');          // 清空問題
+    setResponse('');          // 清空回應
+    setIsTerminated(false);   // 重置終止狀態
+    setIsLoading(false);      // 停止加載動畫
   };
 
   // 處理 Clear 按鈕
   const handleClear = () => {
     fetchController.abort();  // 確保中止現有操作
-    setResponse('');
+    setResponse('');          // 清空回應
+    setIsTerminated(false);   // 重置終止狀態
   };
 
   return (
