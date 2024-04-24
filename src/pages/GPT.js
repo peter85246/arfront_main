@@ -1,16 +1,11 @@
 import React from 'react';  // 確保 React 已被導入
 import { useState, useEffect, useRef } from 'react';
 import styles from '../scss/gpt.module.scss';
-import { type } from '@testing-library/user-event/dist/type';
-import ReactMarkdown from 'react-markdown';
-import rehypeRaw from 'rehype-raw';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { dark } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import Select from 'react-select';
-import { Background } from 'reactflow';
+import ChatArea from '../components/GPT/ChatArea';
+import GPTResponse from '../components/GPT/GPTResponse';
 
 // 設定一個模擬的 fetchGPTResponse 函數
-const fetchGPTResponse = async (input, signal, handleNewChunk, setLoadingFalse) => {
+const fetchGPTResponse = async (input, signal, handleNewChunk, setLoadingFalse, setResponse, setIsLoading) => {
   try {
     const response = await fetch('http://localhost:5000/conversation', {
       method: 'POST',
@@ -24,16 +19,19 @@ const fetchGPTResponse = async (input, signal, handleNewChunk, setLoadingFalse) 
     if (response.ok) {
       const reader = response.body.getReader(); // 確保 reader 在此定義
       let isFirstChunk = true; // 用來檢查是否為第一塊資料
+      let fullText = ''; // 累積完整文本，解決閃出文字問題
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
         const chunk = new TextDecoder().decode(value);
+        fullText += chunk; // 累加文本
         handleNewChunk(chunk);  // 逐塊處理數據
         if (isFirstChunk && setLoadingFalse) {
           setLoadingFalse();
           isFirstChunk = false; // 確保加載指示器隱藏邏輯只執行一次
         }
       }
+      typeWritter(fullText, 0, setResponse, () => setIsLoading(false), true, signal, 100, 500); // 一次性呼叫逐字顯示
     } else {
       throw new Error('Network response was not ok.');
     }
@@ -43,210 +41,50 @@ const fetchGPTResponse = async (input, signal, handleNewChunk, setLoadingFalse) 
   }
 };
 
-function ChatArea({ input, onInputChange, onSubmit, handleNewChat, handleClear, setQuestion, setResponse, setIsLoading }) {
-  const [selectedOption, setSelectedOption] = useState(null); // 新增狀態來追蹤Option選中的選項
-  
-  // 處理 Q&A 選項變更並提交
-  const handleSelectChange = async (selectedOption) => {
-    setSelectedOption(selectedOption); // 更新選中的選項
-    setResponse('');  // 重置回應內容
-    setIsLoading(true);  // 保留加載狀態
-    onInputChange(selectedOption.value); // 更新輸入值
-    setQuestion(selectedOption.value); // 更新問題顯示
-    
-    // 使用異步函數等待狀態更新後提交
-    await new Promise(resolve => setTimeout(resolve, 0)); // 微小的延遲確保狀態更新
-    onSubmit(selectedOption.value); // 直接傳遞選項的值進行提交
-  }
-
-  // 新增重置Option選項的處理
-  const resetSelect = () => {
-    setSelectedOption(null); // 重置選中的選項
-  }
-
-  // 修改 handleNewChat 的定義以包含重置 Select
-  const modifiedHandleNewChat = () => {
-    handleNewChat();
-    resetSelect();
-  }
-
-  const options_data = [
-    { value: '德川公司介紹', label: '德川公司介紹' },
-    { value: '德川公司獲獎報導', label: '德川公司獲獎報導' },
-    { value: '德川公司今年參展計畫', label: '德川公司今年參展計畫' },
-    { value: '德川公司聯絡資訊', label: '德川公司聯絡資訊' },
-    { value: 'GXA-S背隙調整', label: 'GXA-S背隙調整' },
-    { value: '電磁閥檢查及更換', label: '電磁閥檢查及更換' },
-    { value: '油壓缸檢查更換', label: '油壓缸檢查更換' },
-    { value: '壓力開關(IFM宜福門)調整及使用', label: '壓力開關(IFM宜福門)調整及使用' },
-    { value: 'GXA-H安裝煞車環', label: 'GXA-H安裝煞車環' },
-    { value: 'GXA-S潤滑油更換', label: 'GXA-S潤滑油更換' },
-    { value: '更換氣壓缸', label: '更換氣壓缸' }
-  ];
-
-  const customStyles = {
-  container: (provided) => ({
-    ...provided,
-    width: '100%',
-    margin: '7px 0px',
-    border: 'solid 1px black',
-    borderRadius: '5px',
-  }),
-  control: (provided) => ({
-    ...provided,
-    color: 'white',
-    height: '6vh',
-    borderRadius: '5px',
-    textAlignLast: 'center',
-    fontSize: '16px',
-    cursor: 'pointer',
-    overflowY: 'auto',
-  }),
-  option: (provided, state) => ({
-    ...provided,
-    fontSize: '16px',
-    padding: '8px',
-    borderRadius: '0',
-    cursor: 'pointer',
-  }),
-};
-  
-  return (
-    <div className={styles["chat-area"]}>
-      <textarea
-        id="chat-input"
-        className={styles["chat-input"]}
-        placeholder="請輸入資訊"
-        // defaultValue="請介紹貴公司??"
-        value={input}
-        onChange={e => onInputChange(e.target.value)}
-      />
-      <Select
-        id="prompt-select"
-        styles={customStyles}
-        value={selectedOption}
-        options={options_data}
-        onChange={handleSelectChange} // 為選單添加 onChange 事件處理器
-        placeholder="Select the Question"
-      />
-      <div className={styles["chat-controls"]}>
-        <button id="send" onClick={() => onSubmit(input)}>Submit</button>
-        <button id="new-chat" onClick={modifiedHandleNewChat}>New Chat</button>
-        <button id="clear" onClick={handleClear}>Clear Response</button>
-      </div>
-    </div>
-  );
-}
-
-function LoadingIndicator() {
-  const [dots, setDots] = useState('...');
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setDots(dots => dots.length < 6 ? dots + '.' : '...');
-    }, 500);
-    return () => clearInterval(timer);
-  }, []);
-
-  return <div className={styles["loading-indicator"]}>Loading{dots}</div>;
-}
-
+// defaultDelay：用於控制每個文字之間的延遲時間。
+// initialDelay：用於控制開始顯示文字之前的等待時間。
+// delay：用於控制特定情況下的額外延遲，例如在特定段落開頭或特定事件觸發時增加延遲，以提供更好的閱讀體驗。
 
 // 修改typeWritter函數以接受完成時的回調與段落切割
-const typeWritter = (text, idx, setResponseFunc, onFinish, shouldContinue, signal, delay = 100) => {
-  if (signal.aborted || !shouldContinue) {
-    // 如果收到中止信號，立即停止
-    if (onFinish) onFinish();
-    return;
-  }
-
-  if (idx < text.length) {
-    let nextIdx = idx + 1; // 預設下一個索引
-
-    // 匹配 "步驟如下：" 或 "步驟 X：" 並確保它是新段落的開頭，考慮格式可能的異常如"步 驟"
-    const sectionStartMatch = text.substring(idx).match(/^(步驟如下：|步\s*驟\s*\d+：)/);
-    if (sectionStartMatch) {
-      const sectionStart = sectionStartMatch[0].replace(/：/, ' ： '); // 增加"："的左右間距
-      nextIdx = idx + sectionStart.length;
-      delay = 500; // 給新段落增加延時
-    } else {
-      setResponseFunc(prev => `${prev}${text[idx]}`);
+const typeWritter = (text, idx, setResponseFunc, setIsLoading, onFinish, shouldContinue, signal, defaultDelay = 500, initialDelay = 800) => {
+  const startTyping = () => {
+    if (signal.aborted || !shouldContinue) {
+      // 如果收到中止信號或不應繼續，立即停止
+      if (onFinish) onFinish();
+      return;
     }
 
-    setTimeout(() => typeWritter(text, nextIdx, setResponseFunc, onFinish, shouldContinue, signal, delay), delay);
-  } else {
-    if (onFinish) onFinish();
-  }
-};
+    const typeNextCharacter = (currentIdx) => {
+      if (currentIdx < text.length) {
+        let nextIdx = currentIdx + 1; // 預設下一個索引
+        let delay = defaultDelay;  // 使用新的局部變量延遲，確保每次使用的都是預設延遲
 
-function GPTResponse({ question, response, isTerminated, isLoading }) {
-  const responseEndRef = useRef(null); // 創建一個 ref
+        // 檢查是否為特定段落開頭，如"步驟如下："或"步驟 X："
+        const sectionStartMatch = text.substring(currentIdx).match(/^(步驟如下：|步\s*驟\s*\d+：)/);
+        if (sectionStartMatch) {
+          const sectionStart = sectionStartMatch[0].replace(/：/, ' ： '); // 增加"："的左右間距
+          nextIdx = currentIdx + sectionStart.length; // 更新索引跳過整個匹配字串
+          delay = 500;  // 增加延時
+          }
 
-  // 每次 response 更新時，自動滾動到底部
-  useEffect(() => {
-    if (responseEndRef.current) {
-        responseEndRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, [response]); // 依賴於 response 的更新
+        setResponseFunc(prev => `${prev}${text[currentIdx]}`);  // 移動到條件外以確保每次迭代都執行
+        setTimeout(() => typeNextCharacter(nextIdx), delay);  // 使用更新後的延遲和索引
+      } else {
+        if (onFinish) onFinish();
+      }
+    };
 
-  // 定義一個自定義渲染方法
-  const renderers = {
-    // 當解析到 h2 標籤時，使用以下元素和樣式
-    h2: ({node, ...props}) => (
-      <h2 className={styles['custom-header']} {...props} />
-    ),
-
-    // 自定義 img 標籤渲染
-    img: ({ node, ...props }) => {
-      // 根據您的後端設置，這裡可能需要修改路徑
-      const imageUrl = `http://localhost:5000/${props.src}`;
-      return <img {...props} src={imageUrl} alt={props.alt || ''} style={{ maxWidth: '100%' }} />
-    },
-    
-    // 其他自定義渲染器...
-    code({node, inline, className, children, ...props}) {
-      const match = /language-(\w+)/.exec(className || '');
-      return !inline && match ? (
-        <SyntaxHighlighter
-          style={dark}
-          language={match[1]}
-          PreTag="div"
-          {...props}
-        >{String(children).replace(/\n$/, '')}</SyntaxHighlighter>
-      ) : (
-        <code className={className} {...props}>
-          {children}
-        </code>
-      );
-    }
+    setTimeout(startTyping, initialDelay);
   };
 
-  return (
-    <div className={styles["gpt-response-area"]}>
-      <div className={styles["user-question"]}>
-        {/* 只有當 question 非空時顯示 "發問：" */}
-        {question && <p>發問：{question}</p>}
-      </div>
-      <div className={styles["gpt-response"]}>
-        <ReactMarkdown 
-          children={response}
-          rehypePlugins={[rehypeRaw]}
-          components={renderers}  // 使用自定義渲染器來顯示Markdown內容
-        />
-        {!isLoading && isTerminated && <p className={styles["gptContent"]}>對話已中止...</p>}
-        {isLoading && <LoadingIndicator />}
-        {/* 空 div 作為滾動定位元素 */}
-        <div ref={responseEndRef} /> 
-      </div>
-    </div>
-  );
-}
+  startTyping();  // 開始打字
+};
 
 
-export default function GPT() {
+export default function GPT({ options_data }) {
   const [input, setInput] = useState('');
   const [question, setQuestion] = useState('');
   const [response, setResponse] = useState('');
-  const [isTerminated, setIsTerminated] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [fetchController, setFetchController] = useState(new AbortController());// 創建一個全局控制器
@@ -268,13 +106,15 @@ export default function GPT() {
     const newController = new AbortController(); // 創建一個新的控制器
     setFetchController(newController);  // 更新控制器狀態
 
-    let fullText = '';
-
     try {
+      let fullText = '';
       await fetchGPTResponse(inputValue, newController.signal, (chunk) => {
         fullText += chunk; // 累積數據
         setResponse(fullText); // 更新響應
-      }, () => setIsLoading(false));
+      }, () => {
+        setIsLoading(false);
+        typeWritter(fullText, 0, setResponse, () => setIsLoading(false), true, newController.signal, 100, 500);
+      });
     } catch (error) {
       if (error.name !== 'AbortError') {
         setError('Failed to fetch response');
@@ -293,7 +133,6 @@ export default function GPT() {
     setInput('');             // 清空輸入
     setQuestion('');          // 清空問題
     setResponse('');          // 清空回應
-    setIsTerminated(false);   // 重置終止狀態
     setIsLoading(false);      // 停止加載動畫
   };
 
@@ -301,7 +140,6 @@ export default function GPT() {
   const handleClear = () => {
     fetchController.abort();  // 確保中止現有操作
     setResponse('');          // 清空回應
-    setIsTerminated(false);   // 重置終止狀態
     setIsLoading(false);      // 停止加载动画
   };
 
@@ -321,11 +159,11 @@ export default function GPT() {
             setQuestion={setQuestion}  // 傳遞 setQuestion 給 ChatArea
             setResponse={setResponse}  // 傳遞 setResponse
             setIsLoading={setIsLoading}  // 傳遞 setIsLoading
+            options_data={options_data}
             />
             <GPTResponse 
               question={question} 
               response={response} 
-              isTerminated={isTerminated} 
               isLoading={isLoading}
               error={error}
             />
