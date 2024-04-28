@@ -4,8 +4,34 @@ import rehypeRaw from 'rehype-raw';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { dark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import styles from '../../scss/gpt.module.scss';
+import GPTImageParser from './GPTImageParser';
 
-const GPTResponse = ({ question, response, isLoading }) => {
+// 步驟組件，用於將文本和圖片包裝在一起
+// const Step = ({ text, imagePath }) => {
+//   return (
+//     <div className={styles.step}>
+//       <ReactMarkdown children={text} rehypePlugins={[rehypeRaw]} />
+//       {imagePath && (
+//         <img
+//           src={`/detron_images/${imagePath}`}
+//           alt={imagePath}
+//           className={styles.image}
+//         />
+//       )}
+//     </div>
+//   );
+// };
+
+// 現在 Step 組件只需要處理文本，圖片由外部渲染
+const Step = ({ children }) => {
+  return (
+    <div className={styles.step}>
+      <ReactMarkdown children={children} rehypePlugins={[rehypeRaw]} />
+    </div>
+  );
+};
+
+const GPTResponse = ({ question, response, isLoading, error }) => {
     const responseEndRef = useRef(null);
 
     // 每次 response 更新時，自動滾動到底部
@@ -15,6 +41,7 @@ const GPTResponse = ({ question, response, isLoading }) => {
       }
     }, [response]); // 依賴於 response 的更新
 
+    // Loading... 過場動畫
     function LoadingIndicator() {
         const [dots, setDots] = useState('...');
         useEffect(() => {
@@ -29,33 +56,35 @@ const GPTResponse = ({ question, response, isLoading }) => {
   
     // 定義一個自定義渲染方法
     const renderers = {
-      // 當解析到 h2 標籤時，使用以下元素和樣式
-      h2: ({node, ...props}) => (
-        <h2 className={styles['custom-header']} {...props} />
-      ),
+      // 添加圖片解析器，自動挑選detron_images檔案內的png圖檔渲染
+      // image: ({ src, alt }) => <GPTImageParser inputText={response} />,
+
+      text: ({ node }) => {
+        const elements = [];
+        const regex = /\{(.*?)\.png\}/g;
+        let lastIndex = 0;
+        let match;
+        
+        while ((match = regex.exec(node.value))) {
+          const text = node.value.substring(lastIndex, match.index).trim();
+          const imagePath = match[1].trim();
+          // 首先將文本添加到元素中
+          if (text) {
+            elements.push(<ReactMarkdown key={`text-${lastIndex}`} children={text} rehypePlugins={[rehypeRaw]} />);
+          }
+          // 然後使用GPTImageParser組件來顯示圖片
+          elements.push(<GPTImageParser key={`image-${match.index}`} inputText={imagePath} />);
+          lastIndex = regex.lastIndex;
+        }
+        
+        if (lastIndex < node.value.length) {
+          elements.push(<ReactMarkdown key={`text-last`} children={node.value.substring(lastIndex)} rehypePlugins={[rehypeRaw]} />);
+        }
   
-      // // 當解析到文本包含特定格式時，解析並顯示圖片
-      // p: ({node, ...props}) => {
-      //   const content = props.children[0];
-      //   if (typeof content === 'string') {
-      //     const parts = content.split(/(\{[\w\s-]+\.png\})/);
-      //     return (
-      //       <p>
-      //         {parts.map((part, index) => {
-      //           const match = part.match(/\{([\w\s-]+\.png)\}/);
-      //           if (match) {
-      //             const imageUrl = `http://localhost:5000/images/${match[1]}`;
-      //             return <img key={index} src={imageUrl} alt={match[1]} style={{ maxWidth: '100%' }} />;
-      //           }
-      //           return part;
-      //         })}
-      //       </p>
-      //     );
-      //   }
-      //   return <p>{content}</p>;
-      // },
-      
-      // 其他自定義渲染器...
+        return <>{elements}</>;
+      },
+
+      // Markdown文字渲染器...
       code({node, inline, className, children, ...props}) {
         const match = /language-(\w+)/.exec(className || '');
         return !inline && match ? (
@@ -81,17 +110,21 @@ const GPTResponse = ({ question, response, isLoading }) => {
         </div>
         <div className={styles["gpt-response"]}>
           <ReactMarkdown 
-            children={response}
+            children={response} // 確保 response 變量為包含要渲染的Markdown內容
             rehypePlugins={[rehypeRaw]}
             components={renderers}  // 使用自定義渲染器來顯示Markdown內容
           />
           {!isLoading && <p className={styles["gptContent"]}></p>}
           {isLoading && <LoadingIndicator />}
+
+          {/* 圖片png檔案前端渲染器組件 */}
+          <GPTImageParser inputText={response} /> 
+          
           {/* 空 div 作為滾動定位元素 */}
           <div ref={responseEndRef} /> 
         </div>
       </div>
     );
-}
+  };
 
-export default GPTResponse
+export default GPTResponse;

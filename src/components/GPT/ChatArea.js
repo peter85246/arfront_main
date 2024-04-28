@@ -35,12 +35,12 @@ const ChatArea = ({ input, onInputChange, onSubmit, handleNewChat, handleClear, 
       { value: '德川公司今年參展計畫', label: '德川公司今年參展計畫' },
       { value: '德川公司聯絡資訊', label: '德川公司聯絡資訊' },
       { value: 'GXA-S背隙調整', label: 'GXA-S背隙調整' },
-      { value: '電磁閥檢查及更換', label: '電磁閥檢查及更換' },
       { value: '油壓缸檢查更換', label: '油壓缸檢查更換' },
       { value: '壓力開關(IFM宜福門)調整及使用', label: '壓力開關(IFM宜福門)調整及使用' },
       { value: 'GXA-H安裝煞車環', label: 'GXA-H安裝煞車環' },
-      { value: 'GXA-S潤滑油更換', label: 'GXA-S潤滑油更換' },
-      { value: '更換氣壓缸', label: '更換氣壓缸' }
+      { value: '更換氣壓缸', label: '更換氣壓缸' },
+      { value: '電磁閥檢查及更換', label: '電磁閥檢查及更換' }, //bug閃文字
+      { value: 'GXA-S潤滑油更換', label: 'GXA-S潤滑油更換' }
     ];
   
     const customStyles = {
