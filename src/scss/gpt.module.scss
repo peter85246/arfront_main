@@ -48,6 +48,7 @@ h2 {
   display: flex;
   flex-direction: column; /* 子元素垂直排列 */
   height: calc(78vh - 30px); /* 計算整體高度，減去上下外邊距 */
+  overflow-y: auto; /* 允許垂直方向上的滾動 */
 }
 
 /* 聊天輸入框的樣式 */
@@ -94,7 +95,7 @@ h2 {
   background-color: #e7e7e7; /* 背景色 */
   padding: 2px 10px; /* 內邊距 */
   margin-bottom: 10px; /* 與下一個元素的間距 */
-  height: 8em;
+  height: 6em;
   border-radius: 5px;
   border: 1px solid #ddd; /* 邊框樣式 */
   overflow-y: auto; /* 超出部分顯示滾動條 */
@@ -167,5 +168,14 @@ h2 {
   font-weight: bold; // 粗體
   font-size: 1.5em; // 較大的字體大小
   // 可以根據需求增加更多樣式，例如邊距、顏色等
+}
+
+.image {
+  width: 40%; /* 讓圖片寬度填滿容器，並保持原始比例 */
+  max-width: 100%; /* 防止圖片超過其原始尺寸 */
+  height: 30vh; /* 高度自動調整以保持圖片比例 */
+  border-radius: 10px;
+  border: 1px solid grey;
+  margin: 0px 5px 5px 5px;
 }
 

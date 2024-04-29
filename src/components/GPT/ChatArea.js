@@ -10,12 +10,17 @@ const ChatArea = ({ input, onInputChange, onSubmit, handleNewChat, handleClear, 
       setSelectedOption(selectedOption); // 更新選中的選項
       setResponse('');  // 重置回應內容
       setIsLoading(true);  // 保留加載狀態
-      onInputChange(selectedOption.value); // 更新輸入值
-      setQuestion(selectedOption.value); // 更新問題顯示
+
+      // 更新顯示在user-question中的文字（只顯示選擇的選項label）
+      setQuestion(selectedOption.label); // 更新問題顯示為選項的label
+      
+      // 將完整訊息傳送給後台，包含"並加上圖片說明"
+      const messageWithImage = `${selectedOption.value}並加上圖片說明`;
+      onInputChange(selectedOption.label); // 更新輸入值為選項的label
       
       // 使用異步函數等待狀態更新後提交
       await new Promise(resolve => setTimeout(resolve, 0)); // 微小的延遲確保狀態更新
-      onSubmit(selectedOption.value); // 直接傳遞選項的值進行提交
+      onSubmit(messageWithImage); // 直接傳遞選項的值進行提交
     }
   
     // 新增重置Option選項的處理

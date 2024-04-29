@@ -88,6 +88,7 @@ export default function GPT({ options_data }) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [fetchController, setFetchController] = useState(new AbortController());// 創建一個全局控制器
+  const [imagePath, setImagePath] = useState(''); // 定義狀態和更新函數
 
   useEffect(() => {
     return () => {
@@ -113,7 +114,7 @@ export default function GPT({ options_data }) {
         setResponse(fullText); // 更新響應
       }, () => {
         setIsLoading(false);
-        typeWritter(fullText, 0, setResponse, () => setIsLoading(false), true, newController.signal, 100, 500);
+        // typeWritter(fullText, 0, setResponse, () => setIsLoading(false), true, newController.signal, 100, 500);
       });
     } catch (error) {
       if (error.name !== 'AbortError') {
@@ -122,7 +123,6 @@ export default function GPT({ options_data }) {
       setIsLoading(false);
     }
   };
-  
 
   // 處理 new chat 按鈕
   const handleNewChat = () => {
@@ -161,9 +161,9 @@ export default function GPT({ options_data }) {
             setIsLoading={setIsLoading}  // 傳遞 setIsLoading
             options_data={options_data}
             />
-            <GPTResponse 
+            <GPTResponse
               question={question} 
-              response={response} 
+              inputText={response} // 傳遞回應文本給 GPTImageParser
               isLoading={isLoading}
               error={error}
             />
