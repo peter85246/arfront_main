@@ -1,16 +1,13 @@
-
 import classNames from "classnames";
 import styles from "../scss/global.module.scss";
 import { Link } from "react-router-dom";
 
-import React, { useRef, useState } from 'react';
-import { useReactToPrint } from 'react-to-print';
-import { jsPDF } from 'jspdf';
-import PdfContent from './PDFContent';
-
+import React, { useRef, useState } from "react";
+import { useReactToPrint } from "react-to-print";
+import { jsPDF } from "jspdf";
+import PdfContent from "./PDFContent";
 
 export function RepairDocument() {
-
   const pdfRef = React.useRef();
   const [isPrinting, setIsPrinting] = useState(false);
 
@@ -29,13 +26,13 @@ export function RepairDocument() {
     const pdf = new jsPDF();
     pdf.html(pdfRef.current, {
       callback: function (doc) {
-          doc.save('德川維修手冊.pdf');
+        doc.save("德川維修手冊.pdf");
       },
       // Adjust these options as needed to improve formatting
       x: 10,
       y: 10,
       width: 180,
-  });
+    });
   };
 
   return (

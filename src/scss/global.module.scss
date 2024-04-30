@@ -720,7 +720,7 @@ table th {
 }
 
 .red-star::before {
-  content: '★'; /* 使用星星符號 */
+  content: "★"; /* 使用星星符號 */
   position: absolute;
   left: -12px;
   top: 2px;
@@ -935,12 +935,14 @@ table th {
   font-size: 14px;
   color: #4b4b4b;
   cursor: pointer; /* 添加鼠标指针样式 */
-  transition: background-color 0.3s, border 0.3s; /* 添加过渡效果 */
+  transition:
+    background-color 0.3s,
+    border 0.3s; /* 添加过渡效果 */
 }
 
 .showMachine {
   display: flex;
-  justify-content:center; /* 將子元素對齊到右邊 */
+  justify-content: center; /* 將子元素對齊到右邊 */
   /* 確保容器滿寬度展開 */
   width: 100%;
 }
@@ -1598,7 +1600,7 @@ img {
 
 /* 垂直分隔線 */
 .content-section:not(:last-child)::after {
-  content: '';
+  content: "";
   border-right: 1px solid #000;
   position: absolute;
   top: 0;
@@ -1848,7 +1850,9 @@ img {
   border-radius: 5px;
   font-weight: bold;
   cursor: pointer;
-  transition: background-color 0.3s, width 0.3s ease-in-out;
+  transition:
+    background-color 0.3s,
+    width 0.3s ease-in-out;
   background-color: white;
   color: #266df7;
   border: 2px solid #266df7;
@@ -2274,7 +2278,7 @@ img {
 .content-box-right-alarm {
   position: relative; /* 使框框具有相對定位 */
   padding: 10px;
-  margin:0px 2em 0px 3em;
+  margin: 0px 2em 0px 3em;
   width: 100%;
   border: 1px solid #b7bfcf;
   border-radius: 15px;
@@ -2515,7 +2519,9 @@ img {
 .menu-item-alarm .content-alarm .final-item:hover .dot {
   background-color: #252525;
   border-color: #252525;
-  transition: background-color 0.3s, border-color 0.3s;
+  transition:
+    background-color 0.3s,
+    border-color 0.3s;
 }
 
 /* 定义被点击的final-item的active类样式 */
@@ -2576,7 +2582,9 @@ img {
   font-size: 14px;
   color: #4b4b4b;
   cursor: pointer; /* 添加鼠标指针样式 */
-  transition: background-color 0.3s, border 0.3s; /* 添加过渡效果 */
+  transition:
+    background-color 0.3s,
+    border 0.3s; /* 添加过渡效果 */
 }
 
 .alarm-add-machine {
@@ -3178,7 +3186,7 @@ img {
 }
 
 .red-star-branch::before {
-  content: '★'; /* 使用星星符號 */
+  content: "★"; /* 使用星星符號 */
   position: absolute;
   left: -12px;
   top: 2px;

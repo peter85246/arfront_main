@@ -159,5 +159,5 @@ root.render(
       {/* </Route> */}
     </Routes>
     <Assistant />
-  </Router>
+  </Router>,
 );

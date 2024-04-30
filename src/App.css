@@ -38,30 +38,30 @@
 }
 
 @media (max-width: 767px) {
-    .visible-xs {
-        display: block !important;
-    }
+  .visible-xs {
+    display: block !important;
+  }
 
-    .hidden-xs {
-        display: none !important;
-    }
+  .hidden-xs {
+    display: none !important;
+  }
 }
 
 @media (min-width: 768px) {
-    .visible-md {
-        display: block !important;
-    }
+  .visible-md {
+    display: block !important;
+  }
 
-    .hidden-md {
-        display: none !important;
-    }
+  .hidden-md {
+    display: none !important;
+  }
 }
 
 .btn-circle.btn-sm {
-    width: 40px;
-    height: 40px;
-    padding: 6px 0px;
-    border-radius: 20px;
-    font-size: 16px;
-    text-align: center;
+  width: 40px;
+  height: 40px;
+  padding: 6px 0px;
+  border-radius: 20px;
+  font-size: 16px;
+  text-align: center;
 }

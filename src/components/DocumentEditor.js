@@ -75,7 +75,7 @@ export function DocumentEditor() {
               href="#"
               className={classNames(
                 styles["button"],
-                styles["btn-showMachine"]
+                styles["btn-showMachine"],
               )}
             >
               待新增
@@ -100,13 +100,13 @@ export function DocumentEditor() {
               <div
                 className={classNames(
                   styles["custom-select"],
-                  styles["equipment-field"]
+                  styles["equipment-field"],
                 )}
               >
                 <input
                   className={classNames(
                     styles["fault-Info"],
-                    styles["knowledge-input"]
+                    styles["knowledge-input"],
                   )}
                   type="text"
                   name="KnowledgeBaseDeviceType"
@@ -129,13 +129,13 @@ export function DocumentEditor() {
               <div
                 className={classNames(
                   styles["custom-select"],
-                  styles["equipment-field"]
+                  styles["equipment-field"],
                 )}
               >
                 <input
                   className={classNames(
                     styles["fault-Info"],
-                    styles["knowledge-input"]
+                    styles["knowledge-input"],
                   )}
                   name="KnowledgeBaseDeviceParts"
                   id="invoice-number2"
@@ -157,13 +157,13 @@ export function DocumentEditor() {
               <div
                 className={classNames(
                   styles["custom-select"],
-                  styles["equipment-field"]
+                  styles["equipment-field"],
                 )}
               >
                 <input
                   className={classNames(
                     styles["fault-Info"],
-                    styles["knowledge-input"]
+                    styles["knowledge-input"],
                   )}
                   name="KnowledgeBaseRepairItems"
                   id="invoice-number3"
@@ -186,13 +186,13 @@ export function DocumentEditor() {
                 <div
                   className={classNames(
                     styles["custom-select"],
-                    styles["equipment-field"]
+                    styles["equipment-field"],
                   )}
                 >
                   <input
                     className={classNames(
                       styles["fault-Info"],
-                      styles["knowledge-input"]
+                      styles["knowledge-input"],
                     )}
                     name="KnowledgeBaseRepairType"
                     id="invoice-number4"
@@ -211,12 +211,14 @@ export function DocumentEditor() {
               </div>
             </div>
             <div className={styles["form-group"]}>
-              <label className={styles["red-star"]} for="invoice-title">檔案編號：</label>
+              <label className={styles["red-star"]} for="invoice-title">
+                檔案編號：
+              </label>
               <input
                 type="text"
                 className={classNames(
                   styles["fault-Info"],
-                  styles["knowledge-input"]
+                  styles["knowledge-input"],
                 )}
                 data-key="invoice-number5"
                 name="KnowledgeBaseFileNo"
@@ -230,7 +232,7 @@ export function DocumentEditor() {
                 type="text"
                 className={classNames(
                   styles["fault-Info"],
-                  styles["knowledge-input"]
+                  styles["knowledge-input"],
                 )}
                 data-key="invoice-number6"
                 name="KnowledgeBaseAlarmCode"
@@ -244,7 +246,7 @@ export function DocumentEditor() {
                 type="text"
                 className={classNames(
                   styles["fault-Info"],
-                  styles["knowledge-input"]
+                  styles["knowledge-input"],
                 )}
                 name="KnowledgeBaseSpec"
                 id="invoice-number7"
@@ -257,7 +259,7 @@ export function DocumentEditor() {
                 type="text"
                 className={classNames(
                   styles["fault-Info"],
-                  styles["knowledge-input"]
+                  styles["knowledge-input"],
                 )}
                 name="KnowledgeBaseSystem"
                 id="invoice-number8"
@@ -270,7 +272,7 @@ export function DocumentEditor() {
                 type="text"
                 className={classNames(
                   styles["fault-Info"],
-                  styles["knowledge-input"]
+                  styles["knowledge-input"],
                 )}
                 name="KnowledgeBaseProductName"
                 id="invoice-number9"
@@ -287,7 +289,7 @@ export function DocumentEditor() {
             type="text"
             className={classNames(
               styles["text-box"],
-              styles["knowledge-input"]
+              styles["knowledge-input"],
             )}
             name="KnowledgeBaseAlarmCause"
             id="invoice-number10"
@@ -300,7 +302,7 @@ export function DocumentEditor() {
             type="text"
             className={classNames(
               styles["text-box"],
-              styles["knowledge-input"]
+              styles["knowledge-input"],
             )}
             name="KnowledgeBaseAlarmDesc"
             id="invoice-number11"
@@ -313,7 +315,7 @@ export function DocumentEditor() {
             type="text"
             className={classNames(
               styles["text-box"],
-              styles["knowledge-input"]
+              styles["knowledge-input"],
             )}
             name="KnowledgeBaseAlarmOccasion"
             id="invoice-number12"

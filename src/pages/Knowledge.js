@@ -231,7 +231,7 @@ export default function Knowledge() {
                 className={styles["button-page2"]}
                 onClick={() =>
                   setCurrentPage((prev) =>
-                    Math.min(prev + 1, groupedData.length)
+                    Math.min(prev + 1, groupedData.length),
                   )
                 }
               >

@@ -197,7 +197,7 @@ export default function Database() {
                     <div
                       className={classNames(
                         styles["content-section"],
-                        styles["image-container"]
+                        styles["image-container"],
                       )}
                     >
                       <img
@@ -238,7 +238,7 @@ export default function Database() {
                     <div
                       className={classNames(
                         styles["content-section"],
-                        styles["image-container"]
+                        styles["image-container"],
                       )}
                     >
                       <img
@@ -282,7 +282,7 @@ export default function Database() {
                     <div
                       className={classNames(
                         styles["content-section"],
-                        styles["image-container"]
+                        styles["image-container"],
                       )}
                     >
                       <img
@@ -326,7 +326,7 @@ export default function Database() {
                     <div
                       className={classNames(
                         styles["content-section"],
-                        styles["image-container"]
+                        styles["image-container"],
                       )}
                     >
                       <img

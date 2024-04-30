@@ -88,6 +88,7 @@ h2 {
   border-radius: 5px;
   cursor: pointer;
   border: solid 1px black;
+  margin: 5px 0px 0px 0px;
 }
 
 /* 用戶問題展示區的樣式 */
@@ -161,7 +162,7 @@ h2 {
 .gptContent {
   font-size: 16px;
   text-align: left; /* 文字對齊左側 */
-}/*# sourceMappingURL=GPT.css.map */
+} /*# sourceMappingURL=GPT.css.map */
 
 // 自定義 h2 標題的樣式
 .custom-header {
@@ -173,9 +174,11 @@ h2 {
 .image {
   width: 40%; /* 讓圖片寬度填滿容器，並保持原始比例 */
   max-width: 100%; /* 防止圖片超過其原始尺寸 */
-  height: 30vh; /* 高度自動調整以保持圖片比例 */
+  // height: 27.6vh; /* 高度自動調整以保持圖片比例 */
+  height: auto;
+  max-height: 50%;
   border-radius: 10px;
   border: 1px solid grey;
   margin: 0px 5px 5px 5px;
+  padding: 0;
 }
-

@@ -210,7 +210,9 @@
   font-size: 14px;
   color: #4b4b4b;
   cursor: pointer; /* 添加鼠标指针样式 */
-  transition: background-color 0.3s, border 0.3s; /* 添加过渡效果 */
+  transition:
+    background-color 0.3s,
+    border 0.3s; /* 添加过渡效果 */
 }
 
 .dropDownArrow {
@@ -221,7 +223,9 @@
   font-size: 14px;
   color: #4b4b4b;
   cursor: pointer; /* 添加鼠标指针样式 */
-  transition: background-color 0.3s, border 0.3s; /* 添加过渡效果 */
+  transition:
+    background-color 0.3s,
+    border 0.3s; /* 添加过渡效果 */
 }
 .faultInfo {
   width: 100%;
@@ -373,7 +377,7 @@
   position: relative; /* 讓偽元素的絕對定位參考此元素 */
 }
 .redStar::before {
-  content: '★'; /* 使用星星符號 */
+  content: "★"; /* 使用星星符號 */
   position: absolute;
   left: -12px;
   top: -2px;
@@ -384,7 +388,7 @@
   position: relative; /* 讓偽元素的絕對定位參考此元素 */
 }
 .redStar::before {
-  content: '★'; /* 使用星星符號 */
+  content: "★"; /* 使用星星符號 */
   position: absolute;
   left: -12px;
   top: -2px;
@@ -392,7 +396,7 @@
   font-size: 12px; /* 設定字體大小 */
 }
 .redStar-branch::before {
-  content: '★'; /* 使用星星符號 */
+  content: "★"; /* 使用星星符號 */
   position: absolute;
   left: -12px;
   top: 2px;
@@ -421,7 +425,9 @@
   font-size: 14px;
   color: #4b4b4b;
   cursor: pointer; /* 添加鼠标指针样式 */
-  transition: background-color 0.3s, border 0.3s; /* 添加过渡效果 */
+  transition:
+    background-color 0.3s,
+    border 0.3s; /* 添加过渡效果 */
 }
 .inputField {
   margin-bottom: 15px;

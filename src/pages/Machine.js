@@ -111,8 +111,8 @@ function Machine() {
         setShowMachineList(
           machineOverviewResponse.result.slice(
             activePage * pageRow - pageRow,
-            activePage * pageRow
-          )
+            activePage * pageRow,
+          ),
         );
       }
     }
@@ -135,14 +135,14 @@ function Machine() {
         onClick={(e) => handleChangePage(e, number)}
       >
         {number}
-      </Pagination.Item>
+      </Pagination.Item>,
     );
   }
 
   const handleChangePage = async (e, number) => {
     setActivePage(number);
     setShowMachineList(
-      machineList.slice(number * pageRow - pageRow, number * pageRow)
+      machineList.slice(number * pageRow - pageRow, number * pageRow),
     );
   };
   //#endregion
@@ -448,13 +448,13 @@ function Machine() {
       formData.append("machineImageObj", newMachineInfo.machineImageObj);
       formData.append(
         "isDeletedMachineImage",
-        newMachineInfo.isDeletedMachineImage
+        newMachineInfo.isDeletedMachineImage,
       );
       formData.append("machineFile", newMachineInfo.machineFile);
       formData.append("machineFileObj", newMachineInfo.machineFileObj);
       formData.append(
         "isDeletedMachineFile",
-        newMachineInfo.isDeletedMachineFile
+        newMachineInfo.isDeletedMachineFile,
       );
 
       let machineInfoResponse = await apiMachineInfo(formData);
@@ -470,7 +470,7 @@ function Machine() {
               hideProgressBar: true,
               closeOnClick: false,
               pauseOnHover: false,
-            }
+            },
           );
 
           setShowMachineinfoModal(false);
@@ -636,7 +636,7 @@ function Machine() {
       } else if (
         !validator.check(
           machineDevice.machineDeviceServerPort.toString(),
-          "max:10"
+          "max:10",
         )
       ) {
         newMachineDeviceErrors.machineDeviceServerPort = "max";
@@ -827,7 +827,7 @@ function Machine() {
                               className="btn btn-info col-3 offset-md-1 mt-2"
                               onClick={() =>
                                 handleOpenMachineDeviceModal(
-                                  item.machineDeviceId
+                                  item.machineDeviceId,
                                 )
                               }
                             >
@@ -870,57 +870,107 @@ function Machine() {
           </Pagination>
         </div>
       </section>
-                    <div className="row">
-                        {machineList && machineList.length > 0 ?
-                            showMachineList && showMachineList.length > 0 ?
-                                showMachineList.map((item, index) => {
-                                    return (
-                                        <div key={index} className="col-12 col-sm-4 col-md-3">
-                                            <div className="card">
-                                                <div className="card-header">
-                                                    <div className="row">
-                                                        <div className="col-8 h3">
-                                                            {item.machineCode}
-                                                        </div>
-                                                        <div className="col-4 d-flex justify-content-end px-1">
-                                                            <button type="button" className="btn btn-outline-primary btn-circle btn-sm" onClick={() => handleOpenMachineinfoModal(item.machineId)}>
-                                                                <i className="fas fa-pencil-alt"></i>
-                                                            </button>
-                                                            <button type="button" className="btn btn-outline-danger btn-circle btn-sm ml-1" onClick={() => handleOpenDeleteMachineModal(item.machineId)}>
-                                                                <i className="fas fa-trash-alt"></i>
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                {
-                                                    item.machineImage != "" ?
-                                                        <img className="card-img-top" src={item.machineImage} alt={item.machineCode} style={{ minHeight: "292px" }} /> :
-                                                        <img src="/default-image.jpg" style={{ minHeight: "292px" }} />
-                                                }
-                                                <div className="card-body">
-                                                    <h3 className="mb-0"></h3>
-                                                    <h4 className="mb-0">{item.machineName}</h4>
-                                                    <h4 className="mb-0">{item.machineSpec}</h4>
-                                                    <h4 className="mb-0">{item.machineType}</h4>
-                                                    <h4 className="mb-0">{item.modelSeries}</h4>
-                                                </div>
-                                                <div className="card-footer">
-                                                    <div className="text-muted row justify-content-center">
-                                                        <button type="button" className="btn btn-info col-3 mt-2" onClick={() => handleGotoMachineAlarm(item.machineId)}>SOP</button>
-                                                        <button type="button" className="btn btn-info col-3 offset-md-1 mt-2" onClick={() => handleOpenMachineDeviceModal(item.machineDeviceId)}>Device</button>
-                                                        <button type="button" className="btn btn-info col-3 offset-md-1 mt-2" onClick={() => handleGotoMachineIOT(item.machineId)}>IOT</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    )
-                                }) :
-                                <div className="w-100 d-flex justify-content-center"><label>{t("machine.searchEmpty")}{/*查無機台*/}</label></div>
-                            :
-                            <div className="w-100 d-flex justify-content-center"><label>{t("machine.empty")}{/*尚無資料*/}</label></div>
-                        }
+      <div className="row">
+        {machineList && machineList.length > 0 ? (
+          showMachineList && showMachineList.length > 0 ? (
+            showMachineList.map((item, index) => {
+              return (
+                <div key={index} className="col-12 col-sm-4 col-md-3">
+                  <div className="card">
+                    <div className="card-header">
+                      <div className="row">
+                        <div className="col-8 h3">{item.machineCode}</div>
+                        <div className="col-4 d-flex justify-content-end px-1">
+                          <button
+                            type="button"
+                            className="btn btn-outline-primary btn-circle btn-sm"
+                            onClick={() =>
+                              handleOpenMachineinfoModal(item.machineId)
+                            }
+                          >
+                            <i className="fas fa-pencil-alt"></i>
+                          </button>
+                          <button
+                            type="button"
+                            className="btn btn-outline-danger btn-circle btn-sm ml-1"
+                            onClick={() =>
+                              handleOpenDeleteMachineModal(item.machineId)
+                            }
+                          >
+                            <i className="fas fa-trash-alt"></i>
+                          </button>
+                        </div>
+                      </div>
                     </div>
-                    <Pagination className="d-flex justify-content-center">{pages}</Pagination>
+                    {item.machineImage != "" ? (
+                      <img
+                        className="card-img-top"
+                        src={item.machineImage}
+                        alt={item.machineCode}
+                        style={{ minHeight: "292px" }}
+                      />
+                    ) : (
+                      <img
+                        src="/default-image.jpg"
+                        style={{ minHeight: "292px" }}
+                      />
+                    )}
+                    <div className="card-body">
+                      <h3 className="mb-0"></h3>
+                      <h4 className="mb-0">{item.machineName}</h4>
+                      <h4 className="mb-0">{item.machineSpec}</h4>
+                      <h4 className="mb-0">{item.machineType}</h4>
+                      <h4 className="mb-0">{item.modelSeries}</h4>
+                    </div>
+                    <div className="card-footer">
+                      <div className="text-muted row justify-content-center">
+                        <button
+                          type="button"
+                          className="btn btn-info col-3 mt-2"
+                          onClick={() => handleGotoMachineAlarm(item.machineId)}
+                        >
+                          SOP
+                        </button>
+                        <button
+                          type="button"
+                          className="btn btn-info col-3 offset-md-1 mt-2"
+                          onClick={() =>
+                            handleOpenMachineDeviceModal(item.machineDeviceId)
+                          }
+                        >
+                          Device
+                        </button>
+                        <button
+                          type="button"
+                          className="btn btn-info col-3 offset-md-1 mt-2"
+                          onClick={() => handleGotoMachineIOT(item.machineId)}
+                        >
+                          IOT
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })
+          ) : (
+            <div className="w-100 d-flex justify-content-center">
+              <label>
+                {t("machine.searchEmpty")}
+                {/*查無機台*/}
+              </label>
+            </div>
+          )
+        ) : (
+          <div className="w-100 d-flex justify-content-center">
+            <label>
+              {t("machine.empty")}
+              {/*尚無資料*/}
+            </label>
+          </div>
+        )}
+      </div>
+      <Pagination className="d-flex justify-content-center">{pages}</Pagination>
       <ToastContainer />
 
       {/*machine modal - start*/}
@@ -1172,7 +1222,6 @@ function Machine() {
                       {/*上傳圖片*/}
                     </span>
                   )}
-
                 </div>
                 {(() => {
                   switch (machineInfoErrors.machineImage) {
@@ -1217,7 +1266,7 @@ function Machine() {
                       .substr(
                         machineInfo.machineFile.lastIndexOf(".") +
                           1 -
-                          machineInfo.machineFile.length
+                          machineInfo.machineFile.length,
                       )
                       .toLowerCase();
                   } else if (machineInfo.machineFileObj != null) {
@@ -1225,7 +1274,7 @@ function Machine() {
                       .substr(
                         machineInfo.machineFileObj.name.lastIndexOf(".") +
                           1 -
-                          machineInfo.machineFileObj.name.length
+                          machineInfo.machineFileObj.name.length,
                       )
                       .toLowerCase();
                   }

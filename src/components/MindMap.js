@@ -35,11 +35,11 @@ export function MindMap() {
 
   const onNodesChange = useCallback(
     (changes) => setNodes((nds) => applyNodeChanges(changes, nds)),
-    []
+    [],
   );
   const onEdgesChange = useCallback(
     (changes) => setEdges((eds) => applyEdgeChanges(changes, eds)),
-    []
+    [],
   );
 
   return (

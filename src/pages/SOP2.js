@@ -18,7 +18,7 @@ function SOP2() {
   const { machineId, machineAlarmId } = useParams();
 
   const [tempModelNumbers, setTempModelNumbers] = useState(
-    Array.from({ length: 12 }, (_, index) => index + 1)
+    Array.from({ length: 12 }, (_, index) => index + 1),
   ); //建立12格3D Model List
   const [tempModels, setTempModels] = useState([]); //暫存 3D Model List的資料
   const [selectTempModelIndex, setSelectTempModelIndex] = useState(-1); //選擇暫存 3D Model的index
@@ -42,7 +42,6 @@ function SOP2() {
 
   const inputRemarksImageRef = useRef(null); // input File類型的備註圖片
   const [remarksImageError, setRemarksImageError] = useState(""); // 備註圖片格式錯誤
-
 
   const [saveSOPLoading, setSaveSOPLoading] = useState(false); //SOP儲存的轉圈圈
 
@@ -275,58 +274,57 @@ function SOP2() {
   //#endregion
 
   //#region 上傳備註圖片按鈕
-const handleUploadRemarksImageBtn = (e) => {
-  e.preventDefault();
-  inputRemarksImageRef.current.click();
-};
-//#endregion
+  const handleUploadRemarksImageBtn = (e) => {
+    e.preventDefault();
+    inputRemarksImageRef.current.click();
+  };
+  //#endregion
 
-//#region 上傳備註圖片Change事件
-const onRemarksImageChange = (e) => {
-  var file;
-  file = e.target.files[0];
-  let newSelectSOP = { ...selectSOP };
-  if (file != null) {
-    var fileExtension = file.name
-      .substr(file.name.lastIndexOf(".") + 1 - file.name.length)
-      .toLowerCase();
-    if (
-      !(
-        fileExtension == "png" ||
-        fileExtension == "jpg" ||
-        fileExtension == "jpeg"
-      )
-    ) {
-      setRemarksImageError("format");
-    } else {
-      var img = new Image();
-      var objectUrl = URL.createObjectURL(file);
-      img.onload = function () {
-        newSelectSOP.sopRemarksImageObj = file;
-        if (newSelectSOP.sopRemarksImage != "") {
-          newSelectSOP.isDeletedSOPRemarksImage = true;
-        }
-        setSelectSOP(newSelectSOP);
-      };
-      img.src = objectUrl;
+  //#region 上傳備註圖片Change事件
+  const onRemarksImageChange = (e) => {
+    var file;
+    file = e.target.files[0];
+    let newSelectSOP = { ...selectSOP };
+    if (file != null) {
+      var fileExtension = file.name
+        .substr(file.name.lastIndexOf(".") + 1 - file.name.length)
+        .toLowerCase();
+      if (
+        !(
+          fileExtension == "png" ||
+          fileExtension == "jpg" ||
+          fileExtension == "jpeg"
+        )
+      ) {
+        setRemarksImageError("format");
+      } else {
+        var img = new Image();
+        var objectUrl = URL.createObjectURL(file);
+        img.onload = function () {
+          newSelectSOP.sopRemarksImageObj = file;
+          if (newSelectSOP.sopRemarksImage != "") {
+            newSelectSOP.isDeletedSOPRemarksImage = true;
+          }
+          setSelectSOP(newSelectSOP);
+        };
+        img.src = objectUrl;
+      }
     }
-  }
-};
-//#endregion
+  };
+  //#endregion
 
-//#region 移除備註圖片按鈕
-const handleRemoveRemarksImageBtn = (e) => {
-  e.preventDefault();
-  let newSelectSOP = { ...selectSOP };
+  //#region 移除備註圖片按鈕
+  const handleRemoveRemarksImageBtn = (e) => {
+    e.preventDefault();
+    let newSelectSOP = { ...selectSOP };
 
-  newSelectSOP.sopRemarksImage = "";
-  newSelectSOP.sopRemarksImageObj = null;
-  newSelectSOP.isDeletedSOPRemarksImage = true;
+    newSelectSOP.sopRemarksImage = "";
+    newSelectSOP.sopRemarksImageObj = null;
+    newSelectSOP.isDeletedSOPRemarksImage = true;
 
-  setSelectSOP(newSelectSOP);
-};
-//#endregion
-
+    setSelectSOP(newSelectSOP);
+  };
+  //#endregion
 
   //#region 更新SOPs
   useEffect(() => {
@@ -409,20 +407,26 @@ const handleRemoveRemarksImageBtn = (e) => {
       formData.append(`sops[${i}].sopImageObj`, sops[i].sopImageObj);
       formData.append(
         `sops[${i}].isDeletedSOPImage`,
-        sops[i].isDeletedSOPImage
+        sops[i].isDeletedSOPImage,
       );
-      formData.append(`sops[${i}].sopRemarksMessage`, sops[i].sopRemarksMessage);
+      formData.append(
+        `sops[${i}].sopRemarksMessage`,
+        sops[i].sopRemarksMessage,
+      );
       formData.append(`sops[${i}].sopRemarksImage`, sops[i].sopRemarksImage);
-      formData.append(`sops[${i}].sopRemarksImageObj`, sops[i].sopRemarksImageObj);
+      formData.append(
+        `sops[${i}].sopRemarksImageObj`,
+        sops[i].sopRemarksImageObj,
+      );
       formData.append(
         `sops[${i}].isDeletedSOPRemarksImage`,
-        sops[i].isDeletedSOPRemarksImage
+        sops[i].isDeletedSOPRemarksImage,
       );
       formData.append(`sops[${i}].sopVideo`, sops[i].sopVideo);
       formData.append(`sops[${i}].sopVideoObj`, sops[i].sopVideoObj);
       formData.append(
         `sops[${i}].isDeletedSOPVideo`,
-        sops[i].isDeletedSOPVideo
+        sops[i].isDeletedSOPVideo,
       );
       formData.append(`sops[${i}].sopPLC1`, sops[i].sopplC1);
       formData.append(`sops[${i}].sopPLC2`, sops[i].sopplC2);
@@ -432,31 +436,31 @@ const handleRemoveRemarksImageBtn = (e) => {
       for (var j = 0; j < sops[i].sopModels.length; j++) {
         formData.append(
           `sops[${i}].sopModels[${j}].sopModelId`,
-          sops[i].sopModels[j].sopModelId
+          sops[i].sopModels[j].sopModelId,
         );
         formData.append(
           `sops[${i}].sopModels[${j}].deleted`,
-          sops[i].sopModels[j].deleted
+          sops[i].sopModels[j].deleted,
         );
         formData.append(
           `sops[${i}].sopModels[${j}].sopId`,
-          sops[i].sopModels[j].sopId
+          sops[i].sopModels[j].sopId,
         );
         formData.append(
           `sops[${i}].sopModels[${j}].sopModelImage`,
-          sops[i].sopModels[j].sopModelImage
+          sops[i].sopModels[j].sopModelImage,
         );
         formData.append(
           `sops[${i}].sopModels[${j}].sopModelImageObj`,
-          sops[i].sopModels[j].sopModelImageObj
+          sops[i].sopModels[j].sopModelImageObj,
         );
         formData.append(
           `sops[${i}].sopModels[${j}].sopModelFile`,
-          sops[i].sopModels[j].sopModelFile
+          sops[i].sopModels[j].sopModelFile,
         );
         formData.append(
           `sops[${i}].sopModels[${j}].sopModelFileObj`,
-          sops[i].sopModels[j].sopModelFileObj
+          sops[i].sopModels[j].sopModelFileObj,
         );
       }
     }
@@ -889,7 +893,7 @@ const handleRemoveRemarksImageBtn = (e) => {
                                   src={
                                     selectSOP.sopVideoObj != null
                                       ? URL.createObjectURL(
-                                          selectSOP.sopVideoObj
+                                          selectSOP.sopVideoObj,
                                         )
                                       : selectSOP.sopVideo
                                   }
@@ -956,7 +960,7 @@ const handleRemoveRemarksImageBtn = (e) => {
                                   src={
                                     selectSOP.sopImageObj != null
                                       ? URL.createObjectURL(
-                                          selectSOP.sopImageObj
+                                          selectSOP.sopImageObj,
                                         )
                                       : selectSOP.sopImage
                                   }
@@ -1010,7 +1014,7 @@ const handleRemoveRemarksImageBtn = (e) => {
                         <div className="col-sm-12 col-md-6">
                           <div
                             className="form-group"
-                            style={{ minHeight: "150px", marginTop: "20px"}}
+                            style={{ minHeight: "150px", marginTop: "20px" }}
                           >
                             <label>
                               {t("sop.sopRemarksImage")}
@@ -1024,7 +1028,7 @@ const handleRemoveRemarksImageBtn = (e) => {
                                   src={
                                     selectSOP.sopRemarksImageObj != null
                                       ? URL.createObjectURL(
-                                          selectSOP.sopRemarksImageObj
+                                          selectSOP.sopRemarksImageObj,
                                         )
                                       : selectSOP.sopRemarksImage
                                   }
@@ -1164,7 +1168,7 @@ const handleRemoveRemarksImageBtn = (e) => {
                                                 onClick={(e) =>
                                                   handleOpenSaveTempModelBtn(
                                                     e,
-                                                    index
+                                                    index,
                                                   )
                                                 }
                                               >
@@ -1173,7 +1177,7 @@ const handleRemoveRemarksImageBtn = (e) => {
                                                   <img
                                                     src={URL.createObjectURL(
                                                       tempModels[index]
-                                                        .tempModelImageObj
+                                                        .tempModelImageObj,
                                                     )}
                                                     style={{
                                                       width: "100%",
@@ -1252,7 +1256,7 @@ const handleRemoveRemarksImageBtn = (e) => {
                                                           item.sopModelImageObj !=
                                                           null
                                                             ? URL.createObjectURL(
-                                                                item.sopModelImageObj
+                                                                item.sopModelImageObj,
                                                               )
                                                             : item.sopModelImage
                                                         }
@@ -1270,7 +1274,7 @@ const handleRemoveRemarksImageBtn = (e) => {
                                                         }}
                                                         onClick={() =>
                                                           handleCleanModelBtn(
-                                                            index
+                                                            index,
                                                           )
                                                         }
                                                       >
@@ -1361,7 +1365,7 @@ const handleRemoveRemarksImageBtn = (e) => {
                       src={
                         selectTempModel.tempModelImageObj != null
                           ? URL.createObjectURL(
-                              selectTempModel.tempModelImageObj
+                              selectTempModel.tempModelImageObj,
                             )
                           : null
                       }
@@ -1413,7 +1417,7 @@ const handleRemoveRemarksImageBtn = (e) => {
                       .substr(
                         selectTempModel.tempModelFileObj.name.lastIndexOf(".") +
                           1 -
-                          selectTempModel.tempModelFileObj.name.length
+                          selectTempModel.tempModelFileObj.name.length,
                       )
                       .toLowerCase();
                   }

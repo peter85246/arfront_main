@@ -32,7 +32,7 @@ export default function Alarm() {
                 <li
                   onClick={() =>
                     setAlarmValue(
-                      "GXA-S GXA-H GVA GFA-S GFA-H GTF GTFAE Series"
+                      "GXA-S GXA-H GVA GFA-S GFA-H GTF GTFAE Series",
                     )
                   }
                 >
@@ -41,7 +41,7 @@ export default function Alarm() {
                 <li
                   onClick={() =>
                     setAlarmValue(
-                      "GXA-S GXA-H GVA GFA-S GFA-H GTF GTFAE Series"
+                      "GXA-S GXA-H GVA GFA-S GFA-H GTF GTFAE Series",
                     )
                   }
                 >

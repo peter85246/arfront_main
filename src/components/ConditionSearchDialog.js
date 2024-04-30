@@ -1,12 +1,16 @@
-import classNames from 'classnames';
-import styles from '../scss/ConditionSearchDialog.module.scss'
+import classNames from "classnames";
+import styles from "../scss/ConditionSearchDialog.module.scss";
 
 export function ConditionSearchDialog({ onClose }) {
   return (
     <div className={styles.modalOverlay} id="modalOverlay">
       <div className={styles.modalCondition} id="myModal">
         <div className={styles.modalTitleCondition}>條件查詢</div>
-        <span id="closeModalBtn" className={styles.closeModalBtn} onClick={onClose}>
+        <span
+          id="closeModalBtn"
+          className={styles.closeModalBtn}
+          onClick={onClose}
+        >
           &times;
         </span>
         <hr className={styles.titleLine2} />
@@ -198,7 +202,10 @@ export function ConditionSearchDialog({ onClose }) {
         </div>
 
         <div className={styles.buttonsCondition}>
-          <a href="/knowledge" className={classNames(styles.button, styles.btnCancel)}>
+          <a
+            href="/knowledge"
+            className={classNames(styles.button, styles.btnCancel)}
+          >
             取消
           </a>
           <a
