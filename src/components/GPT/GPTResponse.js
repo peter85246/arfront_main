@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
 import styles from "../../scss/gpt.module.scss"; // 引入樣式文件
+import ChatArea from "./ChatArea";
 
 const GPTResponse = ({ question, response, isLoading, inputText }) => {
   const [elements, setElements] = useState([]);
@@ -78,6 +79,7 @@ const GPTResponse = ({ question, response, isLoading, inputText }) => {
       let lastIndex = 0;
       let match;
       const parsedElements = [];
+      const loadedSteps = new Set(); // 用來記錄已經加載過影片的步驟
 
       while ((match = regex.exec(inputText))) {
         const text = inputText.substring(lastIndex, match.index).trim();
@@ -94,48 +96,52 @@ const GPTResponse = ({ question, response, isLoading, inputText }) => {
           );
         }
 
-        // 渲染圖片與對應的步驟名稱
-        const stepLabel = mediaPath
+        // 撈取檔案 png、mp4 內容，與呈現Step字樣
+        const fullStepLabel = mediaPath
           .replace(/\.(png|mp4)$/, "")
           .match(/Step\d+(-\d+)?$/i)[0];
-        parsedElements.push(
-          <div
-            key={`container-${match.index}`}
-            style={{ marginBottom: "15px" }}
-          >
-            <img
-              key={`image-${match.index}`}
-              src={`/detron_data/${mediaPath}`}
-              alt={mediaPath}
-              className={styles.image}
-            />
+
+        // 取得步驟主編號Step1，忽略子編號Step1"-1" (避免發生影片呈現不出來問題)
+        const stepLabel = fullStepLabel.split("-")[0];
+
+        // 分別處理圖片和影片
+        if (mediaPath.endsWith(".png")) {
+          parsedElements.push(
             <div
-              style={{
-                marginTop: "0px",
-                textAlign: "center",
-                width: "40%",
-                margin: "0px 0px 0px 5px",
-              }}
+              key={`container-${match.index}`}
+              style={{ marginBottom: "15px" }}
             >
-              {stepLabel + " - Image"}
-            </div>
-          </div>,
-        );
-        // 在options_data中查找與當前步驟相對應的影片
-        if (
-          options_data.some(
-            (option) => option.value === "GXA-S背隙調整" && option.videos,
-          )
-        ) {
-          // 約束只有"GXA-S背隙調整"才會顯示屬於此項目的影片檔呈現
+              <img
+                key={`image-${match.index}`}
+                src={`/detron_data/${mediaPath}`}
+                alt={mediaPath}
+                className={styles.image}
+              />
+              <div
+                style={{
+                  marginTop: "0px",
+                  textAlign: "center",
+                  width: "40%",
+                  margin: "0px 0px 0px 5px",
+                }}
+              >
+                {fullStepLabel + " - Image"}
+              </div>
+            </div>,
+          );
+        }
+
+        if (!loadedSteps.has(stepLabel)) {
+          // 檢查此步驟的影片是否已加載
           const stepVideo = options_data
             .find((option) => option.value === "GXA-S背隙調整")
-            .videos.find((video) => video.step === stepLabel);
+            ?.videos.find((video) => video.step === stepLabel);
+
           if (stepVideo) {
             parsedElements.push(
               <div
                 key={`video-container-${match.index}`}
-                style={{ marginBottom: "15px" }}
+                style={{ marginBottom: "10px" }}
               >
                 <video
                   key={`video-${match.index}`}
@@ -160,6 +166,7 @@ const GPTResponse = ({ question, response, isLoading, inputText }) => {
                 </div>
               </div>,
             );
+            loadedSteps.add(stepLabel); // 標記此步驟的影片已加載
           }
         }
 

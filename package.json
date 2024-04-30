@@ -32,6 +32,8 @@
     "rehype-raw": "^7.0.0",
     "remark-parse": "^11.0.0",
     "sass": "^1.71.1",
+    "semantic-ui-css": "^2.5.0",
+    "semantic-ui-react": "^2.1.5",
     "simple-react-validator": "^1.6.2",
     "styled-components": "^5.3.9",
     "universal-cookie": "^4.0.4",
@@ -42,7 +44,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "prettify": "prettier --write 'src/**/*.{js,jsx,ts,tsx,json,css,scss}'" 
+    "prettify": "prettier --write 'src/**/*.{js,jsx,ts,tsx,json,css,scss}'"
   },
   "eslintConfig": {
     "extends": [

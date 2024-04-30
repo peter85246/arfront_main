@@ -1,13 +1,35 @@
 import classNames from "classnames";
 import { useTranslation } from "react-i18next"; //語系
 import styles from "../scss/global.module.scss";
-import { useEffect, useLayoutEffect, useRef } from "react";
+import { useState, useEffect, useLayoutEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom"; // 導入 useNavigate
 import { Link } from "react-router-dom";
+import FormGroup from "./FormGroup/FormGroup";
+import ReactDOM from "react-dom";
+import { Container, Header, List } from "semantic-ui-react";
 
 export function DocumentEditor() {
   const uploadModelRef = useRef(null);
   const uploadToolsRef = useRef(null);
   const uploadPositionRef = useRef(null);
+  const [formData, setFormData] = useState({});
+  const navigate = useNavigate(); // 使用 navigate 來處理導航
+
+  // 收集 FormGroup 的輸入
+  const handleInputChange = (id, value) => {
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [id]: value,
+    }));
+  };
+
+  // 處理表單提交
+  const handleSubmit = () => {
+    console.log("Submitting Form Data:", formData);
+    // 這裡可以添加將數據發送到後端的代碼
+    // 假設提交成功後導航到另一頁面
+    navigate("/sop2");
+  };
 
   useLayoutEffect(() => {
     const uploadRefArray = [
@@ -42,6 +64,60 @@ export function DocumentEditor() {
     });
   }, []);
 
+  // 定義一個渲染文本域的方法
+  const renderLabeledTextarea = (label, id, placeholder) => {
+    return (
+      <div className={styles["form-group"]}>
+        <label className={styles["red-star"]} htmlFor={id}>
+          {label}
+        </label>
+        <textarea
+          className={classNames(styles["text-box"], styles["knowledge-input"])}
+          id={id}
+          name={id}
+          placeholder={placeholder}
+        ></textarea>
+      </div>
+    );
+  };
+
+  const formFields = [
+    {
+      label: "設備種類：",
+      id: "invoice-number1",
+      options: ["選項1", "選項2", "選項3"],
+      hasRedStar: true,
+    },
+    {
+      label: "設備部件：",
+      id: "invoice-number2",
+      options: ["選項1", "選項2", "選項3"],
+      hasRedStar: true,
+    },
+    {
+      label: "維修項目：",
+      id: "invoice-number3",
+      options: ["選項1", "選項2", "選項3"],
+      hasRedStar: true,
+    },
+    {
+      label: "維修類型：",
+      id: "invoice-number4",
+      options: ["選項1", "選項2", "選項3"],
+      hasRedStar: true,
+    },
+    {
+      label: "檔案編號：",
+      id: "invoice-number5",
+      options: [],
+      hasRedStar: true,
+    },
+    { label: "故障代碼：", id: "invoice-number6", options: [] },
+    { label: "規格：", id: "invoice-number7", options: [] },
+    { label: "系統：", id: "invoice-number8", options: [] },
+    { label: "產品名稱：", id: "invoice-number9", options: [] },
+  ];
+
   return (
     <main>
       <div>
@@ -50,13 +126,14 @@ export function DocumentEditor() {
           {/* <button type="button" id="btn-save-js" className={classNames(styles["button"], styles["btn-save"])}>
             儲存
           </button> */}
-          <Link
-            to="/sop2"
+          <button
+            type="button"
             className={classNames(styles["button"], styles["btn-save"])}
             id="btn-save-js"
+            onClick={handleSubmit} // 處理點擊事件來提交表單
           >
             儲存
-          </Link>
+          </button>
           <a
             href="/knowledge"
             className={classNames(styles["button"], styles["btn-cancel"])}
@@ -93,192 +170,16 @@ export function DocumentEditor() {
       <div className={styles["content-box"]} style={{ paddingTop: "5px" }}>
         <div className={styles["content-box-left"]}>
           <div className={styles["dropdown"]}>
-            <div className={styles["form-group"]}>
-              <label className={styles["red-star"]} for="invoice-number1">
-                設備種類：
-              </label>
-              <div
-                className={classNames(
-                  styles["custom-select"],
-                  styles["equipment-field"],
-                )}
-              >
-                <input
-                  className={classNames(
-                    styles["fault-Info"],
-                    styles["knowledge-input"],
-                  )}
-                  type="text"
-                  name="KnowledgeBaseDeviceType"
-                  id="invoice-number1"
-                  autocomplete="off"
-                />
-                <span className={styles["drop-down-arrow"]}>▼</span>
-                <ul className={styles["custom-datalist"]} id="invoice-options1">
-                  <li data-value="選項1">選項1</li>
-                  <li data-value="選項2">選項2</li>
-                  <li data-value="選項3">選項3</li>
-                </ul>
-              </div>
-            </div>
-
-            <div className={styles["form-group"]}>
-              <label className={styles["red-star"]} for="invoice-number2">
-                設備部件：
-              </label>
-              <div
-                className={classNames(
-                  styles["custom-select"],
-                  styles["equipment-field"],
-                )}
-              >
-                <input
-                  className={classNames(
-                    styles["fault-Info"],
-                    styles["knowledge-input"],
-                  )}
-                  name="KnowledgeBaseDeviceParts"
-                  id="invoice-number2"
-                  autocomplete="off"
-                />
-                <span className={styles["drop-down-arrow"]}>▼</span>
-                <ul className={styles["custom-datalist"]} id="invoice-options2">
-                  <li data-value="選項1">選項1</li>
-                  <li data-value="選項2">選項2</li>
-                  <li data-value="選項3">選項3</li>
-                </ul>
-              </div>
-            </div>
-
-            <div className={styles["form-group"]}>
-              <label className={styles["red-star"]} for="invoice-number3">
-                維修項目：
-              </label>
-              <div
-                className={classNames(
-                  styles["custom-select"],
-                  styles["equipment-field"],
-                )}
-              >
-                <input
-                  className={classNames(
-                    styles["fault-Info"],
-                    styles["knowledge-input"],
-                  )}
-                  name="KnowledgeBaseRepairItems"
-                  id="invoice-number3"
-                  autocomplete="off"
-                />
-                <span className={styles["drop-down-arrow"]}>▼</span>
-                <ul className={styles["custom-datalist"]} id="invoice-options3">
-                  <li data-value="選項1">選項1</li>
-                  <li data-value="選項2">選項2</li>
-                  <li data-value="選項3">選項3</li>
-                </ul>
-              </div>
-            </div>
-
-            <div className={styles["form-group"]}>
-              <label className={styles["red-star"]} for="invoice-number4">
-                維修類型：
-              </label>
-              <div className={styles["custom-select"]}>
-                <div
-                  className={classNames(
-                    styles["custom-select"],
-                    styles["equipment-field"],
-                  )}
-                >
-                  <input
-                    className={classNames(
-                      styles["fault-Info"],
-                      styles["knowledge-input"],
-                    )}
-                    name="KnowledgeBaseRepairType"
-                    id="invoice-number4"
-                    autocomplete="off"
-                  />
-                  <span className={styles["drop-down-arrow"]}>▼</span>
-                  <ul
-                    className={styles["custom-datalist"]}
-                    id="invoice-options4"
-                  >
-                    <li data-value="選項1">選項1</li>
-                    <li data-value="選項2">選項2</li>
-                    <li data-value="選項3">選項3</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-            <div className={styles["form-group"]}>
-              <label className={styles["red-star"]} for="invoice-title">
-                檔案編號：
-              </label>
-              <input
-                type="text"
-                className={classNames(
-                  styles["fault-Info"],
-                  styles["knowledge-input"],
-                )}
-                data-key="invoice-number5"
-                name="KnowledgeBaseFileNo"
-                id="invoice-number5"
-                autocomplete="off"
+            {formFields.map((field) => (
+              <FormGroup
+                key={field.id}
+                label={field.label}
+                id={field.id}
+                options={field.options}
+                hasRedStar={field.hasRedStar}
+                onChange={(value) => handleInputChange(field.id, value)}
               />
-            </div>
-            <div className={styles["form-group"]}>
-              <label for="invoice-title">故障代碼：</label>
-              <input
-                type="text"
-                className={classNames(
-                  styles["fault-Info"],
-                  styles["knowledge-input"],
-                )}
-                data-key="invoice-number6"
-                name="KnowledgeBaseAlarmCode"
-                id="invoice-number6"
-                autocomplete="off"
-              />
-            </div>
-            <div className={styles["form-group"]}>
-              <label for="invoice-title">規格：</label>
-              <input
-                type="text"
-                className={classNames(
-                  styles["fault-Info"],
-                  styles["knowledge-input"],
-                )}
-                name="KnowledgeBaseSpec"
-                id="invoice-number7"
-                autocomplete="off"
-              />
-            </div>
-            <div className={styles["form-group"]}>
-              <label for="invoice-title">系統：</label>
-              <input
-                type="text"
-                className={classNames(
-                  styles["fault-Info"],
-                  styles["knowledge-input"],
-                )}
-                name="KnowledgeBaseSystem"
-                id="invoice-number8"
-                autocomplete="off"
-              />
-            </div>
-            <div className={styles["form-group"]}>
-              <label for="invoice-title">產品名稱：</label>
-              <input
-                type="text"
-                className={classNames(
-                  styles["fault-Info"],
-                  styles["knowledge-input"],
-                )}
-                name="KnowledgeBaseProductName"
-                id="invoice-number9"
-                autocomplete="off"
-              />
-            </div>
+            ))}
           </div>
         </div>
         <div className={styles["content-box-right"]}>

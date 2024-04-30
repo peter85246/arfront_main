@@ -173,12 +173,11 @@ h2 {
 
 .image {
   width: 40%; /* 讓圖片寬度填滿容器，並保持原始比例 */
-  max-width: 100%; /* 防止圖片超過其原始尺寸 */
   // height: 27.6vh; /* 高度自動調整以保持圖片比例 */
   height: auto;
   max-height: 50%;
   border-radius: 10px;
   border: 1px solid grey;
-  margin: 0px 5px 5px 5px;
+  margin: 0px 5px 0px 5px;
   padding: 0;
 }
