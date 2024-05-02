@@ -90,14 +90,11 @@
   "userManage.delete": "刪除使用者",
   "userManage.deleteContent": "您確定要刪除該筆資料嗎?",
 
-  "machine.content.header": "機台管理",
+  "machine.content.header": "AR設備控制",
   "machine.btn.add": "新增機台",
   "machine.addTitle": "新增機台",
   "machine.editTitle": "編輯機台",
   "machine.machineCode": "機台ID",
-  "machine.machineType": "機台種類",
-  "machine.modelSeries": "型號系列",
-  "machine.machineName": "機台名稱",
   "machine.machineSpec": "機台規格",
   "machine.machineImage": "機台圖片",
   "machine.uploadImage": "上傳圖片",
@@ -168,6 +165,23 @@
   "machineIOT.machineIOTPassword": "Password",
   "machineIOT.updateTopic": "Topic",
   "machineIOT.deleteTopic": "刪除Topic",
-  "machineIOT.deleteContent": "您確定要刪除該筆資料嗎?"
+  "machineIOT.deleteContent": "您確定要刪除該筆資料嗎?",
+
+  "machineKnowledge.content.header": "機台管理",
+  "machineKnowledge.btn.add": "新增機台",
+  "machineKnowledge.addTitle": "新增機台",
+  "machineKnowledge.editTitle": "編輯機台",
+  "machineKnowledge.machineType": "機台種類",
+  "machineKnowledge.modelSeries": "型號系列",
+  "machineKnowledge.machineName": "機台名稱",
+  "machineKnowledge.machineImage": "機台圖片",
+  "machineKnowledge.uploadImage": "上傳圖片",
+  "machineKnowledge.btn.deleteMachineImage": "移除圖片",
+  "machineKnowledge.machineFile": "機台檔案",
+  "machineKnowledge.btn.deleteMachineFile": "移除檔案",
+  "machineKnowledge.delete": "刪除機台",
+  "machineKnowledge.deleteContent": "您確定要刪除該筆資料嗎?",
+  "machineKnowledge.empty": "尚無資料",
+  "machineKnowledge.searchEmpty": "查無機台"
 
 }

@@ -5,6 +5,9 @@ import { useState, useEffect, useLayoutEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom"; // 導入 useNavigate
 import { Link } from "react-router-dom";
 import FormGroup from "./FormGroup/FormGroup";
+import { Space, ColorPicker, theme } from "antd";
+import { generate, red, green, blue } from "@ant-design/colors";
+
 import ReactDOM from "react-dom";
 import { Container, Header, List } from "semantic-ui-react";
 
@@ -14,6 +17,17 @@ export function DocumentEditor() {
   const uploadPositionRef = useRef(null);
   const [formData, setFormData] = useState({});
   const navigate = useNavigate(); // 使用 navigate 來處理導航
+
+  const [textColor, setTextColor] = useState("#000000"); // 初始文字顏色設為黑色
+
+  const { token } = theme.useToken();
+  // 生成顏色組合
+  const presets = Object.entries({
+    primary: generate("#0052cc"), // 這裡使用一個假設的主要顏色
+    red: red,
+    green: green,
+    blue: blue,
+  }).map(([label, colors]) => ({ label, colors }));
 
   // 收集 FormGroup 的輸入
   const handleInputChange = (id, value) => {
@@ -183,44 +197,85 @@ export function DocumentEditor() {
           </div>
         </div>
         <div className={styles["content-box-right"]}>
-          <label className={styles["red-star"]} for="invoice-title">
-            故障發生原因：
-          </label>
-          <textarea
-            type="text"
-            className={classNames(
-              styles["text-box"],
-              styles["knowledge-input"],
-            )}
-            name="KnowledgeBaseAlarmCause"
-            id="invoice-number10"
-          ></textarea>
+          <div className={styles["text-area-container"]}>
+            <label className={styles["red-star"]} htmlFor="invoice-number10">
+              故障發生原因：
+            </label>
+            <textarea
+              type="text"
+              className={classNames(
+                styles["text-box"],
+                styles["knowledge-input"],
+              )}
+              name="KnowledgeBaseAlarmCause"
+              id="invoice-number10"
+              style={{ color: textColor }}
+            ></textarea>
+            <div className={styles["color-picker-container"]}>
+              <Space direction="vertical">
+                <ColorPicker
+                  defaultValue={textColor}
+                  size="small"
+                  onChange={(color) => setTextColor(color.hex)}
+                />
+              </Space>
+            </div>
+          </div>
+
           <p></p>
-          <label className={styles["red-star"]} for="invoice-title">
-            故障描述：
-          </label>
-          <textarea
-            type="text"
-            className={classNames(
-              styles["text-box"],
-              styles["knowledge-input"],
-            )}
-            name="KnowledgeBaseAlarmDesc"
-            id="invoice-number11"
-          ></textarea>
+
+          <div className={styles["text-area-container"]}>
+            <label className={styles["red-star"]} for="invoice-title">
+              故障描述：
+            </label>
+            <textarea
+              type="text"
+              className={classNames(
+                styles["text-box"],
+                styles["knowledge-input"],
+              )}
+              name="KnowledgeBaseAlarmDesc"
+              id="invoice-number11"
+              style={{ color: textColor }}
+            ></textarea>
+
+            <div className={styles["color-picker-container"]}>
+              <Space direction="vertical">
+                <ColorPicker
+                  defaultValue={textColor}
+                  size="small"
+                  onChange={(color) => setTextColor(color.hex)}
+                />
+              </Space>
+            </div>
+          </div>
+
           <p></p>
-          <label className={styles["red-star"]} for="invoice-title">
-            故障發生時機：
-          </label>
-          <textarea
-            type="text"
-            className={classNames(
-              styles["text-box"],
-              styles["knowledge-input"],
-            )}
-            name="KnowledgeBaseAlarmOccasion"
-            id="invoice-number12"
-          ></textarea>
+
+          <div className={styles["text-area-container"]}>
+            <label className={styles["red-star"]} for="invoice-title">
+              故障發生時機：
+            </label>
+            <textarea
+              type="text"
+              className={classNames(
+                styles["text-box"],
+                styles["knowledge-input"],
+              )}
+              name="KnowledgeBaseAlarmOccasion"
+              id="invoice-number12"
+            ></textarea>
+
+            <div className={styles["color-picker-container"]}>
+              <Space direction="vertical">
+                <ColorPicker
+                  defaultValue={textColor}
+                  size="small"
+                  onChange={(color) => setTextColor(color.hex)}
+                />
+              </Space>
+            </div>
+          </div>
           <p></p>
 
           <label className={styles["red-star"]} for="invoice-title">

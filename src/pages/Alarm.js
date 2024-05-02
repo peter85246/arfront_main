@@ -3,6 +3,7 @@ import classNames from "classnames";
 import styles from "../scss/global.module.scss";
 import { MindMap } from "../components/MindMap";
 import { Link } from "react-router-dom";
+import AlarmListTree from "../components/AlarmGroup/AlarmListTree";
 
 export default function Alarm() {
   const [alarmValue, setAlarmValue] = useState("待新增");
@@ -67,35 +68,13 @@ export default function Alarm() {
           <div className={styles["title-bar"]}>
             <h3 style={{ padding: "0", marginTop: "20px" }}>機台種類型號</h3>
           </div>
-          {/* <!-- 列表開始 --> */}
+
           <div className={styles["menu"]}>
-            {/* <!-- 項目 --> */}
-            <div className={styles["menu-item-alarm"]}>
-              <div
-                className={styles["collapsible"]}
-                onclick="toggleContent(event, this)"
-              >
-                {/* <span className={styles["arrow"]}>{">"}</span> */}
-              </div>
-              <div className={styles["content-alarm"]}>
-                {/* <!-- 子項目 --> */}
-                <div className={styles["sub-menu-item"]}>
-                  <div
-                    className={styles["collapsible"]}
-                    onclick="toggleContent(event, this)"
-                  >
-                    {/* <span className={styles["arrow"]}>{">"}</span> */}
-                  </div>
-                  <div className={styles["content-alarm"]}>
-                    {/* <div className={styles["final-item"]}>
-                      <span className={styles["dot"]}></span>
-                    </div> */}
-                  </div>
-                </div>
-              </div>
+            <div classname={styles["alarm-list"]}>
+            <AlarmListTree/>
             </div>
           </div>
-          {/* <!-- 列表結束 --> */}
+
         </div>
         {/* <!--右側欄位內容--> */}
         <div className={styles["content-box-right-alarm"]} id="alarm-mindMap">

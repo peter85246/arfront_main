@@ -116,18 +116,18 @@ export const apiUserinfoChangePaw = (data) =>
 //#endregion
 
 //#region 機台管理
-export const apiMachineOverview = (data) =>
-  fetchDataCall("MachineOverview", "post", data); //機台列表
-export const apiGetOneMachine = (data) =>
-  fetchDataCall("GetOneMachine", "post", data); //取得單一機台
-export const apiMachineInfo = (data) =>
-  fetchDataCallFile("MachineInfo", "put", data); //新增/編輯機台
-export const apiDeleteMachine = (data) =>
-  fetchDataCall("DeleteMachine", "delete", data); //刪除機台
-export const apiGetOneMachineDevice = (data) =>
-  fetchDataCall("GetOneMachineDevice", "post", data); //取得單一一筆機台設備
-export const apiEditMachineDevice = (data) =>
-  fetchDataCall("EditMachineDevice", "put", data); //修改機台設備
+// export const apiMachineOverview = (data) =>
+//   fetchDataCall("MachineOverview", "post", data); //機台列表
+// export const apiGetOneMachine = (data) =>
+//   fetchDataCall("GetOneMachine", "post", data); //取得單一機台
+// export const apiMachineInfo = (data) =>
+//   fetchDataCallFile("MachineInfo", "put", data); //新增/編輯機台
+// export const apiDeleteMachine = (data) =>
+//   fetchDataCall("DeleteMachine", "delete", data); //刪除機台
+// export const apiGetOneMachineDevice = (data) =>
+//   fetchDataCall("GetOneMachineDevice", "post", data); //取得單一一筆機台設備
+// export const apiEditMachineDevice = (data) =>
+//   fetchDataCall("EditMachineDevice", "put", data); //修改機台設備
 //#endregion
 
 //#region 機台Alarm管理
@@ -160,3 +160,100 @@ export const apiGetOneMachineIOT = (data) =>
 export const apiSaveMachineIOT = (data) =>
   fetchDataCall("SaveMachineIOT", "put", data); //取得單一IOT資訊
 //#endregion
+
+// 在../utils/Api.js
+
+// 模擬數據
+const machines = [
+  {
+    machineId: 1,
+    machineName: "CNC旋削機",
+    machineType: "CNC",
+    modelSeries: "XJ-900",
+    machineImage: "/detron_data/For Model.jpg",
+    machineDeviceId: 101
+  },
+  {
+    machineId: 2,
+    machineName: "雷射切割機",
+    machineType: "Laser",
+    modelSeries: "LZ-400",
+    machineImage: "/detron_data/SolenoidValveStep3-3.png",
+    machineDeviceId: 102
+  }
+];
+
+// 模擬API呼叫
+export const apiMachineOverview = async (sendData) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({ code: "0000", result: machines.filter(machine => machine.machineName.includes(sendData.keyword)) });
+    }, 1000);
+  });
+};
+
+export const apiGetOneMachine = async (sendData) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      const machine = machines.find(m => m.machineId === sendData.MachineId);
+      resolve({ code: "0000", result: machine || null });
+    }, 1000);
+  });
+};
+
+export const apiMachineInfo = async (formData) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      // 假定這裡是處理表單數據，根據 machineId 判斷是新增還是修改
+      const existingIndex = machines.findIndex(m => m.machineId === parseInt(formData.get("machineId")));
+      if (existingIndex > -1) {
+        // 更新現有機台資訊
+        machines[existingIndex] = {...machines[existingIndex], ...Object.fromEntries(formData)};
+        resolve({ code: "0000", result: machines[existingIndex] });
+      } else {
+        // 新增機台
+        const newMachine = {...Object.fromEntries(formData), machineId: machines.length + 1};
+        machines.push(newMachine);
+        resolve({ code: "0000", result: newMachine });
+      }
+    }, 1000);
+  });
+};
+
+export const apiDeleteMachine = async (sendData) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      const index = machines.findIndex(m => m.machineId === sendData.id);
+      if (index > -1) {
+        machines.splice(index, 1);
+        resolve({ code: "0000" });
+      } else {
+        resolve({ code: "0001", message: "Machine not found" });
+      }
+    }, 1000);
+  });
+};
+
+export const apiGetOneMachineDevice = async (sendData) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      const machine = machines.find(m => m.machineDeviceId === sendData.MachineDeviceId);
+      resolve({ code: "0000", result: machine || null });
+    }, 1000);
+  });
+};
+
+export const apiEditMachineDevice = async (machineDevice) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      const index = machines.findIndex(m => m.machineDeviceId === machineDevice.machineDeviceId);
+      if (index > -1) {
+        // 更新設備資訊
+        machines[index] = {...machines[index], ...machineDevice};
+        resolve({ code: "0000", result: machines[index] });
+      } else {
+        resolve({ code: "0001", message: "Device not found" });
+      }
+    }, 1000);
+  });
+};

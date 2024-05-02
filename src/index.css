@@ -84,7 +84,7 @@ code {
 .sop-col-border-r {
   border: solid 2px #bdbdbd;
   border-radius: 20px;
-  padding: 1rem;
+  padding: 1.2rem 1rem 1rem 1rem;
   background-color: white;
 }
 

@@ -62,6 +62,7 @@ function Nav() {
       <div className="sidebar">
         <nav className="mt-2">
           <ul className="nav nav-pills nav-sidebar flex-column" role="menu">
+            {/* AR設備控制 */}
             <li className="nav-item">
               <NavLink
                 className={(navData) =>
@@ -72,7 +73,7 @@ function Nav() {
                 onClick={() => handleNavClick("machine")} // 使用 handleNavClick 函數
               >
                 <i className="fas fa-microchip"></i>&nbsp;
-                <p>機器管理</p>
+                <p>AR設備控制</p>
               </NavLink>
             </li>
 
@@ -94,6 +95,20 @@ function Nav() {
             ) : (
               <></>
             )}
+
+            <li className="nav-item">
+              <NavLink
+                className={(navData) =>
+                  navData.isActive ? "nav-link active" : "nav-link"
+                }
+                to="/machineKnowledge"
+                style={{ cursor: "pointer" }}
+                onClick={() => handleNavClick("machineKnowledge")} // 使用 handleNavClick 函數
+              >
+                <i class="fa fa-cog" aria-hidden="true"></i>
+                <p style={{ marginLeft: "2px" }}>機台管理</p>
+              </NavLink>
+            </li>
 
             <li
               className={"nav-item"}

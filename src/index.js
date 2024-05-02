@@ -27,6 +27,7 @@ import "./index.css";
 import { RepairDocument } from "./components/RepairDocument";
 import { DocumentEditor } from "./components/DocumentEditor";
 import GPT from "./pages/GPT";
+import MachineKnowledge from "./pages/MachineKnowledge";
 import Assistant from "./components/Assistant";
 import Demo from "./pages/Demo";
 
@@ -49,6 +50,14 @@ root.render(
         element={
           <Home>
             <Machine />
+          </Home>
+        }
+      />
+      <Route
+        path="/machineKnowledge"
+        element={
+          <Home>
+            <MachineKnowledge />
           </Home>
         }
       />

@@ -6,11 +6,15 @@ import { ToastContainer, toast } from "react-toastify";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import Modal from "react-bootstrap/Modal";
 import Spinner from "react-bootstrap/Spinner";
+import styles from "../scss/global.module.scss";
 
 // import styles from "../scss/AlarmDescription.module.scss";
 import { Link } from "react-router-dom";
 
 import { apiGetAllSOPByMachineAlarmId, apiSaveSOP } from "../utils/Api";
+
+import { Space, ColorPicker, theme } from "antd";
+import { generate, red, green, blue } from "@ant-design/colors";
 
 function SOP2() {
   const { t } = useTranslation();
@@ -47,6 +51,17 @@ function SOP2() {
 
   const [selectDeleteSOPIndex, setSelectDeleteSOPIndex] = useState(-1); //要刪除的topic的index
   const [showDeleteSOPModal, setShowDeleteSOPModal] = useState(false); //顯示"刪除SOP modal"
+
+  const [textColor, setTextColor] = useState("#000000"); // 初始文字顏色設為黑色
+
+  const { token } = theme.useToken();
+  // 生成顏色組合
+  const presets = Object.entries({
+    primary: generate("#0052cc"), // 這裡使用一個假設的主要顏色
+    red: red,
+    green: green,
+    blue: blue,
+  }).map(([label, colors]) => ({ label, colors }));
 
   //#region 初始載入
   useEffect(() => {
@@ -844,32 +859,64 @@ function SOP2() {
                       <div className="row mb-3">
                         <div className="col-12">
                           <div className="form-group">
-                            <label>
-                              {t("sop.sopMessage")}
-                              {/*步驟說明*/}
-                            </label>
-                            <textarea
-                              className="form-control"
-                              rows="8"
-                              name="sopMessage"
-                              maxLength="1000"
-                              value={selectSOP.sopMessage}
-                              onChange={(e) => handleSelectSOPChange(e)}
-                            ></textarea>
+                            <div className={styles["text-area-container"]}>
+                              <label>
+                                {t("sop.sopMessage")}
+                                {/*步驟說明*/}
+                              </label>
+                              <textarea
+                                className="form-control"
+                                rows="8"
+                                name="sopMessage"
+                                maxLength="1000"
+                                value={selectSOP.sopMessage}
+                                onChange={(e) => handleSelectSOPChange(e)}
+                                style={{ color: textColor }}
+                              ></textarea>
+                              <div
+                                className={styles["color-picker-container-sop"]}
+                              >
+                                <Space direction="vertical">
+                                  <ColorPicker
+                                    defaultValue={textColor}
+                                    size="small"
+                                    onChange={(color) =>
+                                      setTextColor(color.hex)
+                                    }
+                                  />
+                                </Space>
+                              </div>
+                            </div>
                           </div>
                           <div className="form-group">
-                            <label>
-                              {t("sop.sopRemarksMessage")}
-                              {/*備註說明*/}
-                            </label>
-                            <textarea
-                              className="form-control"
-                              rows="8"
-                              name="sopRemarksMessage"
-                              maxLength="1000"
-                              value={selectSOP.sopRemarksMessage}
-                              onChange={(e) => handleSelectSOPChange(e)}
-                            ></textarea>
+                            <div className={styles["text-area-container"]}>
+                              <label>
+                                {t("sop.sopRemarksMessage")}
+                                {/*備註說明*/}
+                              </label>
+                              <textarea
+                                className="form-control"
+                                rows="8"
+                                name="sopRemarksMessage"
+                                maxLength="1000"
+                                value={selectSOP.sopRemarksMessage}
+                                onChange={(e) => handleSelectSOPChange(e)}
+                                style={{ color: textColor }}
+                              ></textarea>
+                              <div
+                                className={styles["color-picker-container-sop"]}
+                              >
+                                <Space direction="vertical">
+                                  <ColorPicker
+                                    defaultValue={textColor}
+                                    size="small"
+                                    onChange={(color) =>
+                                      setTextColor(color.hex)
+                                    }
+                                  />
+                                </Space>
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </div>

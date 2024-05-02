@@ -18,7 +18,7 @@ import {
   apiEditMachineDevice,
 } from "../utils/Api";
 
-function Machine() {
+function MachineKnowledge() {
   const { t } = useTranslation();
   const navigate = useNavigate(); //跳轉Router
   const validator = new SimpleReactValidator({
@@ -32,21 +32,19 @@ function Machine() {
   const [machineInfo, setMachineInfo] = useState({
     //新增以及修改內容
     machineId: 0,
-    machineCode: "", //機台ID
-    machineSpec: "", //機台規格
+    machineType: "", //機台種類
+    modelSeries: "", //型號系列
+    machineName: "", //機台名稱
     machineImage: "", //機台圖片路徑
     machineImageObj: null, //機台圖片物件
     isDeletedMachineImage: false, //是否刪除圖片
-    machineFile: "", //AR檔案路徑
-    machineFileObj: null, //AR檔案物件
-    isDeletedMachineFile: false, //是否刪除AR檔案
   });
   const [machineInfoErrors, setMachineInfoErrors] = useState({
     //錯誤訊息
-    machineCode: "", //機台ID
-    machineSpec: "", //機台規格
+    machineType: "", //機台種類
+    modelSeries: "", //型號系列
+    machineName: "", //機台名稱
     machineImage: "", //機台圖片路徑
-    machineFile: "", //AR檔案路徑
   });
   const inputImageRef = useRef(null); //input File類型的圖片
   const [saveMachineinfoLoading, setSaveMachineinfoLoading] = useState(false); //儲存的轉圈圈
@@ -156,6 +154,9 @@ function Machine() {
       setMachineInfo({
         machineId: 0,
         machineCode: "", //機台ID
+        machineType: "", //機台種類
+        modelSeries: "", //型號系列
+        machineName: "", //機台名稱
         machineSpec: "", //機台規格
         machineImage: "", //機台圖片路徑
         machineImageObj: null, //機台圖片物件
@@ -180,6 +181,9 @@ function Machine() {
     setMachineInfoErrors({
       //錯誤訊息
       machineCode: "", //機台ID
+      machineType: "", //機台種類
+      modelSeries: "", //型號系列
+      machineName: "", //機台名稱
       machineSpec: "", //機台規格
       machineImage: "", //機台圖片檔名
       machineFile: "", //AR檔案檔名
@@ -218,27 +222,39 @@ function Machine() {
     let result = true;
     let newMachineInfoErrors = { ...machineInfoErrors };
 
-    if (name == "machineCode" || name == "") {
-      if (!validator.check(machineInfo.machineCode, "required")) {
-        newMachineInfoErrors.machineCode = "required";
+    if (name == "machineType" || name == "") {
+      if (!validator.check(machineInfo.machineType, "required")) {
+        newMachineInfoErrors.machineType = "required";
         result = false;
-      } else if (!validator.check(machineInfo.machineCode, "max:100")) {
-        newMachineInfoErrors.machineCode = "max";
+      } else if (!validator.check(machineInfo.machineType, "max:100")) {
+        newMachineInfoErrors.machineType = "max";
         result = false;
       } else {
-        newMachineInfoErrors.machineCode = "";
+        newMachineInfoErrors.machineType = "";
       }
     }
 
-    if (name == "machineSpec" || name == "") {
-      if (!validator.check(machineInfo.machineSpec, "required")) {
-        newMachineInfoErrors.machineSpec = "required";
+    if (name == "modelSeries" || name == "") {
+      if (!validator.check(machineInfo.modelSeries, "required")) {
+        newMachineInfoErrors.modelSeries = "required";
         result = false;
-      } else if (!validator.check(machineInfo.machineSpec, "max:100")) {
-        newMachineInfoErrors.machineSpec = "max";
+      } else if (!validator.check(machineInfo.modelSeries, "max:100")) {
+        newMachineInfoErrors.modelSeries = "max";
         result = false;
       } else {
-        newMachineInfoErrors.machineSpec = "";
+        newMachineInfoErrors.modelSeries = "";
+      }
+    }
+
+    if (name == "machineName" || name == "") {
+      if (!validator.check(machineInfo.machineName, "required")) {
+        newMachineInfoErrors.machineName = "required";
+        result = false;
+      } else if (!validator.check(machineInfo.machineName, "max:100")) {
+        newMachineInfoErrors.machineName = "max";
+        result = false;
+      } else {
+        newMachineInfoErrors.machineName = "";
       }
     }
 
@@ -391,19 +407,14 @@ function Machine() {
 
       var formData = new FormData();
       formData.append("machineId", newMachineInfo.machineId);
-      formData.append("machineCode", newMachineInfo.machineCode);
-      formData.append("machineSpec", newMachineInfo.machineSpec);
+      formData.append("machineType", newMachineInfo.machineType);
+      formData.append("modelSeries", newMachineInfo.modelSeries);
+      formData.append("machineName", newMachineInfo.machineName);
       formData.append("machineImage", newMachineInfo.machineImage);
       formData.append("machineImageObj", newMachineInfo.machineImageObj);
       formData.append(
         "isDeletedMachineImage",
         newMachineInfo.isDeletedMachineImage,
-      );
-      formData.append("machineFile", newMachineInfo.machineFile);
-      formData.append("machineFileObj", newMachineInfo.machineFileObj);
-      formData.append(
-        "isDeletedMachineFile",
-        newMachineInfo.isDeletedMachineFile,
       );
 
       let machineInfoResponse = await apiMachineInfo(formData);
@@ -676,7 +687,7 @@ function Machine() {
             <div className="content-header-text-color">
               <h1>
                 <strong>
-                  {t("machine.content.header")}
+                  {t("machineKnowledge.content.header")}
                   {/*機台管理*/}
                 </strong>
               </h1>
@@ -757,6 +768,8 @@ function Machine() {
                           <h3 className="mb-0"></h3>
                           <h4 className="mb-0">{item.machineName}</h4>
                           <h4 className="mb-0">{item.machineSpec}</h4>
+                          <h4 className="mb-0">{item.machineType}</h4>
+                          <h4 className="mb-0">{item.modelSeries}</h4>
                         </div>
                         <div className="card-footer">
                           <div className="text-muted row justify-content-center">
@@ -829,8 +842,8 @@ function Machine() {
         <Modal.Header closeButton>
           <Modal.Title>
             {machineInfo.machineId == 0
-              ? t("machine.addTitle")
-              : t("machine.editTitle")}
+              ? t("machineKnowledge.addTitle")
+              : t("machineKnowledge.editTitle")}
             {/*新增機台 : 編輯機台*/}
           </Modal.Title>
         </Modal.Header>
@@ -840,20 +853,58 @@ function Machine() {
               <div className="col-12 form-group">
                 <label className="form-label">
                   <span className="text-danger">*</span>
-                  {t("machine.machineCode")}
-                  {/*機台ID*/}
+                  {t("machineKnowledge.machineType")}
+                  {/*機台種類*/}
                 </label>
                 <input
                   type="text"
                   className="form-control"
-                  name="machineCode"
-                  value={machineInfo.machineCode}
+                  name="machineType"
+                  value={machineInfo.machineType}
                   onChange={(e) => handleEditChange(e)}
                   onBlur={(e) => handleEditBlur(e)}
                   autoComplete="off"
                 />
                 {(() => {
-                  switch (machineInfoErrors.machineCode) {
+                  switch (machineInfoErrors.machineType) {
+                    case "required":
+                      return (
+                        <div className="invalid-feedback d-block">
+                          <i className="fas fa-exclamation-circle"></i>{" "}
+                          {t("helpWord.required")}
+                          {/*不得空白*/}
+                        </div>
+                      );
+                    case "max":
+                      return (
+                        <div className="invalid-feedback d-block">
+                          <i className="fas fa-exclamation-circle"></i>{" "}
+                          {t("helpWord.max", { e: 100 })}
+                          {/*超過上限{{e}}個字元*/}
+                        </div>
+                      );
+                    default:
+                      return null;
+                  }
+                })()}
+              </div>
+              <div className="col-12 form-group">
+                <label className="form-label">
+                  <span className="text-danger">*</span>
+                  {t("machineKnowledge.modelSeries")}
+                  {/*型號系列*/}
+                </label>
+                <input
+                  type="text"
+                  className="form-control"
+                  name="modelSeries"
+                  value={machineInfo.modelSeries}
+                  onChange={(e) => handleEditChange(e)}
+                  onBlur={(e) => handleEditBlur(e)}
+                  autoComplete="off"
+                />
+                {(() => {
+                  switch (machineInfoErrors.modelSeries) {
                     case "required":
                       return (
                         <div className="invalid-feedback d-block">
@@ -879,20 +930,20 @@ function Machine() {
               <div className="col-12 form-group">
                 <label className="form-label">
                   <span className="text-danger">*</span>
-                  {t("machine.machineSpec")}
-                  {/*機台規格*/}
+                  {t("machineKnowledge.machineName")}
+                  {/*機台名稱*/}
                 </label>
                 <input
                   type="text"
                   className="form-control"
-                  name="machineSpec"
-                  value={machineInfo.machineSpec}
+                  name="machineName"
+                  value={machineInfo.machineName}
                   onChange={(e) => handleEditChange(e)}
                   onBlur={(e) => handleEditBlur(e)}
                   autoComplete="off"
                 />
                 {(() => {
-                  switch (machineInfoErrors.machineSpec) {
+                  switch (machineInfoErrors.machineName) {
                     case "required":
                       return (
                         <div className="invalid-feedback d-block">
@@ -916,7 +967,7 @@ function Machine() {
               </div>
               <div className="col-12 form-group">
                 <label className="form-label">
-                  {t("machine.machineImage")}
+                  {t("machineKnowledge.machineImage")}
                   {/*機台圖片*/}(640*480)
                 </label>
                 <input
@@ -950,7 +1001,7 @@ function Machine() {
                     />
                   ) : (
                     <span>
-                      {t("machine.uploadImage")}
+                      {t("machineKnowledge.uploadImage")}
                       {/*上傳圖片*/}
                     </span>
                   )}
@@ -981,68 +1032,8 @@ function Machine() {
                   className="btn btn-danger mt-2"
                   onClick={(e) => handleRemoveImageBtn(e)}
                 >
-                  {t("machine.btn.deleteMachineImage")}
+                  {t("machineKnowledge.btn.deleteMachineImage")}
                   {/*移除圖片*/}
-                </button>
-              </div>
-              <div className="col-12 form-group">
-                <label className="form-label">
-                  {t("machine.machineFile")}
-                  {/*機台檔案*/}
-                </label>
-                <br />
-                {(() => {
-                  var fileExtension = "";
-                  if (machineInfo.machineFile != "") {
-                    fileExtension = machineInfo.machineFile
-                      .substr(
-                        machineInfo.machineFile.lastIndexOf(".") +
-                          1 -
-                          machineInfo.machineFile.length,
-                      )
-                      .toLowerCase();
-                  } else if (machineInfo.machineFileObj != null) {
-                    fileExtension = machineInfo.machineFileObj.name
-                      .substr(
-                        machineInfo.machineFileObj.name.lastIndexOf(".") +
-                          1 -
-                          machineInfo.machineFileObj.name.length,
-                      )
-                      .toLowerCase();
-                  }
-
-                  return fileExtension != "" ? (
-                    <img src={`/${fileExtension}.png`} alt="圖片" />
-                  ) : null;
-                })()}
-                <input
-                  type="file"
-                  className="form-control"
-                  name="machineFile"
-                  onChange={(e) => onFileChange(e)}
-                  autoComplete="off"
-                  accept=".zip"
-                />
-                {(() => {
-                  switch (machineInfoErrors.machineFile) {
-                    case "format":
-                      return (
-                        <div className="invalid-feedback d-block">
-                          <i className="fas fa-exclamation-circle"></i>{" "}
-                          {t("helpWord.imageFormat")}
-                          {/*檔案格式不正確*/}
-                        </div>
-                      );
-                    default:
-                      return null;
-                  }
-                })()}
-                <button
-                  className="btn btn-danger mt-2"
-                  onClick={(e) => handleRemoveFileBtn(e)}
-                >
-                  {t("machine.btn.deleteMachineFile")}
-                  {/*移除檔案*/}
                 </button>
               </div>
             </div>
@@ -1092,13 +1083,13 @@ function Machine() {
       >
         <Modal.Header closeButton>
           <Modal.Title>
-            {t("machine.delete")}
+            {t("machineKnowledge.delete")}
             {/*刪除機台*/}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <p>
-            {t("machine.deleteContent")}
+            {t("machineKnowledge.deleteContent")}
             {/*您確定要刪除該筆資料嗎?*/}
           </p>
         </Modal.Body>
@@ -1154,7 +1145,7 @@ function Machine() {
             <div className="row mb-3">
               <div className="col-12 form-group">
                 <label className="form-label">
-                  {t("machine.machineCode")}
+                  {t("machineKnowledge.machineCode")}
                   {/*機台ID*/}
                 </label>
                 <span className="form-text">{machineDevice.machineCode}</span>
@@ -1365,4 +1356,4 @@ function Machine() {
   );
 }
 
-export default Machine;
+export default MachineKnowledge;
