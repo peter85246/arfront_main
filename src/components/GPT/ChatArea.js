@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Select from "react-select";
 import styles from "../../scss/gpt.module.scss";
 import { Button, Input, Flex } from 'antd';
+import { PoweroffOutlined } from '@ant-design/icons';
 
 const ChatArea = ({
   input,
@@ -13,13 +14,15 @@ const ChatArea = ({
   setResponse,
   setIsLoading,
 }) => {
-  const [selectedOption, setSelectedOption] = useState(null); // 新增狀態來追蹤Option選中的選項
+  const [loadings, setLoadings] = useState([false, false, false]); // Loading 狀態追蹤
+  const [selectedOption, setSelectedOption] = useState(null); // 追蹤選中的問題選項
 
   // 將LLM設為初始選中選項
   const [selectedModel, setSelectedModel] = useState({
     value: "LLM",
     label: "LLM",
   });
+  
 
   // 處理 Q&A 選項變更並提交
   const handleSelectChange = async (selectedOption) => {
@@ -38,23 +41,46 @@ const ChatArea = ({
     onSubmit(messageWithImage); // 直接傳遞選項的值進行提交
   };
 
+  // 加入點擊時的 Loading 效果
+  const enterLoading = (index) => {
+    setLoadings(prevLoadings => {
+      const newLoadings = [...prevLoadings];
+      newLoadings[index] = true;
+      return newLoadings;
+    });
+    setTimeout(() => {
+      setLoadings(prevLoadings => {
+        const newLoadings = [...prevLoadings];
+        newLoadings[index] = false;
+        return newLoadings;
+      });
+    }, 2800);
+  };
+
   // 新增重置Option選項的處理
   const resetSelect = () => {
     setSelectedOption(null); // 重置選中的選項
+  };
+
+  const handleSubmission = () => {
+    if (input.trim() === '' && !selectedModel && !selectedOption) {
+      window.alert('Please select the Model & Question ~!');
+    } else {
+      enterLoading(0); // 加入Loading效果
+      onSubmit(input);
+    }
   };
 
   // 修改 handleNewChat 的定義以包含重置 Select
   const modifiedHandleNewChat = () => {
     handleNewChat();
     resetSelect();
+    enterLoading(1); // 加入Loading效果
   };
 
-  const handleSubmission = () => {
-    if (!selectedModel || !selectedOption) {
-      window.alert('Please select the Model & Question ~!');
-    } else {
-      onSubmit(input);
-    }
+  const modifiedHandleClear = () => {
+    enterLoading(2); // 加入Loading效果
+    handleClear();
   };
 
   const options_model = [
@@ -149,9 +175,6 @@ const ChatArea = ({
   };
 
   const { TextArea } = Input;
-  const onChange = (e) => {
-    console.log('Change:', e.target.value);
-  };
 
   return (
     <div className={styles["chat-area"]}>
@@ -186,13 +209,13 @@ const ChatArea = ({
         placeholder="Select the Question"
       />
       <div className={styles["chat-controls"]}>
-        <Button id="send" onClick={handleSubmission}>
+        <Button id="send" loading={loadings[0]} onClick={handleSubmission}>
           Submit
         </Button>
         <Button id="new-chat" onClick={modifiedHandleNewChat}>
           New Chat
         </Button>
-        <Button id="clear" onClick={handleClear}>
+        <Button id="clear" onClick={modifiedHandleClear}>
           Clear Response
         </Button>
       </div>

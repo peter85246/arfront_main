@@ -4,8 +4,8 @@ import rehypeRaw from "rehype-raw";
 import styles from "../../scss/gpt.module.scss"; // 引入樣式文件
 import ChatArea from "./ChatArea";
 
-const GPTResponse = ({ question, response, isLoading, inputText }) => {
-  const [elements, setElements] = useState([]);
+const GPTResponse = ({ question, response, isLoading, inputText, setIsLoading }) => {
+  const [elements, setElements] = useState([]); 
   const responseEndRef = useRef(null);
 
   const options_data = [
@@ -54,24 +54,32 @@ const GPTResponse = ({ question, response, isLoading, inputText }) => {
   ];
 
   // 每次 response 更新時，自動滾動到底部
+  // useEffect(() => {
+  //   if (responseEndRef.current) {
+  //     responseEndRef.current.scrollIntoView({ behavior: "smooth" });
+  //   }
+  // }, [response]); // 依賴於 response 的更新
+
+  // // Loading... 過場動畫
+  // function LoadingIndicator() {
+  //   const [dots, setDots] = useState("...");
+  //   useEffect(() => {
+  //     const timer = setInterval(() => {
+  //       setDots((dots) => (dots.length < 6 ? dots + "." : "..."));
+  //     }, 500);
+  //     return () => clearInterval(timer);
+  //   }, []);
+
+  //   return <div className={styles["loading-indicator"]}>Loading{dots}</div>;
+  // }
+
+  // 當接收到新的inputText時，確保停止加載動畫
+  
   useEffect(() => {
-    if (responseEndRef.current) {
-      responseEndRef.current.scrollIntoView({ behavior: "smooth" });
+    if (elements) {
+      setIsLoading(false);
     }
-  }, [response]); // 依賴於 response 的更新
-
-  // Loading... 過場動畫
-  function LoadingIndicator() {
-    const [dots, setDots] = useState("...");
-    useEffect(() => {
-      const timer = setInterval(() => {
-        setDots((dots) => (dots.length < 6 ? dots + "." : "..."));
-      }, 500);
-      return () => clearInterval(timer);
-    }, []);
-
-    return <div className={styles["loading-indicator"]}>Loading{dots}</div>;
-  }
+  }, [inputText, setIsLoading]);
 
   useEffect(() => {
     const parseContent = () => {
@@ -204,7 +212,7 @@ const GPTResponse = ({ question, response, isLoading, inputText }) => {
       </div>
       <div className={styles["gpt-response"]}>
         {!isLoading && <p className={styles["gptContent"]}></p>}
-        {isLoading && <LoadingIndicator />}
+        {/* {isLoading && <LoadingIndicator />} */}
 
         {/* 圖片png檔案前端渲染器函數 */}
         <div className={styles.step}>{elements}</div>
