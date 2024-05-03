@@ -171,7 +171,7 @@ const machines = [
     machineType: "CNC",
     modelSeries: "XJ-900",
     machineImage: "/detron_data/For Model.jpg",
-    machineDeviceId: 101
+    machineDeviceId: 101,
   },
   {
     machineId: 2,
@@ -179,15 +179,20 @@ const machines = [
     machineType: "Laser",
     modelSeries: "LZ-400",
     machineImage: "/detron_data/SolenoidValveStep3-3.png",
-    machineDeviceId: 102
-  }
+    machineDeviceId: 102,
+  },
 ];
 
 // 模擬API呼叫
 export const apiMachineOverview = async (sendData) => {
   return new Promise((resolve) => {
     setTimeout(() => {
-      resolve({ code: "0000", result: machines.filter(machine => machine.machineName.includes(sendData.keyword)) });
+      resolve({
+        code: "0000",
+        result: machines.filter((machine) =>
+          machine.machineName.includes(sendData.keyword),
+        ),
+      });
     }, 1000);
   });
 };
@@ -195,7 +200,7 @@ export const apiMachineOverview = async (sendData) => {
 export const apiGetOneMachine = async (sendData) => {
   return new Promise((resolve) => {
     setTimeout(() => {
-      const machine = machines.find(m => m.machineId === sendData.MachineId);
+      const machine = machines.find((m) => m.machineId === sendData.MachineId);
       resolve({ code: "0000", result: machine || null });
     }, 1000);
   });
@@ -205,14 +210,22 @@ export const apiMachineInfo = async (formData) => {
   return new Promise((resolve) => {
     setTimeout(() => {
       // 假定這裡是處理表單數據，根據 machineId 判斷是新增還是修改
-      const existingIndex = machines.findIndex(m => m.machineId === parseInt(formData.get("machineId")));
+      const existingIndex = machines.findIndex(
+        (m) => m.machineId === parseInt(formData.get("machineId")),
+      );
       if (existingIndex > -1) {
         // 更新現有機台資訊
-        machines[existingIndex] = {...machines[existingIndex], ...Object.fromEntries(formData)};
+        machines[existingIndex] = {
+          ...machines[existingIndex],
+          ...Object.fromEntries(formData),
+        };
         resolve({ code: "0000", result: machines[existingIndex] });
       } else {
         // 新增機台
-        const newMachine = {...Object.fromEntries(formData), machineId: machines.length + 1};
+        const newMachine = {
+          ...Object.fromEntries(formData),
+          machineId: machines.length + 1,
+        };
         machines.push(newMachine);
         resolve({ code: "0000", result: newMachine });
       }
@@ -223,7 +236,7 @@ export const apiMachineInfo = async (formData) => {
 export const apiDeleteMachine = async (sendData) => {
   return new Promise((resolve) => {
     setTimeout(() => {
-      const index = machines.findIndex(m => m.machineId === sendData.id);
+      const index = machines.findIndex((m) => m.machineId === sendData.id);
       if (index > -1) {
         machines.splice(index, 1);
         resolve({ code: "0000" });
@@ -237,7 +250,9 @@ export const apiDeleteMachine = async (sendData) => {
 export const apiGetOneMachineDevice = async (sendData) => {
   return new Promise((resolve) => {
     setTimeout(() => {
-      const machine = machines.find(m => m.machineDeviceId === sendData.MachineDeviceId);
+      const machine = machines.find(
+        (m) => m.machineDeviceId === sendData.MachineDeviceId,
+      );
       resolve({ code: "0000", result: machine || null });
     }, 1000);
   });
@@ -246,10 +261,12 @@ export const apiGetOneMachineDevice = async (sendData) => {
 export const apiEditMachineDevice = async (machineDevice) => {
   return new Promise((resolve) => {
     setTimeout(() => {
-      const index = machines.findIndex(m => m.machineDeviceId === machineDevice.machineDeviceId);
+      const index = machines.findIndex(
+        (m) => m.machineDeviceId === machineDevice.machineDeviceId,
+      );
       if (index > -1) {
         // 更新設備資訊
-        machines[index] = {...machines[index], ...machineDevice};
+        machines[index] = { ...machines[index], ...machineDevice };
         resolve({ code: "0000", result: machines[index] });
       } else {
         resolve({ code: "0001", message: "Device not found" });

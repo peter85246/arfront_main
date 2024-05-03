@@ -2296,10 +2296,9 @@ img {
 }
 
 .alarm-list {
-  max-height: 80%;  /* 最大高度設為父容器高度的 80% */
+  max-height: 80%; /* 最大高度設為父容器高度的 80% */
   overflow-y: auto; /* 當內容超過最大高度時，顯示滾動條 */
 }
-
 
 .content-box-left-alarm::-webkit-scrollbar {
   width: 13px;

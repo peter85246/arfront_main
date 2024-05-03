@@ -71,10 +71,9 @@ export default function Alarm() {
 
           <div className={styles["menu"]}>
             <div classname={styles["alarm-list"]}>
-            <AlarmListTree/>
+              <AlarmListTree />
             </div>
           </div>
-
         </div>
         {/* <!--右側欄位內容--> */}
         <div className={styles["content-box-right-alarm"]} id="alarm-mindMap">
