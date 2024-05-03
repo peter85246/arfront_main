@@ -12,8 +12,33 @@ const ChatArea = ({
   setResponse,
   setIsLoading,
 }) => {
+  const [selectedOption, setSelectedOption] = useState(null); // 新增狀態來追蹤Option選中的選項
+
+  // 將LLM設為初始選中選項
+  const [selectedModel, setSelectedModel] = useState({
+    value: "LLM",
+    label: "LLM",
+  });
+
+  // 處理 Q&A 選項變更並提交
+  const handleSelectChange = async (selectedOption) => {
+    setSelectedOption(selectedOption); // 更新選中的選項
+    setResponse(""); // 重置回應內容
+    setIsLoading(true); // 保留加載狀態
+
+    setQuestion(selectedOption.label); // 更新顯示在user-question中的文字（只顯示選擇的選項label）
+
+    // 將完整訊息傳送給後台，包含"並加上圖片說明"
+    const messageWithImage = `${selectedOption.value}並加上圖片說明`;
+    onInputChange(selectedOption.label); // 更新輸入值為選項的label
+
+    // 使用異步函數等待狀態更新後提交
+    await new Promise((resolve) => setTimeout(resolve, 0)); // 微小的延遲確保狀態更新
+    onSubmit(messageWithImage); // 直接傳遞選項的值進行提交
+  };
+
   // 新增重置Option選項的處理
-  const resetSelect = (setSelectedOption) => {
+  const resetSelect = () => {
     setSelectedOption(null); // 重置選中的選項
   };
 
@@ -21,34 +46,6 @@ const ChatArea = ({
   const modifiedHandleNewChat = () => {
     handleNewChat();
     resetSelect();
-  };
-
-  // 狀態變量用於模型選單
-  const [selectedModelOption, setSelectedModelOption] = useState(null);
-  // 狀態變量用於數據選單
-  const [selectedDataOption, setSelectedDataOption] = useState(null);
-
-  useEffect(() => {
-    // 若頁面加載後需要選中特定選項，例如 LLM
-    setSelectedModelOption({ value: "LLM", label: "LLM" });
-  }, []);
-
-  // 處理模型選單變更
-  const handleModelChange = (option) => {
-    setSelectedModelOption(option);
-    // 假設你需要根據模型選項做一些操作
-  };
-
-  // 處理數據選單變更並提交
-  const handleDataChange = async (option) => {
-    setSelectedDataOption(option);
-    setResponse("");
-    setIsLoading(true);
-    setQuestion(option.label);
-    const messageWithImage = `${option.value}並加上圖片說明`;
-    onInputChange(option.label);
-    await new Promise((resolve) => setTimeout(resolve, 0));
-    onSubmit(messageWithImage);
   };
 
   const options_model = [
@@ -155,17 +152,17 @@ const ChatArea = ({
       <Select
         id="prompt-select-model"
         styles={customStyles}
-        value={selectedModelOption}
+        // value={selectedModel} // 頁面渲染出現LLM Model，解開value、onChange方法註釋
         options={options_model}
-        onChange={handleModelChange}
+        // onChange={(setSelectedModel)}
         placeholder="Select the Model"
       />
       <Select
         id="prompt-select"
         styles={customStyles}
-        value={selectedDataOption}
+        value={selectedOption}
         options={options_data}
-        onChange={handleDataChange}
+        onChange={handleSelectChange}
         placeholder="Select the Question"
       />
       <div className={styles["chat-controls"]}>
