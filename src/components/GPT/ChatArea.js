@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Select from "react-select";
 import styles from "../../scss/gpt.module.scss";
+import { Button, Input, Flex } from 'antd';
 
 const ChatArea = ({
   input,
@@ -33,7 +34,7 @@ const ChatArea = ({
     onInputChange(selectedOption.label); // 更新輸入值為選項的label
 
     // 使用異步函數等待狀態更新後提交
-    await new Promise((resolve) => setTimeout(resolve, 0)); // 微小的延遲確保狀態更新
+    await new Promise((resolve) => setTimeout(resolve, 100)); // 微小的延遲確保狀態更新
     onSubmit(messageWithImage); // 直接傳遞選項的值進行提交
   };
 
@@ -46,6 +47,14 @@ const ChatArea = ({
   const modifiedHandleNewChat = () => {
     handleNewChat();
     resetSelect();
+  };
+
+  const handleSubmission = () => {
+    if (!selectedModel || !selectedOption) {
+      window.alert('Please select the Model & Question ~!');
+    } else {
+      onSubmit(input);
+    }
   };
 
   const options_model = [
@@ -139,16 +148,27 @@ const ChatArea = ({
     }),
   };
 
+  const { TextArea } = Input;
+  const onChange = (e) => {
+    console.log('Change:', e.target.value);
+  };
+
   return (
     <div className={styles["chat-area"]}>
-      <textarea
-        id="chat-input"
-        className={styles["chat-input"]}
-        placeholder="請輸入資訊"
-        // defaultValue="請介紹貴公司??"
-        value={input}
-        onChange={(e) => onInputChange(e.target.value)}
-      />
+      <Flex vertical gap={32}>
+        <TextArea
+          style={{
+            height: 280,
+            resize: 'none',
+          }}
+          id="chat-input"
+          className={styles["chat-input"]}
+          placeholder="Enter Information !"
+          // defaultValue="請介紹貴公司??"
+          value={input}
+          onChange={(e) => onInputChange(e.target.value)}
+        />
+    </Flex>
       <Select
         id="prompt-select-model"
         styles={customStyles}
@@ -166,15 +186,15 @@ const ChatArea = ({
         placeholder="Select the Question"
       />
       <div className={styles["chat-controls"]}>
-        <button id="send" onClick={() => onSubmit(input)}>
+        <Button id="send" onClick={handleSubmission}>
           Submit
-        </button>
-        <button id="new-chat" onClick={modifiedHandleNewChat}>
+        </Button>
+        <Button id="new-chat" onClick={modifiedHandleNewChat}>
           New Chat
-        </button>
-        <button id="clear" onClick={handleClear}>
+        </Button>
+        <Button id="clear" onClick={handleClear}>
           Clear Response
-        </button>
+        </Button>
       </div>
     </div>
   );

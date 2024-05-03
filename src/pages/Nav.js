@@ -57,7 +57,7 @@ function Nav() {
   return (
     <aside className="main-sidebar elevation-4 sidebar-dark-primary">
       <Link to="/machine" className="brand-link">
-        <span className="brand-text font-weight-light">AR管理系統</span>
+        <span className="brand-text font-weight-light" style={{marginLeft:'15px'}}>AR管理系統</span>
       </Link>
       <div className="sidebar">
         <nav className="mt-2">
