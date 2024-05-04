@@ -63,13 +63,16 @@ const ChatArea = ({
   };
 
   const handleSubmission = () => {
-    if (input.trim() === '' && !selectedModel && !selectedOption) {
-      window.alert('Please select the Model & Question ~!');
-    } else {
-      enterLoading(0); // 加入Loading效果
-      onSubmit(input);
-    }
-  };
+  // 檢查 input 是否有內容或 selectedOption 是否被選擇
+  if (input.trim() === '' && !selectedOption) {
+    window.alert('Please enter some text or select a Model & Question~!');
+  } else {
+    enterLoading(0); // 加入Loading效果
+    const submitValue = input.trim() !== '' ? input : selectedOption.value;
+    onSubmit(submitValue); // 使用 input 或 selectedOption 的值提交
+  }
+};
+
 
   // 修改 handleNewChat 的定義以包含重置 Select
   const modifiedHandleNewChat = () => {
