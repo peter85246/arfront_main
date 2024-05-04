@@ -54,7 +54,7 @@ h2 {
 /* 聊天輸入框的樣式 */
 .chat-input {
   width: 100%; /* 寬度與父元素一致 */
-  height: 420px; /* 高度為300px */
+  height: 65%; /* 根據父元素高度的百分比設定高度 */
   resize: none; /* 禁止調整大小 */
   border-radius: 3px;
   padding: 8px; /* 內部文本的間距（包括 placeholder） */
@@ -70,25 +70,24 @@ h2 {
   flex-direction: column;
   padding: 0; /* 去除內邊距 */
   justify-content: space-between; /* 平均分配子元素 */
-  height: 35%; /* 設定高度為100%，確保填滿父容器 */
+  flex-grow: 1; /* 讓 .chat-controls 填滿所有剩餘空間 */
 }
 
-.chat-controls button:hover {
+/* 鼠標悬停样式 */
+.chat-controls > *:hover {
   background-color: #d8d8d8;
-  transition: left 0.5s ease; /* 添加過渡效果 */
+  transition: background-color 0.5s ease; /* 修改過渡效果屬性 */
 }
 
-/* 控制按鈕的樣式 */
-.chat-controls button {
+/* 公用樣式設置給 Select 元件和 Button */
+.chat-controls > * {
+  flex-grow: 1; /* 讓所有子元件均分剩餘空間 */
   width: 100%; /* 寬度與父元素一致 */
-  min-height: 6vh; /* 高度設為45px */
-  max-height: 300vh;
-  margin-bottom: 0px; /* 與下一個按鈕的間距為5px */
+  min-height: 6vh; /* 設定最小高度 */
   text-align: center; /* 文字置中 */
   border-radius: 5px;
-  cursor: pointer;
   border: solid 1px black;
-  margin: 5px 0px 0px 0px;
+  margin: 5px 0px 0px 0px; /* 調整上下邊距 */
 }
 
 /* 用戶問題展示區的樣式 */
