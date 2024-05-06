@@ -54,7 +54,6 @@ h2 {
 /* 聊天輸入框的樣式 */
 .chat-input {
   width: 100%; /* 寬度與父元素一致 */
-  height: 65%; /* 根據父元素高度的百分比設定高度 */
   resize: none; /* 禁止調整大小 */
   border-radius: 3px;
   padding: 8px; /* 內部文本的間距（包括 placeholder） */

@@ -184,8 +184,8 @@ const ChatArea = ({
       <Flex vertical gap={32}>
         <TextArea
           style={{
-            height: 280,
             resize: 'none',
+            height: '40vh'  // 直接設定高度為視窗高度的百分比
           }}
           id="chat-input"
           className={styles["chat-input"]}
@@ -194,7 +194,7 @@ const ChatArea = ({
           value={input}
           onChange={(e) => onInputChange(e.target.value)}
         />
-    </Flex>
+      </Flex>
       <Select
         id="prompt-select-model"
         styles={customStyles}
