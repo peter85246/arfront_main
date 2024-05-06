@@ -33,6 +33,7 @@ function Machine() {
     //新增以及修改內容
     machineId: 0,
     machineCode: "", //機台ID
+    machineName: "", //機台名稱
     machineSpec: "", //機台規格
     machineImage: "", //機台圖片路徑
     machineImageObj: null, //機台圖片物件
@@ -156,6 +157,7 @@ function Machine() {
       setMachineInfo({
         machineId: 0,
         machineCode: "", //機台ID
+        machineName: "", //機台名稱
         machineSpec: "", //機台規格
         machineImage: "", //機台圖片路徑
         machineImageObj: null, //機台圖片物件
@@ -180,6 +182,7 @@ function Machine() {
     setMachineInfoErrors({
       //錯誤訊息
       machineCode: "", //機台ID
+      machineName: "", //機台名稱
       machineSpec: "", //機台規格
       machineImage: "", //機台圖片檔名
       machineFile: "", //AR檔案檔名
@@ -227,6 +230,18 @@ function Machine() {
         result = false;
       } else {
         newMachineInfoErrors.machineCode = "";
+      }
+    }
+
+    if (name == "machineName" || name == "") {
+      if (!validator.check(machineInfo.machineName, "required")) {
+        newMachineInfoErrors.machineName = "required";
+        result = false;
+      } else if (!validator.check(machineInfo.machineName, "max:100")) {
+        newMachineInfoErrors.machineName = "max";
+        result = false;
+      } else {
+        newMachineInfoErrors.machineName = "";
       }
     }
 
@@ -392,6 +407,7 @@ function Machine() {
       var formData = new FormData();
       formData.append("machineId", newMachineInfo.machineId);
       formData.append("machineCode", newMachineInfo.machineCode);
+      formData.append("machineName", newMachineInfo.machineName);
       formData.append("machineSpec", newMachineInfo.machineSpec);
       formData.append("machineImage", newMachineInfo.machineImage);
       formData.append("machineImageObj", newMachineInfo.machineImageObj);
@@ -854,6 +870,45 @@ function Machine() {
                 />
                 {(() => {
                   switch (machineInfoErrors.machineCode) {
+                    case "required":
+                      return (
+                        <div className="invalid-feedback d-block">
+                          <i className="fas fa-exclamation-circle"></i>{" "}
+                          {t("helpWord.required")}
+                          {/*不得空白*/}
+                        </div>
+                      );
+                    case "max":
+                      return (
+                        <div className="invalid-feedback d-block">
+                          <i className="fas fa-exclamation-circle"></i>{" "}
+                          {t("helpWord.max", { e: 100 })}
+                          {/*超過上限{{e}}個字元*/}
+                        </div>
+                      );
+                    default:
+                      return null;
+                  }
+                })()}
+              </div>
+
+              <div className="col-12 form-group">
+                <label className="form-label">
+                  <span className="text-danger">*</span>
+                  {t("machine.machineName")}
+                  {/*機台名稱*/}
+                </label>
+                <input
+                  type="text"
+                  className="form-control"
+                  name="machineName"
+                  value={machineInfo.machineName}
+                  onChange={(e) => handleEditChange(e)}
+                  onBlur={(e) => handleEditBlur(e)}
+                  autoComplete="off"
+                />
+                {(() => {
+                  switch (machineInfoErrors.machineName) {
                     case "required":
                       return (
                         <div className="invalid-feedback d-block">

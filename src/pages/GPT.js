@@ -53,7 +53,7 @@ const fetchGPTResponse = async (
     }
   } catch (error) {
     console.error("Error:", error);
-    setIsLoading(false);  // 確保在出現錯誤時停止加載動畫
+    setIsLoading(false); // 確保在出現錯誤時停止加載動畫
     throw new Error("Failed to fetch response");
   }
 };
@@ -195,7 +195,7 @@ export default function GPT({ options_data }) {
               inputText={response} // 傳遞回應文本給 GPTImageParser
               isLoading={isLoading}
               error={error}
-              setIsLoading={setIsLoading}  // 傳遞 setIsLoading 函數
+              setIsLoading={setIsLoading} // 傳遞 setIsLoading 函數
             />
           </div>
         </div>

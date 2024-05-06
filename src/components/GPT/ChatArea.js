@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import Select from "react-select";
 import styles from "../../scss/gpt.module.scss";
-import { Button, Input, Flex } from 'antd';
-import { PoweroffOutlined } from '@ant-design/icons';
+import { Button, Input, Flex } from "antd";
+import { PoweroffOutlined } from "@ant-design/icons";
 
 const ChatArea = ({
   input,
@@ -22,7 +22,6 @@ const ChatArea = ({
     value: "LLM",
     label: "LLM",
   });
-  
 
   // 處理 Q&A 選項變更並提交
   const handleSelectChange = async (selectedOption) => {
@@ -43,13 +42,13 @@ const ChatArea = ({
 
   // 加入點擊時的 Loading 效果
   const enterLoading = (index) => {
-    setLoadings(prevLoadings => {
+    setLoadings((prevLoadings) => {
       const newLoadings = [...prevLoadings];
       newLoadings[index] = true;
       return newLoadings;
     });
     setTimeout(() => {
-      setLoadings(prevLoadings => {
+      setLoadings((prevLoadings) => {
         const newLoadings = [...prevLoadings];
         newLoadings[index] = false;
         return newLoadings;
@@ -63,16 +62,15 @@ const ChatArea = ({
   };
 
   const handleSubmission = () => {
-  // 檢查 input 是否有內容或 selectedOption 是否被選擇
-  if (input.trim() === '' && !selectedOption) {
-    window.alert('Please enter some text or select a Model & Question~!');
-  } else {
-    enterLoading(0); // 加入Loading效果
-    const submitValue = input.trim() !== '' ? input : selectedOption.value;
-    onSubmit(submitValue); // 使用 input 或 selectedOption 的值提交
-  }
-};
-
+    // 檢查 input 是否有內容或 selectedOption 是否被選擇
+    if (input.trim() === "" && !selectedOption) {
+      window.alert("Please enter some text or select a Model & Question~!");
+    } else {
+      enterLoading(0); // 加入Loading效果
+      const submitValue = input.trim() !== "" ? input : selectedOption.value;
+      onSubmit(submitValue); // 使用 input 或 selectedOption 的值提交
+    }
+  };
 
   // 修改 handleNewChat 的定義以包含重置 Select
   const modifiedHandleNewChat = () => {
@@ -184,8 +182,8 @@ const ChatArea = ({
       <Flex vertical gap={32}>
         <TextArea
           style={{
-            resize: 'none',
-            height: '40vh'  // 直接設定高度為視窗高度的百分比
+            resize: "none",
+            height: "40vh", // 直接設定高度為視窗高度的百分比
           }}
           id="chat-input"
           className={styles["chat-input"]}

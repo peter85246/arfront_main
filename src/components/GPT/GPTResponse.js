@@ -3,8 +3,14 @@ import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
 import styles from "../../scss/gpt.module.scss"; // 引入樣式文件
 
-const GPTResponse = ({ question, response, isLoading, inputText, setIsLoading }) => {
-  const [elements, setElements] = useState([]); 
+const GPTResponse = ({
+  question,
+  response,
+  isLoading,
+  inputText,
+  setIsLoading,
+}) => {
+  const [elements, setElements] = useState([]);
   const responseEndRef = useRef(null);
 
   const options_data = [
@@ -51,7 +57,7 @@ const GPTResponse = ({ question, response, isLoading, inputText, setIsLoading })
       ],
     },
   ];
-  
+
   useEffect(() => {
     if (elements) {
       setIsLoading(false);
@@ -184,7 +190,7 @@ const GPTResponse = ({ question, response, isLoading, inputText, setIsLoading })
   // 監聽 elements，當完成更新後結束加載動畫
   useEffect(() => {
     if (elements.length > 0) {
-      setIsLoading(false);  // 當 elements 完全生成後停止加載動畫
+      setIsLoading(false); // 當 elements 完全生成後停止加載動畫
     }
   }, [elements]);
 

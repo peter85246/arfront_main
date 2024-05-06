@@ -10,12 +10,10 @@ import Modal from "react-bootstrap/Modal";
 import Pagination from "react-bootstrap/Pagination";
 
 import {
-  apiMachineOverview,
-  apiGetOneMachine,
-  apiMachineInfo,
-  apiDeleteMachine,
-  apiGetOneMachineDevice,
-  apiEditMachineDevice,
+  apiMachineAddOverview,
+  apiGetOneMachineAdd,
+  apiMachineAddInfo,
+  apiDeleteMachineAdd,
 } from "../utils/Api";
 
 function MachineKnowledge() {
@@ -31,7 +29,7 @@ function MachineKnowledge() {
   const [showMachineinfoModal, setShowMachineinfoModal] = useState(false); //顯示"機台 modal"
   const [machineInfo, setMachineInfo] = useState({
     //新增以及修改內容
-    machineId: 0,
+    machineAddId: 0,
     machineType: "", //機台種類
     modelSeries: "", //型號系列
     machineName: "", //機台名稱
@@ -56,28 +54,6 @@ function MachineKnowledge() {
 
   const [showMachineDeviceModal, setShowMachineDeviceModal] = useState(false); //顯示機台設備"modal"
 
-  const [machineDevice, setMachineDevice] = useState({
-    //機台設備
-    machineDeviceId: 0,
-    machineId: 0,
-    machineCode: 0,
-    machineDeviceControlerModel: "", //控制器模組
-    machineDeviceServerIP: "", //伺服器IP
-    machineDeviceServerPort: "", //伺服器port
-    machineDeviceMachineIP: "", //機台IP
-  });
-
-  const [machineDeviceErrors, setMachineDeviceErrors] = useState({
-    //機台設備 - 錯誤訊息
-    machineDeviceControlerModel: "", //控制器模組
-    machineDeviceServerIP: "", //伺服器IP
-    machineDeviceServerPort: "", //伺服器port
-    machineDeviceMachineIP: "", //機台IP
-  });
-
-  const [saveMachineDeviceLoading, setSaveMachineDeviceLoading] =
-    useState(false); //機台設備儲存的轉圈圈
-
   //#region 初始載入
   useEffect(() => {
     removeWindowClass("login-page");
@@ -96,7 +72,7 @@ function MachineKnowledge() {
       keyword: keyword,
     };
 
-    let machineOverviewResponse = await apiMachineOverview(sendData);
+    let machineOverviewResponse = await apiMachineAddOverview(sendData);
     if (machineOverviewResponse) {
       if (machineOverviewResponse.code == "0000") {
         setMachineList(machineOverviewResponse.result);
@@ -147,30 +123,25 @@ function MachineKnowledge() {
   //#endregion
 
   //#region 開啟機台Modal
-  const handleOpenMachineinfoModal = async (machineId) => {
+  const handleOpenMachineinfoModal = async (machineAddId) => {
     //e.preventDefault();
 
-    if (machineId == 0) {
+    if (machineAddId == 0) {
       setMachineInfo({
-        machineId: 0,
-        machineCode: "", //機台ID
+        machineAddId: 0,
         machineType: "", //機台種類
         modelSeries: "", //型號系列
         machineName: "", //機台名稱
-        machineSpec: "", //機台規格
         machineImage: "", //機台圖片路徑
         machineImageObj: null, //機台圖片物件
         isDeletedMachineImage: false, //是否刪除圖片
-        machineFile: "", //AR檔案路徑
-        machineFileObj: null, //AR檔案物件
-        isDeletedMachineFile: false, //是否刪除AR檔案
       });
     } else {
       var sendData = {
-        MachineId: machineId,
+        MachineAddId: machineAddId,
       };
 
-      let getOneMachineResponse = await apiGetOneMachine(sendData);
+      let getOneMachineResponse = await apiGetOneMachineAdd(sendData);
       if (getOneMachineResponse) {
         if (getOneMachineResponse.code == "0000") {
           setMachineInfo(getOneMachineResponse.result);
@@ -350,44 +321,6 @@ function MachineKnowledge() {
   };
   //#endregion
 
-  //#region 上傳檔案事件
-  const onFileChange = (e) => {
-    let newMachineInfo = { ...machineInfo };
-    let newMachineInfoErrors = { ...machineInfoErrors };
-    var file = e.target.files[0];
-    if (file != null) {
-      var fileExtension = file.name
-        .substr(file.name.lastIndexOf(".") + 1 - file.name.length)
-        .toLowerCase();
-      if (!(fileExtension == "zip")) {
-        newMachineInfoErrors.machineFile = "format";
-        newMachineInfo.machineFileObj = null;
-      } else {
-        newMachineInfoErrors.machineFile = "";
-        newMachineInfo.machineFileObj = file;
-        if (newMachineInfo.machineFile != "") {
-          newMachineInfo.isDeletedMachineFile = true;
-        }
-      }
-      setMachineInfoErrors(newMachineInfoErrors);
-    }
-    setMachineInfo(newMachineInfo);
-  };
-  //#endregion
-
-  //#region 移除檔案按鈕
-  const handleRemoveFileBtn = (e) => {
-    e.preventDefault();
-    let newMachineInfo = { ...machineInfo };
-
-    newMachineInfo.machineFile = "";
-    newMachineInfo.machineFileObj = null;
-    newMachineInfo.isDeletedMachineFile = true;
-
-    setMachineInfo(newMachineInfo);
-  };
-  //#endregion
-
   //#region 儲存機台
   const handleSaveMachineinfo = async (e) => {
     e.preventDefault();
@@ -406,7 +339,7 @@ function MachineKnowledge() {
       setSaveMachineinfoLoading(true);
 
       var formData = new FormData();
-      formData.append("machineId", newMachineInfo.machineId);
+      formData.append("machineAddId", newMachineInfo.machineAddId);
       formData.append("machineType", newMachineInfo.machineType);
       formData.append("modelSeries", newMachineInfo.modelSeries);
       formData.append("machineName", newMachineInfo.machineName);
@@ -417,11 +350,11 @@ function MachineKnowledge() {
         newMachineInfo.isDeletedMachineImage,
       );
 
-      let machineInfoResponse = await apiMachineInfo(formData);
+      let machineInfoResponse = await apiMachineAddInfo(formData);
       if (machineInfoResponse) {
         if (machineInfoResponse.code == "0000") {
           toast.success(
-            newMachineInfo.machineId == 0
+            newMachineInfo.machineAddId == 0
               ? t("toast.add.success")
               : t("toast.edit.success"),
             {
@@ -453,8 +386,8 @@ function MachineKnowledge() {
   //#endregion
 
   //#region 開啟刪除機台Modal
-  const handleOpenDeleteMachineModal = (machineId) => {
-    setSelectDeleteMachineId(machineId);
+  const handleOpenDeleteMachineModal = (machineAddId) => {
+    setSelectDeleteMachineId(machineAddId);
     setShowDeleteMachineModal(true);
   };
   //#endregion
@@ -478,7 +411,7 @@ function MachineKnowledge() {
       id: selectDeleteMachineId,
     };
 
-    let deleteMachineResponse = await apiDeleteMachine(sendData);
+    let deleteMachineResponse = await apiDeleteMachineAdd(sendData);
     if (deleteMachineResponse) {
       if (deleteMachineResponse.code == "0000") {
         toast.success(t("toast.delete.success"), {
@@ -507,174 +440,12 @@ function MachineKnowledge() {
   };
   //#endregion
 
-  //#region 開啟機台設備Modal
-  const handleOpenMachineDeviceModal = async (machineDeviceId) => {
-    var sendData = {
-      MachineDeviceId: machineDeviceId,
-    };
-
-    let getOneMachineDeviceResponse = await apiGetOneMachineDevice(sendData);
-    if (getOneMachineDeviceResponse) {
-      if (getOneMachineDeviceResponse.code == "0000") {
-        setMachineDevice(getOneMachineDeviceResponse.result);
-      }
-    }
-    setMachineDeviceErrors({
-      //錯誤訊息
-      MachineDeviceControlerModel: "", //控制器模組
-      MachineDeviceServerIP: "", //伺服器IP
-      MachineDeviceServerPort: "", //伺服器port
-      MachineDeviceMachineIP: "", //機台IP
-    });
-    setShowMachineDeviceModal(true);
-  };
-  //#endregion
-
   //#region 關閉機台設備Modal
   const handleCloseMachineDeviceModal = async (e) => {
     if (e) {
       e.preventDefault();
     }
     setShowMachineDeviceModal(false);
-  };
-  //#endregion
-
-  //#region 修改機台設備 改變Input的欄位
-  const handleEditMachineDeviceChange = (e) => {
-    const { name, value } = e.target;
-    setMachineDevice({ ...machineDevice, [name]: value });
-  };
-  //#endregion
-
-  //#region 修改機台設備 失去焦點Input的欄位
-  const handleEditMachineDeviceBlur = async (e) => {
-    const { name, value } = e.target;
-
-    await checkEditMachineDeviceValidator(name);
-  };
-  //#endregion
-
-  //#region 機台設備 欄位驗證
-  const checkEditMachineDeviceValidator = async (name = "", val = "") => {
-    let result = true;
-    let newMachineDeviceErrors = { ...machineDeviceErrors };
-
-    if (name == "machineDeviceControlerModel" || name == "") {
-      if (
-        !validator.check(machineDevice.machineDeviceControlerModel, "required")
-      ) {
-        newMachineDeviceErrors.machineDeviceControlerModel = "required";
-        result = false;
-      } else if (
-        !validator.check(machineDevice.machineDeviceControlerModel, "max:100")
-      ) {
-        newMachineDeviceErrors.machineDeviceControlerModel = "max";
-        result = false;
-      } else {
-        newMachineDeviceErrors.machineDeviceControlerModel = "";
-      }
-    }
-
-    if (name == "machineDeviceServerIP" || name == "") {
-      if (!validator.check(machineDevice.machineDeviceServerIP, "required")) {
-        newMachineDeviceErrors.machineDeviceServerIP = "required";
-        result = false;
-      } else if (
-        !validator.check(machineDevice.machineDeviceServerIP, "max:20")
-      ) {
-        newMachineDeviceErrors.machineDeviceServerIP = "max";
-        result = false;
-      } else {
-        newMachineDeviceErrors.machineDeviceServerIP = "";
-      }
-    }
-
-    if (name == "machineDeviceServerPort" || name == "") {
-      if (!validator.check(machineDevice.machineDeviceServerPort, "required")) {
-        newMachineDeviceErrors.machineDeviceServerPort = "required";
-        result = false;
-      } else if (
-        !validator.check(
-          machineDevice.machineDeviceServerPort.toString(),
-          "max:10",
-        )
-      ) {
-        newMachineDeviceErrors.machineDeviceServerPort = "max";
-        result = false;
-      } else if (
-        !validator.check(machineDevice.machineDeviceServerPort, "integer")
-      ) {
-        newMachineDeviceErrors.machineDeviceServerPort = "numeric";
-        result = false;
-      } else {
-        newMachineDeviceErrors.machineDeviceServerPort = "";
-      }
-    }
-
-    if (name == "machineDeviceMachineIP" || name == "") {
-      if (!validator.check(machineDevice.machineDeviceMachineIP, "required")) {
-        newMachineDeviceErrors.machineDeviceMachineIP = "required";
-        result = false;
-      } else if (
-        !validator.check(machineDevice.machineDeviceMachineIP, "max:20")
-      ) {
-        newMachineDeviceErrors.machineDeviceMachineIP = "max";
-        result = false;
-      } else {
-        newMachineDeviceErrors.machineDeviceMachineIP = "";
-      }
-    }
-
-    setMachineDeviceErrors(newMachineDeviceErrors);
-    return result;
-  };
-  //#endregion
-
-  //#region 儲存機台設備
-  const handleSaveMachineDevice = async (e) => {
-    e.preventDefault();
-
-    if (await checkEditMachineDeviceValidator()) {
-      setSaveMachineDeviceLoading(true);
-
-      let editMachineDeviceResponse = await apiEditMachineDevice(machineDevice);
-      if (editMachineDeviceResponse) {
-        if (editMachineDeviceResponse.code == "0000") {
-          toast.success(t("toast.edit.success"), {
-            position: toast.POSITION.TOP_CENTER,
-            autoClose: 3000,
-            hideProgressBar: true,
-            closeOnClick: false,
-            pauseOnHover: false,
-          });
-
-          setShowMachineDeviceModal(false);
-        } else {
-          toast.error(editMachineDeviceResponse.message, {
-            position: toast.POSITION.TOP_CENTER,
-            autoClose: 5000,
-            hideProgressBar: true,
-            closeOnClick: false,
-            pauseOnHover: false,
-          });
-        }
-        setSaveMachineDeviceLoading(false);
-      } else {
-        setSaveMachineDeviceLoading(false);
-      }
-    }
-  };
-  //#endregion
-
-  //#region 前往機台IOT
-  const handleGotoMachineIOT = (machineId) => {
-    navigate(`/machine/${machineId}/machineIOTList`);
-  };
-  //#endregion
-
-  //#region 前往機台Alarm
-  const handleGotoMachineAlarm = (machineId) => {
-    navigate(`/machine/${machineId}/machineAlarm`);
   };
   //#endregion
 
@@ -734,7 +505,7 @@ function MachineKnowledge() {
                                 type="button"
                                 className="btn btn-outline-primary btn-circle btn-sm"
                                 onClick={() =>
-                                  handleOpenMachineinfoModal(item.machineId)
+                                  handleOpenMachineinfoModal(item.machineAddId)
                                 }
                               >
                                 <i className="fas fa-pencil-alt"></i>
@@ -743,7 +514,9 @@ function MachineKnowledge() {
                                 type="button"
                                 className="btn btn-outline-danger btn-circle btn-sm ml-1"
                                 onClick={() =>
-                                  handleOpenDeleteMachineModal(item.machineId)
+                                  handleOpenDeleteMachineModal(
+                                    item.machineAddId,
+                                  )
                                 }
                               >
                                 <i className="fas fa-trash-alt"></i>
@@ -767,42 +540,8 @@ function MachineKnowledge() {
                         <div className="card-body">
                           <h3 className="mb-0"></h3>
                           <h4 className="mb-0">{item.machineName}</h4>
-                          <h4 className="mb-0">{item.machineSpec}</h4>
                           <h4 className="mb-0">{item.machineType}</h4>
                           <h4 className="mb-0">{item.modelSeries}</h4>
-                        </div>
-                        <div className="card-footer">
-                          <div className="text-muted row justify-content-center">
-                            <button
-                              type="button"
-                              className="btn btn-info col-3 mt-2"
-                              onClick={() =>
-                                handleGotoMachineAlarm(item.machineId)
-                              }
-                            >
-                              SOP
-                            </button>
-                            <button
-                              type="button"
-                              className="btn btn-info col-3 offset-md-1 mt-2"
-                              onClick={() =>
-                                handleOpenMachineDeviceModal(
-                                  item.machineDeviceId,
-                                )
-                              }
-                            >
-                              Device
-                            </button>
-                            <button
-                              type="button"
-                              className="btn btn-info col-3 offset-md-1 mt-2"
-                              onClick={() =>
-                                handleGotoMachineIOT(item.machineId)
-                              }
-                            >
-                              IOT
-                            </button>
-                          </div>
                         </div>
                       </div>
                     </div>
@@ -841,7 +580,7 @@ function MachineKnowledge() {
       >
         <Modal.Header closeButton>
           <Modal.Title>
-            {machineInfo.machineId == 0
+            {machineInfo.machineAddId == 0
               ? t("machineKnowledge.addTitle")
               : t("machineKnowledge.editTitle")}
             {/*新增機台 : 編輯機台*/}
@@ -1140,216 +879,6 @@ function MachineKnowledge() {
             {/*編輯機台設備*/}
           </Modal.Title>
         </Modal.Header>
-        <Modal.Body>
-          <form>
-            <div className="row mb-3">
-              <div className="col-12 form-group">
-                <label className="form-label">
-                  {t("machineKnowledge.machineCode")}
-                  {/*機台ID*/}
-                </label>
-                <span className="form-text">{machineDevice.machineCode}</span>
-              </div>
-              <div className="col-12 form-group">
-                <label className="form-label">
-                  <span className="text-danger">*</span>
-                  {t("machineDevice.machineDeviceControlerModel")}
-                  {/*控制器模組*/}
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  name="machineDeviceControlerModel"
-                  maxLength="100"
-                  value={machineDevice.machineDeviceControlerModel}
-                  onChange={(e) => handleEditMachineDeviceChange(e)}
-                  onBlur={(e) => handleEditMachineDeviceBlur(e)}
-                  autoComplete="off"
-                />
-                {(() => {
-                  switch (machineDeviceErrors.machineDeviceControlerModel) {
-                    case "required":
-                      return (
-                        <div className="invalid-feedback d-block">
-                          <i className="fas fa-exclamation-circle"></i>{" "}
-                          {t("helpWord.required")}
-                          {/*不得空白*/}
-                        </div>
-                      );
-                    case "max":
-                      return (
-                        <div className="invalid-feedback d-block">
-                          <i className="fas fa-exclamation-circle"></i>{" "}
-                          {t("helpWord.max", { e: 100 })}
-                          {/*超過上限{{e}}個字元*/}
-                        </div>
-                      );
-                    default:
-                      return null;
-                  }
-                })()}
-              </div>
-              <div className="col-12 form-group">
-                <label className="form-label">
-                  <span className="text-danger">*</span>
-                  {t("machineDevice.machineDeviceServerIP")}
-                  {/*伺服器IP*/}
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  name="machineDeviceServerIP"
-                  maxLength="20"
-                  value={machineDevice.machineDeviceServerIP}
-                  onChange={(e) => handleEditMachineDeviceChange(e)}
-                  onBlur={(e) => handleEditMachineDeviceBlur(e)}
-                  autoComplete="off"
-                />
-                {(() => {
-                  switch (machineDeviceErrors.machineDeviceServerIP) {
-                    case "required":
-                      return (
-                        <div className="invalid-feedback d-block">
-                          <i className="fas fa-exclamation-circle"></i>{" "}
-                          {t("helpWord.required")}
-                          {/*不得空白*/}
-                        </div>
-                      );
-                    case "max":
-                      return (
-                        <div className="invalid-feedback d-block">
-                          <i className="fas fa-exclamation-circle"></i>{" "}
-                          {t("helpWord.max", { e: 20 })}
-                          {/*超過上限{{e}}個字元*/}
-                        </div>
-                      );
-                    default:
-                      return null;
-                  }
-                })()}
-              </div>
-              <div className="col-12 form-group">
-                <label className="form-label">
-                  <span className="text-danger">*</span>
-                  {t("machineDevice.machineDeviceServerPort")}
-                  {/*伺服器Port*/}
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  name="machineDeviceServerPort"
-                  maxLength="10"
-                  value={machineDevice.machineDeviceServerPort}
-                  onChange={(e) => handleEditMachineDeviceChange(e)}
-                  onBlur={(e) => handleEditMachineDeviceBlur(e)}
-                  autoComplete="off"
-                />
-                {(() => {
-                  switch (machineDeviceErrors.machineDeviceServerPort) {
-                    case "required":
-                      return (
-                        <div className="invalid-feedback d-block">
-                          <i className="fas fa-exclamation-circle"></i>{" "}
-                          {t("helpWord.required")}
-                          {/*不得空白*/}
-                        </div>
-                      );
-                    case "numeric":
-                      return (
-                        <div className="invalid-feedback d-block">
-                          <i className="fas fa-exclamation-circle"></i>{" "}
-                          {t("helpWord.numeric")}
-                          {/*需為數字*/}
-                        </div>
-                      );
-                    case "max":
-                      return (
-                        <div className="invalid-feedback d-block">
-                          <i className="fas fa-exclamation-circle"></i>{" "}
-                          {t("helpWord.max", { e: 10 })}
-                          {/*超過上限{{e}}個字元*/}
-                        </div>
-                      );
-                    default:
-                      return null;
-                  }
-                })()}
-              </div>
-              <div className="col-12 form-group">
-                <label className="form-label">
-                  <span className="text-danger">*</span>
-                  {t("machineDevice.machineDeviceMachineIP")}
-                  {/*機台IP*/}
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  name="machineDeviceMachineIP"
-                  maxLength="20"
-                  value={machineDevice.machineDeviceMachineIP}
-                  onChange={(e) => handleEditMachineDeviceChange(e)}
-                  onBlur={(e) => handleEditMachineDeviceBlur(e)}
-                  autoComplete="off"
-                />
-                {(() => {
-                  switch (machineDeviceErrors.machineDeviceMachineIP) {
-                    case "required":
-                      return (
-                        <div className="invalid-feedback d-block">
-                          <i className="fas fa-exclamation-circle"></i>{" "}
-                          {t("helpWord.required")}
-                          {/*不得空白*/}
-                        </div>
-                      );
-                    case "max":
-                      return (
-                        <div className="invalid-feedback d-block">
-                          <i className="fas fa-exclamation-circle"></i>{" "}
-                          {t("helpWord.max", { e: 20 })}
-                          {/*超過上限{{e}}個字元*/}
-                        </div>
-                      );
-                    default:
-                      return null;
-                  }
-                })()}
-              </div>
-            </div>
-          </form>
-        </Modal.Body>
-        <Modal.Footer>
-          <button
-            type="button"
-            className="btn btn-secondary"
-            onClick={(e) => handleCloseMachineDeviceModal(e)}
-          >
-            {t("btn.cancel")}
-            {/*取消*/}
-          </button>
-          <button
-            type="button"
-            className="btn btn-primary"
-            disabled={saveMachineDeviceLoading}
-            onClick={handleSaveMachineDevice}
-          >
-            {saveMachineDeviceLoading ? (
-              <>
-                <Spinner
-                  as="span"
-                  animation="border"
-                  size="sm"
-                  role="status"
-                  aria-hidden="true"
-                />
-              </>
-            ) : (
-              <span>
-                {t("btn.save")}
-                {/*儲存*/}
-              </span>
-            )}
-          </button>
-        </Modal.Footer>
       </Modal>
       {/*device modal - end*/}
     </>
