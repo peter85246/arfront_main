@@ -46,6 +46,7 @@ function Machine() {
     //錯誤訊息
     machineCode: "", //機台ID
     machineSpec: "", //機台規格
+    machineName: "", //機台名稱
     machineImage: "", //機台圖片路徑
     machineFile: "", //AR檔案路徑
   });
@@ -693,7 +694,7 @@ function Machine() {
               <h1>
                 <strong>
                   {t("machine.content.header")}
-                  {/*機台管理*/}
+                  {/*AR設備控制*/}
                 </strong>
               </h1>
             </div>

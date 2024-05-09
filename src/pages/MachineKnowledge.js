@@ -52,8 +52,6 @@ function MachineKnowledge() {
   const [saveDeleteMachineLoading, setSaveDeleteMachineLoading] =
     useState(false);
 
-  const [showMachineDeviceModal, setShowMachineDeviceModal] = useState(false); //顯示機台設備"modal"
-
   //#region 初始載入
   useEffect(() => {
     removeWindowClass("login-page");
@@ -151,13 +149,10 @@ function MachineKnowledge() {
 
     setMachineInfoErrors({
       //錯誤訊息
-      machineCode: "", //機台ID
       machineType: "", //機台種類
       modelSeries: "", //型號系列
       machineName: "", //機台名稱
-      machineSpec: "", //機台規格
       machineImage: "", //機台圖片檔名
-      machineFile: "", //AR檔案檔名
     });
     setSaveMachineinfoLoading(false);
     setShowMachineinfoModal(true);
@@ -231,10 +226,6 @@ function MachineKnowledge() {
 
     if (name == "") {
       if (newMachineInfoErrors.machineImage != "") {
-        result = false;
-      }
-
-      if (newMachineInfoErrors.machineFile != "") {
         result = false;
       }
     }
@@ -329,10 +320,6 @@ function MachineKnowledge() {
     let newMachineInfo = { ...machineInfo };
     if (newMachineInfoErrors.machineImage != "") {
       newMachineInfo.machineImageObj = null;
-    }
-
-    if (newMachineInfoErrors.machineFile != "") {
-      newMachineInfo.machineFileObj = null;
     }
 
     if (await checkEditValidator()) {
@@ -440,15 +427,6 @@ function MachineKnowledge() {
   };
   //#endregion
 
-  //#region 關閉機台設備Modal
-  const handleCloseMachineDeviceModal = async (e) => {
-    if (e) {
-      e.preventDefault();
-    }
-    setShowMachineDeviceModal(false);
-  };
-  //#endregion
-
   return (
     <>
       <section className="content-header">
@@ -496,10 +474,10 @@ function MachineKnowledge() {
                 showMachineList.map((item, index) => {
                   return (
                     <div key={index} className="col-12 col-sm-4 col-md-3">
-                      <div className="card">
+                      <div className="card" style={{ borderRadius: "30px" }}>
                         <div className="card-header">
                           <div className="row">
-                            <div className="col-8 h3">{item.machineCode}</div>
+                            <div className="col-8 h3"></div>
                             <div className="col-4 d-flex justify-content-end px-1">
                               <button
                                 type="button"
@@ -528,17 +506,15 @@ function MachineKnowledge() {
                           <img
                             className="card-img-top"
                             src={item.machineImage}
-                            alt={item.machineCode}
-                            style={{ minHeight: "292px" }}
+                            style={{ minHeight: "200px" }}
                           />
                         ) : (
                           <img
                             src="/default-image.jpg"
-                            style={{ minHeight: "292px" }}
+                            style={{ minHeight: "100px" }}
                           />
                         )}
                         <div className="card-body">
-                          <h3 className="mb-0"></h3>
                           <h4 className="mb-0">{item.machineName}</h4>
                           <h4 className="mb-0">{item.machineType}</h4>
                           <h4 className="mb-0">{item.modelSeries}</h4>
@@ -866,21 +842,6 @@ function MachineKnowledge() {
         </Modal.Footer>
       </Modal>
       {/*delete machine modal - end*/}
-
-      {/*device modal - start*/}
-      <Modal
-        show={showMachineDeviceModal}
-        onHide={(e) => handleCloseMachineDeviceModal(e)}
-        backdrop="static"
-      >
-        <Modal.Header closeButton>
-          <Modal.Title>
-            {t("machineDevice.editTitle")}
-            {/*編輯機台設備*/}
-          </Modal.Title>
-        </Modal.Header>
-      </Modal>
-      {/*device modal - end*/}
     </>
   );
 }
