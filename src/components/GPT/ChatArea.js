@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from "react";
 import Select from "react-select";
 import styles from "../../scss/gpt.module.scss";
 import { Button, Input, Flex } from "antd";
-import { PoweroffOutlined } from "@ant-design/icons";
 
 const ChatArea = ({
   input,
@@ -19,8 +18,8 @@ const ChatArea = ({
 
   // 將LLM設為初始選中選項
   const [selectedModel, setSelectedModel] = useState({
-    value: "LLM",
-    label: "LLM",
+    value: "GPT-4",
+    label: "GPT-4",
   });
 
   // 處理 Q&A 選項變更並提交
@@ -64,7 +63,7 @@ const ChatArea = ({
   const handleSubmission = () => {
     // 檢查 input 是否有內容或 selectedOption 是否被選擇
     if (input.trim() === "" && !selectedOption) {
-      window.alert("Please enter some text or select a Model & Question~!");
+      window.alert("Please enter some Text or select a Question~!");
     } else {
       enterLoading(0); // 加入Loading效果
       const submitValue = input.trim() !== "" ? input : selectedOption.value;
@@ -196,9 +195,9 @@ const ChatArea = ({
       <Select
         id="prompt-select-model"
         styles={customStyles}
-        // value={selectedModel} // 頁面渲染出現LLM Model，解開value、onChange方法註釋
+        value={selectedModel} // 頁面渲染出現GPT-4 Model，解開value、onChange方法註釋
         options={options_model}
-        // onChange={(setSelectedModel)}
+        onChange={setSelectedModel}
         placeholder="Select the Model"
       />
       <Select
