@@ -22,6 +22,7 @@ export function DocumentEditor() {
   const uploadPositionRef = useRef(null);
   const [formData, setFormData] = useState({});
   const navigate = useNavigate(); // 使用 navigate 來處理導航
+  const { t } = useTranslation();
 
   const [textColor, setTextColor] = useState("#000000"); // 初始文字顏色設為黑色
 
@@ -203,7 +204,8 @@ export function DocumentEditor() {
         </div>
         <div className={styles["content-box-right"]}>
           <div className={styles["text-area-container"]}>
-            <label className={styles["red-star"]} htmlFor="invoice-number10">
+          <span className="text-danger">*</span>
+            <label htmlFor="invoice-number10">
               故障發生原因：
             </label>
             <TextArea
@@ -228,7 +230,8 @@ export function DocumentEditor() {
           <p></p>
 
           <div className={styles["text-area-container"]}>
-            <label className={styles["red-star"]} htmlFor="invoice-number11">
+          <span className="text-danger">*</span>
+            <label htmlFor="invoice-number11">
               故障描述：
             </label>
             <TextArea
@@ -254,7 +257,8 @@ export function DocumentEditor() {
           <p></p>
 
           <div className={styles["text-area-container"]}>
-            <label className={styles["red-star"]} htmlFor="invoice-number12">
+          <span className="text-danger">*</span>
+            <label htmlFor="invoice-number12">
               故障發生時機：
             </label>
             <TextArea
@@ -278,7 +282,8 @@ export function DocumentEditor() {
           </div>
           <p></p>
 
-          <label className={styles["red-star"]} for="invoice-title">
+          <span className="text-danger">*</span>
+          <label for="invoice-title">
             For Model機型：
           </label>
           <div ref={uploadModelRef}>
@@ -325,7 +330,8 @@ export function DocumentEditor() {
           </div>
           <p></p>
 
-          <label className={styles["red-star"]} for="invoice-title">
+          <span className="text-danger">*</span>
+          <label for="invoice-title">
             所有使用工具：
           </label>
           <div ref={uploadToolsRef}>
@@ -372,7 +378,8 @@ export function DocumentEditor() {
           </div>
           <p></p>
 
-          <label className={styles["red-star"]} for="invoice-title">
+          <span className="text-danger">*</span>
+          <label for="invoice-title">
             部位位置：
           </label>
           <div ref={uploadPositionRef}>

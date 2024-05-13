@@ -32,9 +32,9 @@ const FormGroup = ({
   return (
     <div className={styles["form-group"]}>
       <label
-        className={classNames({ [styles["red-star"]]: hasRedStar })}
         htmlFor={id}
       >
+        <span className="text-danger">*</span>
         {label}
       </label>
       {inputType === "select" ? (
