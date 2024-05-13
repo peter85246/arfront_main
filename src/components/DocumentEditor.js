@@ -5,11 +5,16 @@ import { useState, useEffect, useLayoutEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom"; // 導入 useNavigate
 import { Link } from "react-router-dom";
 import FormGroup from "./FormGroup/FormGroup";
-import { Space, ColorPicker, theme } from "antd";
+import { Space, ColorPicker, theme, Flex, Input } from "antd";
 import { generate, red, green, blue } from "@ant-design/colors";
 
 import ReactDOM from "react-dom";
 import { Container, Header, List } from "semantic-ui-react";
+
+const { TextArea } = Input;
+const onChange = (e) => {
+  console.log(e);
+};
 
 export function DocumentEditor() {
   const uploadModelRef = useRef(null);
@@ -123,13 +128,13 @@ export function DocumentEditor() {
     {
       label: "檔案編號：",
       id: "invoice-number5",
-      options: [],
+      inputType: "input",
       hasRedStar: true,
     },
-    { label: "故障代碼：", id: "invoice-number6", options: [] },
-    { label: "規格：", id: "invoice-number7", options: [] },
-    { label: "系統：", id: "invoice-number8", options: [] },
-    { label: "產品名稱：", id: "invoice-number9", options: [] },
+    { label: "故障代碼：", id: "invoice-number6", inputType: "input" },
+    { label: "規格：", id: "invoice-number7", inputType: "input" },
+    { label: "系統：", id: "invoice-number8", inputType: "input" },
+    { label: "產品名稱：", id: "invoice-number9", inputType: "input" },
   ];
 
   return (
@@ -189,9 +194,9 @@ export function DocumentEditor() {
                 key={field.id}
                 label={field.label}
                 id={field.id}
-                options={field.options}
                 hasRedStar={field.hasRedStar}
-                onChange={(value) => handleInputChange(field.id, value)}
+                inputType={field.inputType}
+                // 去除 options 傳遞給 input 類型的欄位
               />
             ))}
           </div>
@@ -201,16 +206,14 @@ export function DocumentEditor() {
             <label className={styles["red-star"]} htmlFor="invoice-number10">
               故障發生原因：
             </label>
-            <textarea
-              type="text"
-              className={classNames(
-                styles["text-box"],
-                styles["knowledge-input"],
-              )}
-              name="KnowledgeBaseAlarmCause"
+            <TextArea
+              name="knowledgeBaseAlarmCause"
               id="invoice-number10"
-              style={{ color: textColor }}
-            ></textarea>
+              placeholder="Enter content..."
+              allowClear={true} // 啟用清除圖標
+              onChange={onChange}
+              style={{ color: textColor, height: "150px" }} // 注意：請確保 textColor 已經定義
+            />
             <div className={styles["color-picker-container"]}>
               <Space direction="vertical">
                 <ColorPicker
@@ -225,19 +228,17 @@ export function DocumentEditor() {
           <p></p>
 
           <div className={styles["text-area-container"]}>
-            <label className={styles["red-star"]} for="invoice-title">
+            <label className={styles["red-star"]} htmlFor="invoice-number11">
               故障描述：
             </label>
-            <textarea
-              type="text"
-              className={classNames(
-                styles["text-box"],
-                styles["knowledge-input"],
-              )}
-              name="KnowledgeBaseAlarmDesc"
+            <TextArea
+              name="knowledgeBaseAlarmDesc"
               id="invoice-number11"
-              style={{ color: textColor }}
-            ></textarea>
+              placeholder="Enter content..."
+              allowClear={true} // 啟用清除圖標
+              onChange={onChange}
+              style={{ color: textColor, height: "150px" }} // 注意：請確保 textColor 已經定義
+            />
 
             <div className={styles["color-picker-container"]}>
               <Space direction="vertical">
@@ -253,18 +254,17 @@ export function DocumentEditor() {
           <p></p>
 
           <div className={styles["text-area-container"]}>
-            <label className={styles["red-star"]} for="invoice-title">
+            <label className={styles["red-star"]} htmlFor="invoice-number12">
               故障發生時機：
             </label>
-            <textarea
-              type="text"
-              className={classNames(
-                styles["text-box"],
-                styles["knowledge-input"],
-              )}
-              name="KnowledgeBaseAlarmOccasion"
+            <TextArea
+              name="knowledgeBaseAlarmOccasion"
               id="invoice-number12"
-            ></textarea>
+              placeholder="Enter content..."
+              allowClear={true} // 啟用清除圖標
+              onChange={onChange}
+              style={{ color: textColor, height: "150px" }} // 注意：請確保 textColor 已經定義
+            />
 
             <div className={styles["color-picker-container"]}>
               <Space direction="vertical">
@@ -286,6 +286,11 @@ export function DocumentEditor() {
               className={styles["image-box"]}
               data-step="stepImage"
               data-id="modelImage"
+              style={{
+                border: "1px solid #ccc", // 添加邊框類似 TextArea
+                minHeight: "150px", // 設定最小高度類似 TextArea
+                backgroundColor: "#fff", // 背景顏色類似 TextArea
+              }}
             >
               <img
                 src=""
@@ -328,6 +333,11 @@ export function DocumentEditor() {
               className={styles["image-box"]}
               data-step="stepImage"
               data-id="toolsImage"
+              style={{
+                border: "1px solid #ccc", // 添加邊框類似 TextArea
+                minHeight: "150px", // 設定最小高度類似 TextArea
+                backgroundColor: "#fff", // 背景顏色類似 TextArea
+              }}
             >
               <img
                 src=""
@@ -370,6 +380,11 @@ export function DocumentEditor() {
               className={styles["image-box"]}
               data-step="stepImage"
               data-id="positionImage"
+              style={{
+                border: "1px solid #ccc", // 添加邊框類似 TextArea
+                minHeight: "150px", // 設定最小高度類似 TextArea
+                backgroundColor: "#fff", // 背景顏色類似 TextArea
+              }}
             >
               <img
                 src=""

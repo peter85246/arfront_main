@@ -1,26 +1,32 @@
 import React, { useState, useEffect } from "react";
+import { Select, Input } from "antd";
 import classNames from "classnames";
 import styles from "../../scss/global.module.scss";
 
-const FormGroup = ({ label, id, options, hasRedStar = false }) => {
-  const [inputValue, setInputValue] = useState("");
+const FormGroup = ({
+  label,
+  id,
+  hasRedStar = false,
+  inputType = "select",
+  options = [],
+}) => {
+  const [inputValue, setInputValue] = useState([]); // 保持為數組以支持標籤模式
   const [history, setHistory] = useState(() => {
-    // 從localStorage獲取歷史數據或初始化為空數組
+    // 從 localStorage 加載歷史選項
     const savedHistory = localStorage.getItem(id);
     return savedHistory ? JSON.parse(savedHistory) : [];
   });
 
   useEffect(() => {
-    // 當歷史數據變化時，更新localStorage
+    // 將歷史選項存儲到 localStorage
     localStorage.setItem(id, JSON.stringify(history));
   }, [history, id]);
 
-  const handleSelect = (value) => {
-    setInputValue(value);
-    // 檢查歷史是否已經包含這個新選項（忽略大小寫）
-    if (!history.some((item) => item.toLowerCase() === value.toLowerCase())) {
-      setHistory([...history, value]);
-    }
+  const handleSelectChange = (values) => {
+    setInputValue(values);
+    // 更新歷史記錄，只添加新的非重複項目
+    const newHistory = [...new Set([...history, ...values])];
+    setHistory(newHistory);
   };
 
   return (
@@ -31,43 +37,23 @@ const FormGroup = ({ label, id, options, hasRedStar = false }) => {
       >
         {label}
       </label>
-      <div
-        className={classNames(
-          styles["custom-select"],
-          styles["equipment-field"],
-        )}
-      >
-        <input
-          className={classNames(
-            styles["fault-Info"],
-            styles["knowledge-input"],
-          )}
-          id={id}
-          name={id}
+      {inputType === "select" ? (
+        <Select
+          mode="tags"
+          style={{ width: "100%" }}
+          placeholder="Select content..."
+          value={inputValue}
+          onChange={handleSelectChange}
+          options={history.map((item) => ({ value: item, label: item }))}
+        />
+      ) : (
+        <Input
+          placeholder="Enter content..."
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
-          autoComplete="off"
+          style={{ width: "100%" }}
         />
-        {options.length > 0 && (
-          <span
-            className={styles["drop-down-arrow"]}
-            onClick={() => setInputValue("")}
-          >
-            ▼
-          </span>
-        )}{" "}
-        <ul className={styles["custom-datalist"]} id={`${id}-options`}>
-          {history.map((option, index) => (
-            <li
-              key={index}
-              onClick={() => handleSelect(option)}
-              data-value={option}
-            >
-              {option}
-            </li>
-          ))}
-        </ul>
-      </div>
+      )}
     </div>
   );
 };
