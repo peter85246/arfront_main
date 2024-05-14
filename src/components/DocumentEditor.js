@@ -7,9 +7,14 @@ import { Link } from "react-router-dom";
 import FormGroup from "./FormGroup/FormGroup";
 import { Space, ColorPicker, theme, Flex, Input } from "antd";
 import { generate, red, green, blue } from "@ant-design/colors";
+import Spinner from "react-bootstrap/Spinner";
+import SimpleReactValidator from "simple-react-validator";
+import { ToastContainer, toast } from "react-toastify";
 
-import ReactDOM from "react-dom";
-import { Container, Header, List } from "semantic-ui-react";
+import {
+  apiGetAllKnowledgeBaseByMachineAddId,
+  apiSaveKnowledgeBase,
+} from "../utils/Api";
 
 const { TextArea } = Input;
 const onChange = (e) => {
@@ -25,31 +30,420 @@ export function DocumentEditor() {
   const { t } = useTranslation();
 
   const [textColor, setTextColor] = useState("#000000"); // 初始文字顏色設為黑色
+  const validator = new SimpleReactValidator({
+    autoForceUpdate: this,
+  });
 
-  const { token } = theme.useToken();
-  // 生成顏色組合
-  const presets = Object.entries({
-    primary: generate("#0052cc"), // 這裡使用一個假設的主要顏色
-    red: red,
-    green: green,
-    blue: blue,
-  }).map(([label, colors]) => ({ label, colors }));
+  const [knowledgeInfo, setKnowledgeInfo] = useState({
+    //新增以及修改內容
+    knowledgeBaseId: 0,
+    knowledgeBaseDeviceType: "", //設備種類
+    knowledgeBaseDeviceParts: "", //設備部件
+    knowledgeBaseRepairItems: "", //維修項目
+    knowledgeBaseRepairType: "", //維修類型
+    knowledgeBaseFileNo: "", //檔案編號
+    knowledgeBaseAlarmCode: "", //故障代碼
+    knowledgeBaseSpec: "", //規格
+    knowledgeBaseSystem: "", //系統
+    knowledgeBaseProductName: "", //產品名稱
+    knowledgeBaseAlarmCause: "", //故障發生原因
+    knowledgeBaseAlarmDesc: "", //故障描述
+    knowledgeBaseAlarmOccasion: "", //故障發生時機
+    knowledgeBaseModelImage: "", //Model機型路徑
+    knowledgeBaseModelImageObj: null, //Model機型圖片物件
+    isDeletedKnowledgeBaseModelImage: false, //是否刪除Model機型圖片
+    knowledgeBaseToolsImage: "", //Tools機型路徑
+    knowledgeBaseToolsImageObj: null, //Tools工具圖片物件
+    isDeletedKnowledgeBaseToolsImage: false, //是否刪除Tools工具圖片
+    knowledgeBasePositionImage: "", //Position位置路徑
+    knowledgeBasePositionImageObj: null, //Position位置圖片物件
+    isDeletedKnowledgeBasePositionImage: false, //是否刪除Position位置圖片
+  });
 
-  // 收集 FormGroup 的輸入
-  const handleInputChange = (id, value) => {
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [id]: value,
-    }));
+  const [knowledgeInfoErrors, setKnowledgeInfoErrors] = useState({
+    //錯誤訊息
+    knowledgeBaseDeviceType: "", //設備種類
+    knowledgeBaseDeviceParts: "", //設備部件
+    knowledgeBaseRepairItems: "", //維修項目
+    knowledgeBaseRepairType: "", //維修類型
+    knowledgeBaseFileNo: "", //檔案編號
+    knowledgeBaseAlarmCode: "", //故障代碼
+    knowledgeBaseSpec: "", //規格
+    knowledgeBaseSystem: "", //系統
+    knowledgeBaseProductName: "", //產品名稱
+    knowledgeBaseAlarmCause: "", //故障發生原因
+    knowledgeBaseAlarmDesc: "", //故障描述
+    knowledgeBaseAlarmOccasion: "", //故障發生時機
+    knowledgeBaseModelImage: "", //Model圖片路徑
+    knowledgeBaseToolsImage: "", //Tools圖片路徑
+    knowledgeBasePositionImage: "", //Position圖片路徑
+  });
+
+  //#region 故障說明 欄位驗證
+  const checkEditValidator = async (name = "", val = "") => {
+    let result = true;
+    let newKnowledgeInfoErrors = { ...knowledgeInfoErrors };
+
+    if (name == "knowledgeBaseDeviceType" || name == "") {
+      if (!validator.check(knowledgeInfo.knowledgeBaseDeviceType, "required")) {
+        newKnowledgeInfoErrors.knowledgeBaseDeviceType = "required";
+        result = false;
+      } else if (
+        !validator.check(knowledgeInfo.knowledgeBaseDeviceType, "max:100")
+      ) {
+        newKnowledgeInfoErrors.knowledgeBaseDeviceType = "max";
+        result = false;
+      } else {
+        newKnowledgeInfoErrors.knowledgeBaseDeviceType = "";
+      }
+    }
+
+    if (name == "knowledgeBaseDeviceParts" || name == "") {
+      if (
+        !validator.check(knowledgeInfo.knowledgeBaseDeviceParts, "required")
+      ) {
+        newKnowledgeInfoErrors.knowledgeBaseDeviceParts = "required";
+        result = false;
+      } else if (
+        !validator.check(knowledgeInfo.knowledgeBaseDeviceParts, "max:100")
+      ) {
+        newKnowledgeInfoErrors.knowledgeBaseDeviceParts = "max";
+        result = false;
+      } else {
+        newKnowledgeInfoErrors.knowledgeBaseDeviceParts = "";
+      }
+    }
+
+    if (name == "knowledgeBaseRepairItems" || name == "") {
+      if (
+        !validator.check(knowledgeInfo.knowledgeBaseRepairItems, "required")
+      ) {
+        newKnowledgeInfoErrors.knowledgeBaseRepairItems = "required";
+        result = false;
+      } else if (
+        !validator.check(knowledgeInfo.knowledgeBaseRepairItems, "max:100")
+      ) {
+        newKnowledgeInfoErrors.knowledgeBaseRepairItems = "max";
+        result = false;
+      } else {
+        newKnowledgeInfoErrors.knowledgeBaseRepairItems = "";
+      }
+    }
+
+    if (name == "knowledgeBaseRepairType" || name == "") {
+      if (!validator.check(knowledgeInfo.knowledgeBaseRepairType, "required")) {
+        newKnowledgeInfoErrors.knowledgeBaseRepairType = "required";
+        result = false;
+      } else if (
+        !validator.check(knowledgeInfo.knowledgeBaseRepairType, "max:100")
+      ) {
+        newKnowledgeInfoErrors.knowledgeBaseRepairType = "max";
+        result = false;
+      } else {
+        newKnowledgeInfoErrors.knowledgeBaseRepairType = "";
+      }
+    }
+
+    if (name == "knowledgeBaseFileNo" || name == "") {
+      if (!validator.check(knowledgeInfo.knowledgeBaseFileNo, "required")) {
+        newKnowledgeInfoErrors.knowledgeBaseFileNo = "required";
+        result = false;
+      } else if (
+        !validator.check(knowledgeInfo.knowledgeBaseFileNo, "max:100")
+      ) {
+        newKnowledgeInfoErrors.knowledgeBaseFileNo = "max";
+        result = false;
+      } else {
+        newKnowledgeInfoErrors.knowledgeBaseFileNo = "";
+      }
+    }
+
+    if (name == "knowledgeBaseAlarmCode" || name == "") {
+      if (!validator.check(knowledgeInfo.knowledgeBaseAlarmCode, "required")) {
+        newKnowledgeInfoErrors.knowledgeBaseAlarmCode = "required";
+        result = false;
+      } else if (
+        !validator.check(knowledgeInfo.knowledgeBaseAlarmCode, "max:100")
+      ) {
+        newKnowledgeInfoErrors.knowledgeBaseAlarmCode = "max";
+        result = false;
+      } else {
+        newKnowledgeInfoErrors.knowledgeBaseAlarmCode = "";
+      }
+    }
+
+    if (name == "knowledgeBaseRepairItems" || name == "") {
+      if (
+        !validator.check(knowledgeInfo.knowledgeBaseRepairItems, "required")
+      ) {
+        newKnowledgeInfoErrors.knowledgeBaseRepairItems = "required";
+        result = false;
+      } else if (
+        !validator.check(knowledgeInfo.knowledgeBaseRepairItems, "max:100")
+      ) {
+        newKnowledgeInfoErrors.knowledgeBaseRepairItems = "max";
+        result = false;
+      } else {
+        newKnowledgeInfoErrors.knowledgeBaseRepairItems = "";
+      }
+    }
+
+    if (name == "knowledgeBaseSpec" || name == "") {
+      if (!validator.check(knowledgeInfo.knowledgeBaseSpec, "required")) {
+        newKnowledgeInfoErrors.knowledgeBaseSpec = "required";
+        result = false;
+      } else if (!validator.check(knowledgeInfo.knowledgeBaseSpec, "max:100")) {
+        newKnowledgeInfoErrors.knowledgeBaseSpec = "max";
+        result = false;
+      } else {
+        newKnowledgeInfoErrors.knowledgeBaseSpec = "";
+      }
+    }
+
+    if (name == "knowledgeBaseSystem" || name == "") {
+      if (!validator.check(knowledgeInfo.knowledgeBaseSystem, "required")) {
+        newKnowledgeInfoErrors.knowledgeBaseSystem = "required";
+        result = false;
+      } else if (
+        !validator.check(knowledgeInfo.knowledgeBaseSystem, "max:100")
+      ) {
+        newKnowledgeInfoErrors.knowledgeBaseSystem = "max";
+        result = false;
+      } else {
+        newKnowledgeInfoErrors.knowledgeBaseSystem = "";
+      }
+    }
+
+    if (name == "knowledgeBaseProductName" || name == "") {
+      if (
+        !validator.check(knowledgeInfo.knowledgeBaseProductName, "required")
+      ) {
+        newKnowledgeInfoErrors.knowledgeBaseProductName = "required";
+        result = false;
+      } else if (
+        !validator.check(knowledgeInfo.knowledgeBaseProductName, "max:100")
+      ) {
+        newKnowledgeInfoErrors.knowledgeBaseProductName = "max";
+        result = false;
+      } else {
+        newKnowledgeInfoErrors.knowledgeBaseProductName = "";
+      }
+    }
+
+    if (name == "knowledgeBaseAlarmCause" || name == "") {
+      if (!validator.check(knowledgeInfo.knowledgeBaseAlarmCause, "required")) {
+        newKnowledgeInfoErrors.knowledgeBaseAlarmCause = "required";
+        result = false;
+      } else if (
+        !validator.check(knowledgeInfo.knowledgeBaseAlarmCause, "max:400")
+      ) {
+        newKnowledgeInfoErrors.knowledgeBaseAlarmCause = "max";
+        result = false;
+      } else {
+        newKnowledgeInfoErrors.knowledgeBaseAlarmCause = "";
+      }
+    }
+
+    if (name == "knowledgeBaseAlarmDesc" || name == "") {
+      if (!validator.check(knowledgeInfo.knowledgeBaseAlarmDesc, "required")) {
+        newKnowledgeInfoErrors.knowledgeBaseAlarmDesc = "required";
+        result = false;
+      } else if (
+        !validator.check(knowledgeInfo.knowledgeBaseAlarmDesc, "max:400")
+      ) {
+        newKnowledgeInfoErrors.knowledgeBaseAlarmDesc = "max";
+        result = false;
+      } else {
+        newKnowledgeInfoErrors.knowledgeBaseAlarmDesc = "";
+      }
+    }
+
+    if (name == "knowledgeBaseAlarmOccasion" || name == "") {
+      if (
+        !validator.check(knowledgeInfo.knowledgeBaseAlarmOccasion, "required")
+      ) {
+        newKnowledgeInfoErrors.knowledgeBaseAlarmOccasion = "required";
+        result = false;
+      } else if (
+        !validator.check(knowledgeInfo.knowledgeBaseAlarmOccasion, "max:400")
+      ) {
+        newKnowledgeInfoErrors.knowledgeBaseAlarmOccasion = "max";
+        result = false;
+      } else {
+        newKnowledgeInfoErrors.knowledgeBaseAlarmOccasion = "";
+      }
+    }
+
+    if (name == "") {
+      if (newKnowledgeInfoErrors.knowledgeBaseModelImage != "") {
+        result = false;
+      }
+    }
+    if (name == "") {
+      if (newKnowledgeInfoErrors.knowledgeBaseToolsImage != "") {
+        result = false;
+      }
+    }
+    if (name == "") {
+      if (newKnowledgeInfoErrors.knowledgeBasePositionImage != "") {
+        result = false;
+      }
+    }
+
+    setKnowledgeInfoErrors(newKnowledgeInfoErrors);
+    return result;
   };
+  //#endregion
 
   // 處理表單提交
-  const handleSubmit = () => {
+  const handleSaveKnowledgeInfo = async (e) => {
     console.log("Submitting Form Data:", formData);
+
+    e.preventDefault();
+
+    let newKnowledgeInfoErrors = { ...knowledgeInfoErrors };
+    let newKnowledgeInfo = { ...knowledgeInfo };
+    if (newKnowledgeInfoErrors.knowledgeBaseModelImage != "") {
+      newKnowledgeInfo.knowledgeBaseModelImageObj = null;
+    }
+    if (newKnowledgeInfoErrors.knowledgeBaseToolsImage != "") {
+      newKnowledgeInfo.knowledgeBaseToolsImageObj = null;
+    }
+    if (newKnowledgeInfoErrors.knowledgeBasePositionImage != "") {
+      newKnowledgeInfo.knowledgeBasePositionImageObj = null;
+    }
+
+    if (await checkEditValidator()) {
+      setSaveKnowledgeInfoLoading(true);
+
+      var formData = new FormData();
+
+      formData.append(
+        "KnowledgeBases[0].KnowledgeBaseId",
+        newKnowledgeInfo.knowledgeBaseId,
+      );
+      formData.append(
+        "KnowledgeBases[0].KnowledgeBaseDeviceType",
+        newKnowledgeInfo.knowledgeBaseDeviceType,
+      );
+      formData.append(
+        "KnowledgeBases[0].KnowledgeBaseDeviceParts",
+        newKnowledgeInfo.knowledgeBaseDeviceParts,
+      );
+      formData.append(
+        "KnowledgeBases[0].KnowledgeBaseRepairItems",
+        newKnowledgeInfo.knowledgeBaseRepairItems,
+      );
+      formData.append(
+        "KnowledgeBases[0].KnowledgeBaseRepairType",
+        newKnowledgeInfo.knowledgeBaseRepairType,
+      );
+      formData.append(
+        "KnowledgeBases[0].KnowledgeBaseFileNo",
+        newKnowledgeInfo.knowledgeBaseFileNo,
+      );
+      formData.append(
+        "KnowledgeBases[0].KnowledgeBaseAlarmCode",
+        newKnowledgeInfo.knowledgeBaseAlarmCode,
+      );
+      formData.append(
+        "KnowledgeBases[0].KnowledgeBaseSpec",
+        newKnowledgeInfo.knowledgeBaseSpec,
+      );
+      formData.append(
+        "KnowledgeBases[0].KnowledgeBaseSystem",
+        newKnowledgeInfo.knowledgeBaseSystem,
+      );
+      formData.append(
+        "KnowledgeBases[0].KnowledgeBaseProductName",
+        newKnowledgeInfo.knowledgeBaseProductName,
+      );
+      formData.append(
+        "KnowledgeBases[0].KnowledgeBaseAlarmCause",
+        newKnowledgeInfo.knowledgeBaseAlarmCause,
+      );
+      formData.append(
+        "KnowledgeBases[0].KnowledgeBaseAlarmDesc",
+        newKnowledgeInfo.knowledgeBaseAlarmDesc,
+      );
+      formData.append(
+        "KnowledgeBases[0].KnowledgeBaseAlarmOccasion",
+        newKnowledgeInfo.knowledgeBaseAlarmOccasion,
+      );
+
+      formData.append(
+        "KnowledgeBases[0].KnowledgeBaseModelImage",
+        newKnowledgeInfo.knowledgeBaseModelImage,
+      );
+      formData.append(
+        "KnowledgeBases[0].KnowledgeBaseModelImageObj",
+        newKnowledgeInfo.knowledgeBaseModelImageObj,
+      );
+      formData.append(
+        "isDeleteKnowledgeBaseModelImage",
+        newKnowledgeInfo.isDeleteKnowledgeBaseModelImage,
+      );
+      formData.append(
+        "KnowledgeBases[0].KnowledgeBaseToolsImage",
+        newKnowledgeInfo.knowledgeBaseToolsImage,
+      );
+      formData.append(
+        "KnowledgeBases[0].KnowledgeBaseToolsImageObj",
+        newKnowledgeInfo.knowledgeBaseToolsImageObj,
+      );
+      formData.append(
+        "isDeleteKnowledgeBaseToolsImage",
+        newKnowledgeInfo.isDeleteKnowledgeBaseToolsImage,
+      );
+      formData.append(
+        "KnowledgeBases[0].KnowledgeBasePositionImage",
+        newKnowledgeInfo.knowledgeBasePositionImage,
+      );
+      formData.append(
+        "KnowledgeBases[0].KnowledgeBasePositionImageObj",
+        newKnowledgeInfo.knowledgeBasePositionImageObj,
+      );
+      formData.append(
+        "isDeletedKnowledgeBasePositionImage",
+        newKnowledgeInfo.isDeletedKnowledgeBasePositionImage,
+      );
+
+      let knowledgeInfoResponse = await apiSaveKnowledgeBase(formData);
+      if (knowledgeInfoResponse) {
+        if (knowledgeInfoResponse.code == "0000") {
+          toast.success(
+            newKnowledgeInfo.knowledgeBaseId == 0
+              ? t("toast.add.success")
+              : t("toast.edit.success"),
+            {
+              position: toast.POSITION.TOP_CENTER,
+              autoClose: 3000,
+              hideProgressBar: true,
+              closeOnClick: false,
+              pauseOnHover: false,
+            },
+          );
+        } else {
+          toast.error(knowledgeInfoResponse.message, {
+            position: toast.POSITION.TOP_CENTER,
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: false,
+            pauseOnHover: false,
+          });
+        }
+        setSaveKnowledgeInfoLoading(false);
+      } else {
+        setSaveKnowledgeInfoLoading(false);
+      }
+    }
     // 這裡可以添加將數據發送到後端的代碼
     // 假設提交成功後導航到另一頁面
     navigate("/sop2");
   };
+
+  const [saveKnowledgeInfoLoading, setSaveKnowledgeInfoLoading] =
+    useState(false); //儲存的轉圈圈
 
   useLayoutEffect(() => {
     const uploadRefArray = [
@@ -83,23 +477,6 @@ export function DocumentEditor() {
       };
     });
   }, []);
-
-  // 定義一個渲染文本域的方法
-  const renderLabeledTextarea = (label, id, placeholder) => {
-    return (
-      <div className={styles["form-group"]}>
-        <label className={styles["red-star"]} htmlFor={id}>
-          {label}
-        </label>
-        <textarea
-          className={classNames(styles["text-box"], styles["knowledge-input"])}
-          id={id}
-          name={id}
-          placeholder={placeholder}
-        ></textarea>
-      </div>
-    );
-  };
 
   const formFields = [
     {
@@ -146,13 +523,36 @@ export function DocumentEditor() {
           {/* <button type="button" id="btn-save-js" className={classNames(styles["button"], styles["btn-save"])}>
             儲存
           </button> */}
-          <button
+          {/* <button
             type="button"
             className={classNames(styles["button"], styles["btn-save"])}
             id="btn-save-js"
             onClick={handleSubmit} // 處理點擊事件來提交表單
           >
             儲存
+          </button> */}
+          <button
+            type="button"
+            className={classNames(styles["button"], styles["btn-save"])}
+            disabled={saveKnowledgeInfoLoading}
+            onClick={handleSaveKnowledgeInfo}
+          >
+            {saveKnowledgeInfoLoading ? (
+              <>
+                <Spinner
+                  as="span"
+                  animation="border"
+                  size="sm"
+                  role="status"
+                  aria-hidden="true"
+                />
+              </>
+            ) : (
+              <span>
+                {t("btn.save")}
+                {/*儲存*/}
+              </span>
+            )}
           </button>
           <a
             href="/knowledge"
@@ -204,10 +604,8 @@ export function DocumentEditor() {
         </div>
         <div className={styles["content-box-right"]}>
           <div className={styles["text-area-container"]}>
-          <span className="text-danger">*</span>
-            <label htmlFor="invoice-number10">
-              故障發生原因：
-            </label>
+            <span className="text-danger">*</span>
+            <label htmlFor="invoice-number10">故障發生原因：</label>
             <TextArea
               name="knowledgeBaseAlarmCause"
               id="invoice-number10"
@@ -230,10 +628,8 @@ export function DocumentEditor() {
           <p></p>
 
           <div className={styles["text-area-container"]}>
-          <span className="text-danger">*</span>
-            <label htmlFor="invoice-number11">
-              故障描述：
-            </label>
+            <span className="text-danger">*</span>
+            <label htmlFor="invoice-number11">故障描述：</label>
             <TextArea
               name="knowledgeBaseAlarmDesc"
               id="invoice-number11"
@@ -257,10 +653,8 @@ export function DocumentEditor() {
           <p></p>
 
           <div className={styles["text-area-container"]}>
-          <span className="text-danger">*</span>
-            <label htmlFor="invoice-number12">
-              故障發生時機：
-            </label>
+            <span className="text-danger">*</span>
+            <label htmlFor="invoice-number12">故障發生時機：</label>
             <TextArea
               name="knowledgeBaseAlarmOccasion"
               id="invoice-number12"
@@ -283,9 +677,7 @@ export function DocumentEditor() {
           <p></p>
 
           <span className="text-danger">*</span>
-          <label for="invoice-title">
-            For Model機型：
-          </label>
+          <label for="invoice-title">For Model機型：</label>
           <div ref={uploadModelRef}>
             <div
               className={styles["image-box"]}
@@ -331,9 +723,7 @@ export function DocumentEditor() {
           <p></p>
 
           <span className="text-danger">*</span>
-          <label for="invoice-title">
-            所有使用工具：
-          </label>
+          <label for="invoice-title">所有使用工具：</label>
           <div ref={uploadToolsRef}>
             <div
               className={styles["image-box"]}
@@ -379,9 +769,7 @@ export function DocumentEditor() {
           <p></p>
 
           <span className="text-danger">*</span>
-          <label for="invoice-title">
-            部位位置：
-          </label>
+          <label for="invoice-title">部位位置：</label>
           <div ref={uploadPositionRef}>
             <div
               className={styles["image-box"]}

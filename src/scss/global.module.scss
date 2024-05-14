@@ -923,6 +923,10 @@ table th {
   .ant-input {
     border-radius: 8px !important; // 設定 Input 欄位的邊角為圓角
   }
+
+  .input-big {
+    height: 80px !important;
+  }
 }
 
 /* 自定义选择框容器样式 */

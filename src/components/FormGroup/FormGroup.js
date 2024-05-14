@@ -31,9 +31,7 @@ const FormGroup = ({
 
   return (
     <div className={styles["form-group"]}>
-      <label
-        htmlFor={id}
-      >
+      <label htmlFor={id}>
         <span className="text-danger">*</span>
         {label}
       </label>

@@ -115,7 +115,7 @@ export const apiUserinfoChangePaw = (data) =>
   fetchDataCall("UserinfoChangePaw", "put", data); //使用者修改密碼
 //#endregion
 
-//#region 機台管理
+//#region AR設備控制
 export const apiMachineOverview = (data) =>
   fetchDataCall("MachineOverview", "post", data); //機台列表
 export const apiGetOneMachine = (data) =>
@@ -170,6 +170,13 @@ export const apiMachineAddInfo = (data) =>
   fetchDataCallFile("MachineAddInfo", "put", data); //新增/編輯機台
 export const apiDeleteMachineAdd = (data) =>
   fetchDataCall("DeleteMachineAdd", "delete", data); //刪除機台
+//#endregion
+
+//#region SOP
+export const apiGetAllKnowledgeBaseByMachineAddId = (data) =>
+  fetchDataCall("GetAllKnowledgeBaseByMachineAddId", "post", data); //依據MachineAddId取得所有 故障說明
+export const apiSaveKnowledgeBase = (data) =>
+  fetchDataCallFile("SaveKnowledgeBase", "put", data); //儲存 故障說明 資訊
 //#endregion
 
 // 在../utils/Api.js
