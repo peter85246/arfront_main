@@ -20,8 +20,18 @@ export function ConditionSearchDialog({ onClose }) {
     knowledgeBaseProductName: null,
   });
   const [errors, setErrors] = useState({});
+  const [searchFilter, setSearchFilter] = useState(""); // 用於保存搜索過濾的字符串
   const [selectedItems, setSelectedItems] = useState(new Set()); // 儲存已選擇的項目
   const { t } = useTranslation();
+
+  const handleSearchChange = (event) => {
+    setSearchFilter(event.target.value.toLowerCase()); // 更新搜索過濾條件
+  };
+
+  const visibleItems = Array.from(
+    { length: 10 },
+    (_, i) => `項目${i + 1}`,
+  ).filter((item) => item.toLowerCase().includes(searchFilter)); // 過濾並確認項目是否應該顯示
 
   // 處理模態窗關閉事件
   const handleCloseModal = () => {
@@ -51,22 +61,6 @@ export function ConditionSearchDialog({ onClose }) {
     setErrors(newErrors);
   };
 
-  // 處理條件項目的拖拉事件
-  const handleDrag = (event) => {
-    event.preventDefault();
-    const targetId = event.target.id;
-    const value = event.target.textContent;
-    setConditionInfo((prev) => ({ ...prev, [targetId]: value }));
-    setSelectedItems((prev) => new Set([...prev, value])); // 添加到已選擇項目
-  };
-
-  const handleClick = (value, inputId) => {
-    setConditionInfo((prev) => ({ ...prev, [inputId]: value }));
-    setSelectedItems((prev) => new Set([...prev, value])); // 添加到已選擇項目
-  };
-
-  const [activeInputId, setActiveInputId] = useState(null);
-
   // 處理選擇事件
   const handleSelectChange = (selectedOption, { name }) => {
     setConditionInfo({ ...conditionInfo, [name]: selectedOption });
@@ -88,15 +82,6 @@ export function ConditionSearchDialog({ onClose }) {
       }));
       setSelectedItems((prev) => new Set(prev.add(item)));
     }
-  };
-
-  const handleItemInteraction = (item) => {
-    const nextField = findNextEmptyField();
-    handleSelect(item, nextField);
-  };
-
-  const handleDragEnd = (item) => {
-    handleItemInteraction(item);
   };
 
   const handleDoubleClick = (item) => {
@@ -147,7 +132,10 @@ export function ConditionSearchDialog({ onClose }) {
     <div>
       <Modal
         show={showModal}
-        onHide={handleCloseModal}
+        onHide={() => {
+          setShowModal(false);
+          onClose?.();
+        }}
         backdrop="static"
         centered
         size="xl" // 設定為超大尺寸
@@ -165,22 +153,19 @@ export function ConditionSearchDialog({ onClose }) {
                 className={styles.search}
                 placeholder="搜尋全部內容項目"
                 autocomplete="off"
+                onChange={handleSearchChange}
               />
               <div className={styles.scrollBox} onDragOver={allowDrop}>
                 {/* 動態生成的條件項目 */}
-                {Array.from({ length: 10 }, (_, i) => (
+                {visibleItems.map((item, index) => (
                   <div
-                    key={i}
-                    className={classNames(styles.conditionItem, {
-                      [styles.hidden]: selectedItems.has(`項目${i + 1}`),
-                    })}
+                    key={index}
+                    className={classNames(styles.conditionItem)}
                     draggable="true"
-                    onDoubleClick={() => handleDoubleClick(`項目${i + 1}`)}
-                    // onDragEnd={() => handleDragEnd(`項目${i + 1}`)}
-                    onDragStart={(e) => handleDragStart(e, `項目${i + 1}`)}
+                    onDoubleClick={() => handleDoubleClick(item)}
+                    onDragStart={(e) => handleDragStart(e, item)}
                   >
-                    {`項目${i + 1}`}
-
+                    {item}
                     <div className={styles.icon}>≡</div>
                   </div>
                 ))}
