@@ -172,6 +172,13 @@ export const apiDeleteMachineAdd = (data) =>
   fetchDataCall("DeleteMachineAdd", "delete", data); //刪除機台
 //#endregion
 
+//#region 知識庫管理
+export const apiGetAllKnowledgeBaseByFilter = (data) =>
+  fetchDataCall("GetAllKnowledgeBaseByFilter", "post", data); //依據條件取得所有知識庫列表
+export const apiAddKnowledgeBase = (data) =>
+  fetchDataCall("AddKnowledgeBase", "put", data); //新增指定機台的知識庫
+//#endregion
+
 //#region SOP
 export const apiGetAllKnowledgeBaseByMachineAddId = (data) =>
   fetchDataCall("GetAllKnowledgeBaseByMachineAddId", "post", data); //依據MachineAddId取得所有 故障說明

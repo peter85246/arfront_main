@@ -183,6 +183,10 @@
   "machineKnowledge.delete": "刪除機台",
   "machineKnowledge.deleteContent": "您確定要刪除該筆資料嗎?",
   "machineKnowledge.empty": "尚無資料",
-  "machineKnowledge.searchEmpty": "查無機台"
+  "machineKnowledge.searchEmpty": "查無機台",
+
+  "knowledgeBase.content.header": "知識庫",
+  "knowledgeBase.btn.add": "新增知識",
+  "knowledgeBase.btn.search": "條件查詢"
 
 }

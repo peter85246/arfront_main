@@ -3,6 +3,16 @@ import { AddingKnowledge } from "../components/AddingKnowledge";
 import { ConditionSearchDialog } from "../components/ConditionSearchDialog";
 import styles from "../scss/global.module.scss";
 import classNames from "classnames";
+import { useTranslation } from "react-i18next"; //語系
+import { DebounceInput } from "react-debounce-input";
+import Pagination from "react-bootstrap/Pagination";
+import { ToastContainer, toast } from "react-toastify";
+import { setWindowClass, removeWindowClass } from "../utils/helpers";
+
+import {
+  apiGetAllKnowledgeBaseByFilter,
+  apiAddKnowledgeBase,
+} from "../utils/Api";
 
 const DataArray = [
   {
@@ -111,6 +121,31 @@ export default function Knowledge() {
   const [currentData, setCurrentData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
 
+  const { t } = useTranslation();
+  const [keyword, setKeyword] = useState(""); //關鍵字
+  const [knowledgeBases, setKnowledgeBases] = useState([]); //知識庫列表
+  const [showKnowledgeBases, setShowKnowledgeBases] = useState([]); //知識庫列表(顯示前端)
+  const [showAddKnowledgeBaseModal, setShowAddKnowledgeBaseModal] =
+    useState(false); //顯示"新增知識庫modal"
+
+  const [addKnowledgeBase, setAddKnowledgeBase] = useState({
+    //新增單一使用者
+    userId: 0,
+    userName: "",
+    userAccount: "",
+    userPaw: "",
+    userAgainPaw: "",
+    userLevel: 0,
+  });
+
+  const [addKnowledgeBaseErrors, setAddKnowledgeBaseErrors] = useState({
+    //新增單一使用者錯誤訊息
+    userName: "",
+    userAccount: "",
+    userPaw: "",
+    userAgainPaw: "",
+  });
+
   // 篩選資料
   const filterData = (e) => {
     const searchInput = e.target.value?.toLowerCase();
@@ -151,96 +186,224 @@ export default function Knowledge() {
     setCurrentData(data);
   }, [currentData, groupedData, currentPage]);
 
+  //#region 初始載入
+  useEffect(() => {
+    removeWindowClass("login-page");
+
+    const fetchData = async () => {
+      await refreshKnowledgeBases();
+    };
+
+    fetchData();
+  }, [keyword]);
+  //#endregion
+
+  //#region 刷新知識庫列表
+  const refreshKnowledgeBases = async () => {
+    var sendData = {
+      keyword: keyword,
+    };
+
+    let knowledgeBasesResponse = await apiGetAllKnowledgeBaseByFilter(sendData);
+    if (knowledgeBasesResponse) {
+      if (knowledgeBasesResponse.code == "0000") {
+        setKnowledgeBases(knowledgeBasesResponse.result);
+        setShowKnowledgeBases(
+          knowledgeBasesResponse.result.slice(
+            activePage * pageRow - pageRow,
+            activePage * pageRow,
+          ),
+        );
+      }
+    }
+  };
+  //#endregion
+
+  //#region 頁碼
+  let pageRow = 5; //一頁幾筆
+  const [activePage, setActivePage] = useState(1); //目前停留頁碼
+
+  let pages = []; //頁碼
+  for (
+    let number = 1;
+    number <= Math.ceil(knowledgeBases.length / pageRow);
+    number++
+  ) {
+    pages.push(
+      <Pagination.Item
+        key={number}
+        active={number === activePage}
+        onClick={(e) => handleChangePage(e, number)}
+      >
+        {number}
+      </Pagination.Item>,
+    );
+  }
+
+  const handleChangePage = async (e, number) => {
+    setActivePage(number);
+    setShowKnowledgeBases(
+      knowledgeBases.slice(number * pageRow - pageRow, number * pageRow),
+    );
+  };
+  //#endregion
+
+  //#region 關鍵字
+  const handleChangeKeyword = async (e) => {
+    const { name, value } = e.target;
+    setKeyword(value);
+  };
+  //#endregion
+
+  //#region 開啟新增知識庫Model
+  const handleOpenAddKnowledgeBaseModal = async (e) => {
+    e.preventDefault();
+    setAddKnowledgeBase({
+      userId: 0,
+      userName: "",
+      userAccount: "",
+      userPaw: "",
+      userAgainPaw: "",
+      userLevel: 1,
+    });
+
+    setAddKnowledgeBaseErrors({
+      userName: "",
+      userAccount: "",
+      userPaw: "",
+      userAgainPaw: "",
+    });
+
+    setShowAddKnowledgeBaseModal(true);
+  };
+  //#endregion
+
+  //#region 關閉新增知識Model
+  const handleCloseAddKnowledgeBaseModal = async (e) => {
+    if (e) {
+      e.preventDefault();
+    }
+    setShowAddKnowledgeBaseModal(false);
+  };
+  //#endregion
+
+  //#region 新增知識庫 改變Input的欄位
+  const handleAddChange = (e) => {
+    const { name, value } = e.target;
+    setAddKnowledgeBase({ ...addKnowledgeBase, [name]: value });
+  };
+  //#endregion
+
   return (
     <>
-      <main>
-        <h2>知識庫</h2>
-        <div className={styles["content2"]}>
-          <div className={styles["button-function"]}>
-            <button
-              className={classNames(styles["button"], styles["knowledge-btn"])}
-              onClick={() => setIsAddingKnowledge((prev) => !prev)}
-            >
-              <i
-                class="fa fa-plus"
-                aria-hidden="true"
-                style={{ marginRight: "6px", fontSize: "15px" }}
-              ></i>
-              新增知識
-            </button>
-            <button
-              className={classNames(styles["button"], styles["condition-btn"])}
-              onClick={() => setIsConditionSearch((prev) => !prev)}
-            >
-              <i
-                class="fa fa-search"
-                aria-hidden="true"
-                style={{ marginRight: "4.5px", fontSize: "15px" }}
-              ></i>
-              條件查詢
-            </button>
-            {/* <!-- ... 其他的按鈕 ... --> */}
-          </div>
-          <div className={styles["content-wrapper"]}>
-            <div className={styles["list-search"]}>
-              <input
-                type="text"
-                id="searchInput"
-                placeholder="請輸入關鍵字"
-                onChange={filterData}
-              />
+      <section className="content-header">
+        <div className="container-fluid">
+          <div className="row mb-2 justify-content-between">
+            <div />
+            <div className="content-header-text-color">
+              <h1>
+                <strong>
+                  {t("knowledgeBase.content.header")}
+                  {/*知識庫*/}
+                </strong>
+              </h1>
             </div>
-
-            <table>
-              <thead>
-                <tr>
-                  <th>編號</th>
-                  <th>設備種類</th>
-                  <th>設備部件</th>
-                  <th>維修項目</th>
-                  <th>維修類型</th>
-                  <th>檔案編號</th>
-                </tr>
-              </thead>
-              <tbody>
-                {currentData?.map((item) => (
-                  <tr
-                    key={item.id}
-                    className={styles["row"]}
-                    onClick={() => (window.location = "/database")}
-                  >
-                    <td>{item.id}</td>
-                    <td>{item.KnowledgeBaseDeviceType}</td>
-                    <td>{item.KnowledgeBaseDeviceParts}</td>
-                    <td>{item.RepairItem}</td>
-                    <td>{item.KnowledgeBaseRepairType}</td>
-                    <td>{item.KnowledgeBaseFileNo}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            <div className={styles["button-page"]} id="pagination">
+            <div>
               <button
-                className={styles["button-page1"]}
-                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                type="button"
+                className="btn btn-add"
+                // onClick={(e) => handleOpenAddKnowledgeBaseModal(e)}
+                onClick={() => setIsAddingKnowledge((prev) => !prev)}
+                style={{ marginBottom: "10px" }}
               >
-                {currentPage}
+                <i className="fas fa-plus" style={{ marginLeft: "2px" }}></i>{" "}
+                {t("knowledgeBase.btn.add")}
+                {/*新增知識*/}
               </button>
-              <span className={styles["tab"]}>...</span>
+              <br></br>
               <button
-                className={styles["button-page2"]}
-                onClick={() =>
-                  setCurrentPage((prev) =>
-                    Math.min(prev + 1, groupedData.length),
-                  )
-                }
+                type="button"
+                className="btn btn-search"
+                // onClick={(e) => handleOpenAddKnowledgeBaseModal(e)}
+                onClick={() => setIsConditionSearch((prev) => !prev)}
               >
-                {currentPage >= groupedData.length ? "-" : currentPage + 1}
+                <i className="fa fa-search"></i> {t("knowledgeBase.btn.search")}
+                {/*條件查詢*/}
               </button>
             </div>
           </div>
         </div>
-      </main>
+      </section>
+      <section className="content">
+        <div className="container-fluid container-fluid-border">
+          <div className="row justify-content-end mb-3">
+            <div className="col-3">
+              <div className="from-item search">
+                <DebounceInput
+                  debounceTimeout={300}
+                  type="search"
+                  placeholder={t("keyword.placeholder")}
+                  onChange={(e) => handleChangeKeyword(e)}
+                />
+                {/*請輸入關鍵字*/}
+              </div>
+            </div>
+          </div>
+          <div className="card">
+            <div className="card-body table-responsive p-0">
+              <table className="table table-striped table-valign-middle">
+                <thead>
+                  <tr>
+                    <th>編號</th>
+                    <th>設備種類</th>
+                    <th>設備部件</th>
+                    <th>維修項目</th>
+                    <th>維修類型</th>
+                    <th>檔案編號</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {showKnowledgeBases && showKnowledgeBases.length > 0 ? (
+                    <>
+                      {showKnowledgeBases.map((item, index) => {
+                        return (
+                          <tr
+                            key={item.knowledgeBaseId}
+                            className={styles["row"]}
+                            onClick={() => (window.location = "/database")}
+                          >
+                            <td>{item.knowledgeBaseId}</td>
+                            <td>{item.knowledgeBaseDeviceType}</td>
+                            <td>{item.knowledgeBaseDeviceParts}</td>
+                            <td>{item.knowledgeBaseRepairItems}</td>
+                            <td>{item.knowledgeBaseRepairType}</td>
+                            <td>{item.knowledgeBaseFileNo}</td>
+                          </tr>
+                        );
+                      })}
+                    </>
+                  ) : (
+                    <>
+                      <tr>
+                        <td colSpan="6" style={{ textAlign: "center" }}>
+                          {t("table.empty")}
+                          {/*查無資料*/}
+                        </td>
+                      </tr>
+                    </>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <Pagination className="d-flex justify-content-center">
+            {pages}
+          </Pagination>
+        </div>
+      </section>
+
+      <ToastContainer />
+
       {isAddingKnowledge && (
         <AddingKnowledge onClose={() => setIsAddingKnowledge(false)} />
       )}
