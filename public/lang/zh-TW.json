@@ -187,6 +187,16 @@
 
   "knowledgeBase.content.header": "知識庫",
   "knowledgeBase.btn.add": "新增知識",
-  "knowledgeBase.btn.search": "條件查詢"
+
+  "ConditionSearchDialog.btn.search": "條件查詢",
+  "ConditionSearchDialog.canInput": "可拖動 & 點擊項目填入右側欄位",
+  "ConditionSearchDialog.knowledgeBaseDeviceType": "設備種類",
+  "ConditionSearchDialog.knowledgeBaseDeviceParts": "設備部件",
+  "ConditionSearchDialog.knowledgeBaseRepairItems": "維修項目",
+  "ConditionSearchDialog.knowledgeBaseRepairType": "維修類型",
+  "ConditionSearchDialog.knowledgeBaseSpec": "規格",
+  "ConditionSearchDialog.knowledgeBaseSystem": "系統",
+  "ConditionSearchDialog.knowledgeBaseProductName": "產品名稱"
+  
 
 }

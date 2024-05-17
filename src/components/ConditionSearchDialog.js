@@ -1,10 +1,46 @@
 import classNames from "classnames";
 import styles from "../scss/ConditionSearchDialog.module.scss";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import Select from "react-select";
 import { useTranslation } from "react-i18next";
-import { components } from "react-select";
+
+import { apiGetAllKnowledgeBaseByFilter } from "../utils/Api";
+
+// 創建一個重用的 SelectField 組件
+const SelectField = ({
+  label,
+  fieldName,
+  conditionInfo,
+  handleDrop,
+  handleSelectChange,
+  getOptionsForSelect,
+  allowDrop,
+  labelStyle,
+}) => (
+  <div className={styles.formGroupCondition}>
+    <label htmlFor={fieldName} style={labelStyle}>
+      {label}：
+    </label>
+    <div
+      className={styles.customSelectCondition}
+      onDrop={(e) => handleDrop(e, fieldName)}
+      onDragOver={allowDrop}
+    >
+      <Select
+        id={fieldName}
+        name={fieldName}
+        value={conditionInfo[fieldName]}
+        onChange={handleSelectChange}
+        options={getOptionsForSelect(fieldName)}
+        isClearable
+        placeholder="Select content..."
+        menuPortalTarget={document.body}
+        styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
+      />
+    </div>
+  </div>
+);
 
 export function ConditionSearchDialog({ onClose }) {
   const [showModal, setShowModal] = useState(true);
@@ -21,11 +57,51 @@ export function ConditionSearchDialog({ onClose }) {
   });
   const [errors, setErrors] = useState({});
   const [searchFilter, setSearchFilter] = useState(""); // 用於保存搜索過濾的字符串
-  const [selectedItems, setSelectedItems] = useState(new Set()); // 儲存已選擇的項目
+  const [databaseItems, setDatabaseItems] = useState([]); // 用於儲存從資料庫撈取的項目
+
+  const allowDrop = (event) => {
+    event.preventDefault(); // 阻止默認處理（防止執行不必要的操作，如連結導航）
+  };
+
   const { t } = useTranslation();
 
-  const handleSearchChange = (event) => {
-    setSearchFilter(event.target.value.toLowerCase()); // 更新搜索過濾條件
+  // 當組件掛載時，執行資料獲取
+  const fetchData = async (keyword = "") => {
+    const response = await apiGetAllKnowledgeBaseByFilter({ keyword });
+    console.log("API Response:", response);
+    if (response && response.code === "0000") {
+      setDatabaseItems(response.result);
+      console.log("Fetched Items:", response.result);
+    } else {
+      console.error("Error fetching data:", response?.message);
+    }
+  };
+
+  // 當組件掛載時，執行資料獲取
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const handleSearchChange = async (event) => {
+    const searchValue = event.target.value.toLowerCase();
+    setSearchFilter(searchValue);
+    if (searchValue.length > 0) {
+      const response = await apiGetAllKnowledgeBaseByFilter({
+        keyword: searchValue,
+      });
+      if (response && response.code === "0000") {
+        const filteredItems = response.result.filter((item) =>
+          displayKeys.some(
+            (key) => item[key] && item[key].toLowerCase().includes(searchValue),
+          ),
+        );
+        setDatabaseItems(filteredItems);
+      } else {
+        console.error("Error fetching data:", response?.message);
+      }
+    } else {
+      fetchData();
+    }
   };
 
   const visibleItems = Array.from(
@@ -39,11 +115,15 @@ export function ConditionSearchDialog({ onClose }) {
     onClose?.();
   };
 
+  // 使用集合來追蹤已經顯示的數據，避免重複
+  const shownItems = new Set();
+
   // 處理表單儲存事件
   const handleSave = () => {
     let hasError = false;
     const newErrors = {};
 
+    // 檢查必填欄位是否都已填寫
     Object.keys(conditionInfo).forEach((key) => {
       if (!conditionInfo[key] || conditionInfo[key] === "") {
         newErrors[key] = "required";
@@ -51,6 +131,7 @@ export function ConditionSearchDialog({ onClose }) {
       }
     });
 
+    // 如果有錯誤，不進行保存
     if (hasError) {
       alert("儲存失敗!");
     } else {
@@ -61,91 +142,120 @@ export function ConditionSearchDialog({ onClose }) {
     setErrors(newErrors);
   };
 
-  // 處理選擇事件
   const handleSelectChange = (selectedOption, { name }) => {
-    setConditionInfo({ ...conditionInfo, [name]: selectedOption });
     if (!selectedOption) {
-      // When a selection is cleared
-      setSelectedItems((prev) => {
-        const newSet = new Set(prev);
-        newSet.delete(conditionInfo[name].label);
-        return newSet;
-      });
+      // 當選擇被清除時，將項目返回到 databaseItems
+      const currentItem = conditionInfo[name];
+      setDatabaseItems((prev) => [...prev, { [name]: currentItem.value }]);
     }
+    setConditionInfo({ ...conditionInfo, [name]: selectedOption });
   };
 
-  const handleSelect = (item, nextField) => {
-    if (nextField && !conditionInfo[nextField]) {
+  // 更新handleDoubleClick，確保只處理點擊的項目
+  const handleDoubleClick = (item, field) => {
+    if (item && field && item[field]) {
       setConditionInfo((prev) => ({
         ...prev,
-        [nextField]: { label: item, value: item },
+        [field]: { label: item[field], value: item[field] },
       }));
-      setSelectedItems((prev) => new Set(prev.add(item)));
     }
   };
 
-  const handleDoubleClick = (item) => {
-    const nextField = findNextEmptyField();
-    if (nextField && !conditionInfo[nextField]) {
-      setConditionInfo((prev) => ({
-        ...prev,
-        [nextField]: { label: item, value: item },
-      }));
-      setSelectedItems((prev) => new Set(prev.add(item)));
-    }
-  };
-
-  const findNextEmptyField = () => {
-    const fieldsOrder = [
-      "knowledgeBaseDeviceType",
-      "knowledgeBaseDeviceParts",
-      "knowledgeBaseRepairItems",
-      "knowledgeBaseRepairType",
-      "knowledgeBaseSpec",
-      "knowledgeBaseSystem",
-      "knowledgeBaseProductName",
-    ];
-    return fieldsOrder.find((field) => !conditionInfo[field]);
-  };
+  // 指定需要顯示的鍵
+  const displayKeys = [
+    "knowledgeBaseDeviceType",
+    "knowledgeBaseDeviceParts",
+    "knowledgeBaseRepairItems",
+    "knowledgeBaseRepairType",
+    "knowledgeBaseSpec",
+    "knowledgeBaseSystem",
+    "knowledgeBaseProductName",
+  ];
 
   const handleDragStart = (event, item) => {
-    event.dataTransfer.setData("text", item); // 設定拖拉時傳遞的數據
+    event.dataTransfer.setData("text/plain", JSON.stringify(item));
   };
 
+  // 更新handleDrop方法以適應拖放操作
   const handleDrop = (event, field) => {
     event.preventDefault();
-    const item = event.dataTransfer.getData("text");
-    if (item) {
-      setConditionInfo((prev) => ({
-        ...prev,
-        [field]: { label: item, value: item },
-      }));
-      setSelectedItems((prev) => new Set(prev.add(item)));
+    const item = JSON.parse(event.dataTransfer.getData("text/plain"));
+    // 如果欄位已被填入，則覆蓋並將被覆蓋的項目放回到 databaseItems
+    const currentValue = conditionInfo[field];
+    if (currentValue) {
+      setDatabaseItems((prevItems) => [
+        ...prevItems,
+        { [field]: currentValue.value },
+      ]);
     }
+    setConditionInfo((prev) => ({
+      ...prev,
+      [field]: { label: item[field], value: item[field] },
+    }));
   };
 
-  const allowDrop = (event) => {
-    event.preventDefault(); // 阻止預設事件，以允許放下
+  // Select欄位展開資料庫數據
+  const getOptionsForSelect = (fieldName) => {
+    return databaseItems
+      .map((item) => ({ value: item[fieldName], label: item[fieldName] }))
+      .filter(
+        (option, index, self) =>
+          index ===
+          self.findIndex(
+            (t) => t.label === option.label && t.value === option.value,
+          ),
+      );
   };
+
+  const fieldNames = [
+    {
+      field: "knowledgeBaseDeviceType",
+      label: t("ConditionSearchDialog.knowledgeBaseDeviceType"),
+    },
+    {
+      field: "knowledgeBaseDeviceParts",
+      label: t("ConditionSearchDialog.knowledgeBaseDeviceParts"),
+    },
+    {
+      field: "knowledgeBaseRepairItems",
+      label: t("ConditionSearchDialog.knowledgeBaseRepairItems"),
+    },
+    {
+      field: "knowledgeBaseRepairType",
+      label: t("ConditionSearchDialog.knowledgeBaseRepairType"),
+    },
+    {
+      field: "knowledgeBaseSpec",
+      label: t("ConditionSearchDialog.knowledgeBaseSpec"),
+      labelStyle: { marginLeft: "32px" },
+    },
+    {
+      field: "knowledgeBaseSystem",
+      label: t("ConditionSearchDialog.knowledgeBaseSystem"),
+      labelStyle: { marginLeft: "32px" },
+    },
+    {
+      field: "knowledgeBaseProductName",
+      label: t("ConditionSearchDialog.knowledgeBaseProductName"),
+    },
+  ];
 
   return (
     <div>
       <Modal
         show={showModal}
-        onHide={() => {
-          setShowModal(false);
-          onClose?.();
-        }}
+        onHide={handleCloseModal}
         backdrop="static"
         centered
-        size="xl" // 設定為超大尺寸
+        size="xl"
       >
         <Modal.Header closeButton>
-          <Modal.Title style={{ marginLeft: "20px" }}>條件查詢</Modal.Title>
+          <Modal.Title>{t("ConditionSearchDialog.btn.search")}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <div className={styles.leftBoxCondition}>
-            <p>可拖動選項至目標欄位填入項目</p>
+              {t("ConditionSearchDialog.canInput")}
+              {/* 可拖動 & 點擊項目填入右側欄位 */}
             <div className={styles.boxCondition1}>
               <input
                 type="text"
@@ -155,219 +265,64 @@ export function ConditionSearchDialog({ onClose }) {
                 autocomplete="off"
                 onChange={handleSearchChange}
               />
-              <div className={styles.scrollBox} onDragOver={allowDrop}>
-                {/* 動態生成的條件項目 */}
-                {visibleItems.map((item, index) => (
-                  <div
-                    key={index}
-                    className={classNames(styles.conditionItem)}
-                    draggable="true"
-                    onDoubleClick={() => handleDoubleClick(item)}
-                    onDragStart={(e) => handleDragStart(e, item)}
-                  >
-                    {item}
-                    <div className={styles.icon}>≡</div>
-                  </div>
-                ))}
+              <div className={styles.scrollBox}>
+                {databaseItems.map((item, index) =>
+                  Object.entries(item)
+                    .filter(
+                      ([key, value]) => displayKeys.includes(key) && value,
+                    )
+                    .map(([key, value]) => {
+                      if (!shownItems.has(value)) {
+                        shownItems.add(value); // 記錄顯示的數據，避免重複
+                        return (
+                          <div
+                            key={`${key}-${index}`}
+                            className={classNames(
+                              styles.conditionItem,
+                              styles.draggableItem,
+                              {
+                                [styles.selectedItem]:
+                                  conditionInfo[key] &&
+                                  conditionInfo[key].value === value,
+                              },
+                            )}
+                            draggable="true"
+                            onDoubleClick={() => handleDoubleClick(item, key)}
+                            onDragStart={(e) => handleDragStart(e, item)}
+                          >
+                            {`${value}`}
+                            <div className={styles.icon}>
+                              {conditionInfo[key] &&
+                              conditionInfo[key].value === value
+                                ? "✓"
+                                : "≡"}
+                            </div>
+                          </div>
+                        );
+                      }
+                      return null;
+                    }),
+                )}
               </div>
             </div>
           </div>
 
           <div className={styles.rightBoxCondition}>
             <div className={styles.boxCondition2}>
-              <div className={styles.formGroupCondition}>
-                <label htmlFor="knowledgeBaseDeviceType">設備種類：</label>
-                <div
-                  className={styles.customSelectCondition}
-                  onDrop={(e) => handleDrop(e, "knowledgeBaseDeviceType")}
-                  onDragOver={allowDrop}
-                >
-                  <Select
-                    id="knowledgeBaseDeviceType"
-                    name="knowledgeBaseDeviceType"
-                    value={conditionInfo.knowledgeBaseDeviceType}
-                    onChange={handleSelectChange}
-                    options={Array.from({ length: 10 }, (_, i) => ({
-                      value: `項目${i + 1}`,
-                      label: `項目${i + 1}`,
-                    }))}
-                    isClearable
-                    placeholder="Select content..."
-                    menuPortalTarget={document.body} // 將選項渲染到 body 元素
-                    styles={{
-                      menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-                    }} // 設置高 z-index 以確保其在最上層
-                  />
-                </div>
-              </div>
-
-              <div className={styles.formGroupCondition}>
-                <label htmlFor="knowledgeBaseDeviceParts">設備部件：</label>
-                <div
-                  className={styles.customSelectCondition}
-                  onDrop={(e) => handleDrop(e, "knowledgeBaseDeviceParts")}
-                  onDragOver={allowDrop}
-                >
-                  <Select
-                    id="knowledgeBaseDeviceParts"
-                    name="knowledgeBaseDeviceParts"
-                    value={conditionInfo.knowledgeBaseDeviceParts}
-                    onChange={handleSelectChange}
-                    options={Array.from({ length: 10 }, (_, i) => ({
-                      value: `項目${i + 1}`,
-                      label: `項目${i + 1}`,
-                    }))}
-                    isClearable
-                    placeholder="Select content..."
-                    menuPortalTarget={document.body} // 將選項渲染到 body 元素
-                    styles={{
-                      menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-                    }} // 設置高 z-index 以確保其在最上層
-                  />
-                </div>
-              </div>
-
-              {/* 繼續為其他選擇框添加相同功能 */}
-              {/* 示例：維修項目 */}
-              <div className={styles.formGroupCondition}>
-                <label htmlFor="knowledgeBaseRepairItems">維修項目：</label>
-                <div
-                  className={styles.customSelectCondition}
-                  onDrop={(e) => handleDrop(e, "knowledgeBaseRepairItems")}
-                  onDragOver={allowDrop}
-                >
-                  <Select
-                    id="knowledgeBaseRepairItems"
-                    name="knowledgeBaseRepairItems"
-                    value={conditionInfo.knowledgeBaseRepairItems}
-                    onChange={handleSelectChange}
-                    options={Array.from({ length: 10 }, (_, i) => ({
-                      value: `項目${i + 1}`,
-                      label: `項目${i + 1}`,
-                    }))}
-                    isClearable
-                    placeholder="Select content..."
-                    menuPortalTarget={document.body} // 將選項渲染到 body 元素
-                    styles={{
-                      menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-                    }} // 設置高 z-index 以確保其在最上層
-                  />
-                </div>
-              </div>
-
-              <div className={styles.formGroupCondition}>
-                <label htmlFor="knowledgeBaseRepairType">維修類型：</label>
-                <div
-                  className={styles.customSelectCondition}
-                  onDrop={(e) => handleDrop(e, "knowledgeBaseRepairType")}
-                  onDragOver={allowDrop}
-                >
-                  <Select
-                    id="knowledgeBaseRepairType"
-                    name="knowledgeBaseRepairType"
-                    value={conditionInfo.knowledgeBaseRepairType}
-                    onChange={handleSelectChange}
-                    options={Array.from({ length: 10 }, (_, i) => ({
-                      value: `項目${i + 1}`,
-                      label: `項目${i + 1}`,
-                    }))}
-                    isClearable
-                    placeholder="Select content..."
-                    menuPortalTarget={document.body} // 將選項渲染到 body 元素
-                    styles={{
-                      menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-                    }} // 設置高 z-index 以確保其在最上層
-                  />
-                </div>
-              </div>
-
-              <div className={styles.formGroupCondition}>
-                <label
-                  htmlFor="knowledgeBaseSpec"
-                  style={{ width: "48px", marginLeft: "32px" }}
-                >
-                  規格：
-                </label>
-                <div
-                  className={styles.customSelectCondition}
-                  onDrop={(e) => handleDrop(e, "knowledgeBaseSpec")}
-                  onDragOver={allowDrop}
-                >
-                  <Select
-                    id="knowledgeBaseSpec"
-                    name="knowledgeBaseSpec"
-                    value={conditionInfo.knowledgeBaseSpec}
-                    onChange={handleSelectChange}
-                    options={Array.from({ length: 10 }, (_, i) => ({
-                      value: `項目${i + 1}`,
-                      label: `項目${i + 1}`,
-                    }))}
-                    isClearable
-                    placeholder="Select content..."
-                    menuPortalTarget={document.body} // 將選項渲染到 body 元素
-                    styles={{
-                      menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-                    }} // 設置高 z-index 以確保其在最上層
-                  />
-                </div>
-              </div>
-
-              <div className={styles.formGroupCondition}>
-                <label
-                  htmlFor="knowledgeBaseSystem"
-                  style={{ width: "48px", marginLeft: "32px" }}
-                >
-                  系統：
-                </label>
-                <div
-                  className={styles.customSelectCondition}
-                  onDrop={(e) => handleDrop(e, "knowledgeBaseSystem")}
-                  onDragOver={allowDrop}
-                >
-                  <Select
-                    id="knowledgeBaseSystem"
-                    name="knowledgeBaseSystem"
-                    value={conditionInfo.knowledgeBaseSystem}
-                    onChange={handleSelectChange}
-                    options={Array.from({ length: 10 }, (_, i) => ({
-                      value: `項目${i + 1}`,
-                      label: `項目${i + 1}`,
-                    }))}
-                    isClearable
-                    placeholder="Select content..."
-                    menuPortalTarget={document.body} // 將選項渲染到 body 元素
-                    styles={{
-                      menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-                    }} // 設置高 z-index 以確保其在最上層
-                  />
-                </div>
-              </div>
-
-              <div className={styles.formGroupCondition}>
-                <label htmlFor="knowledgeBaseProductName">產品名稱：</label>
-                <div
-                  className={styles.customSelectCondition}
-                  onDrop={(e) => handleDrop(e, "knowledgeBaseProductName")}
-                  onDragOver={allowDrop}
-                >
-                  <Select
-                    id="knowledgeBaseProductName"
-                    name="knowledgeBaseProductName"
-                    value={conditionInfo.knowledgeBaseProductName}
-                    onChange={handleSelectChange}
-                    options={Array.from({ length: 10 }, (_, i) => ({
-                      value: `項目${i + 1}`,
-                      label: `項目${i + 1}`,
-                    }))}
-                    isClearable
-                    placeholder="Select content..."
-                    menuPortalTarget={document.body} // 將選項渲染到 body 元素
-                    styles={{
-                      menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-                    }} // 設置高 z-index 以確保其在最上層
-                  />
-                </div>
-              </div>
+              {fieldNames.map(({ field, label, labelStyle }) => (
+                <SelectField
+                  key={field}
+                  label={label}
+                  fieldName={field}
+                  conditionInfo={conditionInfo}
+                  setConditionInfo={setConditionInfo}
+                  handleDrop={handleDrop}
+                  handleSelectChange={handleSelectChange}
+                  getOptionsForSelect={getOptionsForSelect}
+                  allowDrop={allowDrop}
+                  labelStyle={labelStyle}
+                />
+              ))}
             </div>
           </div>
         </Modal.Body>

@@ -327,7 +327,8 @@ export default function Knowledge() {
                 // onClick={(e) => handleOpenAddKnowledgeBaseModal(e)}
                 onClick={() => setIsConditionSearch((prev) => !prev)}
               >
-                <i className="fa fa-search"></i> {t("knowledgeBase.btn.search")}
+                <i className="fa fa-search"></i>{" "}
+                {t("ConditionSearchDialog.btn.search")}
                 {/*條件查詢*/}
               </button>
             </div>
