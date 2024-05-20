@@ -5,7 +5,21 @@ import { Link } from "react-router-dom";
 import React, { useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
 import { jsPDF } from "jspdf";
+import { Document, Page, Text, View, StyleSheet } from "@react-pdf/renderer";
 import PdfContent from "./PDFContent";
+
+// React PDF Styles
+const pdfStyles = StyleSheet.create({
+  page: {
+    flexDirection: "row",
+    backgroundColor: "#E4E4E4",
+  },
+  section: {
+    margin: 10,
+    padding: 10,
+    flexGrow: 1,
+  },
+});
 
 export function RepairDocument() {
   const pdfRef = React.useRef();
@@ -16,9 +30,7 @@ export function RepairDocument() {
     onBeforePrint: () => setIsPrinting(true),
     onAfterPrint: () => {
       setIsPrinting(false);
-      if (isPrinting) {
-        savePdf();
-      }
+      // savePdf();  // 確保在列印完成後保存 PDF 文件
     },
   });
 
@@ -57,7 +69,12 @@ export function RepairDocument() {
         </Link>
       </div>
 
-      <PdfContent ref={pdfRef} />
+      {/* <!--中間欄位內容--> */}
+      <div className={styles["content-box"]}>
+        <div className={styles["content-box-middle-bigView"]}>
+          <PdfContent ref={pdfRef} />
+        </div>
+      </div>
     </main>
   );
 }

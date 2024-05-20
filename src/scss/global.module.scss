@@ -482,7 +482,7 @@ table th {
   align-items: center; /* 垂直居中對齊 */
   position: absolute; /* 絕對定位 */
   padding-top: 1.5em; /* 距離框框上邊的距離，可以根據需要調整 */
-  right: 1.5vw; /* 距離框框右邊的距離，可以根據需要調整 */
+  right: 1vw; /* 距離框框右邊的距離，可以根據需要調整 */
   display: block;
   gap: 2px;
   top: 6vh;
@@ -1255,6 +1255,22 @@ table th {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+.content-box-middle-bigView {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  padding: 20px;
+  margin-top: -10px;
+  width: 100%;
+  transition: width 0.3s ease-in-out;
+  border: 2px solid #b7bfcf;
+  border-radius: 15px;
+  background-color: #ffffff;
+  left: 5px;
+  position: relative;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
 .content-box-middle::-webkit-scrollbar {
   width: 16px;
   margin-top: 5px;
@@ -1308,400 +1324,6 @@ table th {
 .preview-content > * {
   flex-shrink: 1;
   min-width: 0; /* 避免flex项目溢出其容器 */
-}
-
-/* 特定區塊內圖片的特殊樣式 */
-.content-section img {
-  max-width: calc(100% - 4px); /* 留出更小的邊距 */
-  margin: 2px; /* 這裡也是2px邊距，可以根據需要調整 */
-}
-
-.page {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  padding-bottom: 40px;
-  overflow: hidden; /* 防止内容溢出 */
-}
-
-/* 確保所有有框線的標題具有一致的外邊距和內邊距 */
-.page h1,
-.page2 h1,
-.step-title span {
-  margin: 10px 0; /* 上下外邊距 */
-  padding: 5px 0; /* 上下內邊距 */
-}
-
-.page h1 {
-  text-align: center;
-  font-size: 40px;
-  margin-top: 30px;
-  order: -1;
-}
-
-.page2 {
-  display: flex;
-  flex-direction: column;
-  padding-bottom: 40px;
-  padding: 40px 0px 0px 0px;
-  overflow: hidden; /* 防止内容溢出 */
-}
-
-.page2 h1 {
-  text-align: center;
-  font-size: 40px;
-  margin-top: 30px;
-  order: -1;
-}
-
-.preview-content {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-bottom: 0px;
-  padding: 0px 0px -20px;
-}
-
-.sop-section {
-  text-align: center;
-  font-size: 21px;
-  font-weight: 520;
-  display: flex;
-  flex-direction: column; /* 使子元素垂直排列 */
-  align-items: stretch; /* 子元素撐滿容器寬度 */
-  border-top: 1px solid black;
-  border-bottom: 1px solid black;
-  width: 100%;
-  padding-left: 0; /* 移除左側的padding */
-  margin-top: -0.5em;
-  margin-bottom: 1.2em !important;
-}
-
-.sop-section2 {
-  text-align: center;
-  font-size: 21px;
-  font-weight: 520;
-  display: flex;
-  flex-direction: column; /* 使子元素垂直排列 */
-  align-items: stretch; /* 子元素撐滿容器寬度 */
-  border-top: 1px solid black;
-  border-bottom: 1px solid black;
-  width: 100%;
-  padding-left: 0; /* 移除左側的padding */
-}
-
-.info-box {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 10px;
-  padding-left: 10px;
-  flex: 1;
-  margin-bottom: 2px; /* 新增此行來縮短下方距離 */
-  padding-bottom: 0px;
-}
-
-.info-box p {
-  color: #000000;
-  font-size: 15px;
-  padding: 0px 0px -5px 0px;
-  margin: -5px 0px;
-  font-size: 15px;
-}
-
-.info-box2 {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 10px;
-  padding-left: 10px;
-  flex: 1;
-  margin-top: -20px;
-  margin-bottom: 22px; /* 新增此行來縮短下方距離 */
-  padding-bottom: 0px;
-}
-
-.info-box2 p {
-  color: #000000;
-  font-size: 15px;
-  padding: 0px 0px -5px 0px;
-  margin: -5px 0px;
-  font-size: 15px;
-}
-
-img {
-  width: auto; /* 讓圖片保持原有比例 */
-  max-height: 100%; /* 確保圖片高度不超過容器 */
-  margin-right: 2px; /* 設定圖片與右側文字的間距 */
-  vertical-align: middle; /* 確保圖片與文字垂直居中對齊 */
-}
-
-.model,
-.tools,
-.illustration {
-  box-sizing: border-box;
-  display: flex;
-  gap: 20px;
-  align-items: center;
-  border-top: 1px solid #000;
-  padding: 0px 2px 5px 10px;
-  margin-bottom: -10px;
-  justify-content: space-between;
-}
-
-.model label,
-.tools label,
-.illustration label {
-  position: absolute; /* 使用绝对定位 */
-  top: 5px; /* 定位到顶部 */
-  left: 5px; /* 定位到左边 */
-}
-
-.model img,
-.tools img,
-.illustration img {
-  width: auto; /* 保持图片自然宽度 */
-  height: auto; /* 自動調整高度以保持圖片的比例 */
-  object-fit: contain; /* 完整显示图片 */
-  margin-bottom: 2px;
-}
-
-.image-container-page {
-  position: relative;
-  border: 1px solid transparent; /* 创建一个透明边框作为间距 */
-  margin: 2px; /* 与外部元素的间距 */
-  display: flex; /* 使用弹性盒子布局 */
-  justify-content: center; /* 图片水平居中 */
-  align-items: center; /* 图片垂直居中 */
-  overflow: hidden; /* 超出容器的图片部分会被隐藏 */
-  width: 850px;
-  max-height: 280px; /* 高度设置为自动，依据内容调整 */
-  margin-bottom: 10px;
-  margin-top: 30px;
-}
-
-.model .image-container-page {
-  width: 1000px;
-  max-width: 100%; /* 图片最大宽度为容器宽度 */
-  margin-left: 10%; /* 为模型部分的图片容器设置左边距，确保与其他内容有间隔 */
-}
-
-.image-container-page img {
-  width: auto; /* 保持图片原始宽度 */
-  max-height: 100%; /* 图片最大高度为容器高度 */
-  object-fit: contain; /* 图片将被缩放以保持其宽高比同时被包含在容器内 */
-}
-
-.model .image-container-page img {
-  max-width: 70%; /* 图片最大宽度为容器宽度 */
-  object-fit: scale-down; /* 图片缩放以适应容器大小，但不裁剪 */
-}
-
-.model {
-  margin-top: -30px;
-  border-top: none;
-  padding-top: 5px;
-}
-
-.tools ul,
-.illustration ul {
-  padding: 20px 30px; /* 设置左右内边距为100px，确保列表不会贴边显示 */
-  margin-top: 0px;
-}
-
-.tools-list li,
-.illustration-list li {
-  margin-top: 15px; /* 增加上部外邊距 */
-  margin-bottom: 15px; /* 增加底部外邊距 */
-}
-
-.list-container {
-  width: 30%; /* 列表容器也占据50%的宽度 */
-  max-height: 290px;
-  display: flex; /* 使用 flex 布局 */
-  flex-direction: column; /* 让列表垂直排列 */
-  padding-top: 10px; /* 设置上内边距 */
-  margin-top: 10px; /* 设置上外边距 */
-  border: 1px solid transparent;
-}
-
-.tools-list li,
-.illustration-list li {
-  flex-shrink: 1; /* 允許縮小以適應容器大小 */
-}
-
-.tools-list,
-.illustration-list {
-  list-style-type: none;
-}
-
-/* 为并排布局容器设置 display: flex; */
-.flex-row-container {
-  display: flex;
-  justify-content: space-between; /* 保证子元素之间有间隔 */
-}
-
-.page-outline {
-  position: relative;
-  border: 1px solid #000000;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 1172px;
-  overflow: hidden;
-}
-
-.page-outline-bigPreview {
-  position: relative;
-  border: 1px solid #000000;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 1172px;
-}
-
-.page-outline,
-.page-outline-bigPreview {
-  height: 1172px; /* 固定高度 */
-  width: 100%; /* 固定寬度 */
-  /* 其他样式保持不变 */
-}
-
-.logo-img {
-  position: absolute;
-  top: 15px;
-  right: 15px;
-  height: 160px;
-  width: 25%;
-}
-
-.step-title1,
-.step-title2,
-.step-title3,
-.step-title4 {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  border-top: 1px solid #000;
-  border-bottom: 1px solid #000;
-  padding-left: 5px;
-}
-
-.step-title span {
-  border-top: 1px solid #000;
-  border-bottom: 1px solid #000;
-  display: block;
-  width: 100%;
-  padding: 2px 2px 0px 28px;
-}
-
-/* 5. 如果步骤旁边有文字，设置间距 */
-.step-title1 span,
-.step-title2 span,
-.step-title3 span,
-.step-title4 span {
-  margin-right: 5px; /* 设置文字旁边的间距 */
-}
-
-.step-title1 {
-  border-top: none;
-}
-
-.step-content {
-  height: 212px;
-  display: flex;
-  flex-direction: row; /* 水平排列子元素 */
-  justify-content: space-between; /* 子元素间距均等分布 */
-  position: relative;
-}
-
-.content-section {
-  display: flex; /* 使用flex布局 */
-  flex-direction: column; /* 垂直排列子元素 */
-  justify-content: start; /* 从顶部开始排列子元素 */
-  overflow: hidden; /* 隐藏溢出内容 */
-  clear: both; /* 清除浮動效果 */
-  width: 100%; /* 需要時可以設定寬度 */
-  height: 212px; /* 固定高度，或者根据需要调整 */
-  flex: 1;
-  min-height: 100%; /* 最小高度与父元素相同 */
-  position: relative;
-  padding: 2px; /* 新增的屬性，確保內容和框線有2px的距離 */
-}
-
-.content-section p {
-  color: #000;
-  font-size: 15px;
-  margin: 2px;
-  text-align: left;
-  word-wrap: break-word; /* 確保長字不超出容器 */
-  overflow: hidden; /* 防止內容超出容器 */
-  padding: 2px 2px; /* 保持文字內容與邊框有一定距離 */
-}
-
-/* 圖片容器 */
-.image-container {
-  height: 50%; /* 或根据需要调整 */
-  width: 100%; /* 固定宽度 */
-  overflow: hidden;
-  display: flex; /* 或其他适合您布局的display属性 */
-  justify-content: center;
-  align-items: center;
-  padding: 2px;
-}
-
-.image-container img {
-  max-width: calc(100% - 4px); /* 减去左右各2px的padding */
-  max-height: calc(100% - 4px); /* 减去上下各2px的padding */
-  margin-right: 2px; /* 与右侧文本保持2px距离 */
-  object-fit: contain; /* 不失真地缩放图片 */
-}
-
-/* 垂直分隔線 */
-.content-section:not(:last-child)::after {
-  content: "";
-  border-right: 1px solid #000;
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  right: 0;
-}
-
-.step-content-box {
-  padding: 5px;
-  margin: 2px;
-  margin-top: -5px;
-  min-height: 180px; /* 設定最小高度 */
-  width: calc(100% - 4px); /* 减去边界和内边距的宽度 */
-  box-sizing: border-box; /* 包括padding和border在內的總寬度 */
-  border: 1px solid transparent;
-  position: relative; /* 容器相對定位 */
-  overflow: hidden; /* 隱藏溢出內容 */
-}
-
-.step-content-box img {
-  width: auto; /* 新增，使宽度自动调整 */
-  max-width: 100%; /* 最大宽度不超过容器 */
-  max-height: 120px;
-  display: block;
-  margin: 2px auto;
-  position: relative;
-  object-fit: contain;
-  float: left;
-}
-
-.step-content-box .icon-open {
-  position: relative;
-  height: 20px;
-  width: 100%;
-  float: right;
-}
-
-.step-content-box .icon-open2 {
-  position: relative;
-  height: 20px;
-  width: 100%;
-  float: right;
 }
 
 /* ----------------- condition page----------------- */
@@ -3367,7 +2989,7 @@ img {
 
   .buttons-container {
     top: 5vh;
-    right: 1.5vw; /* 距離框框右邊的距離，可以根據需要調整 */
+    right: 1vw; /* 距離框框右邊的距離，可以根據需要調整 */
     padding-top: 1.2em; /* 距離框框上邊的距離，可以根據需要調整 */
   }
 

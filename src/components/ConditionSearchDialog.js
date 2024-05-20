@@ -254,8 +254,8 @@ export function ConditionSearchDialog({ onClose }) {
         </Modal.Header>
         <Modal.Body>
           <div className={styles.leftBoxCondition}>
-              {t("ConditionSearchDialog.canInput")}
-              {/* 可拖動 & 點擊項目填入右側欄位 */}
+            {t("ConditionSearchDialog.canInput")}
+            {/* 可拖動 & 點擊項目填入右側欄位 */}
             <div className={styles.boxCondition1}>
               <input
                 type="text"
