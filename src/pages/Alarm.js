@@ -4,14 +4,32 @@ import styles from "../scss/global.module.scss";
 import { MindMap } from "../components/MindMap";
 import { Link } from "react-router-dom";
 import AlarmListTree from "../components/AlarmGroup/AlarmListTree";
+import { useTranslation } from "react-i18next"; //語系
 
 export default function Alarm() {
   const [alarmValue, setAlarmValue] = useState("待新增");
   const [dropMenuOpen, setDropMenuOpen] = useState(false);
+  const { t } = useTranslation();
 
   return (
     <main>
-      <h2 id="title-alarm">故障庫</h2>
+    <section className="content-header" style={{marginBottom:'10px'}}>
+      <div className="container-fluid">
+        <div className="row mb-2 justify-content-between">
+          <div />
+          <div className="content-header-text-color">
+            <h1>
+              <strong>
+                {t("alarm.content.header")}
+                {/*故障庫*/}
+              </strong>
+            </h1>
+          </div>
+          <div>
+          </div>
+        </div>
+      </div>
+    </section>
       <div>
         <div className={styles["buttons-container-item"]}>
           <div className={styles["buttons-alarm"]}>

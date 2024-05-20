@@ -31,6 +31,7 @@ import MachineKnowledge from "./pages/MachineKnowledge";
 import Assistant from "./components/Assistant";
 import MenuTest from "./components/MenuTest";
 import PDFDemo from "./pages/PDFDemo";
+import { useDatabase } from './components/useDatabse';
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(

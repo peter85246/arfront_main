@@ -35,9 +35,23 @@ export default function PageMindMap() {
         </Link>
       </div>
       <main>
-        <h2>
-          <strong>{t("系列")}</strong>
-        </h2>
+      <section className="content-header" style={{marginBottom:'10px'}}>
+        <div className="container-fluid">
+          <div className="row mb-2 justify-content-between">
+            <div />
+            <div className="content-header-text-color">
+              <h1>
+                <strong>
+                  {t("pageMindMap.content.header")}
+                  {/*系列*/}
+                </strong>
+              </h1>
+            </div>
+            <div>
+            </div>
+          </div>
+        </div>
+      </section>
 
         <div className={stylesAlarm.contentBoxAlarm}>
           <div className={stylesAlarm.contentBoxMindMap}>

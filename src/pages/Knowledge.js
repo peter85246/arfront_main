@@ -8,6 +8,7 @@ import { DebounceInput } from "react-debounce-input";
 import Pagination from "react-bootstrap/Pagination";
 import { ToastContainer, toast } from "react-toastify";
 import { setWindowClass, removeWindowClass } from "../utils/helpers";
+import { useNavigate } from "react-router-dom";
 
 import {
   apiGetAllKnowledgeBaseByFilter,
@@ -294,6 +295,13 @@ export default function Knowledge() {
   };
   //#endregion
 
+  
+  const navigate = useNavigate();
+  
+  const handleRowClick = (item) => {
+    navigate('/database', { state: { item } });
+  };
+
   return (
     <>
       <section className="content-header">
@@ -371,7 +379,7 @@ export default function Knowledge() {
                           <tr
                             key={item.knowledgeBaseId}
                             className={styles["row"]}
-                            onClick={() => (window.location = "/database")}
+                            onClick={() => handleRowClick(item)}
                           >
                             <td>{item.knowledgeBaseId}</td>
                             <td>{item.knowledgeBaseDeviceType}</td>

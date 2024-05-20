@@ -482,7 +482,7 @@ table th {
   align-items: center; /* 垂直居中對齊 */
   position: absolute; /* 絕對定位 */
   padding-top: 1.5em; /* 距離框框上邊的距離，可以根據需要調整 */
-  right: 1vw; /* 距離框框右邊的距離，可以根據需要調整 */
+  right: 1.5vw; /* 距離框框右邊的距離，可以根據需要調整 */
   display: block;
   gap: 2px;
   top: 6vh;
@@ -1005,6 +1005,7 @@ table th {
   justify-content: center; /* 將子元素對齊到右邊 */
   /* 確保容器滿寬度展開 */
   width: 100%;
+  padding-left:2px;
 }
 
 .btn-showMachine {
@@ -2989,7 +2990,7 @@ table th {
 
   .buttons-container {
     top: 5vh;
-    right: 1vw; /* 距離框框右邊的距離，可以根據需要調整 */
+    right: 1.5vw; /* 距離框框右邊的距離，可以根據需要調整 */
     padding-top: 1.2em; /* 距離框框上邊的距離，可以根據需要調整 */
   }
 
@@ -3043,6 +3044,7 @@ table th {
   .btn-showMachine {
     width: 10vw;
     margin-left: 5px;
+    padding-left:2px;
   }
 }
 

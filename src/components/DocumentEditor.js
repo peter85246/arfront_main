@@ -518,19 +518,24 @@ export function DocumentEditor() {
   return (
     <main>
       <div>
-        <h2>故障說明</h2>
+        <section className="content-header" style={{marginBottom:'10px'}}>
+        <div className="container-fluid">
+          <div className="row mb-2 justify-content-between">
+            <div />
+            <div className="content-header-text-color">
+              <h1>
+                <strong>
+                  {t("documentEditor.content.header")}
+                  {/*故障說明*/}
+                </strong>
+              </h1>
+            </div>
+            <div>
+            </div>
+          </div>
+        </div>
+      </section>
         <div className={styles["buttons-container"]}>
-          {/* <button type="button" id="btn-save-js" className={classNames(styles["button"], styles["btn-save"])}>
-            儲存
-          </button> */}
-          {/* <button
-            type="button"
-            className={classNames(styles["button"], styles["btn-save"])}
-            id="btn-save-js"
-            onClick={handleSubmit} // 處理點擊事件來提交表單
-          >
-            儲存
-          </button> */}
           <button
             type="button"
             className={classNames(styles["button"], styles["btn-save"])}

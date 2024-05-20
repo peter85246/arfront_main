@@ -1,12 +1,13 @@
 import classNames from "classnames";
 import styles from "../scss/global.module.scss";
 import { Link } from "react-router-dom";
-
+import { useLocation } from 'react-router-dom';
 import React, { useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
 import { jsPDF } from "jspdf";
 import { Document, Page, Text, View, StyleSheet } from "@react-pdf/renderer";
 import PdfContent from "./PDFContent";
+import { useTranslation } from "react-i18next"; //語系
 
 // React PDF Styles
 const pdfStyles = StyleSheet.create({
@@ -24,6 +25,7 @@ const pdfStyles = StyleSheet.create({
 export function RepairDocument() {
   const pdfRef = React.useRef();
   const [isPrinting, setIsPrinting] = useState(false);
+  const { t } = useTranslation();
 
   const handlePrint = useReactToPrint({
     content: () => pdfRef.current,
@@ -47,9 +49,28 @@ export function RepairDocument() {
     });
   };
 
+  const location = useLocation();
+  const item = location.state?.item; // 訪問傳遞的狀態
+
   return (
     <main>
-      <h2>維修說明檔案</h2>
+    <section className="content-header" style={{marginBottom:'10px'}}>
+      <div className="container-fluid">
+        <div className="row mb-2 justify-content-between">
+          <div />
+          <div className="content-header-text-color">
+            <h1>
+              <strong>
+                {t("repairDocument.content.header")}
+                {/*維修說明檔案*/}
+              </strong>
+            </h1>
+          </div>
+          <div>
+          </div>
+        </div>
+      </div>
+    </section>
       <div className={styles["buttons-container"]}>
         <button
           onClick={handlePrint}
@@ -63,8 +84,10 @@ export function RepairDocument() {
           {" "}
           知識庫
         </Link>
-        <Link to="/database" className={"fas fa-angle-left"}>
-          {" "}
+        <Link to={{
+          pathname: "/database",
+          state: { item }
+        }} className={"fas fa-angle-left"}>
           資料庫
         </Link>
       </div>

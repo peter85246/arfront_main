@@ -122,6 +122,12 @@
   "machineAlarm.delete": "刪除Alarm",
   "machineAlarm.deleteContent": "您確定要刪除該筆資料嗎?",
 
+  "documentEditor.content.header": "故障說明",
+  "database.content.header": "資料庫",
+  "repairDocument.content.header": "維修說明檔案",
+  "alarm.content.header": "故障庫",
+  "pageMindMap.content.header": "系列",
+
   "sop.content.header": "SOP",
   "sop.btn.save": "儲存設定",
   "sop.deleteSOP": "刪除SOP",
