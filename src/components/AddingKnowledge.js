@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import Select from "react-select";
 import { useTranslation } from "react-i18next";
+
+import { apiGetMachineOptions } from "../utils/Api";
 
 export function AddingKnowledge({ onClose }) {
   const [showModal, setShowModal] = useState(true);
@@ -10,9 +12,52 @@ export function AddingKnowledge({ onClose }) {
     modelSeries: "",
     machineName: "",
   });
-  const [errors, setErrors] = useState({});
+  const [options, setOptions] = useState({
+    machineType: [],
+    modelSeries: [],
+    machineName: [],
+    completeMachineOptions: [],
+  });
 
+  const [errors, setErrors] = useState({});
   const { t } = useTranslation();
+
+  useEffect(() => {
+    fetchMachineOptions();
+  }, []);
+
+  const fetchMachineOptions = async () => {
+    try {
+      const response = await apiGetMachineOptions();
+      console.log("API Response:", response); // 確認 API 回應
+      if (response && response.code === "0000" && response.result) {
+        const formattedOptions = {
+          machineType: response.result.map((item) => ({
+            value: item.machineType,
+            label: item.machineType,
+          })),
+          modelSeries: response.result.map((item) => ({
+            value: item.modelSeries,
+            label: item.modelSeries,
+          })),
+          machineName: response.result.map((item) => ({
+            value: item.machineName,
+            label: item.machineName,
+          })),
+          completeMachineOptions: response.result, // 儲存完整機台信息
+        };
+        setOptions(formattedOptions);
+      } else {
+        console.error("Failed to load options:", response);
+      }
+    } catch (error) {
+      console.error("Failed to fetch machine options:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchMachineOptions();
+  }, []);
 
   // 處理模態窗關閉事件
   const handleCloseModal = () => {
@@ -22,8 +67,9 @@ export function AddingKnowledge({ onClose }) {
 
   // 驗證選擇的機台種類和型號系列是否符合機台名稱的前綴
   const validateSelection = (name, type, series) => {
-    const prefix = name.substring(0, 3);
-    return type.startsWith(prefix) && series.startsWith(prefix);
+    const typePrefix = type.substring(0, Math.min(3, type.length)); // 取前三個字符或更少，避免越界
+    const seriesPrefix = series.substring(0, Math.min(3, series.length));
+    return name.startsWith(typePrefix) && name.startsWith(seriesPrefix);
   };
 
   // 處理下拉選單選擇變更事件
@@ -31,17 +77,27 @@ export function AddingKnowledge({ onClose }) {
     setMachineInfo((prevState) => {
       const newState = { ...prevState, [key]: option.value };
 
-      // 更新機台種類和型號系列的值，如果機台名稱有對應的映射
       if (key === "machineName") {
-        const machinePrefix = option.value.substring(0, 3);
-        newState.machineType = "";
-        newState.modelSeries = "";
-        newState.machineType =
-          options.machineType.find((opt) => opt.value.startsWith(machinePrefix))
-            ?.value || "";
-        newState.modelSeries =
-          options.modelSeries.find((opt) => opt.value.startsWith(machinePrefix))
-            ?.value || "";
+        // 當選擇機台名稱時自動填入對應的機台種類和型號系列
+        const selectedMachine = options.completeMachineOptions.find(
+          (m) => m.machineName === option.value,
+        );
+        if (selectedMachine) {
+          newState.machineType = selectedMachine.machineType || "";
+          newState.modelSeries = selectedMachine.modelSeries || "";
+        } else {
+          newState.machineType = "";
+          newState.modelSeries = "";
+        }
+      } else {
+        // 當機台種類或型號系列被改變時，重新驗證機台名稱的前綴
+        const { machineType, modelSeries, machineName } = newState;
+        if (
+          machineName &&
+          !validateSelection(machineName, machineType, modelSeries)
+        ) {
+          newState.machineName = ""; // 如果不匹配，清空機台名稱
+        }
       }
 
       return newState;
@@ -105,26 +161,26 @@ export function AddingKnowledge({ onClose }) {
   };
 
   // 下拉選單的選項數據
-  const options = {
-    machineType: [
-      { value: "CNC車床", label: "CNC車床" },
-      { value: "AAC銑床", label: "AAC銑床" },
-      { value: "GXA數控旋轉工作台", label: "GXA數控旋轉工作台" },
-      { value: "BXG自動磨床", label: "BXG自動磨床" },
-    ],
-    modelSeries: [
-      { value: "CNC", label: "CNC" },
-      { value: "AAC", label: "AAC" },
-      { value: "GXA", label: "GXA" },
-      { value: "BXG", label: "BXG" },
-    ],
-    machineName: [
-      { value: "CNC-55688", label: "CNC-55688" },
-      { value: "AAC-00847", label: "AAC-00847" },
-      { value: "GXA-63008", label: "GXA-63008" },
-      { value: "BXG-1330097", label: "BXG-1330097" },
-    ],
-  };
+  // const options = {
+  //   machineType: [
+  //     { value: "CNC車床", label: "CNC車床" },
+  //     { value: "AAC銑床", label: "AAC銑床" },
+  //     { value: "GXA數控旋轉工作台", label: "GXA數控旋轉工作台" },
+  //     { value: "BXG自動磨床", label: "BXG自動磨床" },
+  //   ],
+  //   modelSeries: [
+  //     { value: "CNC", label: "CNC" },
+  //     { value: "AAC", label: "AAC" },
+  //     { value: "GXA", label: "GXA" },
+  //     { value: "BXG", label: "BXG" },
+  //   ],
+  //   machineName: [
+  //     { value: "CNC-55688", label: "CNC-55688" },
+  //     { value: "AAC-00847", label: "AAC-00847" },
+  //     { value: "GXA-63008", label: "GXA-63008" },
+  //     { value: "BXG-1330097", label: "BXG-1330097" },
+  //   ],
+  // };
 
   return (
     <div>
@@ -158,6 +214,7 @@ export function AddingKnowledge({ onClose }) {
                   classNamePrefix="select"
                   onChange={(option) => handleEditChange(option, key)}
                   onBlur={() => handleEditBlur(key)}
+                  onFocus={() => fetchMachineOptions()} // 加載數據
                   value={options[key].find(
                     (option) => option.value === machineInfo[key],
                   )}

@@ -2,7 +2,7 @@ import React from "react";
 import styles from "../scss/PDFDesign.module.scss";
 import classNames from "classnames";
 
-const PdfContent = React.forwardRef((props, ref) => {
+const PDFContent = React.forwardRef((props, ref) => {
   return (
     <div className={styles["content-box"]} ref={ref}>
       {/* PDF內容放在這裡 */}
@@ -274,4 +274,4 @@ const PdfContent = React.forwardRef((props, ref) => {
   );
 });
 
-export default PdfContent;
+export default PDFContent;

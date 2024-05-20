@@ -177,6 +177,8 @@ export const apiGetAllKnowledgeBaseByFilter = (data) =>
   fetchDataCall("GetAllKnowledgeBaseByFilter", "post", data); //依據條件取得所有知識庫列表
 export const apiAddKnowledgeBase = (data) =>
   fetchDataCall("AddKnowledgeBase", "put", data); //新增指定機台的知識庫
+export const apiGetMachineOptions = (data) =>
+  fetchDataCall("GetMachineOptions", "get", data); //取得機台內容
 //#endregion
 
 //#region SOP
