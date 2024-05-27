@@ -776,8 +776,8 @@ function Machine() {
                           <h4 className="mb-0">{item.machineSpec}</h4>
                         </div>
                         <div className="card-footer">
-                          <div className="text-muted row justify-content-center">
-                            <button
+                          <div className="text-muted flex justify-center gap-[12px]">
+                            {/* <button
                               type="button"
                               className="btn btn-info col-3 mt-2"
                               onClick={() =>
@@ -785,10 +785,10 @@ function Machine() {
                               }
                             >
                               SOP
-                            </button>
+                            </button> */}
                             <button
                               type="button"
-                              className="btn btn-info col-3 offset-md-1 mt-2"
+                              className="btn btn-info col-3"
                               onClick={() =>
                                 handleOpenMachineDeviceModal(
                                   item.machineDeviceId,
@@ -799,7 +799,7 @@ function Machine() {
                             </button>
                             <button
                               type="button"
-                              className="btn btn-info col-3 offset-md-1 mt-2"
+                              className="btn btn-info col-3"
                               onClick={() =>
                                 handleGotoMachineIOT(item.machineId)
                               }
