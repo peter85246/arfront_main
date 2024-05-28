@@ -29,7 +29,7 @@ function MachineKnowledge() {
   const [machineList, setMachineList] = useState([]); //機台列表(全部資料)
   const [showMachineList, setShowMachineList] = useState([]); //機台列表(顯示前端)
   const [machineCategory, setMachineCategory] = useState([]); //機台種類
-  const [selectedMachineCategory, setSelectedMachineCategory] = useState(''); //選擇的機台種類
+  const [selectedMachineCategory, setSelectedMachineCategory] = useState(""); //選擇的機台種類
 
   const [showMachineinfoModal, setShowMachineinfoModal] = useState(false); //顯示"機台 modal"
   const [machineInfo, setMachineInfo] = useState({
@@ -54,7 +54,8 @@ function MachineKnowledge() {
 
   const [selectDeleteMachineId, setSelectDeleteMachineId] = useState(0); //要刪除的機台id
   const [showDeleteMachineModal, setShowDeleteMachineModal] = useState(false); //顯示"刪除機台 modal"
-  const [saveDeleteMachineLoading, setSaveDeleteMachineLoading] = useState(false);
+  const [saveDeleteMachineLoading, setSaveDeleteMachineLoading] =
+    useState(false);
 
   //#region 初始載入
   useEffect(() => {
@@ -72,7 +73,7 @@ function MachineKnowledge() {
   const refreshMachineinfos = async (category) => {
     var sendData = {
       keyword: keyword,
-      ...category ? { machineType: category } : {}, 
+      ...(category ? { machineType: category } : {}),
     };
 
     let machineOverviewResponse = await apiMachineAddOverview(sendData);
@@ -461,11 +462,13 @@ function MachineKnowledge() {
       <section className="content">
         <div className="container-fluid container-fluid-border">
           <div className="w-full flex justify-between items-center mb-3">
-            <div className="p-2 flex items-center gap-[6px]">
-              <label>種類</label>
-              <Select 
-                className="w-[200px]" 
-                value={selectedMachineCategory} 
+            <div className="p-2 flex items-center gap-[2px]">
+              <strong style={{ color: "#1672ad", fontSize: "18px" }}>
+                {t("機台種類：")}
+              </strong>
+              <Select
+                className="w-[200px]"
+                value={selectedMachineCategory}
                 onChange={(v) => {
                   setSelectedMachineCategory(v);
                   refreshMachineinfos(v);
@@ -478,9 +481,10 @@ function MachineKnowledge() {
                 ))}
               </Select>
               {selectedMachineCategory && (
-                <CloseCircleOutlined onClick={() => {
-                    setSelectedMachineCategory('');
-                    refreshMachineinfos();  
+                <CloseCircleOutlined
+                  onClick={() => {
+                    setSelectedMachineCategory("");
+                    refreshMachineinfos();
                   }}
                 />
               )}
