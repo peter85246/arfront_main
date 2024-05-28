@@ -15,6 +15,8 @@ import {
   apiMachineAddInfo,
   apiDeleteMachineAdd,
 } from "../utils/Api";
+import { Select } from "antd";
+import { Option } from "antd/es/mentions";
 
 function MachineKnowledge() {
   const { t } = useTranslation();
@@ -49,8 +51,7 @@ function MachineKnowledge() {
 
   const [selectDeleteMachineId, setSelectDeleteMachineId] = useState(0); //要刪除的機台id
   const [showDeleteMachineModal, setShowDeleteMachineModal] = useState(false); //顯示"刪除機台 modal"
-  const [saveDeleteMachineLoading, setSaveDeleteMachineLoading] =
-    useState(false);
+  const [saveDeleteMachineLoading, setSaveDeleteMachineLoading] = useState(false);
 
   //#region 初始載入
   useEffect(() => {
@@ -326,12 +327,12 @@ function MachineKnowledge() {
       setSaveMachineinfoLoading(true);
 
       var formData = new FormData();
-      formData.append("machineAddId", newMachineInfo.machineAddId);
+      // formData.append("machineAddId", newMachineInfo.machineAddId);
       formData.append("machineType", newMachineInfo.machineType);
       formData.append("modelSeries", newMachineInfo.modelSeries);
       formData.append("machineName", newMachineInfo.machineName);
       formData.append("machineImage", newMachineInfo.machineImage);
-      formData.append("machineImageObj", newMachineInfo.machineImageObj);
+      // formData.append("machineImageObj", newMachineInfo.machineImageObj);
       formData.append(
         "isDeletedMachineImage",
         newMachineInfo.isDeletedMachineImage,
@@ -454,7 +455,17 @@ function MachineKnowledge() {
       </section>
       <section className="content">
         <div className="container-fluid container-fluid-border">
-          <div className="row justify-content-end mb-3">
+          <div className="w-full flex justify-between items-center mb-3">
+            <div className="p-2 flex items-center gap-[6px]">
+              <label>種類</label>
+              <Select className="w-[200px]">
+                {showMachineList.map((item, idx) => (
+                  <Option key={idx} value={item.machineType}>
+                    {item.machineType}
+                  </Option>
+                ))}
+              </Select>
+            </div>
             <div className="col-3">
               <div className="from-item search">
                 <DebounceInput

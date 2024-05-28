@@ -18,7 +18,7 @@ export const fetchDataCall = async (
 ) => {
   var config = {
     method: method,
-    url: `${window.apiUrl}/api/AREditior/${api}`,
+    url: `${window.apiUrl}/api/${api}`,
     headers: getHeaders(),
     params: null,
     data: null,
@@ -67,7 +67,7 @@ export const fetchDataCall = async (
 
 export const fetchDataCallFile = async (api, method, data) => {
   let apiReturn = await axios
-    .put(`${window.apiUrl}/api/AREditior/${api}`, data, {
+    .put(`${window.apiUrl}/api/${api}`, data, {
       headers: {
         "Content-Type": "multipart/form-data",
         Accept: "application/json",
