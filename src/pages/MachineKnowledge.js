@@ -731,6 +731,8 @@ function MachineKnowledge() {
                 <div
                   style={{
                     borderStyle: "dotted",
+                    borderWidth: "3px",  // 調整虛線的大小
+                    borderColor: "#0003", 
                     cursor: "pointer",
                     minHeight: "240px",
                   }}
