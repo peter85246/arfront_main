@@ -788,7 +788,8 @@ function Machine() {
                             </button> */}
                             <button
                               type="button"
-                              className="btn btn-info col-3"
+                              className="btn btn-info col-4"
+                              style={{ marginRight: "10px" }}
                               onClick={() =>
                                 handleOpenMachineDeviceModal(
                                   item.machineDeviceId,
@@ -799,7 +800,7 @@ function Machine() {
                             </button>
                             <button
                               type="button"
-                              className="btn btn-info col-3"
+                              className="btn btn-info col-4"
                               onClick={() =>
                                 handleGotoMachineIOT(item.machineId)
                               }
