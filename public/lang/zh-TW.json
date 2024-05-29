@@ -154,6 +154,7 @@
   "machineDevice.machineDeviceMachineIP": "機台IP",
 
   "machineIOTList.content.header": "IOT管理",
+  "machineIOTList.backButton": "AR設備控制",
   "machineIOTList.btn.add": "新增IOT",
   "machineIOTList.machineIOTId": "編號",
   "machineIOTList.fun": "功能",
