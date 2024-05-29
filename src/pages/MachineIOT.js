@@ -368,9 +368,10 @@ function MachineIOT() {
                 href={`/machine/${machineId}/machineIOTList`}
                 className="d-flex align-items-center"
               >
-                <i className="fas fa-angle-left"></i>&nbsp;&nbsp;
+                <i className="fas fa-angle-left">&nbsp;&nbsp;
                 {t("machineIOTList.content.header")}
                 {/*IOT管理*/}
+                </i>
               </a>
             </div>
             <div className="content-header-text-color">
