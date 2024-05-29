@@ -51,6 +51,10 @@ code {
   cursor: pointer;
 }
 
+.fa-angle-left{
+  color: #018de4;
+}
+
 .content-header-text-color {
   color: #1672ad;
 }
