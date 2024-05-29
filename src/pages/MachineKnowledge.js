@@ -8,6 +8,7 @@ import { setWindowClass, removeWindowClass } from "../utils/helpers";
 import SimpleReactValidator from "simple-react-validator";
 import Modal from "react-bootstrap/Modal";
 import Pagination from "react-bootstrap/Pagination";
+import { CloseCircleOutlined } from "@ant-design/icons";
 
 import {
   apiMachineAddOverview,
@@ -27,6 +28,8 @@ function MachineKnowledge() {
   const [keyword, setKeyword] = useState(""); //關鍵字
   const [machineList, setMachineList] = useState([]); //機台列表(全部資料)
   const [showMachineList, setShowMachineList] = useState([]); //機台列表(顯示前端)
+  const [machineCategory, setMachineCategory] = useState([]); //機台種類
+  const [selectedMachineCategory, setSelectedMachineCategory] = useState(""); //選擇的機台種類
 
   const [showMachineinfoModal, setShowMachineinfoModal] = useState(false); //顯示"機台 modal"
   const [machineInfo, setMachineInfo] = useState({
@@ -51,7 +54,8 @@ function MachineKnowledge() {
 
   const [selectDeleteMachineId, setSelectDeleteMachineId] = useState(0); //要刪除的機台id
   const [showDeleteMachineModal, setShowDeleteMachineModal] = useState(false); //顯示"刪除機台 modal"
-  const [saveDeleteMachineLoading, setSaveDeleteMachineLoading] = useState(false);
+  const [saveDeleteMachineLoading, setSaveDeleteMachineLoading] =
+    useState(false);
 
   //#region 初始載入
   useEffect(() => {
@@ -66,9 +70,10 @@ function MachineKnowledge() {
   //#endregion
 
   //#region 刷新機台列表
-  const refreshMachineinfos = async () => {
+  const refreshMachineinfos = async (category) => {
     var sendData = {
       keyword: keyword,
+      ...(category ? { machineType: category } : {}),
     };
 
     let machineOverviewResponse = await apiMachineAddOverview(sendData);
@@ -81,6 +86,7 @@ function MachineKnowledge() {
             activePage * pageRow,
           ),
         );
+        setMachineCategory(machineOverviewResponse.category);
       }
     }
   };
@@ -456,15 +462,32 @@ function MachineKnowledge() {
       <section className="content">
         <div className="container-fluid container-fluid-border">
           <div className="w-full flex justify-between items-center mb-3">
-            <div className="p-2 flex items-center gap-[6px]">
-              <label>種類</label>
-              <Select className="w-[200px]">
-                {showMachineList.map((item, idx) => (
-                  <Option key={idx} value={item.machineType}>
-                    {item.machineType}
+            <div className="p-2 flex items-center gap-[2px]">
+              <strong style={{ color: "#1672ad", fontSize: "18px" }}>
+                {t("機台種類：")}
+              </strong>
+              <Select
+                className="w-[200px]"
+                value={selectedMachineCategory}
+                onChange={(v) => {
+                  setSelectedMachineCategory(v);
+                  refreshMachineinfos(v);
+                }}
+              >
+                {machineCategory.map((category, idx) => (
+                  <Option key={idx} value={category}>
+                    {category}
                   </Option>
                 ))}
               </Select>
+              {selectedMachineCategory && (
+                <CloseCircleOutlined
+                  onClick={() => {
+                    setSelectedMachineCategory("");
+                    refreshMachineinfos();
+                  }}
+                />
+              )}
             </div>
             <div className="col-3">
               <div className="from-item search">
@@ -708,6 +731,8 @@ function MachineKnowledge() {
                 <div
                   style={{
                     borderStyle: "dotted",
+                    borderWidth: "3px", // 調整虛線的大小
+                    borderColor: "#0003",
                     cursor: "pointer",
                     minHeight: "240px",
                   }}

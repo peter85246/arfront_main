@@ -139,7 +139,7 @@ function Login() {
       <div className="login-box">
         <div className="card card-outline card-primary">
           <div className="card-header text-center">
-            <h1>AR管理系統</h1>
+            <h1 style={{ fontSize: "25px" }}>AR管理系統</h1>
           </div>
           <div className="card-body">
             <p className="login-box-msg">登入</p>

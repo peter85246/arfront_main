@@ -295,11 +295,10 @@ export default function Knowledge() {
   };
   //#endregion
 
-  
   const navigate = useNavigate();
-  
+
   const handleRowClick = (item) => {
-    navigate('/database', { state: { item } });
+    navigate("/database", { state: { item } });
   };
 
   return (

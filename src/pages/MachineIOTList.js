@@ -162,9 +162,11 @@ function MachineIOTList() {
           <div className="row mb-2 justify-content-between align-items-center">
             <div>
               <a href={`/machine`} className="d-flex align-items-center">
-                <i className="fas fa-angle-left"></i>&nbsp;&nbsp;
-                {t("machine.content.header")}
-                {/*機台管理*/}
+                <i className="fas fa-angle-left">
+                  &nbsp;&nbsp;
+                  {t("machineIOTList.backButton")}
+                  {/*AR設備控制*/}
+                </i>
               </a>
             </div>
             <div className="content-header-text-color">

@@ -1,9 +1,9 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState } from "react";
 
 const DatabaseContext = createContext();
 
 export function DatabaseProvider({ children }) {
-    const [item, setItem] = useState(null); // 存储项目信息
+  const [item, setItem] = useState(null); // 存储项目信息
 
   return (
     <DatabaseContext.Provider value={{ item, setItem }}>

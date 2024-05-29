@@ -13,23 +13,22 @@ export default function Alarm() {
 
   return (
     <main>
-    <section className="content-header" style={{marginBottom:'10px'}}>
-      <div className="container-fluid">
-        <div className="row mb-2 justify-content-between">
-          <div />
-          <div className="content-header-text-color">
-            <h1>
-              <strong>
-                {t("alarm.content.header")}
-                {/*故障庫*/}
-              </strong>
-            </h1>
-          </div>
-          <div>
+      <section className="content-header" style={{ marginBottom: "10px" }}>
+        <div className="container-fluid">
+          <div className="row mb-2 justify-content-between">
+            <div />
+            <div className="content-header-text-color">
+              <h1>
+                <strong>
+                  {t("alarm.content.header")}
+                  {/*故障庫*/}
+                </strong>
+              </h1>
+            </div>
+            <div></div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
       <div>
         <div className={styles["buttons-container-item"]}>
           <div className={styles["buttons-alarm"]}>

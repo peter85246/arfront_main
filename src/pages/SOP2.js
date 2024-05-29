@@ -6,7 +6,9 @@ import { ToastContainer, toast } from "react-toastify";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import Modal from "react-bootstrap/Modal";
 import Spinner from "react-bootstrap/Spinner";
+import { SOPName } from "../components/SOPName";
 import styles from "../scss/global.module.scss";
+import classNames from "classnames";
 
 // import styles from "../scss/AlarmDescription.module.scss";
 import { Link } from "react-router-dom";
@@ -53,6 +55,7 @@ function SOP2() {
   const [showDeleteSOPModal, setShowDeleteSOPModal] = useState(false); //顯示"刪除SOP modal"
 
   const [textColor, setTextColor] = useState("#000000"); // 初始文字顏色設為黑色
+  const [isSOPName, setIsSOPName] = useState(false);
 
   const { token } = theme.useToken();
   // 生成顏色組合
@@ -747,7 +750,67 @@ function SOP2() {
               </h1>
             </div>
             <div>
-              <button
+              <div className={styles["buttons-container"]}>
+                <button
+                  type="button"
+                  className={classNames(styles["button"], styles["btn-save"])}
+                  onClick={() => setIsSOPName((prev) => !prev)}
+                  // disabled={saveKnowledgeInfoLoading}
+                  // onClick={handleSaveKnowledgeInfo}
+                >
+                  {/* {saveKnowledgeInfoLoading ? (
+              <>
+                <Spinner
+                  as="span"
+                  animation="border"
+                  size="sm"
+                  role="status"
+                  aria-hidden="true"
+                />
+              </>
+            ) : ( */}
+                  <span>
+                    {t("btn.save")}
+                    {/*儲存*/}
+                  </span>
+                  {/* )} */}
+                </button>
+                <a
+                  href="/knowledge"
+                  className={classNames(styles["button"], styles["btn-cancel"])}
+                >
+                  取消
+                </a>
+                <a
+                  href="/repairDocument"
+                  className={classNames(
+                    styles["button"],
+                    styles["btn-preview"],
+                  )}
+                >
+                  預覽
+                </a>
+
+                <div className={styles["showMachine"]}>
+                  <a
+                    href="#"
+                    className={classNames(
+                      styles["button"],
+                      styles["btn-showMachine"],
+                    )}
+                  >
+                    待新增
+                  </a>
+                </div>
+              </div>
+              {isSOPName && (
+                <SOPName
+                  onClose={() => setIsSOPName(false)}
+                  onSave={handleSaveSOP} // 傳遞儲存函數
+                />
+              )}
+
+              {/* <button
                 type="button"
                 className="btn btn-primary btn-add"
                 disabled={saveSOPLoading}
@@ -766,15 +829,15 @@ function SOP2() {
                 ) : (
                   <>
                     <i className="fas fa-plus"></i> {t("machineIOT.btn.save")}
-                    {/*儲存設定*/}
+                    儲存設定
                   </>
                 )}
-              </button>
+              </button> */}
             </div>
           </div>
         </div>
       </section>
-      <section className="content">
+      <section className="content" style={{ marginTop: 5 }}>
         <div className="container-fluid">
           <div className="row">
             <div className="col-sm-12 col-md-2 mb-2">
@@ -1570,6 +1633,7 @@ function SOP2() {
         </Modal.Footer>
       </Modal>
       {/*delete machine modal - end*/}
+      {isSOPName && <SOPName onClose={() => setIsSOPName(false)} />}
     </>
   );
 }
