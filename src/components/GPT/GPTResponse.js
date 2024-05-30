@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from "react";
 import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
 import styles from "../../scss/gpt.module.scss"; // 引入樣式文件
+import { createElement } from "react";
+import { Link } from "react-router-dom"; // 若使用 React Router，或改用標準的 <a> 標籤
 
 const GPTResponse = ({
   question,
@@ -58,17 +60,28 @@ const GPTResponse = ({
     },
   ];
 
+  const linkify = (text) => {
+    const urlRegex = /(\bhttps?:\/\/[^\s<]+)\b/g; // 確保 URL 前後是邊界
+    return text.replace(
+      urlRegex,
+      (url) => `<a href="${url}" target="_blank">${url}</a>`,
+    );
+  };
+
+  const renderers = {
+    link: ({ href, children }) => (
+      <a href={href} target="_blank" rel="noopener noreferrer">
+        {children}
+      </a>
+    ),
+  };
+
   useEffect(() => {
     if (elements) {
       setIsLoading(false);
     }
   }, [inputText, setIsLoading]);
 
-  const linkify = (text) => {
-    const urlRegex = /(https?:\/\/[^\s]+)/g;
-    return text.replace(urlRegex, (url) => `[${url}](${url})`);
-  };
-  
   useEffect(() => {
     const parseContent = () => {
       const regex = /\{([^}]*?\.(png|mp4))\}/g; // 更新正則表達式以匹配 png 和 mp4 文件
@@ -86,8 +99,9 @@ const GPTResponse = ({
           parsedElements.push(
             <ReactMarkdown
               key={`text-${lastIndex}`}
-              children={linkify(text)}  // 使用 linkify 函數處理文本
+              children={linkify(text)} // 確保文本經過 linkify 處理
               rehypePlugins={[rehypeRaw]}
+              components={renderers}
             />,
           );
         }
@@ -176,6 +190,7 @@ const GPTResponse = ({
             key="text-last"
             children={linkify(inputText.substring(lastIndex))}
             rehypePlugins={[rehypeRaw]}
+            components={renderers}
           />,
         );
       }
