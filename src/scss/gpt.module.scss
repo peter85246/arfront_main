@@ -40,6 +40,7 @@ h2 {
 
 /* 右側GPT回應區域的樣式 */
 .gpt-response-area {
+  position: relative;
   width: 80%; /* 占總寬度的70% */
   margin: 10px; /* 外邊距為10px */
   padding: 0px; /* 內邊距為10px */
@@ -116,7 +117,7 @@ h2 {
 /* GPT回應展示區的樣式 */
 .gpt-response {
   background-color: #f7f7f7; /* 背景色 */
-  padding: 5px 15px; /* 內邊距 */
+  padding: 5px 5px 5px 15px; /* 內邊距 */
   flex: 1; /* 占滿所有可用空間 */
   overflow-y: auto; /* 超出部分顯示滾動條 */
   border-radius: 5px;
@@ -125,7 +126,7 @@ h2 {
 
 .gpt-response p {
   padding: 0px; /* 內邊距 */
-  margin: 10px 0px;
+  margin: 0px 0px;
   color: black;
   text-align: left; /* 文字對齊左側 */
   font-size: 16px;
@@ -180,4 +181,20 @@ h2 {
   border: 1px solid grey;
   margin: 0px 5px 0px 5px;
   padding: 0;
+}
+
+.gpt-response-area {
+  // 定義文字區域的樣式
+  .gpt-response {
+    // 連結樣式
+    a {
+      color: #137bf1; // 深藍色的色碼
+      text-decoration: underline; // 顯示下劃線
+
+      &:hover {
+        color: #0257b8; // 深藍色的色碼
+        text-decoration: underline; // 滑鼠移過時顯示下劃線
+      }
+    }
+  }
 }
