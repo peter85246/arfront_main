@@ -40,6 +40,7 @@ h2 {
 
 /* 右側GPT回應區域的樣式 */
 .gpt-response-area {
+  position: relative;
   width: 80%; /* 占總寬度的70% */
   margin: 10px; /* 外邊距為10px */
   padding: 0px; /* 內邊距為10px */
