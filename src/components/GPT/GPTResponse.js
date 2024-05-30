@@ -2,15 +2,13 @@ import React, { useState, useEffect, useRef } from "react";
 import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
 import styles from "../../scss/gpt.module.scss"; // 引入樣式文件
-<<<<<<< HEAD
 import { createElement } from "react";
 import { Link } from "react-router-dom"; // 若使用 React Router，或改用標準的 <a> 標籤
-=======
+
 import Button from "@mui/material/Button";
 import FileCopyIcon from "@mui/icons-material/FileCopy";
 import DownloadIcon from "@mui/icons-material/CloudDownload";
 import classNames from "classnames";
->>>>>>> 0b10364 (20240530 GPTResponse.js & gpt.css update & join Copy、Donwnload button function)
 
 const GPTResponse = ({
   question,
@@ -68,10 +66,7 @@ const GPTResponse = ({
     },
   ];
 
-<<<<<<< HEAD
-=======
   // 引入網站url判斷功能linkify
->>>>>>> 0b10364 (20240530 GPTResponse.js & gpt.css update & join Copy、Donwnload button function)
   const linkify = (text) => {
     const urlRegex = /(\bhttps?:\/\/[^\s<]+)\b/g; // 確保 URL 前後是邊界
     return text.replace(
@@ -80,10 +75,7 @@ const GPTResponse = ({
     );
   };
 
-<<<<<<< HEAD
-=======
   // 網站連結精確抓取設定
->>>>>>> 0b10364 (20240530 GPTResponse.js & gpt.css update & join Copy、Donwnload button function)
   const renderers = {
     link: ({ href, children }) => (
       <a href={href} target="_blank" rel="noopener noreferrer">
@@ -92,8 +84,6 @@ const GPTResponse = ({
     ),
   };
 
-<<<<<<< HEAD
-=======
   // 複製到剪貼簿的函數
   const copyToClipboard = () => {
     if (responseAreaRef.current) {
@@ -133,7 +123,7 @@ const GPTResponse = ({
     }
   };
 
->>>>>>> 0b10364 (20240530 GPTResponse.js & gpt.css update & join Copy、Donwnload button function)
+
   useEffect(() => {
     if (elements) {
       setIsLoading(false);
@@ -279,12 +269,14 @@ const GPTResponse = ({
         {question && <p>發問：{question.split("並加上圖片說明")[0]}</p>}
       </div>
 
+      
+      <div className={styles["gpt-response"]} ref={responseAreaRef}>
       <div
         style={{
           display: "flex",
           justifyContent: "flex-end",
           width: "100%",
-          margin: "-5px 0px 5px 0px",
+          marginRight: "-5px",
         }}
       >
         <Button
@@ -319,7 +311,6 @@ const GPTResponse = ({
           }}
         ></Button>
       </div>
-      <div className={styles["gpt-response"]} ref={responseAreaRef}>
         {!isLoading && <p className={styles["gptContent"]}></p>}
         {/* {isLoading && <LoadingIndicator />} */}
 

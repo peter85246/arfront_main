@@ -518,22 +518,23 @@ export function DocumentEditor() {
   return (
     <main>
       <div>
-        <section className="content-header" style={{ marginBottom: "10px" }}>
-          <div className="container-fluid">
-            <div className="row mb-2 justify-content-between">
-              <div />
-              <div className="content-header-text-color">
-                <h1>
-                  <strong>
-                    {t("documentEditor.content.header")}
-                    {/*故障說明*/}
-                  </strong>
-                </h1>
-              </div>
-              <div></div>
+        <section className="content-header" style={{marginBottom:'10px'}}>
+        <div className="container-fluid">
+          <div className="row mb-2 justify-content-between">
+            <div />
+            <div className="content-header-text-color">
+              <h1>
+                <strong>
+                  {t("documentEditor.content.header")}
+                  {/*故障說明*/}
+                </strong>
+              </h1>
+            </div>
+            <div>
             </div>
           </div>
-        </section>
+        </div>
+      </section>
         <div className={styles["buttons-container"]}>
           <button
             type="button"

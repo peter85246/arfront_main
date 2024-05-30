@@ -3053,3 +3053,15 @@ table th {
     border-radius: 8px !important; // 设置为你想要的圆角大小
   }
 }
+
+.image-container {
+  display: flex; /* 使圖片水平排列 */
+  align-items: flex-start; /* 對齊圖片頂部 */
+  flex-wrap: wrap; /* 允許多行，如果需要 */
+}
+
+.uploaded-image {
+  max-width: 150px; /* 最大寬度限制 */
+  max-height: 150px; /* 最大高度限制 */
+  margin-right: 10px; /* 圖片間距 */
+}
