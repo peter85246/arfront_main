@@ -64,6 +64,11 @@ const GPTResponse = ({
     }
   }, [inputText, setIsLoading]);
 
+  const linkify = (text) => {
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    return text.replace(urlRegex, (url) => `[${url}](${url})`);
+  };
+  
   useEffect(() => {
     const parseContent = () => {
       const regex = /\{([^}]*?\.(png|mp4))\}/g; // 更新正則表達式以匹配 png 和 mp4 文件
@@ -81,7 +86,7 @@ const GPTResponse = ({
           parsedElements.push(
             <ReactMarkdown
               key={`text-${lastIndex}`}
-              children={text}
+              children={linkify(text)}  // 使用 linkify 函數處理文本
               rehypePlugins={[rehypeRaw]}
             />,
           );
@@ -169,7 +174,7 @@ const GPTResponse = ({
         parsedElements.push(
           <ReactMarkdown
             key="text-last"
-            children={inputText.substring(lastIndex)}
+            children={linkify(inputText.substring(lastIndex))}
             rehypePlugins={[rehypeRaw]}
           />,
         );
