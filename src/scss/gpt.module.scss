@@ -181,3 +181,19 @@ h2 {
   margin: 0px 5px 0px 5px;
   padding: 0;
 }
+
+.gpt-response-area {
+  // 定義文字區域的樣式
+  .gpt-response {
+    // 連結樣式
+    a {
+      color: #137bf1; // 深藍色的色碼
+      text-decoration: underline; // 顯示下劃線
+
+      &:hover {
+        color: #0257b8; // 深藍色的色碼
+        text-decoration: underline; // 滑鼠移過時顯示下劃線
+      }
+    }
+  }
+}
