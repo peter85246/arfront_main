@@ -29,7 +29,12 @@ function MachineKnowledge() {
   const [machineList, setMachineList] = useState([]); //機台列表(全部資料)
   const [showMachineList, setShowMachineList] = useState([]); //機台列表(顯示前端)
   const [machineCategory, setMachineCategory] = useState([]); //機台種類
+  const [machineSeries, setMachineSeries] = useState([]); //機台系列
+  const [machineName, setMachineName] = useState([]); //機台名稱
+
   const [selectedMachineCategory, setSelectedMachineCategory] = useState(""); //選擇的機台種類
+  const [selectedMachineSeries, setSelectedMachineSeries] = useState(""); //選擇的機台系列
+  const [selectedMachineName, setSelectedMachineName] = useState(""); //選擇的機台名稱
 
   const [showMachineinfoModal, setShowMachineinfoModal] = useState(false); //顯示"機台 modal"
   const [machineInfo, setMachineInfo] = useState({
@@ -70,10 +75,13 @@ function MachineKnowledge() {
   //#endregion
 
   //#region 刷新機台列表
-  const refreshMachineinfos = async (category) => {
+  const refreshMachineinfos = async (props) => {
+    const { category, name, series } = props || {};
     var sendData = {
       keyword: keyword,
       ...(category ? { machineType: category } : {}),
+      ...(series ? { modelSeries: series } : {}),
+      ...(name ? { machineName: name } : {}),
     };
 
     let machineOverviewResponse = await apiMachineAddOverview(sendData);
@@ -83,10 +91,12 @@ function MachineKnowledge() {
         setShowMachineList(
           machineOverviewResponse.result.slice(
             activePage * pageRow - pageRow,
-            activePage * pageRow,
-          ),
+            activePage * pageRow
+          )
         );
         setMachineCategory(machineOverviewResponse.category);
+        setMachineSeries(machineOverviewResponse.modelSeries);
+        setMachineName(machineOverviewResponse.machineName);
       }
     }
   };
@@ -108,14 +118,14 @@ function MachineKnowledge() {
         onClick={(e) => handleChangePage(e, number)}
       >
         {number}
-      </Pagination.Item>,
+      </Pagination.Item>
     );
   }
 
   const handleChangePage = async (e, number) => {
     setActivePage(number);
     setShowMachineList(
-      machineList.slice(number * pageRow - pageRow, number * pageRow),
+      machineList.slice(number * pageRow - pageRow, number * pageRow)
     );
   };
   //#endregion
@@ -341,7 +351,7 @@ function MachineKnowledge() {
       // formData.append("machineImageObj", newMachineInfo.machineImageObj);
       formData.append(
         "isDeletedMachineImage",
-        newMachineInfo.isDeletedMachineImage,
+        newMachineInfo.isDeletedMachineImage
       );
 
       let machineInfoResponse = await apiMachineAddInfo(formData);
@@ -357,7 +367,7 @@ function MachineKnowledge() {
               hideProgressBar: true,
               closeOnClick: false,
               pauseOnHover: false,
-            },
+            }
           );
 
           setShowMachineinfoModal(false);
@@ -462,32 +472,79 @@ function MachineKnowledge() {
       <section className="content">
         <div className="container-fluid container-fluid-border">
           <div className="w-full flex justify-between items-center mb-3">
-            <div className="p-2 flex items-center gap-[2px]">
-              <strong style={{ color: "#1672ad", fontSize: "18px" }}>
-                {t("機台種類：")}
-              </strong>
-              <Select
-                className="w-[200px]"
-                value={selectedMachineCategory}
-                onChange={(v) => {
-                  setSelectedMachineCategory(v);
-                  refreshMachineinfos(v);
-                }}
-              >
-                {machineCategory.map((category, idx) => (
-                  <Option key={idx} value={category}>
-                    {category}
-                  </Option>
-                ))}
-              </Select>
-              {selectedMachineCategory && (
-                <CloseCircleOutlined
-                  onClick={() => {
+            <div className="flex gap-[8px]">
+              <div className="p-2 flex items-center gap-[2px]">
+                <strong style={{ color: "#1672ad", fontSize: "18px" }}>
+                  {t("機台種類：")}
+                </strong>
+                <Select
+                  className="w-[160px]"
+                  value={selectedMachineCategory}
+                  allowClear
+                  onChange={(v) => {
+                    setSelectedMachineCategory(v);
+                    refreshMachineinfos({ category: v });
+                  }}
+                  onClear={() => {
                     setSelectedMachineCategory("");
                     refreshMachineinfos();
                   }}
-                />
-              )}
+                >
+                  {machineCategory.map((category, idx) => (
+                    <Option key={idx} value={category}>
+                      {category}
+                    </Option>
+                  ))}
+                </Select>
+              </div>
+              <div className="p-2 flex items-center gap-[2px]">
+                <strong style={{ color: "#1672ad", fontSize: "18px" }}>
+                  {t("機台系列：")}
+                </strong>
+                <Select
+                  className="w-[160px]"
+                  value={selectedMachineSeries}
+                  allowClear
+                  onChange={(v) => {
+                    setSelectedMachineSeries(v);
+                    refreshMachineinfos({ series: v });
+                  }}
+                  onClear={() => {
+                    setSelectedMachineSeries("");
+                    refreshMachineinfos();
+                  }}
+                >
+                  {machineSeries?.map((series, idx) => (
+                    <Option key={idx} value={series}>
+                      {series}
+                    </Option>
+                  ))}
+                </Select>
+              </div>
+              <div className="p-2 flex items-center gap-[2px]">
+                <strong style={{ color: "#1672ad", fontSize: "18px" }}>
+                  {t("機台名稱：")}
+                </strong>
+                <Select
+                  className="w-[160px]"
+                  value={selectedMachineName}
+                  allowClear
+                  onChange={(v) => {
+                    setSelectedMachineName(v);
+                    refreshMachineinfos({ name: v });
+                  }}
+                  onClear={() => {
+                    setSelectedMachineName("");
+                    refreshMachineinfos();
+                  }}
+                >
+                  {machineName?.map((series, idx) => (
+                    <Option key={idx} value={series}>
+                      {series}
+                    </Option>
+                  ))}
+                </Select>
+              </div>
             </div>
             <div className="col-3">
               <div className="from-item search">
@@ -527,7 +584,7 @@ function MachineKnowledge() {
                                 className="btn btn-outline-danger btn-circle btn-sm ml-1"
                                 onClick={() =>
                                   handleOpenDeleteMachineModal(
-                                    item.machineAddId,
+                                    item.machineAddId
                                   )
                                 }
                               >
