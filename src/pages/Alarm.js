@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react";
 import classNames from "classnames";
 import styles from "../scss/global.module.scss";
-import { MindMap } from "../components/MindMap";
+import MindMap from "../components/MindMap";
 import { Link } from "react-router-dom";
 import AlarmListTree from "../components/AlarmGroup/AlarmListTree";
 import { useTranslation } from "react-i18next"; //語系

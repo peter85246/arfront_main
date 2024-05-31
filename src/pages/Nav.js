@@ -206,3 +206,89 @@ function Nav() {
 }
 
 export default Nav;
+
+// import React, { useState, useContext } from 'react';
+// import { Link, useLocation } from 'react-router-dom';
+// import { MyUserContext } from "../contexts/MyUserContext";
+// import styles from "../scss/global.module.scss";
+// import classNames from "classnames";
+
+// import {
+//   DesktopOutlined,
+//   UserOutlined,
+//   DatabaseOutlined,
+//   CommentOutlined,
+//   MenuFoldOutlined,
+//   MenuUnfoldOutlined,
+// } from '@ant-design/icons';
+// import { Button, Menu } from 'antd';
+// // import './Nav.css'; // 確保這裡引入了適當的 CSS 檔案來調整版面
+
+// function Nav() {
+//   const { myUser } = useContext(MyUserContext);
+//   const [collapsed, setCollapsed] = useState(false);
+//   const location = useLocation();
+
+//   const items = [
+//     {
+//       key: '/machine',
+//       icon: <DesktopOutlined />,
+//       label: <Link to="/machine">AR設備控制</Link>,
+//     },
+//     myUser && myUser.UserLevel !== 2 && {
+//       key: '/userManage',
+//       icon: <UserOutlined />,
+//       label: <Link to="/userManage">使用者管理</Link>,
+//     },
+//     {
+//       key: '/machineKnowledge',
+//       icon: <DatabaseOutlined />,
+//       label: <Link to="/machineKnowledge">機台管理</Link>,
+//     },
+//     {
+//       key: '/knowledge',
+//       icon: <DatabaseOutlined />,
+//       label: <Link to="/knowledge">知識庫</Link>,
+//       children: [
+//         {
+//           key: '/alarm',
+//           label: <Link to="/alarm">故障庫</Link>,
+//         },
+//       ],
+//     },
+//     {
+//       key: '/gpt',
+//       icon: <CommentOutlined />,
+//       label: <Link to="/gpt">GPT系統</Link>,
+//     },
+//   ].filter(Boolean);
+
+//   const toggleCollapsed = () => {
+//     setCollapsed(!collapsed);
+//   };
+
+//   return (
+//         <aside className="main-sidebar elevation-4 sidebar-dark-primary" >
+//     <div style={{ width: collapsed ? 80 : 249.5 }}>
+//       <Button
+//         type="primary"
+//         onClick={toggleCollapsed}
+//         style={{ marginBottom: 16 }}
+//       >
+//         {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+//       </Button>
+//       <Menu
+//         defaultSelectedKeys={[location.pathname]}
+//         defaultOpenKeys={['/knowledge']}
+//         mode="inline"
+//         theme="dark"
+//         inlineCollapsed={collapsed}
+//         items={items}
+//       />
+//     </div>
+    
+//     </aside>
+//   );
+// }
+
+// export default Nav;

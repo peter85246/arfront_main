@@ -268,7 +268,6 @@ const GPTResponse = ({
         {/* 只有當 question 非空時顯示 "發問：" */}
         {question && <p>發問：{question.split("並加上圖片說明")[0]}</p>}
       </div>
-
       
       <div className={styles["gpt-response"]} ref={responseAreaRef}>
       <div

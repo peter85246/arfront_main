@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next"; //語系
 import classNames from "classnames";
 import styles from "../scss/global.module.scss";
 import stylesAlarm from "../scss/Alarm.module.scss";
-import { MindMap } from "../components/MindMap";
+import MindMap from "../components/MindMap";
 import { Link } from "react-router-dom";
 
 export default function PageMindMap() {
