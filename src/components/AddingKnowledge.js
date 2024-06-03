@@ -2,11 +2,19 @@ import React, { useState, useEffect } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import Select from "react-select";
 import { useTranslation } from "react-i18next";
-
-import { apiGetMachineOptions } from "../utils/Api";
+import { apiGetMachineOptions, apiMachineAddOverview } from "../utils/Api";
+import { useStore } from "../zustand/store";
+import { useNavigate } from "react-router-dom";
 
 export function AddingKnowledge({ onClose }) {
+
+  const navigate = useNavigate();
+  const { setIsCreatingSOP, setSOPInfo } = useStore()
+
+  const { t } = useTranslation();
+  const [errors, setErrors] = useState({});
   const [showModal, setShowModal] = useState(true);
+  const [existsMachines, setExistsMachines] = useState(null);
   const [machineInfo, setMachineInfo] = useState({
     machineType: "",
     modelSeries: "",
@@ -19,45 +27,30 @@ export function AddingKnowledge({ onClose }) {
     completeMachineOptions: [],
   });
 
-  const [errors, setErrors] = useState({});
-  const { t } = useTranslation();
-
-  useEffect(() => {
-    fetchMachineOptions();
-  }, []);
-
   const fetchMachineOptions = async () => {
     try {
-      const response = await apiGetMachineOptions();
-      console.log("API Response:", response); // 確認 API 回應
-      if (response && response.code === "0000" && response.result) {
-        const formattedOptions = {
-          machineType: response.result.map((item) => ({
-            value: item.machineType,
-            label: item.machineType,
-          })),
-          modelSeries: response.result.map((item) => ({
-            value: item.modelSeries,
-            label: item.modelSeries,
-          })),
-          machineName: response.result.map((item) => ({
-            value: item.machineName,
-            label: item.machineName,
-          })),
-          completeMachineOptions: response.result, // 儲存完整機台信息
-        };
-        setOptions(formattedOptions);
+      const res = await apiMachineAddOverview({ 
+        keyword: "",
+        ...(machineInfo.machineType ? { machineType: machineInfo.machineType } : {}),
+        ...(machineInfo.modelSeries ? { modelSeries: machineInfo.modelSeries } : {}),
+        ...(machineInfo.machineName ? { machineName: machineInfo.machineName } : {}),
+      })
+      
+      if (res?.code === "0000" && res?.result) {
+        console.log(res)
+        setOptions({
+          machineType: res.machineType.map(label => ({ value: label, label: label})),
+          modelSeries: res.modelSeries.map(label => ({ value: label, label: label})),
+          machineName: res.machineName.map(label => ({ value: label, label: label})),
+          completeMachineOptions: res.result
+        })
       } else {
-        console.error("Failed to load options:", response);
+        console.error("Failed to load options:", res);
       }
     } catch (error) {
       console.error("Failed to fetch machine options:", error);
     }
   };
-
-  useEffect(() => {
-    fetchMachineOptions();
-  }, []);
 
   // 處理模態窗關閉事件
   const handleCloseModal = () => {
@@ -156,31 +149,27 @@ export function AddingKnowledge({ onClose }) {
 
     if (!hasError) {
       console.log("全部有效，執行保存!");
-      window.location.href = "/document-editor";
+      const machineAddId = existsMachines.filter(item => item.machineName === machineInfo.machineName)[0].machineAddId;
+      setIsCreatingSOP(true);
+      setSOPInfo({ 
+        machineInfo: machineInfo,
+        machineAddId: machineAddId
+      });
+      navigate("/document-editor");
     }
   };
 
-  // 下拉選單的選項數據
-  // const options = {
-  //   machineType: [
-  //     { value: "CNC車床", label: "CNC車床" },
-  //     { value: "AAC銑床", label: "AAC銑床" },
-  //     { value: "GXA數控旋轉工作台", label: "GXA數控旋轉工作台" },
-  //     { value: "BXG自動磨床", label: "BXG自動磨床" },
-  //   ],
-  //   modelSeries: [
-  //     { value: "CNC", label: "CNC" },
-  //     { value: "AAC", label: "AAC" },
-  //     { value: "GXA", label: "GXA" },
-  //     { value: "BXG", label: "BXG" },
-  //   ],
-  //   machineName: [
-  //     { value: "CNC-55688", label: "CNC-55688" },
-  //     { value: "AAC-00847", label: "AAC-00847" },
-  //     { value: "GXA-63008", label: "GXA-63008" },
-  //     { value: "BXG-1330097", label: "BXG-1330097" },
-  //   ],
-  // };
+  useEffect(() => {
+    const getExistsMachines = async () => {
+      const res = await apiMachineAddOverview({ keyword: "" });
+      if (res?.code === "0000" && res?.result) {
+        setExistsMachines(res.result);
+      } else {
+        console.error("Failed to load existing machines:", res);
+      }
+    }
+    getExistsMachines();
+  }, [])
 
   return (
     <div>

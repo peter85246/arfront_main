@@ -76,10 +76,10 @@ function MachineKnowledge() {
 
   //#region 刷新機台列表
   const refreshMachineinfos = async (props) => {
-    const { category, name, series } = props || {};
+    const { machineType, name, series } = props || {};
     var sendData = {
       keyword: keyword,
-      ...(category ? { machineType: category } : {}),
+      ...(machineType ? { machineType: machineType } : {}),
       ...(series ? { modelSeries: series } : {}),
       ...(name ? { machineName: name } : {}),
     };
@@ -94,7 +94,7 @@ function MachineKnowledge() {
             activePage * pageRow
           )
         );
-        setMachineCategory(machineOverviewResponse.category);
+        setMachineCategory(machineOverviewResponse.machineType);
         setMachineSeries(machineOverviewResponse.modelSeries);
         setMachineName(machineOverviewResponse.machineName);
       }
@@ -483,16 +483,16 @@ function MachineKnowledge() {
                   allowClear
                   onChange={(v) => {
                     setSelectedMachineCategory(v);
-                    refreshMachineinfos({ category: v });
+                    refreshMachineinfos({ machineType: v });
                   }}
                   onClear={() => {
                     setSelectedMachineCategory("");
                     refreshMachineinfos();
                   }}
                 >
-                  {machineCategory.map((category, idx) => (
-                    <Option key={idx} value={category}>
-                      {category}
+                  {machineCategory.map((machineType, idx) => (
+                    <Option key={idx} value={machineType}>
+                      {machineType}
                     </Option>
                   ))}
                 </Select>

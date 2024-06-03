@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
+import { useStore } from "../zustand/store";
 
 export function SOPName({ onClose }) {
+  const { SOPInfo } = useStore();
   const [showModal, setShowModal] = useState(true);
   const [sopName, setSopName] = useState("");
   const [errors, setErrors] = useState({});
@@ -35,6 +37,7 @@ export function SOPName({ onClose }) {
 
   // 處理表單儲存事件
   const handleSave = () => {
+    console.log({ ...SOPInfo, sopName })
     let hasError = false;
     const newErrors = {};
 
@@ -47,7 +50,7 @@ export function SOPName({ onClose }) {
 
     if (!hasError) {
       console.log("全部有效，執行保存!");
-      window.location.href = "/sop2";
+      // window.location.href = "/sop2";
     }
   };
 

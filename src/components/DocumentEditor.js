@@ -1,449 +1,173 @@
-import classNames from "classnames";
 import { useTranslation } from "react-i18next"; //語系
-import styles from "../scss/global.module.scss";
 import { useState, useEffect, useLayoutEffect, useRef } from "react";
+import { Space, ColorPicker, theme, Flex, Input, Select } from "antd";
 import { useNavigate } from "react-router-dom"; // 導入 useNavigate
-import { Link } from "react-router-dom";
-import FormGroup from "./FormGroup/FormGroup";
-import { Space, ColorPicker, theme, Flex, Input } from "antd";
 import { generate, red, green, blue } from "@ant-design/colors";
+import { useSearchParams } from 'react-router-dom';
+import { ToastContainer, toast } from "react-toastify";
+import { Link } from "react-router-dom";
+import styles from "../scss/global.module.scss";
+import classNames from "classnames";
+import FormGroup from "./FormGroup/FormGroup";
 import Spinner from "react-bootstrap/Spinner";
 import SimpleReactValidator from "simple-react-validator";
-import { ToastContainer, toast } from "react-toastify";
 
 import {
+  apiGetAllKnowledgeBaseByFilter,
   apiGetAllKnowledgeBaseByMachineAddId,
   apiSaveKnowledgeBase,
 } from "../utils/Api";
 
+import { useStore } from "../zustand/store";
+
 const { TextArea } = Input;
-const onChange = (e) => {
-  console.log(e);
-};
 
 export function DocumentEditor() {
+
+  const { SOPInfo, setSOPInfo } = useStore();
+  const navigate = useNavigate(); // 使用 navigate 來處理導航
+  const { t } = useTranslation();
+
   const uploadModelRef = useRef(null);
   const uploadToolsRef = useRef(null);
   const uploadPositionRef = useRef(null);
   const [formData, setFormData] = useState({});
-  const navigate = useNavigate(); // 使用 navigate 來處理導航
-  const { t } = useTranslation();
+  const [saveKnowledgeInfoLoading, setSaveKnowledgeInfoLoading] = useState(false); //儲存的轉圈圈
 
   const [textColor, setTextColor] = useState("#000000"); // 初始文字顏色設為黑色
   const validator = new SimpleReactValidator({
     autoForceUpdate: this,
   });
 
-  const [knowledgeInfo, setKnowledgeInfo] = useState({
-    //新增以及修改內容
-    knowledgeBaseId: 0,
-    knowledgeBaseDeviceType: "", //設備種類
-    knowledgeBaseDeviceParts: "", //設備部件
-    knowledgeBaseRepairItems: "", //維修項目
-    knowledgeBaseRepairType: "", //維修類型
-    knowledgeBaseFileNo: "", //檔案編號
-    knowledgeBaseAlarmCode: "", //故障代碼
-    knowledgeBaseSpec: "", //規格
-    knowledgeBaseSystem: "", //系統
-    knowledgeBaseProductName: "", //產品名稱
-    knowledgeBaseAlarmCause: "", //故障發生原因
-    knowledgeBaseAlarmDesc: "", //故障描述
-    knowledgeBaseAlarmOccasion: "", //故障發生時機
-    knowledgeBaseModelImage: "", //Model機型路徑
-    knowledgeBaseModelImageObj: null, //Model機型圖片物件
-    isDeletedKnowledgeBaseModelImage: false, //是否刪除Model機型圖片
-    knowledgeBaseToolsImage: "", //Tools機型路徑
-    knowledgeBaseToolsImageObj: null, //Tools工具圖片物件
-    isDeletedKnowledgeBaseToolsImage: false, //是否刪除Tools工具圖片
-    knowledgeBasePositionImage: "", //Position位置路徑
-    knowledgeBasePositionImageObj: null, //Position位置圖片物件
-    isDeletedKnowledgeBasePositionImage: false, //是否刪除Position位置圖片
-  });
+  const [searchParams] = useSearchParams();
+  const machineName = searchParams.get('name');
 
-  const [knowledgeInfoErrors, setKnowledgeInfoErrors] = useState({
-    //錯誤訊息
-    knowledgeBaseDeviceType: "", //設備種類
-    knowledgeBaseDeviceParts: "", //設備部件
-    knowledgeBaseRepairItems: "", //維修項目
-    knowledgeBaseRepairType: "", //維修類型
-    knowledgeBaseFileNo: "", //檔案編號
-    knowledgeBaseAlarmCode: "", //故障代碼
-    knowledgeBaseSpec: "", //規格
-    knowledgeBaseSystem: "", //系統
-    knowledgeBaseProductName: "", //產品名稱
-    knowledgeBaseAlarmCause: "", //故障發生原因
-    knowledgeBaseAlarmDesc: "", //故障描述
-    knowledgeBaseAlarmOccasion: "", //故障發生時機
-    knowledgeBaseModelImage: "", //Model圖片路徑
-    knowledgeBaseToolsImage: "", //Tools圖片路徑
-    knowledgeBasePositionImage: "", //Position圖片路徑
-  });
-
-  //#region 故障說明 欄位驗證
-  const checkEditValidator = async (name = "", val = "") => {
-    let result = true;
-    let newKnowledgeInfoErrors = { ...knowledgeInfoErrors };
-
-    if (name == "knowledgeBaseDeviceType" || name == "") {
-      if (!validator.check(knowledgeInfo.knowledgeBaseDeviceType, "required")) {
-        newKnowledgeInfoErrors.knowledgeBaseDeviceType = "required";
-        result = false;
-      } else if (
-        !validator.check(knowledgeInfo.knowledgeBaseDeviceType, "max:100")
-      ) {
-        newKnowledgeInfoErrors.knowledgeBaseDeviceType = "max";
-        result = false;
-      } else {
-        newKnowledgeInfoErrors.knowledgeBaseDeviceType = "";
-      }
+  const [knowledgeInfo, setKnowledgeInfo] = useState(
+    SOPInfo.knowledgeInfo || 
+    {
+      //新增以及修改內容
+      knowledgeBaseId: 0,
+      knowledgeBaseDeviceType: "", //設備種類
+      knowledgeBaseDeviceParts: "", //設備部件
+      knowledgeBaseRepairItems: "", //維修項目
+      knowledgeBaseRepairType: "", //維修類型
+      knowledgeBaseFileNo: "", //檔案編號
+      knowledgeBaseAlarmCode: "", //故障代碼
+      knowledgeBaseSpec: "", //規格
+      knowledgeBaseSystem: "", //系統
+      knowledgeBaseProductName: "", //產品名稱
+      knowledgeBaseAlarmCause: "", //故障發生原因
+      knowledgeBaseAlarmDesc: "", //故障描述
+      knowledgeBaseAlarmOccasion: "", //故障發生時機
+      knowledgeBaseModelImage: "", //Model機型路徑
+      knowledgeBaseModelImageObj: null, //Model機型圖片物件
+      isDeletedKnowledgeBaseModelImage: false, //是否刪除Model機型圖片
+      knowledgeBaseToolsImage: "", //Tools機型路徑
+      knowledgeBaseToolsImageObj: null, //Tools工具圖片物件
+      isDeletedKnowledgeBaseToolsImage: false, //是否刪除Tools工具圖片
+      knowledgeBasePositionImage: "", //Position位置路徑
+      knowledgeBasePositionImageObj: null, //Position位置圖片物件
+      isDeletedKnowledgeBasePositionImage: false, //是否刪除Position位置圖片
     }
+  );
 
-    if (name == "knowledgeBaseDeviceParts" || name == "") {
-      if (
-        !validator.check(knowledgeInfo.knowledgeBaseDeviceParts, "required")
-      ) {
-        newKnowledgeInfoErrors.knowledgeBaseDeviceParts = "required";
-        result = false;
-      } else if (
-        !validator.check(knowledgeInfo.knowledgeBaseDeviceParts, "max:100")
-      ) {
-        newKnowledgeInfoErrors.knowledgeBaseDeviceParts = "max";
-        result = false;
-      } else {
-        newKnowledgeInfoErrors.knowledgeBaseDeviceParts = "";
-      }
-    }
-
-    if (name == "knowledgeBaseRepairItems" || name == "") {
-      if (
-        !validator.check(knowledgeInfo.knowledgeBaseRepairItems, "required")
-      ) {
-        newKnowledgeInfoErrors.knowledgeBaseRepairItems = "required";
-        result = false;
-      } else if (
-        !validator.check(knowledgeInfo.knowledgeBaseRepairItems, "max:100")
-      ) {
-        newKnowledgeInfoErrors.knowledgeBaseRepairItems = "max";
-        result = false;
-      } else {
-        newKnowledgeInfoErrors.knowledgeBaseRepairItems = "";
-      }
-    }
-
-    if (name == "knowledgeBaseRepairType" || name == "") {
-      if (!validator.check(knowledgeInfo.knowledgeBaseRepairType, "required")) {
-        newKnowledgeInfoErrors.knowledgeBaseRepairType = "required";
-        result = false;
-      } else if (
-        !validator.check(knowledgeInfo.knowledgeBaseRepairType, "max:100")
-      ) {
-        newKnowledgeInfoErrors.knowledgeBaseRepairType = "max";
-        result = false;
-      } else {
-        newKnowledgeInfoErrors.knowledgeBaseRepairType = "";
-      }
-    }
-
-    if (name == "knowledgeBaseFileNo" || name == "") {
-      if (!validator.check(knowledgeInfo.knowledgeBaseFileNo, "required")) {
-        newKnowledgeInfoErrors.knowledgeBaseFileNo = "required";
-        result = false;
-      } else if (
-        !validator.check(knowledgeInfo.knowledgeBaseFileNo, "max:100")
-      ) {
-        newKnowledgeInfoErrors.knowledgeBaseFileNo = "max";
-        result = false;
-      } else {
-        newKnowledgeInfoErrors.knowledgeBaseFileNo = "";
-      }
-    }
-
-    if (name == "knowledgeBaseAlarmCode" || name == "") {
-      if (!validator.check(knowledgeInfo.knowledgeBaseAlarmCode, "required")) {
-        newKnowledgeInfoErrors.knowledgeBaseAlarmCode = "required";
-        result = false;
-      } else if (
-        !validator.check(knowledgeInfo.knowledgeBaseAlarmCode, "max:100")
-      ) {
-        newKnowledgeInfoErrors.knowledgeBaseAlarmCode = "max";
-        result = false;
-      } else {
-        newKnowledgeInfoErrors.knowledgeBaseAlarmCode = "";
-      }
-    }
-
-    if (name == "knowledgeBaseRepairItems" || name == "") {
-      if (
-        !validator.check(knowledgeInfo.knowledgeBaseRepairItems, "required")
-      ) {
-        newKnowledgeInfoErrors.knowledgeBaseRepairItems = "required";
-        result = false;
-      } else if (
-        !validator.check(knowledgeInfo.knowledgeBaseRepairItems, "max:100")
-      ) {
-        newKnowledgeInfoErrors.knowledgeBaseRepairItems = "max";
-        result = false;
-      } else {
-        newKnowledgeInfoErrors.knowledgeBaseRepairItems = "";
-      }
-    }
-
-    if (name == "knowledgeBaseSpec" || name == "") {
-      if (!validator.check(knowledgeInfo.knowledgeBaseSpec, "required")) {
-        newKnowledgeInfoErrors.knowledgeBaseSpec = "required";
-        result = false;
-      } else if (!validator.check(knowledgeInfo.knowledgeBaseSpec, "max:100")) {
-        newKnowledgeInfoErrors.knowledgeBaseSpec = "max";
-        result = false;
-      } else {
-        newKnowledgeInfoErrors.knowledgeBaseSpec = "";
-      }
-    }
-
-    if (name == "knowledgeBaseSystem" || name == "") {
-      if (!validator.check(knowledgeInfo.knowledgeBaseSystem, "required")) {
-        newKnowledgeInfoErrors.knowledgeBaseSystem = "required";
-        result = false;
-      } else if (
-        !validator.check(knowledgeInfo.knowledgeBaseSystem, "max:100")
-      ) {
-        newKnowledgeInfoErrors.knowledgeBaseSystem = "max";
-        result = false;
-      } else {
-        newKnowledgeInfoErrors.knowledgeBaseSystem = "";
-      }
-    }
-
-    if (name == "knowledgeBaseProductName" || name == "") {
-      if (
-        !validator.check(knowledgeInfo.knowledgeBaseProductName, "required")
-      ) {
-        newKnowledgeInfoErrors.knowledgeBaseProductName = "required";
-        result = false;
-      } else if (
-        !validator.check(knowledgeInfo.knowledgeBaseProductName, "max:100")
-      ) {
-        newKnowledgeInfoErrors.knowledgeBaseProductName = "max";
-        result = false;
-      } else {
-        newKnowledgeInfoErrors.knowledgeBaseProductName = "";
-      }
-    }
-
-    if (name == "knowledgeBaseAlarmCause" || name == "") {
-      if (!validator.check(knowledgeInfo.knowledgeBaseAlarmCause, "required")) {
-        newKnowledgeInfoErrors.knowledgeBaseAlarmCause = "required";
-        result = false;
-      } else if (
-        !validator.check(knowledgeInfo.knowledgeBaseAlarmCause, "max:400")
-      ) {
-        newKnowledgeInfoErrors.knowledgeBaseAlarmCause = "max";
-        result = false;
-      } else {
-        newKnowledgeInfoErrors.knowledgeBaseAlarmCause = "";
-      }
-    }
-
-    if (name == "knowledgeBaseAlarmDesc" || name == "") {
-      if (!validator.check(knowledgeInfo.knowledgeBaseAlarmDesc, "required")) {
-        newKnowledgeInfoErrors.knowledgeBaseAlarmDesc = "required";
-        result = false;
-      } else if (
-        !validator.check(knowledgeInfo.knowledgeBaseAlarmDesc, "max:400")
-      ) {
-        newKnowledgeInfoErrors.knowledgeBaseAlarmDesc = "max";
-        result = false;
-      } else {
-        newKnowledgeInfoErrors.knowledgeBaseAlarmDesc = "";
-      }
-    }
-
-    if (name == "knowledgeBaseAlarmOccasion" || name == "") {
-      if (
-        !validator.check(knowledgeInfo.knowledgeBaseAlarmOccasion, "required")
-      ) {
-        newKnowledgeInfoErrors.knowledgeBaseAlarmOccasion = "required";
-        result = false;
-      } else if (
-        !validator.check(knowledgeInfo.knowledgeBaseAlarmOccasion, "max:400")
-      ) {
-        newKnowledgeInfoErrors.knowledgeBaseAlarmOccasion = "max";
-        result = false;
-      } else {
-        newKnowledgeInfoErrors.knowledgeBaseAlarmOccasion = "";
-      }
-    }
-
-    if (name == "") {
-      if (newKnowledgeInfoErrors.knowledgeBaseModelImage != "") {
-        result = false;
-      }
-    }
-    if (name == "") {
-      if (newKnowledgeInfoErrors.knowledgeBaseToolsImage != "") {
-        result = false;
-      }
-    }
-    if (name == "") {
-      if (newKnowledgeInfoErrors.knowledgeBasePositionImage != "") {
-        result = false;
-      }
-    }
-
-    setKnowledgeInfoErrors(newKnowledgeInfoErrors);
-    return result;
-  };
-  //#endregion
+  const [formFields, setFormFields] = useState([
+    {
+      field: "knowledgeBaseDeviceType",
+      label: "設備種類：",
+      id: "invoice-number1",
+      options: [],
+      required: true,
+    },
+    {
+      field: "knowledgeBaseDeviceParts",
+      label: "設備部件：",
+      id: "invoice-number2",
+      options: [],
+      required: true,
+    },
+    {
+      field: "knowledgeBaseRepairItems",
+      label: "維修項目：",
+      id: "invoice-number3",
+      options: [],
+      required: true,
+    },
+    {
+      field: "knowledgeBaseRepairType",
+      label: "維修類型：",
+      id: "invoice-number4",
+      options: [],
+      required: true,
+    },
+    {
+      field: "knowledgeBaseFileNo",
+      label: "檔案編號：",
+      id: "invoice-number5",
+      required: true,
+    },
+    { 
+      field: "knowledgeBaseAlarmCode",
+      label: "故障代碼：", 
+      id: "invoice-number6"
+     },
+    { 
+      field: "knowledgeBaseSpec",
+      label: "規格：", 
+      id: "invoice-number7"
+     },
+    { 
+      field: "knowledgeBaseSystem",
+      label: "系統：", 
+      id: "invoice-number8"
+     },
+    { 
+      field: "knowledgeBaseProductName",
+      label: "產品名稱：", 
+      id: "invoice-number9"
+     },
+  ])
 
   // 處理表單提交
   const handleSaveKnowledgeInfo = async (e) => {
-    console.log("Submitting Form Data:", formData);
-
     e.preventDefault();
+    setSOPInfo(prev => (
+      { ...prev, knowledgeInfo: knowledgeInfo }
+    ));
 
-    let newKnowledgeInfoErrors = { ...knowledgeInfoErrors };
-    let newKnowledgeInfo = { ...knowledgeInfo };
-    if (newKnowledgeInfoErrors.knowledgeBaseModelImage != "") {
-      newKnowledgeInfo.knowledgeBaseModelImageObj = null;
-    }
-    if (newKnowledgeInfoErrors.knowledgeBaseToolsImage != "") {
-      newKnowledgeInfo.knowledgeBaseToolsImageObj = null;
-    }
-    if (newKnowledgeInfoErrors.knowledgeBasePositionImage != "") {
-      newKnowledgeInfo.knowledgeBasePositionImageObj = null;
-    }
-
-    if (await checkEditValidator()) {
-      setSaveKnowledgeInfoLoading(true);
-
-      var formData = new FormData();
-
-      formData.append(
-        "KnowledgeBases[0].KnowledgeBaseId",
-        newKnowledgeInfo.knowledgeBaseId,
-      );
-      formData.append(
-        "KnowledgeBases[0].KnowledgeBaseDeviceType",
-        newKnowledgeInfo.knowledgeBaseDeviceType,
-      );
-      formData.append(
-        "KnowledgeBases[0].KnowledgeBaseDeviceParts",
-        newKnowledgeInfo.knowledgeBaseDeviceParts,
-      );
-      formData.append(
-        "KnowledgeBases[0].KnowledgeBaseRepairItems",
-        newKnowledgeInfo.knowledgeBaseRepairItems,
-      );
-      formData.append(
-        "KnowledgeBases[0].KnowledgeBaseRepairType",
-        newKnowledgeInfo.knowledgeBaseRepairType,
-      );
-      formData.append(
-        "KnowledgeBases[0].KnowledgeBaseFileNo",
-        newKnowledgeInfo.knowledgeBaseFileNo,
-      );
-      formData.append(
-        "KnowledgeBases[0].KnowledgeBaseAlarmCode",
-        newKnowledgeInfo.knowledgeBaseAlarmCode,
-      );
-      formData.append(
-        "KnowledgeBases[0].KnowledgeBaseSpec",
-        newKnowledgeInfo.knowledgeBaseSpec,
-      );
-      formData.append(
-        "KnowledgeBases[0].KnowledgeBaseSystem",
-        newKnowledgeInfo.knowledgeBaseSystem,
-      );
-      formData.append(
-        "KnowledgeBases[0].KnowledgeBaseProductName",
-        newKnowledgeInfo.knowledgeBaseProductName,
-      );
-      formData.append(
-        "KnowledgeBases[0].KnowledgeBaseAlarmCause",
-        newKnowledgeInfo.knowledgeBaseAlarmCause,
-      );
-      formData.append(
-        "KnowledgeBases[0].KnowledgeBaseAlarmDesc",
-        newKnowledgeInfo.knowledgeBaseAlarmDesc,
-      );
-      formData.append(
-        "KnowledgeBases[0].KnowledgeBaseAlarmOccasion",
-        newKnowledgeInfo.knowledgeBaseAlarmOccasion,
-      );
-
-      formData.append(
-        "KnowledgeBases[0].KnowledgeBaseModelImage",
-        newKnowledgeInfo.knowledgeBaseModelImage,
-      );
-      formData.append(
-        "KnowledgeBases[0].KnowledgeBaseModelImageObj",
-        newKnowledgeInfo.knowledgeBaseModelImageObj,
-      );
-      formData.append(
-        "isDeleteKnowledgeBaseModelImage",
-        newKnowledgeInfo.isDeleteKnowledgeBaseModelImage,
-      );
-      formData.append(
-        "KnowledgeBases[0].KnowledgeBaseToolsImage",
-        newKnowledgeInfo.knowledgeBaseToolsImage,
-      );
-      formData.append(
-        "KnowledgeBases[0].KnowledgeBaseToolsImageObj",
-        newKnowledgeInfo.knowledgeBaseToolsImageObj,
-      );
-      formData.append(
-        "isDeleteKnowledgeBaseToolsImage",
-        newKnowledgeInfo.isDeleteKnowledgeBaseToolsImage,
-      );
-      formData.append(
-        "KnowledgeBases[0].KnowledgeBasePositionImage",
-        newKnowledgeInfo.knowledgeBasePositionImage,
-      );
-      formData.append(
-        "KnowledgeBases[0].KnowledgeBasePositionImageObj",
-        newKnowledgeInfo.knowledgeBasePositionImageObj,
-      );
-      formData.append(
-        "isDeletedKnowledgeBasePositionImage",
-        newKnowledgeInfo.isDeletedKnowledgeBasePositionImage,
-      );
-
-      let knowledgeInfoResponse = await apiSaveKnowledgeBase(formData);
-      if (knowledgeInfoResponse) {
-        if (knowledgeInfoResponse.code == "0000") {
-          toast.success(
-            newKnowledgeInfo.knowledgeBaseId == 0
-              ? t("toast.add.success")
-              : t("toast.edit.success"),
-            {
-              position: toast.POSITION.TOP_CENTER,
-              autoClose: 3000,
-              hideProgressBar: true,
-              closeOnClick: false,
-              pauseOnHover: false,
-            },
-          );
-        } else {
-          toast.error(knowledgeInfoResponse.message, {
-            position: toast.POSITION.TOP_CENTER,
-            autoClose: 5000,
-            hideProgressBar: true,
-            closeOnClick: false,
-            pauseOnHover: false,
-          });
-        }
-        setSaveKnowledgeInfoLoading(false);
-      } else {
-        setSaveKnowledgeInfoLoading(false);
-      }
-    }
+    // let knowledgeInfoResponse = await apiSaveKnowledgeBase(formData);
+    // if (knowledgeInfoResponse) {
+    //   if (knowledgeInfoResponse.code == "0000") {
+    //     toast.success(
+    //       newKnowledgeInfo.knowledgeBaseId == 0
+    //         ? t("toast.add.success")
+    //         : t("toast.edit.success"),
+    //       {
+    //         position: toast.POSITION.TOP_CENTER,
+    //         autoClose: 3000,
+    //         hideProgressBar: true,
+    //         closeOnClick: false,
+    //         pauseOnHover: false,
+    //       },
+    //     );
+    //   } else {
+    //     toast.error(knowledgeInfoResponse.message, {
+    //       position: toast.POSITION.TOP_CENTER,
+    //       autoClose: 5000,
+    //       hideProgressBar: true,
+    //       closeOnClick: false,
+    //       pauseOnHover: false,
+    //     });
+    //   }
+    //   setSaveKnowledgeInfoLoading(false);
+    // } else {
+    //   setSaveKnowledgeInfoLoading(false);
+    // }
+  
     // 這裡可以添加將數據發送到後端的代碼
     // 假設提交成功後導航到另一頁面
     navigate("/sop2");
   };
-
-  const [saveKnowledgeInfoLoading, setSaveKnowledgeInfoLoading] =
-    useState(false); //儲存的轉圈圈
 
   useLayoutEffect(() => {
     const uploadRefArray = [
@@ -478,42 +202,40 @@ export function DocumentEditor() {
     });
   }, []);
 
-  const formFields = [
-    {
-      label: "設備種類：",
-      id: "invoice-number1",
-      options: ["選項1", "選項2", "選項3"],
-      hasRedStar: true,
-    },
-    {
-      label: "設備部件：",
-      id: "invoice-number2",
-      options: ["選項1", "選項2", "選項3"],
-      hasRedStar: true,
-    },
-    {
-      label: "維修項目：",
-      id: "invoice-number3",
-      options: ["選項1", "選項2", "選項3"],
-      hasRedStar: true,
-    },
-    {
-      label: "維修類型：",
-      id: "invoice-number4",
-      options: ["選項1", "選項2", "選項3"],
-      hasRedStar: true,
-    },
-    {
-      label: "檔案編號：",
-      id: "invoice-number5",
-      inputType: "input",
-      hasRedStar: true,
-    },
-    { label: "故障代碼：", id: "invoice-number6", inputType: "input" },
-    { label: "規格：", id: "invoice-number7", inputType: "input" },
-    { label: "系統：", id: "invoice-number8", inputType: "input" },
-    { label: "產品名稱：", id: "invoice-number9", inputType: "input" },
-  ];
+  useEffect(() => {
+    const getDocumentOptions = async () => {
+      const res = await apiGetAllKnowledgeBaseByFilter({ keyword: "" });
+
+      setFormFields((prev) => prev.map((item) => {
+        if (item.field === "knowledgeBaseDeviceType") {
+          return {
+            ...item,
+            options: res.result.map((item) => ({ value: item.knowledgeBaseDeviceType, label: item.knowledgeBaseDeviceType })),
+          }
+        }
+        if (item.field === "knowledgeBaseDeviceParts") {
+          return {
+            ...item,
+            options: res.result.map((item) => ({ value: item.knowledgeBaseDeviceParts, label: item.knowledgeBaseDeviceParts })),
+          }
+        }
+        if (item.field === "knowledgeBaseRepairItems") {
+          return {
+            ...item,
+            options: res.result.map((item) => ({ value: item.knowledgeBaseRepairItems, label: item.knowledgeBaseRepairItems })),
+          }
+        }
+        if (item.field === "knowledgeBaseRepairType") {
+          return {
+            ...item,
+            options: res.result.map((item) => ({ value: item.knowledgeBaseRepairType, label: item.knowledgeBaseRepairType })),
+          }
+        }
+        return item;
+      }))
+    }
+    getDocumentOptions();
+  }, [])
 
   return (
     <main>
@@ -580,7 +302,7 @@ export function DocumentEditor() {
                 styles["btn-showMachine"],
               )}
             >
-              待新增
+              {SOPInfo?.machineInfo?.machineName}
             </a>
           </div>
         </div>
@@ -595,15 +317,27 @@ export function DocumentEditor() {
       <div className={styles["content-box"]} style={{ paddingTop: "5px" }}>
         <div className={styles["content-box-left"]}>
           <div className={styles["dropdown"]}>
-            {formFields.map((field) => (
-              <FormGroup
-                key={field.id}
-                label={field.label}
-                id={field.id}
-                hasRedStar={field.hasRedStar}
-                inputType={field.inputType}
-                // 去除 options 傳遞給 input 類型的欄位
-              />
+            {formFields.map((item) => (
+              <div className={styles["form-group"]}>
+                <label>
+                  {item.required && <span className="text-danger">*</span>}
+                  {item.label}
+                </label>
+                {item.options ? (
+                  <Select 
+                    mode="tags"
+                    className="w-full" 
+                    value={knowledgeInfo[item.field] || null} 
+                    onChange={(v) => setKnowledgeInfo((prev) => ({ ...prev, [item.field]: v[v.length -1] }))}
+                    options={item?.options}
+                  />
+                ) : (
+                  <Input 
+                    value={knowledgeInfo[item.field]} 
+                    onChange={(v) => setKnowledgeInfo((prev) => ({ ...prev, [item.field]: v.target.value }))} 
+                  />
+                )}
+              </div>
             ))}
           </div>
         </div>
@@ -616,7 +350,8 @@ export function DocumentEditor() {
               id="invoice-number10"
               placeholder="Enter content..."
               allowClear={true} // 啟用清除圖標
-              onChange={onChange}
+              value={knowledgeInfo.knowledgeBaseAlarmCause}
+              onChange={(e) => setKnowledgeInfo({ ...knowledgeInfo, knowledgeBaseAlarmCause: e.target.value })}
               style={{ color: textColor, height: "150px" }} // 注意：請確保 textColor 已經定義
             />
             <div className={styles["color-picker-container"]}>
@@ -629,9 +364,6 @@ export function DocumentEditor() {
               </Space>
             </div>
           </div>
-
-          <p></p>
-
           <div className={styles["text-area-container"]}>
             <span className="text-danger">*</span>
             <label htmlFor="invoice-number11">故障描述：</label>
@@ -640,10 +372,10 @@ export function DocumentEditor() {
               id="invoice-number11"
               placeholder="Enter content..."
               allowClear={true} // 啟用清除圖標
-              onChange={onChange}
+              value={knowledgeInfo.knowledgeBaseAlarmDesc}
+              onChange={(e) => setKnowledgeInfo({ ...knowledgeInfo, knowledgeBaseAlarmDesc: e.target.value })}
               style={{ color: textColor, height: "150px" }} // 注意：請確保 textColor 已經定義
             />
-
             <div className={styles["color-picker-container"]}>
               <Space direction="vertical">
                 <ColorPicker
@@ -654,8 +386,6 @@ export function DocumentEditor() {
               </Space>
             </div>
           </div>
-
-          <p></p>
 
           <div className={styles["text-area-container"]}>
             <span className="text-danger">*</span>
@@ -665,7 +395,8 @@ export function DocumentEditor() {
               id="invoice-number12"
               placeholder="Enter content..."
               allowClear={true} // 啟用清除圖標
-              onChange={onChange}
+              value={knowledgeInfo.knowledgeBaseAlarmOccasion}
+              onChange={(e) => setKnowledgeInfo({ ...knowledgeInfo, knowledgeBaseAlarmOccasion: e.target.value })}
               style={{ color: textColor, height: "150px" }} // 注意：請確保 textColor 已經定義
             />
 
@@ -679,7 +410,6 @@ export function DocumentEditor() {
               </Space>
             </div>
           </div>
-          <p></p>
 
           <span className="text-danger">*</span>
           <label for="invoice-title">For Model機型：</label>
@@ -725,7 +455,6 @@ export function DocumentEditor() {
               </button>
             </div>
           </div>
-          <p></p>
 
           <span className="text-danger">*</span>
           <label for="invoice-title">所有使用工具：</label>
@@ -771,7 +500,6 @@ export function DocumentEditor() {
               </button>
             </div>
           </div>
-          <p></p>
 
           <span className="text-danger">*</span>
           <label for="invoice-title">部位位置：</label>
@@ -817,7 +545,6 @@ export function DocumentEditor() {
               </button>
             </div>
           </div>
-          <p></p>
         </div>
       </div>
     </main>

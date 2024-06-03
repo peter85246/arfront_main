@@ -17,9 +17,13 @@ import { apiGetAllSOPByMachineAlarmId, apiSaveSOP } from "../utils/Api";
 
 import { Space, ColorPicker, theme } from "antd";
 import { generate, red, green, blue } from "@ant-design/colors";
+import { useStore } from "../zustand/store";
 
 function SOP2() {
   const { t } = useTranslation();
+
+  const { SOPInfo, setSOPInfo } = useStore();
+  console.log(SOPInfo);
 
   const { machineId, machineAlarmId } = useParams();
 
@@ -362,9 +366,9 @@ function SOP2() {
   }, [selectSOP]);
   //#endregion
 
-  useEffect(() => {
-    console.log(sops);
-  }, [sops]);
+  // useEffect(() => {
+  //   console.log(sops);
+  // }, [sops]);
 
   //#region 關閉刪除SOP Modal
   const handleCloseDeleteSOPModal = async (e) => {
@@ -407,107 +411,38 @@ function SOP2() {
   //#endregion
 
   //#region 儲存SOP
-  const handleSaveSOP = async (e) => {
-    e.preventDefault();
+  const handleSaveSOP = async () => {
+    // e.preventDefault();
 
     setSaveSOPLoading(true);
-
-    var formData = new FormData();
-    formData.append(`machineAlarmId`, machineAlarmId);
-
-    for (var i = 0; i < sops.length; i++) {
-      formData.append(`sops[${i}].sopId`, sops[i].sopId);
-      formData.append(`sops[${i}].deleted`, sops[i].deleted);
-      formData.append(`sops[${i}].MachineAlarmId`, sops[i].machineAlarmId);
-      formData.append(`sops[${i}].sopStep`, sops[i].sopStep);
-      formData.append(`sops[${i}].sopMessage`, sops[i].sopMessage);
-      formData.append(`sops[${i}].sopImage`, sops[i].sopImage);
-      formData.append(`sops[${i}].sopImageObj`, sops[i].sopImageObj);
-      formData.append(
-        `sops[${i}].isDeletedSOPImage`,
-        sops[i].isDeletedSOPImage,
-      );
-      formData.append(
-        `sops[${i}].sopRemarksMessage`,
-        sops[i].sopRemarksMessage,
-      );
-      formData.append(`sops[${i}].sopRemarksImage`, sops[i].sopRemarksImage);
-      formData.append(
-        `sops[${i}].sopRemarksImageObj`,
-        sops[i].sopRemarksImageObj,
-      );
-      formData.append(
-        `sops[${i}].isDeletedSOPRemarksImage`,
-        sops[i].isDeletedSOPRemarksImage,
-      );
-      formData.append(`sops[${i}].sopVideo`, sops[i].sopVideo);
-      formData.append(`sops[${i}].sopVideoObj`, sops[i].sopVideoObj);
-      formData.append(
-        `sops[${i}].isDeletedSOPVideo`,
-        sops[i].isDeletedSOPVideo,
-      );
-      formData.append(`sops[${i}].sopPLC1`, sops[i].sopplC1);
-      formData.append(`sops[${i}].sopPLC2`, sops[i].sopplC2);
-      formData.append(`sops[${i}].sopPLC3`, sops[i].sopplC3);
-      formData.append(`sops[${i}].sopPLC4`, sops[i].sopplC4);
-
-      for (var j = 0; j < sops[i].sopModels.length; j++) {
-        formData.append(
-          `sops[${i}].sopModels[${j}].sopModelId`,
-          sops[i].sopModels[j].sopModelId,
-        );
-        formData.append(
-          `sops[${i}].sopModels[${j}].deleted`,
-          sops[i].sopModels[j].deleted,
-        );
-        formData.append(
-          `sops[${i}].sopModels[${j}].sopId`,
-          sops[i].sopModels[j].sopId,
-        );
-        formData.append(
-          `sops[${i}].sopModels[${j}].sopModelImage`,
-          sops[i].sopModels[j].sopModelImage,
-        );
-        formData.append(
-          `sops[${i}].sopModels[${j}].sopModelImageObj`,
-          sops[i].sopModels[j].sopModelImageObj,
-        );
-        formData.append(
-          `sops[${i}].sopModels[${j}].sopModelFile`,
-          sops[i].sopModels[j].sopModelFile,
-        );
-        formData.append(
-          `sops[${i}].sopModels[${j}].sopModelFileObj`,
-          sops[i].sopModels[j].sopModelFileObj,
-        );
-      }
-    }
-
-    let saveSOPResponse = await apiSaveSOP(formData);
-    if (saveSOPResponse) {
-      if (saveSOPResponse.code == "0000") {
-        refreshSOP();
-        toast.success(t("toast.save.success"), {
-          position: toast.POSITION.TOP_CENTER,
-          autoClose: 3000,
-          hideProgressBar: true,
-          closeOnClick: false,
-          pauseOnHover: false,
-          onClose: () => {},
-        });
-      } else {
-        toast.error(saveSOPResponse.message, {
-          position: toast.POSITION.TOP_CENTER,
-          autoClose: 5000,
-          hideProgressBar: true,
-          closeOnClick: false,
-          pauseOnHover: false,
-        });
-      }
-      setSaveSOPLoading(false);
-    } else {
-      setSaveSOPLoading(false);
-    }
+    console.log('sops', sops)
+    setSOPInfo((prev) => ({ ...prev, sops: sops }))
+    setIsSOPName((prev) => !prev)
+    // let saveSOPResponse = await apiSaveSOP(formData);
+    // if (saveSOPResponse) {
+    //   if (saveSOPResponse.code == "0000") {
+    //     refreshSOP();
+    //     toast.success(t("toast.save.success"), {
+    //       position: toast.POSITION.TOP_CENTER,
+    //       autoClose: 3000,
+    //       hideProgressBar: true,
+    //       closeOnClick: false,
+    //       pauseOnHover: false,
+    //       onClose: () => {},
+    //     });
+    //   } else {
+    //     toast.error(saveSOPResponse.message, {
+    //       position: toast.POSITION.TOP_CENTER,
+    //       autoClose: 5000,
+    //       hideProgressBar: true,
+    //       closeOnClick: false,
+    //       pauseOnHover: false,
+    //     });
+    //   }
+    //   setSaveSOPLoading(false);
+    // } else {
+    //   setSaveSOPLoading(false);
+    // }
   };
   //#endregion
 
@@ -754,21 +689,8 @@ function SOP2() {
                 <button
                   type="button"
                   className={classNames(styles["button"], styles["btn-save"])}
-                  onClick={() => setIsSOPName((prev) => !prev)}
-                  // disabled={saveKnowledgeInfoLoading}
-                  // onClick={handleSaveKnowledgeInfo}
+                  onClick={() => handleSaveSOP()}
                 >
-                  {/* {saveKnowledgeInfoLoading ? (
-              <>
-                <Spinner
-                  as="span"
-                  animation="border"
-                  size="sm"
-                  role="status"
-                  aria-hidden="true"
-                />
-              </>
-            ) : ( */}
                   <span>
                     {t("btn.save")}
                     {/*儲存*/}
@@ -799,14 +721,13 @@ function SOP2() {
                       styles["btn-showMachine"],
                     )}
                   >
-                    待新增
+                    {SOPInfo.machineInfo.machineName}
                   </a>
                 </div>
               </div>
               {isSOPName && (
                 <SOPName
                   onClose={() => setIsSOPName(false)}
-                  onSave={handleSaveSOP} // 傳遞儲存函數
                 />
               )}
 
