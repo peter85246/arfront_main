@@ -7,9 +7,8 @@ import { useStore } from "../zustand/store";
 import { useNavigate } from "react-router-dom";
 
 export function AddingKnowledge({ onClose }) {
-
   const navigate = useNavigate();
-  const { setIsCreatingSOP, setSOPInfo } = useStore()
+  const { setIsCreatingSOP, setSOPInfo } = useStore();
 
   const { t } = useTranslation();
   const [errors, setErrors] = useState({});
@@ -29,21 +28,36 @@ export function AddingKnowledge({ onClose }) {
 
   const fetchMachineOptions = async () => {
     try {
-      const res = await apiMachineAddOverview({ 
+      const res = await apiMachineAddOverview({
         keyword: "",
-        ...(machineInfo.machineType ? { machineType: machineInfo.machineType } : {}),
-        ...(machineInfo.modelSeries ? { modelSeries: machineInfo.modelSeries } : {}),
-        ...(machineInfo.machineName ? { machineName: machineInfo.machineName } : {}),
-      })
-      
+        ...(machineInfo.machineType
+          ? { machineType: machineInfo.machineType }
+          : {}),
+        ...(machineInfo.modelSeries
+          ? { modelSeries: machineInfo.modelSeries }
+          : {}),
+        ...(machineInfo.machineName
+          ? { machineName: machineInfo.machineName }
+          : {}),
+      });
+
       if (res?.code === "0000" && res?.result) {
-        console.log(res)
+        console.log(res);
         setOptions({
-          machineType: res.machineType.map(label => ({ value: label, label: label})),
-          modelSeries: res.modelSeries.map(label => ({ value: label, label: label})),
-          machineName: res.machineName.map(label => ({ value: label, label: label})),
-          completeMachineOptions: res.result
-        })
+          machineType: res.machineType.map((label) => ({
+            value: label,
+            label: label,
+          })),
+          modelSeries: res.modelSeries.map((label) => ({
+            value: label,
+            label: label,
+          })),
+          machineName: res.machineName.map((label) => ({
+            value: label,
+            label: label,
+          })),
+          completeMachineOptions: res.result,
+        });
       } else {
         console.error("Failed to load options:", res);
       }
@@ -149,11 +163,13 @@ export function AddingKnowledge({ onClose }) {
 
     if (!hasError) {
       console.log("全部有效，執行保存!");
-      const machineAddId = existsMachines.filter(item => item.machineName === machineInfo.machineName)[0].machineAddId;
+      const machineAddId = existsMachines.filter(
+        (item) => item.machineName === machineInfo.machineName,
+      )[0].machineAddId;
       setIsCreatingSOP(true);
-      setSOPInfo({ 
+      setSOPInfo({
         machineInfo: machineInfo,
-        machineAddId: machineAddId
+        machineAddId: machineAddId,
       });
       navigate("/document-editor");
     }
@@ -167,9 +183,9 @@ export function AddingKnowledge({ onClose }) {
       } else {
         console.error("Failed to load existing machines:", res);
       }
-    }
+    };
     getExistsMachines();
-  }, [])
+  }, []);
 
   return (
     <div>

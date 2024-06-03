@@ -37,7 +37,7 @@ export function SOPName({ onClose }) {
 
   // 處理表單儲存事件
   const handleSave = () => {
-    console.log({ ...SOPInfo, sopName })
+    console.log({ ...SOPInfo, sopName });
     let hasError = false;
     const newErrors = {};
 

@@ -91,8 +91,8 @@ function MachineKnowledge() {
         setShowMachineList(
           machineOverviewResponse.result.slice(
             activePage * pageRow - pageRow,
-            activePage * pageRow
-          )
+            activePage * pageRow,
+          ),
         );
         setMachineCategory(machineOverviewResponse.machineType);
         setMachineSeries(machineOverviewResponse.modelSeries);
@@ -118,14 +118,14 @@ function MachineKnowledge() {
         onClick={(e) => handleChangePage(e, number)}
       >
         {number}
-      </Pagination.Item>
+      </Pagination.Item>,
     );
   }
 
   const handleChangePage = async (e, number) => {
     setActivePage(number);
     setShowMachineList(
-      machineList.slice(number * pageRow - pageRow, number * pageRow)
+      machineList.slice(number * pageRow - pageRow, number * pageRow),
     );
   };
   //#endregion
@@ -351,7 +351,7 @@ function MachineKnowledge() {
       // formData.append("machineImageObj", newMachineInfo.machineImageObj);
       formData.append(
         "isDeletedMachineImage",
-        newMachineInfo.isDeletedMachineImage
+        newMachineInfo.isDeletedMachineImage,
       );
 
       let machineInfoResponse = await apiMachineAddInfo(formData);
@@ -367,7 +367,7 @@ function MachineKnowledge() {
               hideProgressBar: true,
               closeOnClick: false,
               pauseOnHover: false,
-            }
+            },
           );
 
           setShowMachineinfoModal(false);
@@ -584,7 +584,7 @@ function MachineKnowledge() {
                                 className="btn btn-outline-danger btn-circle btn-sm ml-1"
                                 onClick={() =>
                                   handleOpenDeleteMachineModal(
-                                    item.machineAddId
+                                    item.machineAddId,
                                   )
                                 }
                               >

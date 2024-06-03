@@ -3,7 +3,7 @@ import { useState, useEffect, useLayoutEffect, useRef } from "react";
 import { Space, ColorPicker, theme, Flex, Input, Select } from "antd";
 import { useNavigate } from "react-router-dom"; // 導入 useNavigate
 import { generate, red, green, blue } from "@ant-design/colors";
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import styles from "../scss/global.module.scss";
@@ -23,7 +23,6 @@ import { useStore } from "../zustand/store";
 const { TextArea } = Input;
 
 export function DocumentEditor() {
-
   const { SOPInfo, setSOPInfo } = useStore();
   const navigate = useNavigate(); // 使用 navigate 來處理導航
   const { t } = useTranslation();
@@ -32,7 +31,8 @@ export function DocumentEditor() {
   const uploadToolsRef = useRef(null);
   const uploadPositionRef = useRef(null);
   const [formData, setFormData] = useState({});
-  const [saveKnowledgeInfoLoading, setSaveKnowledgeInfoLoading] = useState(false); //儲存的轉圈圈
+  const [saveKnowledgeInfoLoading, setSaveKnowledgeInfoLoading] =
+    useState(false); //儲存的轉圈圈
 
   const [textColor, setTextColor] = useState("#000000"); // 初始文字顏色設為黑色
   const validator = new SimpleReactValidator({
@@ -40,11 +40,10 @@ export function DocumentEditor() {
   });
 
   const [searchParams] = useSearchParams();
-  const machineName = searchParams.get('name');
+  const machineName = searchParams.get("name");
 
   const [knowledgeInfo, setKnowledgeInfo] = useState(
-    SOPInfo.knowledgeInfo || 
-    {
+    SOPInfo.knowledgeInfo || {
       //新增以及修改內容
       knowledgeBaseId: 0,
       knowledgeBaseDeviceType: "", //設備種類
@@ -68,7 +67,7 @@ export function DocumentEditor() {
       knowledgeBasePositionImage: "", //Position位置路徑
       knowledgeBasePositionImageObj: null, //Position位置圖片物件
       isDeletedKnowledgeBasePositionImage: false, //是否刪除Position位置圖片
-    }
+    },
   );
 
   const [formFields, setFormFields] = useState([
@@ -106,34 +105,32 @@ export function DocumentEditor() {
       id: "invoice-number5",
       required: true,
     },
-    { 
+    {
       field: "knowledgeBaseAlarmCode",
-      label: "故障代碼：", 
-      id: "invoice-number6"
-     },
-    { 
+      label: "故障代碼：",
+      id: "invoice-number6",
+    },
+    {
       field: "knowledgeBaseSpec",
-      label: "規格：", 
-      id: "invoice-number7"
-     },
-    { 
+      label: "規格：",
+      id: "invoice-number7",
+    },
+    {
       field: "knowledgeBaseSystem",
-      label: "系統：", 
-      id: "invoice-number8"
-     },
-    { 
+      label: "系統：",
+      id: "invoice-number8",
+    },
+    {
       field: "knowledgeBaseProductName",
-      label: "產品名稱：", 
-      id: "invoice-number9"
-     },
-  ])
+      label: "產品名稱：",
+      id: "invoice-number9",
+    },
+  ]);
 
   // 處理表單提交
   const handleSaveKnowledgeInfo = async (e) => {
     e.preventDefault();
-    setSOPInfo(prev => (
-      { ...prev, knowledgeInfo: knowledgeInfo }
-    ));
+    setSOPInfo((prev) => ({ ...prev, knowledgeInfo: knowledgeInfo }));
 
     // let knowledgeInfoResponse = await apiSaveKnowledgeBase(formData);
     // if (knowledgeInfoResponse) {
@@ -163,7 +160,7 @@ export function DocumentEditor() {
     // } else {
     //   setSaveKnowledgeInfoLoading(false);
     // }
-  
+
     // 這裡可以添加將數據發送到後端的代碼
     // 假設提交成功後導航到另一頁面
     navigate("/sop2");
@@ -206,57 +203,70 @@ export function DocumentEditor() {
     const getDocumentOptions = async () => {
       const res = await apiGetAllKnowledgeBaseByFilter({ keyword: "" });
 
-      setFormFields((prev) => prev.map((item) => {
-        if (item.field === "knowledgeBaseDeviceType") {
-          return {
-            ...item,
-            options: res.result.map((item) => ({ value: item.knowledgeBaseDeviceType, label: item.knowledgeBaseDeviceType })),
+      setFormFields((prev) =>
+        prev.map((item) => {
+          if (item.field === "knowledgeBaseDeviceType") {
+            return {
+              ...item,
+              options: res.result.map((item) => ({
+                value: item.knowledgeBaseDeviceType,
+                label: item.knowledgeBaseDeviceType,
+              })),
+            };
           }
-        }
-        if (item.field === "knowledgeBaseDeviceParts") {
-          return {
-            ...item,
-            options: res.result.map((item) => ({ value: item.knowledgeBaseDeviceParts, label: item.knowledgeBaseDeviceParts })),
+          if (item.field === "knowledgeBaseDeviceParts") {
+            return {
+              ...item,
+              options: res.result.map((item) => ({
+                value: item.knowledgeBaseDeviceParts,
+                label: item.knowledgeBaseDeviceParts,
+              })),
+            };
           }
-        }
-        if (item.field === "knowledgeBaseRepairItems") {
-          return {
-            ...item,
-            options: res.result.map((item) => ({ value: item.knowledgeBaseRepairItems, label: item.knowledgeBaseRepairItems })),
+          if (item.field === "knowledgeBaseRepairItems") {
+            return {
+              ...item,
+              options: res.result.map((item) => ({
+                value: item.knowledgeBaseRepairItems,
+                label: item.knowledgeBaseRepairItems,
+              })),
+            };
           }
-        }
-        if (item.field === "knowledgeBaseRepairType") {
-          return {
-            ...item,
-            options: res.result.map((item) => ({ value: item.knowledgeBaseRepairType, label: item.knowledgeBaseRepairType })),
+          if (item.field === "knowledgeBaseRepairType") {
+            return {
+              ...item,
+              options: res.result.map((item) => ({
+                value: item.knowledgeBaseRepairType,
+                label: item.knowledgeBaseRepairType,
+              })),
+            };
           }
-        }
-        return item;
-      }))
-    }
+          return item;
+        }),
+      );
+    };
     getDocumentOptions();
-  }, [])
+  }, []);
 
   return (
     <main>
       <div>
-        <section className="content-header" style={{marginBottom:'10px'}}>
-        <div className="container-fluid">
-          <div className="row mb-2 justify-content-between">
-            <div />
-            <div className="content-header-text-color">
-              <h1>
-                <strong>
-                  {t("documentEditor.content.header")}
-                  {/*故障說明*/}
-                </strong>
-              </h1>
-            </div>
-            <div>
+        <section className="content-header" style={{ marginBottom: "10px" }}>
+          <div className="container-fluid">
+            <div className="row mb-2 justify-content-between">
+              <div />
+              <div className="content-header-text-color">
+                <h1>
+                  <strong>
+                    {t("documentEditor.content.header")}
+                    {/*故障說明*/}
+                  </strong>
+                </h1>
+              </div>
+              <div></div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
         <div className={styles["buttons-container"]}>
           <button
             type="button"
@@ -324,17 +334,27 @@ export function DocumentEditor() {
                   {item.label}
                 </label>
                 {item.options ? (
-                  <Select 
+                  <Select
                     mode="tags"
-                    className="w-full" 
-                    value={knowledgeInfo[item.field] || null} 
-                    onChange={(v) => setKnowledgeInfo((prev) => ({ ...prev, [item.field]: v[v.length -1] }))}
+                    className="w-full"
+                    value={knowledgeInfo[item.field] || null}
+                    onChange={(v) =>
+                      setKnowledgeInfo((prev) => ({
+                        ...prev,
+                        [item.field]: v[v.length - 1],
+                      }))
+                    }
                     options={item?.options}
                   />
                 ) : (
-                  <Input 
-                    value={knowledgeInfo[item.field]} 
-                    onChange={(v) => setKnowledgeInfo((prev) => ({ ...prev, [item.field]: v.target.value }))} 
+                  <Input
+                    value={knowledgeInfo[item.field]}
+                    onChange={(v) =>
+                      setKnowledgeInfo((prev) => ({
+                        ...prev,
+                        [item.field]: v.target.value,
+                      }))
+                    }
                   />
                 )}
               </div>
@@ -351,7 +371,12 @@ export function DocumentEditor() {
               placeholder="Enter content..."
               allowClear={true} // 啟用清除圖標
               value={knowledgeInfo.knowledgeBaseAlarmCause}
-              onChange={(e) => setKnowledgeInfo({ ...knowledgeInfo, knowledgeBaseAlarmCause: e.target.value })}
+              onChange={(e) =>
+                setKnowledgeInfo({
+                  ...knowledgeInfo,
+                  knowledgeBaseAlarmCause: e.target.value,
+                })
+              }
               style={{ color: textColor, height: "150px" }} // 注意：請確保 textColor 已經定義
             />
             <div className={styles["color-picker-container"]}>
@@ -373,7 +398,12 @@ export function DocumentEditor() {
               placeholder="Enter content..."
               allowClear={true} // 啟用清除圖標
               value={knowledgeInfo.knowledgeBaseAlarmDesc}
-              onChange={(e) => setKnowledgeInfo({ ...knowledgeInfo, knowledgeBaseAlarmDesc: e.target.value })}
+              onChange={(e) =>
+                setKnowledgeInfo({
+                  ...knowledgeInfo,
+                  knowledgeBaseAlarmDesc: e.target.value,
+                })
+              }
               style={{ color: textColor, height: "150px" }} // 注意：請確保 textColor 已經定義
             />
             <div className={styles["color-picker-container"]}>
@@ -396,7 +426,12 @@ export function DocumentEditor() {
               placeholder="Enter content..."
               allowClear={true} // 啟用清除圖標
               value={knowledgeInfo.knowledgeBaseAlarmOccasion}
-              onChange={(e) => setKnowledgeInfo({ ...knowledgeInfo, knowledgeBaseAlarmOccasion: e.target.value })}
+              onChange={(e) =>
+                setKnowledgeInfo({
+                  ...knowledgeInfo,
+                  knowledgeBaseAlarmOccasion: e.target.value,
+                })
+              }
               style={{ color: textColor, height: "150px" }} // 注意：請確保 textColor 已經定義
             />
 

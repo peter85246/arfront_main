@@ -415,9 +415,9 @@ function SOP2() {
     // e.preventDefault();
 
     setSaveSOPLoading(true);
-    console.log('sops', sops)
-    setSOPInfo((prev) => ({ ...prev, sops: sops }))
-    setIsSOPName((prev) => !prev)
+    console.log("sops", sops);
+    setSOPInfo((prev) => ({ ...prev, sops: sops }));
+    setIsSOPName((prev) => !prev);
     // let saveSOPResponse = await apiSaveSOP(formData);
     // if (saveSOPResponse) {
     //   if (saveSOPResponse.code == "0000") {
@@ -725,11 +725,7 @@ function SOP2() {
                   </a>
                 </div>
               </div>
-              {isSOPName && (
-                <SOPName
-                  onClose={() => setIsSOPName(false)}
-                />
-              )}
+              {isSOPName && <SOPName onClose={() => setIsSOPName(false)} />}
 
               {/* <button
                 type="button"

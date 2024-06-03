@@ -123,7 +123,6 @@ const GPTResponse = ({
     }
   };
 
-
   useEffect(() => {
     if (elements) {
       setIsLoading(false);
@@ -268,48 +267,48 @@ const GPTResponse = ({
         {/* 只有當 question 非空時顯示 "發問：" */}
         {question && <p>發問：{question.split("並加上圖片說明")[0]}</p>}
       </div>
-      
+
       <div className={styles["gpt-response"]} ref={responseAreaRef}>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "flex-end",
-          width: "100%",
-          marginRight: "-5px",
-        }}
-      >
-        <Button
-          startIcon={<FileCopyIcon />}
-          onClick={copyToClipboard}
-          variant="contained"
-          color="primary"
-          sx={{
-            minWidth: 30,
-            width: 30,
-            padding: "3px 5px 3px 17px",
-            marginRight: "5px",
-            backgroundColor: "#439cfc",
-            "&:hover": {
-              backgroundColor: "#0056b3",
-            },
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            width: "100%",
+            marginRight: "-5px",
           }}
-        ></Button>
-        <Button
-          startIcon={<DownloadIcon />}
-          onClick={downloadTxtFile}
-          variant="contained"
-          color="primary"
-          sx={{
-            minWidth: 30,
-            width: 30,
-            padding: "3px 5px 3px 17px",
-            backgroundColor: "#439cfc",
-            "&:hover": {
-              backgroundColor: "#0056b3",
-            },
-          }}
-        ></Button>
-      </div>
+        >
+          <Button
+            startIcon={<FileCopyIcon />}
+            onClick={copyToClipboard}
+            variant="contained"
+            color="primary"
+            sx={{
+              minWidth: 30,
+              width: 30,
+              padding: "3px 5px 3px 17px",
+              marginRight: "5px",
+              backgroundColor: "#439cfc",
+              "&:hover": {
+                backgroundColor: "#0056b3",
+              },
+            }}
+          ></Button>
+          <Button
+            startIcon={<DownloadIcon />}
+            onClick={downloadTxtFile}
+            variant="contained"
+            color="primary"
+            sx={{
+              minWidth: 30,
+              width: 30,
+              padding: "3px 5px 3px 17px",
+              backgroundColor: "#439cfc",
+              "&:hover": {
+                backgroundColor: "#0056b3",
+              },
+            }}
+          ></Button>
+        </div>
         {!isLoading && <p className={styles["gptContent"]}></p>}
         {/* {isLoading && <LoadingIndicator />} */}
 
