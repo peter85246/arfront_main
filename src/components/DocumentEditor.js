@@ -404,7 +404,7 @@ export function DocumentEditor() {
                   knowledgeBaseAlarmCause: e.target.value,
                 })
               }
-              style={{ color: textColor, height: "150px" }} // 注意：請確保 textColor 已經定義
+              style={{ color: textColor, height: "150px", marginBottom: "10px" }} // 注意：請確保 textColor 已經定義
             />
             <div className={styles["color-picker-container"]}>
               <Space direction="vertical">
@@ -431,7 +431,7 @@ export function DocumentEditor() {
                   knowledgeBaseAlarmDesc: e.target.value,
                 })
               }
-              style={{ color: textColor, height: "150px" }} // 注意：請確保 textColor 已經定義
+              style={{ color: textColor, height: "150px", marginBottom: "10px" }} // 注意：請確保 textColor 已經定義
             />
             <div className={styles["color-picker-container"]}>
               <Space direction="vertical">
@@ -459,7 +459,7 @@ export function DocumentEditor() {
                   knowledgeBaseAlarmOccasion: e.target.value,
                 })
               }
-              style={{ color: textColor, height: "150px" }} // 注意：請確保 textColor 已經定義
+              style={{ color: textColor, height: "150px", marginBottom: "10px" }} // 注意：請確保 textColor 已經定義
             />
 
             <div className={styles["color-picker-container"]}>
@@ -512,7 +512,8 @@ export function DocumentEditor() {
                 </div>
               ))}
             </div>
-            <div className={styles["image-actions"]}>
+            <div className={styles["image-actions"]} style={{
+                marginBottom: "10px"}}>
               <input
                 type="file"
                 name="KnowledgeBaseModelImage"
@@ -569,7 +570,8 @@ export function DocumentEditor() {
                 </div>
               ))}
             </div>
-            <div className={styles["image-actions"]}>
+            <div className={styles["image-actions"]} style={{
+                marginBottom: "10px"}}>
               <input
                 type="file"
                 name="KnowledgeBaseToolsImage"
@@ -632,7 +634,8 @@ export function DocumentEditor() {
                 </div>
               ))}
             </div>
-            <div className={styles["image-actions"]}>
+            <div className={styles["image-actions"]} style={{
+                marginBottom: "10px"}}>
               <input
                 type="file"
                 name="KnowledgeBasePositionImage"

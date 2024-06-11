@@ -1378,6 +1378,7 @@ function SOP2() {
                 <div
                   style={{
                     borderStyle: "dotted",
+                    borderWidth: "3px", // 調整虛線的大小
                     cursor: "pointer",
                     minHeight: "240px",
                   }}
