@@ -791,7 +791,6 @@ table th {
   max-width: 200px; /* 設定固定的最大寬度 */
   height: 100px; /* 設定固定的高度 */
   display: inline-block; /* 圖片水平排列 */
-  margin-right: 5px; /* 如果有多張圖片，這會給它們之間一些間距 */
   vertical-align: top; /* 確保圖片頂部對齊 */
 }
 
@@ -3063,5 +3062,4 @@ table th {
 .uploaded-image {
   max-width: 150px; /* 最大寬度限制 */
   max-height: 150px; /* 最大高度限制 */
-  margin-right: 10px; /* 圖片間距 */
 }

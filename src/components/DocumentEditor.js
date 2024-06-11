@@ -31,8 +31,7 @@ export function DocumentEditor() {
   const uploadToolsRef = useRef(null);
   const uploadPositionRef = useRef(null);
   const [formData, setFormData] = useState({});
-  const [saveKnowledgeInfoLoading, setSaveKnowledgeInfoLoading] =
-    useState(false); //儲存的轉圈圈
+  const [saveKnowledgeInfoLoading, setSaveKnowledgeInfoLoading] = useState(false); //儲存的轉圈圈
 
   const [textColor, setTextColor] = useState("#000000"); // 初始文字顏色設為黑色
   const validator = new SimpleReactValidator({
@@ -43,7 +42,7 @@ export function DocumentEditor() {
   const machineName = searchParams.get("name");
 
   const [knowledgeInfo, setKnowledgeInfo] = useState(
-    SOPInfo.knowledgeInfo || {
+    SOPInfo?.knowledgeInfo || {
       //新增以及修改內容
       knowledgeBaseId: 0,
       knowledgeBaseDeviceType: "", //設備種類
@@ -69,6 +68,10 @@ export function DocumentEditor() {
       isDeletedKnowledgeBasePositionImage: false, //是否刪除Position位置圖片
     },
   );
+
+  const [knowledgeBaseToolsImages, setKnowledgeBaseToolsImages] = useState([]);
+  const [knowledgeBasePositionImages, setKnowledgeBasePositionImages] = useState([]);
+  const [knowledgeBaseModelImages, setKnowledgeBaseModelImages] = useState([]);
 
   const [formFields, setFormFields] = useState([
     {
@@ -172,30 +175,54 @@ export function DocumentEditor() {
       uploadToolsRef.current,
       uploadPositionRef.current,
     ];
-    uploadRefArray.forEach((ref) => {
+
+    uploadRefArray.forEach((ref, idx) => {
       const uploadBtn = ref.querySelectorAll("button")[0];
       const deleteBtn = ref.querySelectorAll("button")[1];
       const input = ref.querySelectorAll("input")[0];
-      const image = ref.querySelectorAll("img")[0];
 
       input.onchange = () => {
         const file = input.files[0];
-        console.log(file);
+
         if (file) {
           const reader = new FileReader();
           reader.onload = function (e) {
-            image.src = e.target.result;
-            image.style.display = "block";
+            switch (idx) {
+              case 0:
+                setKnowledgeBaseToolsImages(prev => prev.length < 3 ? [...prev, { name: file.name, img: e.target.result }] : prev)
+                input.value = ""
+                break
+              case 1:
+                setKnowledgeBasePositionImages(prev => prev.length < 3 ? [...prev, { name: file.name, img: e.target.result }] : prev)
+                input.value = ""
+                break
+              case 2:
+                setKnowledgeBaseModelImages(prev => prev.length < 3 ? [...prev, { name: file.name, img: e.target.result }] : prev)
+                input.value = ""
+                break
+              default:
+                return
+            }
           };
           reader.readAsDataURL(file);
         }
       };
+      
       uploadBtn.onclick = () => input.click();
-      deleteBtn.onclick = () => {
-        input.value = "";
-        image.src = "";
-        image.style.display = "none";
-      };
+
+      switch (idx) {
+        case 0:
+          deleteBtn.onclick = () => setKnowledgeBaseToolsImages(prev => prev.slice(0, prev.length - 1))
+          break
+        case 1:
+          deleteBtn.onclick = () => setKnowledgeBasePositionImages(prev => prev.slice(0, prev.length - 1))
+          break
+        case 2:
+          deleteBtn.onclick = () => setKnowledgeBaseModelImages(prev => prev.slice(0, prev.length - 1))
+          break
+        default:
+          return
+      }
     });
   }, []);
 
@@ -327,8 +354,8 @@ export function DocumentEditor() {
       <div className={styles["content-box"]} style={{ paddingTop: "5px" }}>
         <div className={styles["content-box-left"]}>
           <div className={styles["dropdown"]}>
-            {formFields.map((item) => (
-              <div className={styles["form-group"]}>
+            {formFields.map((item, idx) => (
+              <div key={idx} className={styles["form-group"]}>
                 <label>
                   {item.required && <span className="text-danger">*</span>}
                   {item.label}
@@ -447,7 +474,7 @@ export function DocumentEditor() {
           </div>
 
           <span className="text-danger">*</span>
-          <label for="invoice-title">For Model機型：</label>
+          <label>For Model機型：</label>
           <div ref={uploadModelRef}>
             <div
               className={styles["image-box"]}
@@ -457,15 +484,33 @@ export function DocumentEditor() {
                 border: "1px solid #ccc", // 添加邊框類似 TextArea
                 minHeight: "150px", // 設定最小高度類似 TextArea
                 backgroundColor: "#fff", // 背景顏色類似 TextArea
+                gap: "8px",
               }}
             >
-              <img
-                src=""
-                className={styles["uploaded-image"]}
-                alt="Uploaded Images"
-                style={{ display: "none" }}
-                id="modelImage"
-              />
+              {knowledgeBaseToolsImages.map((item, idx) => (
+                <div className="w-[120px] flex flex-col gap-[8px] border p-2 rounded">
+                  <img
+                    key={idx}
+                    src={item.img}
+                    className={styles["uploaded-image"]}
+                    alt="Uploaded Images"
+                    id="modelImage"
+                  />
+                  <input 
+                    type="text" 
+                    className="w-full"
+                    value={item.name} 
+                    onChange={(e) => {
+                      const newName = e.target.value;
+                      setKnowledgeBaseToolsImages(prev => 
+                        prev.map((image, imageIdx) => 
+                          imageIdx === idx ? { ...image, name: newName } : image
+                        )
+                      );
+                    }}
+                  />
+                </div>
+              ))}
             </div>
             <div className={styles["image-actions"]}>
               <input
@@ -476,23 +521,17 @@ export function DocumentEditor() {
                 hidden
                 data-id="modelImage"
               />
-              <button
-                className={styles["upload-btn-model"]}
-                id="upload-btn-model"
-              >
+              <button className={styles["upload-btn-model"]}>
                 上傳圖片
               </button>
-              <button
-                className={styles["delete-btn-model"]}
-                id="delete-btn-model"
-              >
+              <button className={styles["delete-btn-model"]}>
                 刪除圖片
               </button>
             </div>
           </div>
 
           <span className="text-danger">*</span>
-          <label for="invoice-title">所有使用工具：</label>
+          <label>所有使用工具：</label>
           <div ref={uploadToolsRef}>
             <div
               className={styles["image-box"]}
@@ -502,15 +541,33 @@ export function DocumentEditor() {
                 border: "1px solid #ccc", // 添加邊框類似 TextArea
                 minHeight: "150px", // 設定最小高度類似 TextArea
                 backgroundColor: "#fff", // 背景顏色類似 TextArea
+                gap: "8px",
               }}
             >
-              <img
-                src=""
-                className={styles["uploaded-image"]}
-                alt="Uploaded Images"
-                style={{ display: "none" }}
-                id="toolsImage"
-              />
+              {knowledgeBasePositionImages.map((item, idx) => (
+                <div className="w-[120px] flex flex-col gap-[8px] border p-2 rounded">
+                  <img
+                    key={idx}
+                    src={item.img}
+                    className={styles["uploaded-image"]}
+                    alt="Uploaded Images"
+                    id="modelImage"
+                  />
+                  <input 
+                    type="text" 
+                    className="w-full"
+                    value={item.name} 
+                    onChange={(e) => {
+                      const newName = e.target.value;
+                      setKnowledgeBasePositionImages(prev => 
+                        prev.map((image, imageIdx) => 
+                          imageIdx === idx ? { ...image, name: newName } : image
+                        )
+                      );
+                    }}
+                  />
+                </div>
+              ))}
             </div>
             <div className={styles["image-actions"]}>
               <input
@@ -537,7 +594,7 @@ export function DocumentEditor() {
           </div>
 
           <span className="text-danger">*</span>
-          <label for="invoice-title">部位位置：</label>
+          <label>部位位置：</label>
           <div ref={uploadPositionRef}>
             <div
               className={styles["image-box"]}
@@ -547,15 +604,33 @@ export function DocumentEditor() {
                 border: "1px solid #ccc", // 添加邊框類似 TextArea
                 minHeight: "150px", // 設定最小高度類似 TextArea
                 backgroundColor: "#fff", // 背景顏色類似 TextArea
+                gap: "8px",
               }}
             >
-              <img
-                src=""
-                className={styles["uploaded-image"]}
-                alt="Uploaded Images"
-                style={{ display: "none" }}
-                id="positionImage"
-              />
+              {knowledgeBaseModelImages.map((item, idx) => (
+                <div className="w-[120px] flex flex-col gap-[8px] border p-2 rounded">
+                  <img
+                    key={idx}
+                    src={item.img}
+                    className={styles["uploaded-image"]}
+                    alt="Uploaded Images"
+                    id="modelImage"
+                  />
+                  <input 
+                    type="text" 
+                    className="w-full"
+                    value={item.name} 
+                    onChange={(e) => {
+                      const newName = e.target.value;
+                      setKnowledgeBaseModelImages(prev => 
+                        prev.map((image, imageIdx) => 
+                          imageIdx === idx ? { ...image, name: newName } : image
+                        )
+                      );
+                    }}
+                  />
+                </div>
+              ))}
             </div>
             <div className={styles["image-actions"]}>
               <input

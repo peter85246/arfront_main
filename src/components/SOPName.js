@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { useStore } from "../zustand/store";
+import { apiMachineInfo, apiSaveKnowledgeBase, apiSaveSOP2 } from "../utils/Api";
 
 export function SOPName({ onClose }) {
   const { SOPInfo } = useStore();
@@ -36,7 +37,7 @@ export function SOPName({ onClose }) {
   };
 
   // 處理表單儲存事件
-  const handleSave = () => {
+  const handleSave = async () => {
     console.log({ ...SOPInfo, sopName });
     let hasError = false;
     const newErrors = {};
@@ -50,6 +51,19 @@ export function SOPName({ onClose }) {
 
     if (!hasError) {
       console.log("全部有效，執行保存!");
+
+      const saveMachineInfoRes = await apiMachineInfo({
+        MachineAddId: SOPInfo.machineAddId,
+        MachineInfo: { ...SOPInfo.machineInfo },
+      })
+      const saveKnowledgeBase = await apiSaveKnowledgeBase({
+        MachineAddId: SOPInfo.machineAddId,
+        KnowledgeBases: { ...SOPInfo.knowledgeInfo },
+      });
+      const saveSOPInfo = await apiSaveSOP2({
+        MachineAddId: SOPInfo.machineAddId,
+        SOP2s: SOPInfo.sops,
+      });
       // window.location.href = "/sop2";
     }
   };

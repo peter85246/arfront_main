@@ -721,7 +721,7 @@ function SOP2() {
                       styles["btn-showMachine"],
                     )}
                   >
-                    {SOPInfo.machineInfo.machineName}
+                    {SOPInfo?.machineInfo?.machineName}
                   </a>
                 </div>
               </div>

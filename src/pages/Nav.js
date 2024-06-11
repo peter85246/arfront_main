@@ -110,7 +110,7 @@ function Nav() {
                 style={{ cursor: "pointer" }}
                 onClick={() => handleNavClick("machineKnowledge")} // 使用 handleNavClick 函數
               >
-                <i class="fa fa-cog" aria-hidden="true"></i>
+                <i className="fa fa-cog" aria-hidden="true"></i>
                 <p style={{ marginLeft: "2px" }}>機台管理</p>
               </NavLink>
             </li>

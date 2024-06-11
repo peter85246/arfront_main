@@ -186,7 +186,13 @@ export const apiGetAllKnowledgeBaseByMachineAddId = (data) =>
   fetchDataCall("GetAllKnowledgeBaseByMachineAddId", "post", data); //依據MachineAddId取得所有 故障說明
 export const apiSaveKnowledgeBase = (data) =>
   fetchDataCallFile("SaveKnowledgeBase", "put", data); //儲存 故障說明 資訊
+export const apiSaveSOP2 = (data) => 
+  fetchDataCallFile("SaveSOP2", "put", data); //新增SOP2
 //#endregion
+
+
+
+
 
 // 在../utils/Api.js
 
