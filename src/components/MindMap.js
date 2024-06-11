@@ -237,14 +237,26 @@ const initialNodes = [
 ];
 
 const initialEdges = [
-  { id: "e1-2", source: "1", target: "2", sourceHandle: "right-source", animated: true },
+  {
+    id: "e1-2",
+    source: "1",
+    target: "2",
+    sourceHandle: "right-source",
+    animated: true,
+  },
   { id: "e1-3", source: "1", target: "3", sourceHandle: "right-source" },
   { id: "e1-4", source: "1", target: "4", sourceHandle: "right-source" },
   { id: "e1-5", source: "1", target: "5", sourceHandle: "left-source" },
   { id: "e1-6", source: "1", target: "6", sourceHandle: "left-source" },
   { id: "e1-7", source: "1", target: "7", sourceHandle: "left-source" },
   // 第二階層邊
-  { id: "e2-8", source: "2", target: "8", sourceHandle: "right-source", animated: true },
+  {
+    id: "e2-8",
+    source: "2",
+    target: "8",
+    sourceHandle: "right-source",
+    animated: true,
+  },
   { id: "e2-9", source: "2", target: "9", sourceHandle: "right-source" },
   { id: "e3-10", source: "3", target: "10", sourceHandle: "right-source" },
   { id: "e3-11", source: "3", target: "11", sourceHandle: "right-source" },
@@ -256,7 +268,13 @@ const initialEdges = [
   { id: "e7-17", source: "7", target: "17", sourceHandle: "left-source" },
   { id: "e7-18", source: "7", target: "18", sourceHandle: "left-source" },
   // 第三階層邊
-  { id: "e8-19", source: "8", target: "19", sourceHandle: "right-source", animated: true },
+  {
+    id: "e8-19",
+    source: "8",
+    target: "19",
+    sourceHandle: "right-source",
+    animated: true,
+  },
   { id: "e8-20", source: "8", target: "20", sourceHandle: "right-source" },
   { id: "e9-21", source: "9", target: "21", sourceHandle: "right-source" },
   { id: "e10-22", source: "10", target: "22", sourceHandle: "right-source" },

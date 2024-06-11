@@ -31,7 +31,8 @@ export function DocumentEditor() {
   const uploadToolsRef = useRef(null);
   const uploadPositionRef = useRef(null);
   const [formData, setFormData] = useState({});
-  const [saveKnowledgeInfoLoading, setSaveKnowledgeInfoLoading] = useState(false); //儲存的轉圈圈
+  const [saveKnowledgeInfoLoading, setSaveKnowledgeInfoLoading] =
+    useState(false); //儲存的轉圈圈
 
   const [textColor, setTextColor] = useState("#000000"); // 初始文字顏色設為黑色
   const validator = new SimpleReactValidator({
@@ -70,7 +71,8 @@ export function DocumentEditor() {
   );
 
   const [knowledgeBaseToolsImages, setKnowledgeBaseToolsImages] = useState([]);
-  const [knowledgeBasePositionImages, setKnowledgeBasePositionImages] = useState([]);
+  const [knowledgeBasePositionImages, setKnowledgeBasePositionImages] =
+    useState([]);
   const [knowledgeBaseModelImages, setKnowledgeBaseModelImages] = useState([]);
 
   const [formFields, setFormFields] = useState([
@@ -189,39 +191,60 @@ export function DocumentEditor() {
           reader.onload = function (e) {
             switch (idx) {
               case 0:
-                setKnowledgeBaseToolsImages(prev => prev.length < 3 ? [...prev, { name: file.name, img: e.target.result }] : prev)
-                input.value = ""
-                break
+                setKnowledgeBaseToolsImages((prev) =>
+                  prev.length < 3
+                    ? [...prev, { name: file.name, img: e.target.result }]
+                    : prev,
+                );
+                input.value = "";
+                break;
               case 1:
-                setKnowledgeBasePositionImages(prev => prev.length < 3 ? [...prev, { name: file.name, img: e.target.result }] : prev)
-                input.value = ""
-                break
+                setKnowledgeBasePositionImages((prev) =>
+                  prev.length < 3
+                    ? [...prev, { name: file.name, img: e.target.result }]
+                    : prev,
+                );
+                input.value = "";
+                break;
               case 2:
-                setKnowledgeBaseModelImages(prev => prev.length < 3 ? [...prev, { name: file.name, img: e.target.result }] : prev)
-                input.value = ""
-                break
+                setKnowledgeBaseModelImages((prev) =>
+                  prev.length < 3
+                    ? [...prev, { name: file.name, img: e.target.result }]
+                    : prev,
+                );
+                input.value = "";
+                break;
               default:
-                return
+                return;
             }
           };
           reader.readAsDataURL(file);
         }
       };
-      
+
       uploadBtn.onclick = () => input.click();
 
       switch (idx) {
         case 0:
-          deleteBtn.onclick = () => setKnowledgeBaseToolsImages(prev => prev.slice(0, prev.length - 1))
-          break
+          deleteBtn.onclick = () =>
+            setKnowledgeBaseToolsImages((prev) =>
+              prev.slice(0, prev.length - 1),
+            );
+          break;
         case 1:
-          deleteBtn.onclick = () => setKnowledgeBasePositionImages(prev => prev.slice(0, prev.length - 1))
-          break
+          deleteBtn.onclick = () =>
+            setKnowledgeBasePositionImages((prev) =>
+              prev.slice(0, prev.length - 1),
+            );
+          break;
         case 2:
-          deleteBtn.onclick = () => setKnowledgeBaseModelImages(prev => prev.slice(0, prev.length - 1))
-          break
+          deleteBtn.onclick = () =>
+            setKnowledgeBaseModelImages((prev) =>
+              prev.slice(0, prev.length - 1),
+            );
+          break;
         default:
-          return
+          return;
       }
     });
   }, []);
@@ -404,7 +427,11 @@ export function DocumentEditor() {
                   knowledgeBaseAlarmCause: e.target.value,
                 })
               }
-              style={{ color: textColor, height: "150px", marginBottom: "10px" }} // 注意：請確保 textColor 已經定義
+              style={{
+                color: textColor,
+                height: "150px",
+                marginBottom: "10px",
+              }} // 注意：請確保 textColor 已經定義
             />
             <div className={styles["color-picker-container"]}>
               <Space direction="vertical">
@@ -431,7 +458,11 @@ export function DocumentEditor() {
                   knowledgeBaseAlarmDesc: e.target.value,
                 })
               }
-              style={{ color: textColor, height: "150px", marginBottom: "10px" }} // 注意：請確保 textColor 已經定義
+              style={{
+                color: textColor,
+                height: "150px",
+                marginBottom: "10px",
+              }} // 注意：請確保 textColor 已經定義
             />
             <div className={styles["color-picker-container"]}>
               <Space direction="vertical">
@@ -459,7 +490,11 @@ export function DocumentEditor() {
                   knowledgeBaseAlarmOccasion: e.target.value,
                 })
               }
-              style={{ color: textColor, height: "150px", marginBottom: "10px" }} // 注意：請確保 textColor 已經定義
+              style={{
+                color: textColor,
+                height: "150px",
+                marginBottom: "10px",
+              }} // 注意：請確保 textColor 已經定義
             />
 
             <div className={styles["color-picker-container"]}>
@@ -496,24 +531,30 @@ export function DocumentEditor() {
                     alt="Uploaded Images"
                     id="modelImage"
                   />
-                  <input 
-                    type="text" 
+                  <input
+                    type="text"
                     className="w-full"
-                    value={item.name} 
+                    value={item.name}
                     onChange={(e) => {
                       const newName = e.target.value;
-                      setKnowledgeBaseToolsImages(prev => 
-                        prev.map((image, imageIdx) => 
-                          imageIdx === idx ? { ...image, name: newName } : image
-                        )
+                      setKnowledgeBaseToolsImages((prev) =>
+                        prev.map((image, imageIdx) =>
+                          imageIdx === idx
+                            ? { ...image, name: newName }
+                            : image,
+                        ),
                       );
                     }}
                   />
                 </div>
               ))}
             </div>
-            <div className={styles["image-actions"]} style={{
-                marginBottom: "10px"}}>
+            <div
+              className={styles["image-actions"]}
+              style={{
+                marginBottom: "10px",
+              }}
+            >
               <input
                 type="file"
                 name="KnowledgeBaseModelImage"
@@ -522,12 +563,8 @@ export function DocumentEditor() {
                 hidden
                 data-id="modelImage"
               />
-              <button className={styles["upload-btn-model"]}>
-                上傳圖片
-              </button>
-              <button className={styles["delete-btn-model"]}>
-                刪除圖片
-              </button>
+              <button className={styles["upload-btn-model"]}>上傳圖片</button>
+              <button className={styles["delete-btn-model"]}>刪除圖片</button>
             </div>
           </div>
 
@@ -554,24 +591,30 @@ export function DocumentEditor() {
                     alt="Uploaded Images"
                     id="modelImage"
                   />
-                  <input 
-                    type="text" 
+                  <input
+                    type="text"
                     className="w-full"
-                    value={item.name} 
+                    value={item.name}
                     onChange={(e) => {
                       const newName = e.target.value;
-                      setKnowledgeBasePositionImages(prev => 
-                        prev.map((image, imageIdx) => 
-                          imageIdx === idx ? { ...image, name: newName } : image
-                        )
+                      setKnowledgeBasePositionImages((prev) =>
+                        prev.map((image, imageIdx) =>
+                          imageIdx === idx
+                            ? { ...image, name: newName }
+                            : image,
+                        ),
                       );
                     }}
                   />
                 </div>
               ))}
             </div>
-            <div className={styles["image-actions"]} style={{
-                marginBottom: "10px"}}>
+            <div
+              className={styles["image-actions"]}
+              style={{
+                marginBottom: "10px",
+              }}
+            >
               <input
                 type="file"
                 name="KnowledgeBaseToolsImage"
@@ -618,24 +661,30 @@ export function DocumentEditor() {
                     alt="Uploaded Images"
                     id="modelImage"
                   />
-                  <input 
-                    type="text" 
+                  <input
+                    type="text"
                     className="w-full"
-                    value={item.name} 
+                    value={item.name}
                     onChange={(e) => {
                       const newName = e.target.value;
-                      setKnowledgeBaseModelImages(prev => 
-                        prev.map((image, imageIdx) => 
-                          imageIdx === idx ? { ...image, name: newName } : image
-                        )
+                      setKnowledgeBaseModelImages((prev) =>
+                        prev.map((image, imageIdx) =>
+                          imageIdx === idx
+                            ? { ...image, name: newName }
+                            : image,
+                        ),
                       );
                     }}
                   />
                 </div>
               ))}
             </div>
-            <div className={styles["image-actions"]} style={{
-                marginBottom: "10px"}}>
+            <div
+              className={styles["image-actions"]}
+              style={{
+                marginBottom: "10px",
+              }}
+            >
               <input
                 type="file"
                 name="KnowledgeBasePositionImage"

@@ -84,23 +84,45 @@ export function ConditionSearchDialog({ onClose }) {
 
   const handleSearchChange = async (event) => {
     const searchValue = event.target.value.toLowerCase();
-    setSearchFilter(searchValue);
-    if (searchValue.length > 0) {
+    setSearchFilter(searchValue); // 更新搜索過濾字符串
+    if (searchValue) {
       const response = await apiGetAllKnowledgeBaseByFilter({
         keyword: searchValue,
       });
       if (response && response.code === "0000") {
-        const filteredItems = response.result.filter((item) =>
-          displayKeys.some(
-            (key) => item[key] && item[key].toLowerCase().includes(searchValue),
-          ),
-        );
-        setDatabaseItems(filteredItems);
+        // 過濾數據，確保包括數字和文本類型的數據
+        const filteredItems = response.result.reduce((acc, item) => {
+          const filteredEntry = {};
+          Object.entries(item).forEach(([key, value]) => {
+            if (
+              displayKeys.includes(key) &&
+              value !== null &&
+              value !== undefined
+            ) {
+              // 將所有值轉為字符串並進行小寫處理，以便匹配
+              const valueStr = value.toString().toLowerCase();
+              if (valueStr.includes(searchValue)) {
+                filteredEntry[key] = value;
+              } else if (
+                !isNaN(value) &&
+                value.toString().includes(searchValue)
+              ) {
+                // 特殊處理數字匹配
+                filteredEntry[key] = value;
+              }
+            }
+          });
+          if (Object.keys(filteredEntry).length > 0) {
+            acc.push(filteredEntry);
+          }
+          return acc;
+        }, []);
+        setDatabaseItems(filteredItems); // 更新顯示項目
       } else {
         console.error("Error fetching data:", response?.message);
       }
     } else {
-      fetchData();
+      fetchData(); // 如果沒有搜索關鍵字，則重新獲取所有數據
     }
   };
 

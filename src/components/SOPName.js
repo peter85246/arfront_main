@@ -2,7 +2,11 @@ import React, { useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { useStore } from "../zustand/store";
-import { apiMachineInfo, apiSaveKnowledgeBase, apiSaveSOP2 } from "../utils/Api";
+import {
+  apiMachineInfo,
+  apiSaveKnowledgeBase,
+  apiSaveSOP2,
+} from "../utils/Api";
 
 export function SOPName({ onClose }) {
   const { SOPInfo } = useStore();
@@ -55,7 +59,7 @@ export function SOPName({ onClose }) {
       const saveMachineInfoRes = await apiMachineInfo({
         MachineAddId: SOPInfo.machineAddId,
         MachineInfo: { ...SOPInfo.machineInfo },
-      })
+      });
       const saveKnowledgeBase = await apiSaveKnowledgeBase({
         MachineAddId: SOPInfo.machineAddId,
         KnowledgeBases: { ...SOPInfo.knowledgeInfo },
