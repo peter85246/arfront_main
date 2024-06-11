@@ -191,24 +191,24 @@ export function DocumentEditor() {
           reader.onload = function (e) {
             switch (idx) {
               case 0:
-                setKnowledgeBaseToolsImages((prev) =>
-                  prev.length < 3
+                setKnowledgeBaseModelImages((prev) =>
+                  prev.length < 1
                     ? [...prev, { name: file.name, img: e.target.result }]
                     : prev,
                 );
                 input.value = "";
                 break;
               case 1:
-                setKnowledgeBasePositionImages((prev) =>
-                  prev.length < 3
+                setKnowledgeBaseToolsImages((prev) =>
+                  prev.length < 6
                     ? [...prev, { name: file.name, img: e.target.result }]
                     : prev,
                 );
                 input.value = "";
                 break;
               case 2:
-                setKnowledgeBaseModelImages((prev) =>
-                  prev.length < 3
+                setKnowledgeBasePositionImages((prev) =>
+                  prev.length < 6
                     ? [...prev, { name: file.name, img: e.target.result }]
                     : prev,
                 );
@@ -227,19 +227,19 @@ export function DocumentEditor() {
       switch (idx) {
         case 0:
           deleteBtn.onclick = () =>
-            setKnowledgeBaseToolsImages((prev) =>
+            setKnowledgeBaseModelImages((prev) =>
               prev.slice(0, prev.length - 1),
             );
           break;
         case 1:
           deleteBtn.onclick = () =>
-            setKnowledgeBasePositionImages((prev) =>
+            setKnowledgeBaseToolsImages((prev) =>
               prev.slice(0, prev.length - 1),
             );
           break;
         case 2:
           deleteBtn.onclick = () =>
-            setKnowledgeBaseModelImages((prev) =>
+            setKnowledgeBasePositionImages((prev) =>
               prev.slice(0, prev.length - 1),
             );
           break;
@@ -522,7 +522,7 @@ export function DocumentEditor() {
                 gap: "8px",
               }}
             >
-              {knowledgeBaseToolsImages.map((item, idx) => (
+              {knowledgeBaseModelImages.map((item, idx) => (
                 <div className="w-[120px] flex flex-col gap-[8px] border p-2 rounded">
                   <img
                     key={idx}
@@ -537,7 +537,7 @@ export function DocumentEditor() {
                     value={item.name}
                     onChange={(e) => {
                       const newName = e.target.value;
-                      setKnowledgeBaseToolsImages((prev) =>
+                      setKnowledgeBaseModelImages((prev) =>
                         prev.map((image, imageIdx) =>
                           imageIdx === idx
                             ? { ...image, name: newName }
@@ -582,7 +582,7 @@ export function DocumentEditor() {
                 gap: "8px",
               }}
             >
-              {knowledgeBasePositionImages.map((item, idx) => (
+              {knowledgeBaseToolsImages.map((item, idx) => (
                 <div className="w-[120px] flex flex-col gap-[8px] border p-2 rounded">
                   <img
                     key={idx}
@@ -597,7 +597,7 @@ export function DocumentEditor() {
                     value={item.name}
                     onChange={(e) => {
                       const newName = e.target.value;
-                      setKnowledgeBasePositionImages((prev) =>
+                      setKnowledgeBaseToolsImages((prev) =>
                         prev.map((image, imageIdx) =>
                           imageIdx === idx
                             ? { ...image, name: newName }
@@ -652,7 +652,7 @@ export function DocumentEditor() {
                 gap: "8px",
               }}
             >
-              {knowledgeBaseModelImages.map((item, idx) => (
+              {knowledgeBasePositionImages.map((item, idx) => (
                 <div className="w-[120px] flex flex-col gap-[8px] border p-2 rounded">
                   <img
                     key={idx}
@@ -667,7 +667,7 @@ export function DocumentEditor() {
                     value={item.name}
                     onChange={(e) => {
                       const newName = e.target.value;
-                      setKnowledgeBaseModelImages((prev) =>
+                      setKnowledgeBasePositionImages((prev) =>
                         prev.map((image, imageIdx) =>
                           imageIdx === idx
                             ? { ...image, name: newName }
