@@ -348,7 +348,7 @@ function MachineKnowledge() {
       formData.append("modelSeries", newMachineInfo.modelSeries);
       formData.append("machineName", newMachineInfo.machineName);
       formData.append("machineImage", newMachineInfo.machineImage);
-      // formData.append("machineImageObj", newMachineInfo.machineImageObj);
+      formData.append("machineImageObj", newMachineInfo.machineImageObj);
       formData.append(
         "isDeletedMachineImage",
         newMachineInfo.isDeletedMachineImage,
