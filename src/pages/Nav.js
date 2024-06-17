@@ -216,6 +216,7 @@ export default Nav;
 // import {
 //   DesktopOutlined,
 //   UserOutlined,
+//   SettingOutlined,
 //   DatabaseOutlined,
 //   CommentOutlined,
 //   MenuFoldOutlined,
@@ -242,14 +243,18 @@ export default Nav;
 //     },
 //     {
 //       key: '/machineKnowledge',
-//       icon: <DatabaseOutlined />,
+//       icon: <SettingOutlined />,
 //       label: <Link to="/machineKnowledge">機台管理</Link>,
 //     },
 //     {
 //       key: '/knowledge',
 //       icon: <DatabaseOutlined />,
-//       label: <Link to="/knowledge">知識庫</Link>,
+//       label: <Link to="/knowledge">知識管理</Link>,
 //       children: [
+//         {
+//           key: '/knowledge',
+//           label: <Link to="/knowledge">知識庫</Link>,
+//         },
 //         {
 //           key: '/alarm',
 //           label: <Link to="/alarm">故障庫</Link>,

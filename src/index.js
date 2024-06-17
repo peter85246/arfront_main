@@ -21,12 +21,12 @@ import Knowledge from "./pages/Knowledge";
 import Database from "./pages/Database";
 import Alarm from "./pages/Alarm";
 import PageMindMap from "./pages/PageMindMap";
+import GPT from "./pages/GPT";
 
 import "./App.css";
 import "./index.css";
 import { RepairDocument } from "./components/RepairDocument";
 import { DocumentEditor } from "./components/DocumentEditor";
-import GPT from "./pages/GPT";
 import MachineKnowledge from "./pages/MachineKnowledge";
 import Assistant from "./components/Assistant";
 import MenuTest from "./components/MenuTest";
