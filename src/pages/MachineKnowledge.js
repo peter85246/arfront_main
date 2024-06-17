@@ -343,7 +343,7 @@ function MachineKnowledge() {
       setSaveMachineinfoLoading(true);
 
       var formData = new FormData();
-      // formData.append("machineAddId", newMachineInfo.machineAddId);
+      formData.append("machineAddId", newMachineInfo.machineAddId);
       formData.append("machineType", newMachineInfo.machineType);
       formData.append("modelSeries", newMachineInfo.modelSeries);
       formData.append("machineName", newMachineInfo.machineName);

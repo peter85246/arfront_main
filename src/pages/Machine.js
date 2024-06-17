@@ -1069,9 +1069,9 @@ function Machine() {
                       .toLowerCase();
                   }
 
-                  return fileExtension != "" ? (
-                    <img src={`/${fileExtension}.png`} alt="圖片" />
-                  ) : null;
+                  // return fileExtension != "" ? (
+                  //   <img src={`/${fileExtension}.png`} alt="圖片" />
+                  // ) : null;
                 })()}
                 <input
                   type="file"

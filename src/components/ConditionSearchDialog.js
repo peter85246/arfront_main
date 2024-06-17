@@ -354,9 +354,9 @@ export function ConditionSearchDialog({ onClose }) {
           </Button>
           <Button
             variant="primary"
-            onClick={handleSave}
+            // onClick={handleSave}
             id="openModalBtn-condition"
-            href="./QueryResult.html"
+            href="/knowledge"
           >
             儲存
           </Button>
