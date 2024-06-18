@@ -1,8 +1,12 @@
-import React from "react";
+import React, { useState, useEffect, forwardRef } from "react";
 import styles from "../scss/PDFDesign.module.scss";
 import classNames from "classnames";
+import { useLocation } from "react-router-dom";
 
 const PDFContent = React.forwardRef((props, ref) => {
+  const location = useLocation();
+  const item = location.state?.item; // 訪問傳遞的狀態
+
   return (
     <div className={styles["content-box"]} ref={ref}>
       {/* PDF內容放在這裡 */}
@@ -12,9 +16,18 @@ const PDFContent = React.forwardRef((props, ref) => {
             <h1>Trouble Shooting</h1>
             <div className={styles["preview-content"]}>
               <div className={styles["info-box"]}>
-                <p>
-                  File No : TS31103<br></br>Error Code : 0000
-                </p>
+                {item ? (
+                  <p style={{ textAlign: "left" }}>
+                    File No : {item.knowledgeBaseFileNo}
+                    <br></br>
+                    Error Code : {item.knowledgeBaseAlarmCode}
+                  </p>
+                ) : (
+                  <p style={{ textAlign: "left" }}>
+                    File No : 12345<br></br>
+                    Error Code : 00000
+                  </p>
+                )}
               </div>
             </div>
             <img
@@ -99,9 +112,18 @@ const PDFContent = React.forwardRef((props, ref) => {
             <h1>Trouble Shooting</h1>
             <div className={styles["preview-content"]}>
               <div className={styles["info-box"]}>
-                <p>
-                  File No : TS31103<br></br>Error Code : 0000
-                </p>
+                {item ? (
+                  <p style={{ textAlign: "left" }}>
+                    File No : {item.knowledgeBaseFileNo}
+                    <br></br>
+                    Error Code : {item.knowledgeBaseAlarmCode}
+                  </p>
+                ) : (
+                  <p style={{ textAlign: "left" }}>
+                    File No : 12345<br></br>
+                    Error Code : 00000
+                  </p>
+                )}
               </div>
             </div>
             <img
