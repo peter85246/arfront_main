@@ -18,6 +18,7 @@ export default function Alarm() {
   const [machineNames, setMachineNames] = useState([]); // 儲存當選中的 modelSeries 下的所有 children 名稱
   const [selectedModelSeriesKey, setSelectedModelSeriesKey] = useState("");
   const [selectedKey, setSelectedKey] = useState("");
+  const [selectedMachineId, setSelectedMachineId] = useState("");
 
   const { t } = useTranslation();
 
@@ -93,6 +94,7 @@ export default function Alarm() {
       seriesNode.children.push({
         title: item.machineName,
         key: `${seriesKey}-${item.machineName}`, // 確保key的唯一性
+        machineAddId: item.machineAddId,
       });
 
       // 重新構建 children 數組
@@ -181,29 +183,34 @@ export default function Alarm() {
           </div>
 
           <div className={styles["menu"]}>
-            <div classname={styles["alarm-list"]}>
+            <div className={styles["alarm-list"]}>
               <AlarmListTree
                 treeData={machineData}
                 onSelectMachineName={handleSelectMachineName}
                 selectedKey={selectedKey}
+                setSelectedMachineId={setSelectedMachineId}
               />
             </div>
           </div>
         </div>
         {/* <!--右側欄位內容--> */}
         <div className={styles["content-box-right-alarm"]} id="alarm-mindMap">
-          <Link to="/pageMindMap">
-            <p className={styles["mark-text"]}>▶ 點擊即可展開心智圖</p>
-            {/* <!-- 內容待添加 --> */}
-            <div className={styles["mindmap"]}>
-              {/* <div className={styles["node central-node"]} id="central-node"> */}
-              {/* <!-- <div className={styles["add-btn left">+</div> --> */}
-              {/* <span>心智圖</span> */}
-              {/* <!-- <div className={styles["add-btn right">+</div> --> */}
-              {/* </div> */}
-              <MindMap />
-            </div>
-          </Link>
+          {
+            selectedMachineId && (
+              <Link to="/pageMindMap">
+                <p className={styles["mark-text"]}>▶ 點擊即可展開心智圖</p>
+                {/* <!-- 內容待添加 --> */}
+                <div className={styles["mindmap"]}>
+                  {/* <div className={styles["node central-node"]} id="central-node"> */}
+                  {/* <!-- <div className={styles["add-btn left">+</div> --> */}
+                  {/* <span>心智圖</span> */}
+                  {/* <!-- <div className={styles["add-btn right">+</div> --> */}
+                  {/* </div> */}
+                  <MindMap machineAddId={selectedMachineId} />
+                </div>
+              </Link>
+            )
+          }
         </div>
       </div>
     </main>

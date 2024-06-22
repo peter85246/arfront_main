@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
 import { useStore } from "../zustand/store";
 import {
   apiMachineInfo,
@@ -9,7 +10,7 @@ import {
 } from "../utils/Api";
 
 export function SOPName({ onClose }) {
-  const { SOPInfo } = useStore();
+  const { SOPInfo, setSOPInfo } = useStore();
   const [showModal, setShowModal] = useState(true);
   const [sopName, setSopName] = useState("");
   const [errors, setErrors] = useState({});
@@ -54,21 +55,61 @@ export function SOPName({ onClose }) {
     setErrors(newErrors);
 
     if (!hasError) {
-      console.log("全部有效，執行保存!");
+      try {
+        console.log('SOPInfo', SOPInfo);
+        const knowledgeBaseModelImageObj = SOPInfo.knowledgeInfo?.knowledgeBaseModelImageObj?.map(item => item.file)
+        const knowledgeBaseToolsImageObj = SOPInfo.knowledgeInfo?.knowledgeBaseToolsImageObj?.map(item => item.file)
+        const knowledgeBasePositionImageObj = SOPInfo.knowledgeInfo?.knowledgeBasePositionImageObj?.map(item => item.file)
+        
+        const saveKnowledgeBaseRes = await apiSaveKnowledgeBase({
+          MachineAddId: SOPInfo.machineAddId,
+          KnowledgeBases: [{ 
+            ...SOPInfo.knowledgeInfo,
+            knowledgeBaseModelImageObj,
+            knowledgeBaseToolsImageObj,
+            knowledgeBasePositionImageObj
+          }],
+        });
 
-      const saveMachineInfoRes = await apiMachineInfo({
-        MachineAddId: SOPInfo.machineAddId,
-        MachineInfo: { ...SOPInfo.machineInfo },
-      });
-      const saveKnowledgeBase = await apiSaveKnowledgeBase({
-        MachineAddId: SOPInfo.machineAddId,
-        KnowledgeBases: { ...SOPInfo.knowledgeInfo },
-      });
-      const saveSOPInfo = await apiSaveSOP2({
-        MachineAddId: SOPInfo.machineAddId,
-        SOP2s: SOPInfo.sops,
-      });
-      // window.location.href = "/sop2";
+        if (saveKnowledgeBaseRes.message !== '完全成功') {
+          return toast.error(saveKnowledgeBaseRes.message, {
+            position: toast.POSITION.TOP_CENTER,
+            autoClose: 2000,
+            hideProgressBar: true,
+            closeOnClick: false,
+            pauseOnHover: true,
+          });
+        }
+  
+        const saveSOPInfoRes = await apiSaveSOP2({
+          KnowledgeBaseId: saveKnowledgeBaseRes.result,
+          MachineAddId: SOPInfo.machineAddId,
+          SOP2s: SOPInfo.sops,
+        });
+  
+        if (saveSOPInfoRes.message === '完全成功') {
+          toast.success('保存成功', {
+            position: toast.POSITION.TOP_CENTER,
+            autoClose: 2000,
+            hideProgressBar: true,
+            closeOnClick: false,
+            pauseOnHover: true,
+          });
+          setSOPInfo(null);
+          // setTimeout(() => { window.location.href = "/knowledge"}, 2000)
+        } 
+        else {
+          return toast.error(saveSOPInfoRes.message, {
+            position: toast.POSITION.TOP_CENTER,
+            autoClose: 2000,
+            hideProgressBar: true,
+            closeOnClick: false,
+            pauseOnHover: true,
+          });
+        }
+      } catch (err) {
+        console.log(err)
+      }
     }
   };
 
