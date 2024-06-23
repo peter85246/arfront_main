@@ -534,6 +534,7 @@ export function DocumentEditor() {
                     key={idx}
                     src={item.img}
                     className={styles["uploaded-image"]}
+                    style={{ objectFit: "cover"}}
                     alt="Uploaded Images"
                     id="modelImage"
                   />
@@ -594,6 +595,7 @@ export function DocumentEditor() {
                     key={idx}
                     src={item.img}
                     className={styles["uploaded-image"]}
+                    style={{ objectFit: "cover"}}
                     alt="Uploaded Images"
                     id="modelImage"
                   />
@@ -664,6 +666,7 @@ export function DocumentEditor() {
                     key={idx}
                     src={item.img}
                     className={styles["uploaded-image"]}
+                    style={{ objectFit: "cover"}}
                     alt="Uploaded Images"
                     id="modelImage"
                   />
