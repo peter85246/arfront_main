@@ -42,7 +42,7 @@ const SelectField = ({
   </div>
 );
 
-export function ConditionSearchDialog({ onClose }) {
+export function ConditionSearchDialog({ onClose, setSelectedConditions }) {
   const [showModal, setShowModal] = useState(true);
   const [conditionInfo, setConditionInfo] = useState({
     knowledgeBaseDeviceType: null,
@@ -84,7 +84,7 @@ export function ConditionSearchDialog({ onClose }) {
 
   const handleSearchChange = async (event) => {
     const searchValue = event.target.value.toLowerCase();
-    setSearchFilter(searchValue); // 更新搜索過濾字符串
+    // setSearchFilter(searchValue); // 更新搜索過濾字符串
     if (searchValue) {
       const response = await apiGetAllKnowledgeBaseByFilter({
         keyword: searchValue,
@@ -356,7 +356,14 @@ export function ConditionSearchDialog({ onClose }) {
             variant="primary"
             // onClick={handleSave}
             id="openModalBtn-condition"
-            href="/knowledge"
+            onClick={() => {
+              Object.entries(conditionInfo).forEach(([key, value]) => {
+                if (value) {
+                  setSelectedConditions(conditionInfo)
+                }
+              });
+              handleCloseModal()
+            }}
           >
             儲存
           </Button>

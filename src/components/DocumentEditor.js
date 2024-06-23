@@ -1,24 +1,16 @@
 import { useTranslation } from "react-i18next"; //語系
 import { useState, useEffect, useLayoutEffect, useRef } from "react";
-import { Space, ColorPicker, theme, Flex, Input, Select } from "antd";
+import { Space, ColorPicker, Input, Select } from "antd";
 import { useNavigate } from "react-router-dom"; // 導入 useNavigate
-import { generate, red, green, blue } from "@ant-design/colors";
 import { useSearchParams } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
+import { useStore } from "../zustand/store";
+import { apiGetAllKnowledgeBaseByFilter } from "../utils/Api";
 import styles from "../scss/global.module.scss";
 import classNames from "classnames";
-import FormGroup from "./FormGroup/FormGroup";
 import Spinner from "react-bootstrap/Spinner";
 import SimpleReactValidator from "simple-react-validator";
-
-import {
-  apiGetAllKnowledgeBaseByFilter,
-  apiGetAllKnowledgeBaseByMachineAddId,
-  apiSaveKnowledgeBase,
-} from "../utils/Api";
-
-import { useStore } from "../zustand/store";
 
 const { TextArea } = Input;
 
@@ -268,36 +260,36 @@ export function DocumentEditor() {
           if (item.field === "knowledgeBaseDeviceType") {
             return {
               ...item,
-              options: res.result.map((item) => ({
-                value: item.knowledgeBaseDeviceType,
-                label: item.knowledgeBaseDeviceType,
+              options: res.deviceType.map((value) => ({
+                value: value,
+                label: value,
               })),
             };
           }
           if (item.field === "knowledgeBaseDeviceParts") {
             return {
               ...item,
-              options: res.result.map((item) => ({
-                value: item.knowledgeBaseDeviceParts,
-                label: item.knowledgeBaseDeviceParts,
+              options: res.deviceParts.map((value) => ({
+                value: value,
+                label: value,
               })),
             };
           }
           if (item.field === "knowledgeBaseRepairItems") {
             return {
               ...item,
-              options: res.result.map((item) => ({
-                value: item.knowledgeBaseRepairItems,
-                label: item.knowledgeBaseRepairItems,
+              options: res.repairItems.map((value) => ({
+                value: value,
+                label: value,
               })),
             };
           }
           if (item.field === "knowledgeBaseRepairType") {
             return {
               ...item,
-              options: res.result.map((item) => ({
-                value: item.knowledgeBaseRepairType,
-                label: item.knowledgeBaseRepairType,
+              options: res.repairType.map((value) => ({
+                value: value,
+                label: value,
               })),
             };
           }
@@ -307,6 +299,10 @@ export function DocumentEditor() {
     };
     getDocumentOptions();
   }, []);
+
+  // useEffect(() => {
+
+  // }, [])
 
   return (
     <main>

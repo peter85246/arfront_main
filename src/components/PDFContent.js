@@ -2,39 +2,12 @@ import React, { useState, useEffect, forwardRef } from "react";
 import styles from "../scss/PDFDesign.module.scss";
 import classNames from "classnames";
 import { useLocation } from "react-router-dom";
-import { apiGetAllKnowledgeBaseByMachineAddId, apiGetAllSOPByMachineAddId } from "../utils/Api";
 
-const PDFContent = React.forwardRef((props, ref) => {
+const PDFContent = React.forwardRef(({ knowledgeInfo, SOPData}, ref) => {
+  console.log('knowledgeInfo', knowledgeInfo)
+  console.log('SOPData', SOPData)
   const location = useLocation();
   const item = location.state?.item; // 訪問傳遞的狀態
-
-  const [knowledgeInfo, setKnowledgeInfo] = useState([]);
-  const [SOPInfo, setSOPInfo] = useState([]);
-
-  useEffect(() => {
-    const machineAddId = item.machineAddId;
-    const knowledgeBaseId = item.knowledgeBaseId;
-
-    const getKnowledgeInfo = async () => {
-      const res = await apiGetAllKnowledgeBaseByMachineAddId({ Id: machineAddId });
-      if (res?.message === '完全成功') {
-        const knowledgeInfo = res.result.filter(item => item.knowledgeBaseId === knowledgeBaseId)[0];
-        console.log('knowledgeInfo', knowledgeInfo)
-        setKnowledgeInfo(knowledgeInfo);
-      }
-    }
-    getKnowledgeInfo();
-
-    const getSOPInfo = async () => {
-      const res = await apiGetAllSOPByMachineAddId({ Id: machineAddId })
-      if (res?.message === '完全成功') {
-        const sop = res.result.filter(item => item.knowledgeBaseId === knowledgeBaseId)[0];
-        console.log('sop', sop)
-        setSOPInfo(sop);
-      }
-    }
-    getSOPInfo()
-  }, [])
 
   return (
     <div className={styles["content-box"]} ref={ref}>

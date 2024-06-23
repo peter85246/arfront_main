@@ -63,6 +63,7 @@ export function SOPName({ onClose }) {
         
         const saveKnowledgeBaseRes = await apiSaveKnowledgeBase({
           MachineAddId: SOPInfo.machineAddId,
+          machineName: SOPInfo.machineInfo.machineName,
           KnowledgeBases: [{ 
             ...SOPInfo.knowledgeInfo,
             knowledgeBaseModelImageObj,
