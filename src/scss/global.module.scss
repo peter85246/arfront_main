@@ -2018,19 +2018,19 @@ table th {
   gap: 2px;
 }
 
-.edit-container button {
-  border-radius: 5px;
-  font-size: 13px;
-  background-color: #ffffff; /* 背景顏色 */
-  color: #1d6faa;
-  box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
-}
+// .edit-container button {
+//   border-radius: 5px;
+//   font-size: 13px;
+//   background-color: #ffffff; /* 背景顏色 */
+//   color: #1d6faa;
+//   box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+// }
 
-.edit-container button:hover {
-  background-color: #c9e3f5; /* 背景顏色 */
-  color: #1d6faa;
-  transition: width 0.5s ease-in-out; /* 平滑過渡效果 */
-}
+// .edit-container button:hover {
+//   background-color: #c9e3f5; /* 背景顏色 */
+//   color: #1d6faa;
+//   transition: width 0.5s ease-in-out; /* 平滑過渡效果 */
+// }
 
 .edit-container-alarmItem {
   position: absolute; /* 絕對定位 */
@@ -2062,6 +2062,39 @@ table th {
   border-radius: 8px;
   font-size: 14px;
   margin-left: 4px;
+}
+
+.edit-button:hover,
+.save-button:hover{
+  background-color: #cfe6f6;;
+}
+
+.save-button {
+  cursor: pointer; /* 鼠標樣式 */
+  color: #1d6faa;
+  padding: 3px 5px; /* 按鈕內邊距 */
+  border: 1px solid #1d6faa; /* 按鈕邊框樣式 */
+  border-radius: 8px;
+  font-size: 13px;
+  margin-left: 4px;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+  transition: width 0.5s ease-in-out; /* 平滑過渡效果 */
+}
+
+.delete-button {
+  cursor: pointer; /* 鼠標樣式 */
+  color: #aa1d1d;
+  padding: 3px 5px; /* 按鈕內邊距 */
+  border: 1px solid #aa1d1d; /* 按鈕邊框樣式 */
+  border-radius: 8px;
+  font-size: 13px;
+  margin-left: 4px;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+  transition: width 0.5s ease-in-out; /* 平滑過渡效果 */
+}
+
+.delete-button:hover{
+  background-color: #f6cfcf;;
 }
 
 .edit-button-click {
@@ -3063,3 +3096,4 @@ table th {
   max-width: 150px; /* 最大寬度限制 */
   max-height: 150px; /* 最大高度限制 */
 }
+

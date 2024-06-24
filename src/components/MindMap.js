@@ -9,6 +9,7 @@ import ReactFlow, {
   Handle,
 } from "reactflow";
 import "reactflow/dist/style.css";
+import { apiGetAllSOPByMachineAddId } from "../utils/Api";
 
 // 自定義節點組件
 const CustomNode = ({ data, id, onNodeClick }) => (
@@ -287,7 +288,7 @@ const initialEdges = [
   { id: "e18-29", source: "18", target: "29", sourceHandle: "left-source" },
 ];
 
-const MindMap = () => {
+const MindMap = ({ machineAddId }) => {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [activeNode, setActiveNode] = useState(null); // 新增狀態來追蹤活躍節點
@@ -310,6 +311,14 @@ const MindMap = () => {
     },
     [setEdges],
   );
+
+  useEffect(() => {
+    const getAllSOPData = async () => {
+      const res = await apiGetAllSOPByMachineAddId({ Id: machineAddId })
+      console.log(res)
+    }
+    getAllSOPData()
+  }, [machineAddId])
 
   return (
     <ReactFlow

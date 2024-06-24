@@ -42,6 +42,7 @@ const DataArray = [
   },
 ];
 
+// prettier-igonre
 export default function Knowledge() {
   const [isAddingKnowledge, setIsAddingKnowledge] = useState(false);
   const [isConditionSearch, setIsConditionSearch] = useState(false);
@@ -54,8 +55,11 @@ export default function Knowledge() {
   const [keyword, setKeyword] = useState(""); //關鍵字
   const [knowledgeBases, setKnowledgeBases] = useState([]); //知識庫列表
   const [showKnowledgeBases, setShowKnowledgeBases] = useState([]); //知識庫列表(顯示前端)
+  const [rawKnowledgeBases, setRawKnowledgeBases] = useState([]); //原始知識庫列表
   const [showAddKnowledgeBaseModal, setShowAddKnowledgeBaseModal] =
     useState(false); //顯示"新增知識庫modal"
+  const [selectedConditions, setSelectedConditions] = useState(null);
+  const [hover, setHover] = useState(false);
 
   const [addKnowledgeBase, setAddKnowledgeBase] = useState({
     //新增單一使用者
@@ -127,6 +131,24 @@ export default function Knowledge() {
   }, [keyword]);
   //#endregion
 
+  useEffect(() => {
+    if (selectedConditions) {
+      console.log('rawKnowledgeBases', rawKnowledgeBases)
+      console.log('selectedConditions', selectedConditions)
+
+      const filteredData = Object.entries(selectedConditions).reduce((result, [key, value]) => {
+        console.log('value', value)
+        if (value) {
+          return result.filter((item) => item[key] == value.label);
+        }
+        return result;
+      }, rawKnowledgeBases);
+
+      console.log("filteredData", filteredData);
+      setShowKnowledgeBases(filteredData);
+    }
+  }, [selectedConditions, rawKnowledgeBases]);
+
   //#region 刷新知識庫列表
   const refreshKnowledgeBases = async () => {
     var sendData = {
@@ -136,12 +158,12 @@ export default function Knowledge() {
     let knowledgeBasesResponse = await apiGetAllKnowledgeBaseByFilter(sendData);
     if (knowledgeBasesResponse) {
       if (knowledgeBasesResponse.code == "0000") {
-        setKnowledgeBases(knowledgeBasesResponse.result);
+        setRawKnowledgeBases(knowledgeBasesResponse.result);
         setShowKnowledgeBases(
           knowledgeBasesResponse.result.slice(
             activePage * pageRow - pageRow,
-            activePage * pageRow,
-          ),
+            activePage * pageRow
+          )
         );
       }
     }
@@ -165,14 +187,14 @@ export default function Knowledge() {
         onClick={(e) => handleChangePage(e, number)}
       >
         {number}
-      </Pagination.Item>,
+      </Pagination.Item>
     );
   }
 
   const handleChangePage = async (e, number) => {
     setActivePage(number);
     setShowKnowledgeBases(
-      knowledgeBases.slice(number * pageRow - pageRow, number * pageRow),
+      knowledgeBases.slice(number * pageRow - pageRow, number * pageRow)
     );
   };
   //#endregion
@@ -243,27 +265,38 @@ export default function Knowledge() {
                 </strong>
               </h1>
             </div>
-            <div>
+            <div className="flex flex-col gap-[6px]">
               <button
                 type="button"
                 className="btn btn-add"
-                // onClick={(e) => handleOpenAddKnowledgeBaseModal(e)}
                 onClick={() => setIsAddingKnowledge((prev) => !prev)}
-                style={{ marginBottom: "10px" }}
               >
                 <i className="fas fa-plus" style={{ marginLeft: "2px" }}></i>{" "}
                 {t("knowledgeBase.btn.add")}
                 {/*新增知識*/}
               </button>
-              <br></br>
               <button
                 type="button"
                 className="btn btn-search"
-                // onClick={(e) => handleOpenAddKnowledgeBaseModal(e)}
                 onClick={() => setIsConditionSearch((prev) => !prev)}
               >
                 <i className="fa fa-search"></i>{" "}
                 {t("ConditionSearchDialog.btn.search")}
+                {/*條件查詢*/}
+              </button>
+              <button
+                type="button"
+                className="btn btn-search"
+                style={{ background: hover ? "#b10000" : "#f83c3c", borderColor: "#f83c3c" }}
+                onMouseEnter={() => setHover(true)}
+                onMouseLeave={() => setHover(false)}
+                onClick={() => {
+                  setSelectedConditions(null)
+                  refreshKnowledgeBases()
+                }}
+              >
+                <i className="fa fa-window-close"></i>{" "}
+                {'清除條件'}
                 {/*條件查詢*/}
               </button>
             </div>
@@ -344,7 +377,10 @@ export default function Knowledge() {
         <AddingKnowledge onClose={() => setIsAddingKnowledge(false)} />
       )}
       {isConditionSearch && (
-        <ConditionSearchDialog onClose={() => setIsConditionSearch(false)} />
+        <ConditionSearchDialog
+          onClose={() => setIsConditionSearch(false)}
+          setSelectedConditions={setSelectedConditions}
+        />
       )}
     </>
   );

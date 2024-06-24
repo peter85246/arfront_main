@@ -1,27 +1,20 @@
 import { useTranslation } from "react-i18next"; //語系
 import { useState, useEffect, useLayoutEffect, useRef } from "react";
-import { Space, ColorPicker, theme, Flex, Input, Select } from "antd";
+import { Space, ColorPicker, Input, Select } from "antd";
 import { useNavigate } from "react-router-dom"; // 導入 useNavigate
-import { generate, red, green, blue } from "@ant-design/colors";
 import { useSearchParams } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
+import { useStore } from "../zustand/store";
+import { apiGetAllKnowledgeBaseByFilter } from "../utils/Api";
 import styles from "../scss/global.module.scss";
 import classNames from "classnames";
-import FormGroup from "./FormGroup/FormGroup";
 import Spinner from "react-bootstrap/Spinner";
 import SimpleReactValidator from "simple-react-validator";
 
-import {
-  apiGetAllKnowledgeBaseByFilter,
-  apiGetAllKnowledgeBaseByMachineAddId,
-  apiSaveKnowledgeBase,
-} from "../utils/Api";
-
-import { useStore } from "../zustand/store";
-
 const { TextArea } = Input;
 
+// prettier-ignore
 export function DocumentEditor() {
   const { SOPInfo, setSOPInfo } = useStore();
   const navigate = useNavigate(); // 使用 navigate 來處理導航
@@ -31,8 +24,7 @@ export function DocumentEditor() {
   const uploadToolsRef = useRef(null);
   const uploadPositionRef = useRef(null);
   const [formData, setFormData] = useState({});
-  const [saveKnowledgeInfoLoading, setSaveKnowledgeInfoLoading] =
-    useState(false); //儲存的轉圈圈
+  const [saveKnowledgeInfoLoading, setSaveKnowledgeInfoLoading] = useState(false); //儲存的轉圈圈
 
   const [textColor, setTextColor] = useState("#000000"); // 初始文字顏色設為黑色
   const validator = new SimpleReactValidator({
@@ -45,7 +37,6 @@ export function DocumentEditor() {
   const [knowledgeInfo, setKnowledgeInfo] = useState(
     SOPInfo?.knowledgeInfo || {
       //新增以及修改內容
-      knowledgeBaseId: 0,
       knowledgeBaseDeviceType: "", //設備種類
       knowledgeBaseDeviceParts: "", //設備部件
       knowledgeBaseRepairItems: "", //維修項目
@@ -58,22 +49,27 @@ export function DocumentEditor() {
       knowledgeBaseAlarmCause: "", //故障發生原因
       knowledgeBaseAlarmDesc: "", //故障描述
       knowledgeBaseAlarmOccasion: "", //故障發生時機
-      knowledgeBaseModelImage: "", //Model機型路徑
       knowledgeBaseModelImageObj: null, //Model機型圖片物件
       isDeletedKnowledgeBaseModelImage: false, //是否刪除Model機型圖片
-      knowledgeBaseToolsImage: "", //Tools機型路徑
       knowledgeBaseToolsImageObj: null, //Tools工具圖片物件
       isDeletedKnowledgeBaseToolsImage: false, //是否刪除Tools工具圖片
-      knowledgeBasePositionImage: "", //Position位置路徑
       knowledgeBasePositionImageObj: null, //Position位置圖片物件
       isDeletedKnowledgeBasePositionImage: false, //是否刪除Position位置圖片
     },
   );
-
-  const [knowledgeBaseToolsImages, setKnowledgeBaseToolsImages] = useState([]);
-  const [knowledgeBasePositionImages, setKnowledgeBasePositionImages] =
-    useState([]);
-  const [knowledgeBaseModelImages, setKnowledgeBaseModelImages] = useState([]);
+  
+  const [knowledgeBaseModelImages, setKnowledgeBaseModelImages] = useState(
+    SOPInfo?.knowledgeInfo?.knowledgeBaseModelImageObj 
+    || []
+  );
+  const [knowledgeBaseToolsImages, setKnowledgeBaseToolsImages] = useState(
+    SOPInfo?.knowledgeInfo?.knowledgeBaseToolsImageObj 
+    || []
+  );
+  const [knowledgeBasePositionImages, setKnowledgeBasePositionImages] = useState(
+    SOPInfo?.knowledgeInfo?.knowledgeBasePositionImageObj
+    || []
+  );
 
   const [formFields, setFormFields] = useState([
     {
@@ -132,43 +128,49 @@ export function DocumentEditor() {
     },
   ]);
 
+  const requiredFields = [
+    { field: 'knowledgeBaseDeviceType', lebel: '設備種類' },
+    { field: 'knowledgeBaseDeviceParts', lebel: '設備部件' },
+    { field: 'knowledgeBaseRepairItems', lebel: '維修項目' },
+    { field: 'knowledgeBaseRepairType', lebel: '維修類型' },
+    { field: 'knowledgeBaseFileNo', lebel: '檔案編號' },
+    { field: 'knowledgeBaseAlarmCause', lebel: '故障發生原因' },
+    { field: 'knowledgeBaseAlarmDesc', lebel: '故障描述' },
+    { field: 'knowledgeBaseAlarmOccasion', lebel: '故障發生時機' },
+    { field: 'knowledgeBaseModelImageObj', lebel: 'Model機型圖片物件' },
+    { field: 'knowledgeBaseToolsImageObj', lebel: 'Tools工具圖片物件' },
+    { field: 'knowledgeBasePositionImageObj', lebel: 'Position位置圖片物件' },
+  ]
+
   // 處理表單提交
   const handleSaveKnowledgeInfo = async (e) => {
-    e.preventDefault();
-    setSOPInfo((prev) => ({ ...prev, knowledgeInfo: knowledgeInfo }));
+    let isValid = true
+    
+    const allKnowledgeInfo = {
+      ...knowledgeInfo,
+      knowledgeBaseModelImageObj: knowledgeBaseModelImages,
+      knowledgeBaseToolsImageObj: knowledgeBaseToolsImages,
+      knowledgeBasePositionImageObj: knowledgeBasePositionImages
+    }
 
-    // let knowledgeInfoResponse = await apiSaveKnowledgeBase(formData);
-    // if (knowledgeInfoResponse) {
-    //   if (knowledgeInfoResponse.code == "0000") {
-    //     toast.success(
-    //       newKnowledgeInfo.knowledgeBaseId == 0
-    //         ? t("toast.add.success")
-    //         : t("toast.edit.success"),
-    //       {
-    //         position: toast.POSITION.TOP_CENTER,
-    //         autoClose: 3000,
-    //         hideProgressBar: true,
-    //         closeOnClick: false,
-    //         pauseOnHover: false,
-    //       },
-    //     );
-    //   } else {
-    //     toast.error(knowledgeInfoResponse.message, {
-    //       position: toast.POSITION.TOP_CENTER,
-    //       autoClose: 5000,
-    //       hideProgressBar: true,
-    //       closeOnClick: false,
-    //       pauseOnHover: false,
-    //     });
-    //   }
-    //   setSaveKnowledgeInfoLoading(false);
-    // } else {
-    //   setSaveKnowledgeInfoLoading(false);
-    // }
+    for (const item of requiredFields) {
+      const { field, lebel } = item
+      if (allKnowledgeInfo[field] === '' || allKnowledgeInfo[field].length === 0) {
+        isValid = false
+        return toast.error(`\x22 ${lebel} \x22 是必填的欄位`, {
+          position: toast.POSITION.TOP_CENTER,
+          autoClose: 3000,
+          hideProgressBar: true,
+          closeOnClick: false,
+          pauseOnHover: true,
+        });
+      }
+    }
 
-    // 這裡可以添加將數據發送到後端的代碼
-    // 假設提交成功後導航到另一頁面
-    navigate("/sop2");
+    if (isValid) {
+      setSOPInfo((prev) => ({ ...prev, knowledgeInfo: allKnowledgeInfo }));
+      navigate("/sop2");
+    }
   };
 
   useLayoutEffect(() => {
@@ -193,7 +195,7 @@ export function DocumentEditor() {
               case 0:
                 setKnowledgeBaseModelImages((prev) =>
                   prev.length < 1
-                    ? [...prev, { name: file.name, img: e.target.result }]
+                    ? [...prev, { name: file.name, img: e.target.result, file: file }]
                     : prev,
                 );
                 input.value = "";
@@ -201,7 +203,7 @@ export function DocumentEditor() {
               case 1:
                 setKnowledgeBaseToolsImages((prev) =>
                   prev.length < 6
-                    ? [...prev, { name: file.name, img: e.target.result }]
+                    ? [...prev, { name: file.name, img: e.target.result, file: file }]
                     : prev,
                 );
                 input.value = "";
@@ -209,7 +211,7 @@ export function DocumentEditor() {
               case 2:
                 setKnowledgeBasePositionImages((prev) =>
                   prev.length < 6
-                    ? [...prev, { name: file.name, img: e.target.result }]
+                    ? [...prev, { name: file.name, img: e.target.result, file: file }]
                     : prev,
                 );
                 input.value = "";
@@ -258,36 +260,36 @@ export function DocumentEditor() {
           if (item.field === "knowledgeBaseDeviceType") {
             return {
               ...item,
-              options: res.result.map((item) => ({
-                value: item.knowledgeBaseDeviceType,
-                label: item.knowledgeBaseDeviceType,
+              options: res.deviceType.map((value) => ({
+                value: value,
+                label: value,
               })),
             };
           }
           if (item.field === "knowledgeBaseDeviceParts") {
             return {
               ...item,
-              options: res.result.map((item) => ({
-                value: item.knowledgeBaseDeviceParts,
-                label: item.knowledgeBaseDeviceParts,
+              options: res.deviceParts.map((value) => ({
+                value: value,
+                label: value,
               })),
             };
           }
           if (item.field === "knowledgeBaseRepairItems") {
             return {
               ...item,
-              options: res.result.map((item) => ({
-                value: item.knowledgeBaseRepairItems,
-                label: item.knowledgeBaseRepairItems,
+              options: res.repairItems.map((value) => ({
+                value: value,
+                label: value,
               })),
             };
           }
           if (item.field === "knowledgeBaseRepairType") {
             return {
               ...item,
-              options: res.result.map((item) => ({
-                value: item.knowledgeBaseRepairType,
-                label: item.knowledgeBaseRepairType,
+              options: res.repairType.map((value) => ({
+                value: value,
+                label: value,
               })),
             };
           }
@@ -297,6 +299,10 @@ export function DocumentEditor() {
     };
     getDocumentOptions();
   }, []);
+
+  // useEffect(() => {
+
+  // }, [])
 
   return (
     <main>
@@ -528,6 +534,7 @@ export function DocumentEditor() {
                     key={idx}
                     src={item.img}
                     className={styles["uploaded-image"]}
+                    style={{ objectFit: "cover"}}
                     alt="Uploaded Images"
                     id="modelImage"
                   />
@@ -588,6 +595,7 @@ export function DocumentEditor() {
                     key={idx}
                     src={item.img}
                     className={styles["uploaded-image"]}
+                    style={{ objectFit: "cover"}}
                     alt="Uploaded Images"
                     id="modelImage"
                   />
@@ -658,6 +666,7 @@ export function DocumentEditor() {
                     key={idx}
                     src={item.img}
                     className={styles["uploaded-image"]}
+                    style={{ objectFit: "cover"}}
                     alt="Uploaded Images"
                     id="modelImage"
                   />

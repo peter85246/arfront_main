@@ -13,7 +13,7 @@ import classNames from "classnames";
 // import styles from "../scss/AlarmDescription.module.scss";
 import { Link } from "react-router-dom";
 
-import { apiGetAllSOPByMachineAlarmId, apiSaveSOP } from "../utils/Api";
+import { apiGetAllSOPByMachineAddId, apiSaveSOP } from "../utils/Api";
 
 import { Space, ColorPicker, theme } from "antd";
 import { generate, red, green, blue } from "@ant-design/colors";
@@ -25,7 +25,7 @@ function SOP2() {
   const { SOPInfo, setSOPInfo } = useStore();
   console.log(SOPInfo);
 
-  const { machineId, machineAlarmId } = useParams();
+  const { machineId, machineAddId } = useParams();
 
   const [tempModelNumbers, setTempModelNumbers] = useState(
     Array.from({ length: 12 }, (_, index) => index + 1),
@@ -97,11 +97,11 @@ function SOP2() {
   //#region 刷新SOP
   const refreshSOP = async () => {
     var sendData = {
-      id: machineAlarmId,
+      id: machineAddId,
       isCommon: 0,
     };
 
-    let getAllSOPResponse = await apiGetAllSOPByMachineAlarmId(sendData);
+    let getAllSOPResponse = await apiGetAllSOPByMachineAddId(sendData);
     if (getAllSOPResponse) {
       if (getAllSOPResponse.code == "0000") {
         setSOPs(getAllSOPResponse.result);
@@ -120,7 +120,7 @@ function SOP2() {
     let sop = {
       sopId: 0,
       deleted: 0,
-      machineAlarmId: machineAlarmId,
+      machineAddId: machineAddId,
       sopStep: lastSOP != null ? lastSOP.sopStep + 1 : 1,
       sopMessage: "",
       sopImage: "",

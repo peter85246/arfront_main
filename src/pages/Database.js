@@ -1,15 +1,79 @@
 import classNames from "classnames";
 import styles from "../scss/global.module.scss";
 import { useTranslation } from "react-i18next"; //語系
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import PdfContent from "../components/PDFContent";
 import { useLocation } from "react-router-dom";
 import { useDatabase } from "../components/useDatabse";
+import { apiSaveKnowledgeBase, apiSaveSOP2 } from "../utils/Api";
+import { apiGetAllKnowledgeBaseByMachineAddId, apiGetAllSOPByMachineAddId } from "../utils/Api";
+import { useEffect, useState } from "react";
+import { useStore } from "../zustand/store";
 
 export default function Database() {
   const location = useLocation();
   const item = location.state?.item; // 訪問傳遞的狀態
+
   const { t } = useTranslation();
+  const { setSOPInfo } = useStore()
+  const navigate = useNavigate(); // 使用 navigate 來處理導航
+
+  const [knowledgeInfo, setKnowledgeInfo] = useState([]);
+  const [SOPData, setSOPData] = useState([]);
+
+  const handleEdit = () => {
+    setSOPInfo({
+      machineAddId: item.machineAddId,
+      machineInfo: {
+        machineName: knowledgeInfo.machineName,
+      },
+      knowledgeInfo: knowledgeInfo,
+      sops: SOPData
+    })
+    navigate('/document-editor')
+  }
+
+  const handleDelete = async () => {
+    try {
+      await apiSaveSOP2({
+        machineAddId: item.machineAddId,
+        knowledgeBaseId: item.knowledgeBaseId,
+        deleted: 1
+      })
+      await apiSaveKnowledgeBase({
+        machineAddId: item.machineAddId,
+        KnowledgeBases: [{
+          knowledgeBaseId: item.knowledgeBaseId,
+          deleted: 1
+        }]
+      })
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  useEffect(() => {
+    const machineAddId = item?.machineAddId;
+    const knowledgeBaseId = item?.knowledgeBaseId;
+
+    const getKnowledgeInfo = async () => {
+      const res = await apiGetAllKnowledgeBaseByMachineAddId({ Id: machineAddId });
+      if (res?.message === '完全成功') {
+        const knowledgeInfo = res.result.filter(item => item.knowledgeBaseId === knowledgeBaseId)[0];
+        setKnowledgeInfo(knowledgeInfo);
+      }
+    }
+    getKnowledgeInfo();
+
+    const getSOPInfo = async () => {
+      const res = await apiGetAllSOPByMachineAddId({ Id: machineAddId })
+      if (res?.message === '完全成功') {
+        const sop = res.result.filter(item => item.knowledgeBaseId === knowledgeBaseId)[0];
+        setSOPData(sop);
+      }
+    }
+    getSOPInfo()
+  }, [])
 
   return (
     <>
@@ -37,19 +101,19 @@ export default function Database() {
           </Link>
         </div>
         <div className={styles["buttons-container"]}>
-          <Link
-            to="/document-editor"
-            className={classNames(styles["button"], styles["btn-edit"])}
+          <div
             type="button"
+            className={classNames(styles["button"], styles["btn-edit"])}
+            onClick={handleEdit}
           >
             編輯
-          </Link>
-          <Link
-            to="/knowledge"
+          </div>
+          <div
             className={classNames(styles["button"], styles["btn-delete"])}
+            onClick={handleDelete}
           >
             刪除
-          </Link>
+          </div>
           <Link
             to="/repairDocument"
             className={classNames(styles["button"], styles["btn-pdf"])}
@@ -106,7 +170,7 @@ export default function Database() {
                   點擊放大預覽
                 </a>
               </div>
-              <PdfContent />
+              <PdfContent knowledgeInfo={knowledgeInfo} SOPData={SOPData} />
             </div>
           </div>
         </div>
