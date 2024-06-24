@@ -59,10 +59,8 @@ export default function Knowledge() {
   const [showAddKnowledgeBaseModal, setShowAddKnowledgeBaseModal] =
     useState(false); //顯示"新增知識庫modal"
   const [selectedConditions, setSelectedConditions] = useState(null);
-<<<<<<< HEAD
   const [hover, setHover] = useState(false);
-=======
->>>>>>> 4f1310cf1b535add3ff6a7a5fa68842667e68b80
+
 
   const [addKnowledgeBase, setAddKnowledgeBase] = useState({
     //新增單一使用者
@@ -290,13 +288,9 @@ export default function Knowledge() {
               <button
                 type="button"
                 className="btn btn-search"
-<<<<<<< HEAD
                 style={{ background: hover ? "#b10000" : "#f83c3c", borderColor: "#f83c3c" }}
                 onMouseEnter={() => setHover(true)}
                 onMouseLeave={() => setHover(false)}
-=======
-                style={{ background: "#FF0000", borderColor: "#FF000090" }}
->>>>>>> 4f1310cf1b535add3ff6a7a5fa68842667e68b80
                 onClick={() => {
                   setSelectedConditions(null)
                   refreshKnowledgeBases()

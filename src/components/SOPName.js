@@ -97,11 +97,8 @@ export function SOPName({ onClose }) {
             pauseOnHover: true,
           });
           setSOPInfo(null);
-<<<<<<< HEAD
-          setTimeout(() => { window.location.href = "/knowledge"}, 2000)
-=======
           // setTimeout(() => { window.location.href = "/knowledge"}, 2000)
->>>>>>> 4f1310cf1b535add3ff6a7a5fa68842667e68b80
+
         } 
         else {
           return toast.error(saveSOPInfoRes.message, {

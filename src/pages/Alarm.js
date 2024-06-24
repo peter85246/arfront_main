@@ -8,7 +8,6 @@ import { useTranslation } from "react-i18next";
 import { apiMachineAddOverview } from "../utils/Api";
 
 export default function Alarm() {
-<<<<<<< HEAD
   const [alarmValue, setAlarmValue] = useState("Select Machine"); // 選中的機台顯示值
   const [dropMenuOpen, setDropMenuOpen] = useState(false); // 下拉菜單開關狀態
   const [machineData, setMachineData] = useState([]); // 機台數據
@@ -22,19 +21,7 @@ export default function Alarm() {
   const [selectedMachineId, setSelectedMachineId] = useState(""); // 選中的機台的 ID
   const [isEditing, setIsEditing] = useState(false); // 編輯狀態
   const [isDeleting, setIsDeleting] = useState(false); // 刪除狀態
-=======
-  const [alarmValue, setAlarmValue] = useState("Select Machine");
-  const [dropMenuOpen, setDropMenuOpen] = useState(false);
-  const [machineData, setMachineData] = useState([]); // 將初始樹形數據設置為空數組
-  const [machineCategory, setMachineCategory] = useState([]);
-  const [machineSeries, setMachineSeries] = useState([]);
-  const [machineName, setMachineName] = useState([]);
-  const [selectedMachineName, setSelectedMachineName] = useState("");
-  const [machineNames, setMachineNames] = useState([]); // 儲存當選中的 modelSeries 下的所有 children 名稱
-  const [selectedModelSeriesKey, setSelectedModelSeriesKey] = useState("");
-  const [selectedKey, setSelectedKey] = useState("");
-  const [selectedMachineId, setSelectedMachineId] = useState("");
->>>>>>> 4f1310cf1b535add3ff6a7a5fa68842667e68b80
+
 
   const { t } = useTranslation(); // i18n 語言翻譯函數
 
@@ -107,11 +94,7 @@ export default function Alarm() {
       let seriesNode = seriesMap.get(seriesKey);
       seriesNode.children.push({
         title: item.machineName,
-<<<<<<< HEAD
-        key: `${seriesKey}-${item.machineName}`,
-=======
         key: `${seriesKey}-${item.machineName}`, // 確保key的唯一性
->>>>>>> 4f1310cf1b535add3ff6a7a5fa68842667e68b80
         machineAddId: item.machineAddId,
       });
 
@@ -238,7 +221,6 @@ export default function Alarm() {
         
         {/* 右側心智圖區域 */}
         <div className={styles["content-box-right-alarm"]} id="alarm-mindMap">
-<<<<<<< HEAD
           {selectedMachineId && (
             <Link to="/pageMindMap">
               <p className={styles["mark-text"]}>▶ 點擊即可展開心智圖</p>
@@ -247,24 +229,6 @@ export default function Alarm() {
               </div>
             </Link>
           )}
-=======
-          {
-            selectedMachineId && (
-              <Link to="/pageMindMap">
-                <p className={styles["mark-text"]}>▶ 點擊即可展開心智圖</p>
-                {/* <!-- 內容待添加 --> */}
-                <div className={styles["mindmap"]}>
-                  {/* <div className={styles["node central-node"]} id="central-node"> */}
-                  {/* <!-- <div className={styles["add-btn left">+</div> --> */}
-                  {/* <span>心智圖</span> */}
-                  {/* <!-- <div className={styles["add-btn right">+</div> --> */}
-                  {/* </div> */}
-                  <MindMap machineAddId={selectedMachineId} />
-                </div>
-              </Link>
-            )
-          }
->>>>>>> 4f1310cf1b535add3ff6a7a5fa68842667e68b80
         </div>
       </div>
     </main>
