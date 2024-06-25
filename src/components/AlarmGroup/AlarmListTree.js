@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Tree } from "antd";
 
-const AlarmListTree = ({ treeData, onSelectMachineName, selectedKey, setSelectedMachineId }) => {
+const AlarmListTree = ({
+  treeData,
+  onSelectMachineName,
+  selectedKey,
+  setSelectedMachineId,
+}) => {
   const [expandedKeys, setExpandedKeys] = useState(["0-0-0", "0-0-1"]);
   const [checkedKeys, setCheckedKeys] = useState(["0-0-0"]);
   const [selectedKeys, setSelectedKeys] = useState([]);
@@ -30,7 +35,7 @@ const AlarmListTree = ({ treeData, onSelectMachineName, selectedKey, setSelected
     // 只有當節點是子節點（沒有子節點自己）時，才調用 onSelectMachineName
     if (info && info.node && !info.node.children) {
       onSelectMachineName(info.node.title, info.node.key);
-      setSelectedMachineId(info.node.machineAddId)
+      setSelectedMachineId(info.node.machineAddId);
     }
   };
 

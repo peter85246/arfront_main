@@ -35,8 +35,7 @@ export function DocumentEditor() {
   const machineName = searchParams.get("name");
 
   const [knowledgeInfo, setKnowledgeInfo] = useState(
-    SOPInfo?.knowledgeInfo || {
-      //新增以及修改內容
+    SOPInfo?.knowledgeInfo || [{
       knowledgeBaseDeviceType: "", //設備種類
       knowledgeBaseDeviceParts: "", //設備部件
       knowledgeBaseRepairItems: "", //維修項目
@@ -49,26 +48,23 @@ export function DocumentEditor() {
       knowledgeBaseAlarmCause: "", //故障發生原因
       knowledgeBaseAlarmDesc: "", //故障描述
       knowledgeBaseAlarmOccasion: "", //故障發生時機
-      knowledgeBaseModelImageObj: null, //Model機型圖片物件
+      knowledgeBaseModelImageObj: [], //Model機型圖片物件
       isDeletedKnowledgeBaseModelImage: false, //是否刪除Model機型圖片
-      knowledgeBaseToolsImageObj: null, //Tools工具圖片物件
+      knowledgeBaseToolsImageObj: [], //Tools工具圖片物件
       isDeletedKnowledgeBaseToolsImage: false, //是否刪除Tools工具圖片
-      knowledgeBasePositionImageObj: null, //Position位置圖片物件
-      isDeletedKnowledgeBasePositionImage: false, //是否刪除Position位置圖片
-    },
-  );
+      knowledgeBasePositionImageObj: [], //Position位置圖片物件
+      isDeletedKnowledgeBasePositionImage: false //是否刪除Position位置圖片
+    }]
+);
   
   const [knowledgeBaseModelImages, setKnowledgeBaseModelImages] = useState(
-    SOPInfo?.knowledgeInfo?.knowledgeBaseModelImageObj 
-    || []
+    SOPInfo?.knowledgeInfo?.[0]?.knowledgeBaseModelImageObj || []
   );
   const [knowledgeBaseToolsImages, setKnowledgeBaseToolsImages] = useState(
-    SOPInfo?.knowledgeInfo?.knowledgeBaseToolsImageObj 
-    || []
+    SOPInfo?.knowledgeInfo?.[0]?.knowledgeBaseToolsImageObj || []
   );
   const [knowledgeBasePositionImages, setKnowledgeBasePositionImages] = useState(
-    SOPInfo?.knowledgeInfo?.knowledgeBasePositionImageObj
-    || []
+    SOPInfo?.knowledgeInfo?.[0]?.knowledgeBasePositionImageObj || []
   );
 
   const [formFields, setFormFields] = useState([
@@ -250,59 +246,60 @@ export function DocumentEditor() {
       }
     });
   }, []);
+  
 
   useEffect(() => {
     const getDocumentOptions = async () => {
-      const res = await apiGetAllKnowledgeBaseByFilter({ keyword: "" });
+        try {
+            const res = await apiGetAllKnowledgeBaseByFilter({ keyword: "" });
 
-      setFormFields((prev) =>
-        prev.map((item) => {
-          if (item.field === "knowledgeBaseDeviceType") {
-            return {
-              ...item,
-              options: res.deviceType.map((value) => ({
-                value: value,
-                label: value,
-              })),
-            };
-          }
-          if (item.field === "knowledgeBaseDeviceParts") {
-            return {
-              ...item,
-              options: res.deviceParts.map((value) => ({
-                value: value,
-                label: value,
-              })),
-            };
-          }
-          if (item.field === "knowledgeBaseRepairItems") {
-            return {
-              ...item,
-              options: res.repairItems.map((value) => ({
-                value: value,
-                label: value,
-              })),
-            };
-          }
-          if (item.field === "knowledgeBaseRepairType") {
-            return {
-              ...item,
-              options: res.repairType.map((value) => ({
-                value: value,
-                label: value,
-              })),
-            };
-          }
-          return item;
-        }),
-      );
+            setFormFields((prev) =>
+                prev.map((item) => {
+                    if (item.field === "knowledgeBaseDeviceType") {
+                        return {
+                            ...item,
+                            options: (res.deviceType || []).map((value) => ({
+                                value: value,
+                                label: value,
+                            })),
+                        };
+                    }
+                    if (item.field === "knowledgeBaseDeviceParts") {
+                        return {
+                            ...item,
+                            options: (res.deviceParts || []).map((value) => ({
+                                value: value,
+                                label: value,
+                            })),
+                        };
+                    }
+                    if (item.field === "knowledgeBaseRepairItems") {
+                        return {
+                            ...item,
+                            options: (res.repairItems || []).map((value) => ({
+                                value: value,
+                                label: value,
+                            })),
+                        };
+                    }
+                    if (item.field === "knowledgeBaseRepairType") {
+                        return {
+                            ...item,
+                            options: (res.repairType || []).map((value) => ({
+                                value: value,
+                                label: value,
+                            })),
+                        };
+                    }
+                    return item;
+                }),
+            );
+        } catch (error) {
+            console.error("Error fetching document options:", error);
+        }
     };
     getDocumentOptions();
-  }, []);
-
-  // useEffect(() => {
-
-  // }, [])
+}, []);
 
   return (
     <main>

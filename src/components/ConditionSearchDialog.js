@@ -359,10 +359,10 @@ export function ConditionSearchDialog({ onClose, setSelectedConditions }) {
             onClick={() => {
               Object.entries(conditionInfo).forEach(([key, value]) => {
                 if (value) {
-                  setSelectedConditions(conditionInfo)
+                  setSelectedConditions(conditionInfo);
                 }
               });
-              handleCloseModal()
+              handleCloseModal();
             }}
           >
             儲存

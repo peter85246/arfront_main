@@ -202,8 +202,8 @@ function MachineKnowledge() {
 
   // 檢查機台名稱是否唯一
   const checkMachineNameUnique = (name) => {
-    return !machineList.some(machine => machine.machineName === name);
-  }
+    return !machineList.some((machine) => machine.machineName === name);
+  };
 
   //#region 機台 欄位驗證
   const checkEditValidator = async (name = "", val = "") => {
@@ -341,7 +341,7 @@ function MachineKnowledge() {
     // 檢查機台名稱是否唯一
     if (!checkMachineNameUnique(machineInfo.machineName)) {
       // 如果名稱重複，顯示錯誤訊息
-      setMachineInfoErrors(prevErrors => ({
+      setMachineInfoErrors((prevErrors) => ({
         ...prevErrors,
       }));
       toast.error(t("相同機台重複"), {

@@ -314,11 +314,11 @@ const MindMap = ({ machineAddId }) => {
 
   useEffect(() => {
     const getAllSOPData = async () => {
-      const res = await apiGetAllSOPByMachineAddId({ Id: machineAddId })
-      console.log(res)
-    }
-    getAllSOPData()
-  }, [machineAddId])
+      const res = await apiGetAllSOPByMachineAddId({ Id: machineAddId });
+      console.log(res);
+    };
+    getAllSOPData();
+  }, [machineAddId]);
 
   return (
     <ReactFlow

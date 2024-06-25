@@ -61,7 +61,6 @@ export default function Knowledge() {
   const [selectedConditions, setSelectedConditions] = useState(null);
   const [hover, setHover] = useState(false);
 
-
   const [addKnowledgeBase, setAddKnowledgeBase] = useState({
     //新增單一使用者
     userId: 0,
@@ -134,16 +133,19 @@ export default function Knowledge() {
 
   useEffect(() => {
     if (selectedConditions) {
-      console.log('rawKnowledgeBases', rawKnowledgeBases)
-      console.log('selectedConditions', selectedConditions)
+      console.log("rawKnowledgeBases", rawKnowledgeBases);
+      console.log("selectedConditions", selectedConditions);
 
-      const filteredData = Object.entries(selectedConditions).reduce((result, [key, value]) => {
-        console.log('value', value)
-        if (value) {
-          return result.filter((item) => item[key] == value.label);
-        }
-        return result;
-      }, rawKnowledgeBases);
+      const filteredData = Object.entries(selectedConditions).reduce(
+        (result, [key, value]) => {
+          console.log("value", value);
+          if (value) {
+            return result.filter((item) => item[key] == value.label);
+          }
+          return result;
+        },
+        rawKnowledgeBases,
+      );
 
       console.log("filteredData", filteredData);
       setShowKnowledgeBases(filteredData);
@@ -163,8 +165,8 @@ export default function Knowledge() {
         setShowKnowledgeBases(
           knowledgeBasesResponse.result.slice(
             activePage * pageRow - pageRow,
-            activePage * pageRow
-          )
+            activePage * pageRow,
+          ),
         );
       }
     }
@@ -188,14 +190,14 @@ export default function Knowledge() {
         onClick={(e) => handleChangePage(e, number)}
       >
         {number}
-      </Pagination.Item>
+      </Pagination.Item>,
     );
   }
 
   const handleChangePage = async (e, number) => {
     setActivePage(number);
     setShowKnowledgeBases(
-      knowledgeBases.slice(number * pageRow - pageRow, number * pageRow)
+      knowledgeBases.slice(number * pageRow - pageRow, number * pageRow),
     );
   };
   //#endregion
@@ -288,16 +290,18 @@ export default function Knowledge() {
               <button
                 type="button"
                 className="btn btn-search"
-                style={{ background: hover ? "#b10000" : "#f83c3c", borderColor: "#f83c3c" }}
+                style={{
+                  background: hover ? "#b10000" : "#f83c3c",
+                  borderColor: "#f83c3c",
+                }}
                 onMouseEnter={() => setHover(true)}
                 onMouseLeave={() => setHover(false)}
                 onClick={() => {
-                  setSelectedConditions(null)
-                  refreshKnowledgeBases()
+                  setSelectedConditions(null);
+                  refreshKnowledgeBases();
                 }}
               >
-                <i className="fa fa-window-close"></i>{" "}
-                {'清除條件'}
+                <i className="fa fa-window-close"></i> {"清除條件"}
                 {/*條件查詢*/}
               </button>
             </div>

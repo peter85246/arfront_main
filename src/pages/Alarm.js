@@ -22,7 +22,6 @@ export default function Alarm() {
   const [isEditing, setIsEditing] = useState(false); // 編輯狀態
   const [isDeleting, setIsDeleting] = useState(false); // 刪除狀態
 
-
   const { t } = useTranslation(); // i18n 語言翻譯函數
 
   // 選擇機台名稱時的處理函數
@@ -60,7 +59,9 @@ export default function Alarm() {
       setMachineSeries(machineOverviewResponse.modelSeries); // 更新機台系列
       setMachineName(machineOverviewResponse.machineName); // 更新機台名稱
 
-      const transformedData = transformToTreeData(machineOverviewResponse.result); // 轉換數據為樹形結構
+      const transformedData = transformToTreeData(
+        machineOverviewResponse.result,
+      ); // 轉換數據為樹形結構
       setMachineData(transformedData); // 更新機台數據
     }
   };
@@ -145,7 +146,7 @@ export default function Alarm() {
           </div>
         </div>
       </section>
-      
+
       {/* 按鈕及下拉菜單 */}
       <div className={styles["buttons-container-item"]}>
         <div className={styles["buttons-alarm"]}>
@@ -169,10 +170,13 @@ export default function Alarm() {
             <ul className={styles["custom-datalist-alarm"]}>
               {machineNames.map((name, index) => (
                 <li
-                key={index}
-                onClick={() =>
-                  handleSelectMachineName(name, `${selectedModelSeriesKey}-${name}`)
-                }
+                  key={index}
+                  onClick={() =>
+                    handleSelectMachineName(
+                      name,
+                      `${selectedModelSeriesKey}-${name}`,
+                    )
+                  }
                 >
                   {name}
                 </li>
@@ -181,27 +185,39 @@ export default function Alarm() {
           )}
         </div>
       </div>
-      
+
       {/* 主要內容區域 */}
-      <div className={styles["content-box"]} style={{ paddingTop: 0, gap: "5px" }}>
+      <div
+        className={styles["content-box"]}
+        style={{ paddingTop: 0, gap: "5px" }}
+      >
         {/* 編輯及保存按鈕 */}
         <div className={styles["edit-container"]}>
           {isEditing ? (
             <>
-              <button className={styles["delete-button"]} onClick={handleDeleteButtonClick}>
+              <button
+                className={styles["delete-button"]}
+                onClick={handleDeleteButtonClick}
+              >
                 刪除
               </button>
-              <button className={styles["save-button"]} onClick={handleSaveButtonClick}>
+              <button
+                className={styles["save-button"]}
+                onClick={handleSaveButtonClick}
+              >
                 保存
               </button>
             </>
           ) : (
-            <button className={styles["edit-button"]} onClick={handleEditButtonClick}>
+            <button
+              className={styles["edit-button"]}
+              onClick={handleEditButtonClick}
+            >
               編輯
             </button>
           )}
         </div>
-        
+
         {/* 左側列表 */}
         <div className={styles["content-box-left-alarm"]}>
           <div className={styles["title-bar"]}>
@@ -218,7 +234,7 @@ export default function Alarm() {
             </div>
           </div>
         </div>
-        
+
         {/* 右側心智圖區域 */}
         <div className={styles["content-box-right-alarm"]} id="alarm-mindMap">
           {selectedMachineId && (

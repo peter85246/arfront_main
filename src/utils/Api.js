@@ -192,6 +192,11 @@ export const apiGetAllSOPByMachineAddId = (data) =>
   fetchDataCall("GetAllSOPByMachineAddId", "post", data); //取得SOP2
 //#endregion
 
+//#region MindMap
+export const apiGetMachineAddMindMap = (data) =>
+  fetchDataCall("GetMachineAddMindMap", "get", data);
+//#endregion
+
 // 在../utils/Api.js
 
 // // 模擬數據

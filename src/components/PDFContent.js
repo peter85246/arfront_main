@@ -3,9 +3,9 @@ import styles from "../scss/PDFDesign.module.scss";
 import classNames from "classnames";
 import { useLocation } from "react-router-dom";
 
-const PDFContent = React.forwardRef(({ knowledgeInfo, SOPData}, ref) => {
-  console.log('knowledgeInfo', knowledgeInfo)
-  console.log('SOPData', SOPData)
+const PDFContent = React.forwardRef(({ knowledgeInfo, SOPData }, ref) => {
+  console.log("knowledgeInfo", knowledgeInfo);
+  console.log("SOPData", SOPData);
   const location = useLocation();
   const item = location.state?.item; // 訪問傳遞的狀態
 

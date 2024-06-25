@@ -3,6 +3,8 @@ import { Modal, Button, Form } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 import { useStore } from "../zustand/store";
+import { fetchDataCallFile } from "../utils/Api";
+
 import {
   apiMachineInfo,
   apiSaveKnowledgeBase,
@@ -47,70 +49,104 @@ export function SOPName({ onClose }) {
     let hasError = false;
     const newErrors = {};
 
-    if (!sopName || sopName === "") {
-      newErrors.sopName = "required";
+    if (!sopName || sopName.trim() === "") {
+      newErrors.sopName = "必填项";
       hasError = true;
     }
 
     setErrors(newErrors);
 
     if (!hasError) {
+      const formData = new FormData();
+      formData.append("MachineAddId", SOPInfo.machineAddId.toString());
+      formData.append("machineName", SOPInfo.machineInfo.machineName);
+
+      // 確保knowledgeInfo是一個陣列，並提供默認值
+      const knowledgeInfoArray = SOPInfo.knowledgeInfo
+        ? Array.isArray(SOPInfo.knowledgeInfo)
+          ? SOPInfo.knowledgeInfo
+          : [SOPInfo.knowledgeInfo]
+        : [];
+
+      const allowedExtensions = ["png", "jpg", "jpeg"];
+      let fileIncluded = false; // 標記是否包含至少一個文件
+
+      knowledgeInfoArray.forEach((info, index) => {
+        Object.keys(info).forEach((key) => {
+          if (key.includes("ImageObj")) {
+            // 檢查info[key]是否存在並具有forEach方法
+            if (info[key] && info[key].forEach) {
+              info[key].forEach((fileObj) => {
+                const file = fileObj.file; // 確保使用的是原始文件對象
+                const fileExtension = file.name.split(".").pop().toLowerCase();
+                if (!allowedExtensions.includes(fileExtension)) {
+                  toast.error(`不支持的文件類型: ${file.name}`, {
+                    position: toast.POSITION.TOP_CENTER,
+                    autoClose: 2000,
+                    hideProgressBar: true,
+                    closeOnClick: false,
+                    pauseOnHover: true,
+                  });
+                } else {
+                  formData.append(`KnowledgeBases[${index}].${key}`, file);
+                  fileIncluded = true;
+                }
+              });
+            }
+          } else {
+            formData.append(`KnowledgeBases[${index}].${key}`, info[key]);
+          }
+        });
+      });
+
+      // 檢查是否有文件被添加
+      if (!fileIncluded) {
+        toast.error("請添加至少一個圖片文件。", {
+          position: toast.POSITION.TOP_CENTER,
+          autoClose: 2000,
+          hideProgressBar: true,
+          closeOnClick: false,
+          pauseOnHover: true,
+        });
+        return;
+      }
+
       try {
-        console.log('SOPInfo', SOPInfo);
-        const knowledgeBaseModelImageObj = SOPInfo.knowledgeInfo?.knowledgeBaseModelImageObj?.map(item => item.file)
-        const knowledgeBaseToolsImageObj = SOPInfo.knowledgeInfo?.knowledgeBaseToolsImageObj?.map(item => item.file)
-        const knowledgeBasePositionImageObj = SOPInfo.knowledgeInfo?.knowledgeBasePositionImageObj?.map(item => item.file)
-        
-        const saveKnowledgeBaseRes = await apiSaveKnowledgeBase({
-          MachineAddId: SOPInfo.machineAddId,
-          machineName: SOPInfo.machineInfo.machineName,
-          KnowledgeBases: [{ 
-            ...SOPInfo.knowledgeInfo,
-            knowledgeBaseModelImageObj,
-            knowledgeBaseToolsImageObj,
-            knowledgeBasePositionImageObj
-          }],
-        });
+        const saveKnowledgeBaseRes = await fetchDataCallFile(
+          "SaveKnowledgeBase",
+          "PUT",
+          formData,
+        );
 
-        if (saveKnowledgeBaseRes.message !== '完全成功') {
-          return toast.error(saveKnowledgeBaseRes.message, {
+        if (saveKnowledgeBaseRes.message !== "完全成功") {
+          toast.error(saveKnowledgeBaseRes.message, {
             position: toast.POSITION.TOP_CENTER,
             autoClose: 2000,
             hideProgressBar: true,
             closeOnClick: false,
             pauseOnHover: true,
           });
+          return;
         }
-  
-        const saveSOPInfoRes = await apiSaveSOP2({
-          KnowledgeBaseId: saveKnowledgeBaseRes.result,
-          MachineAddId: SOPInfo.machineAddId,
-          SOP2s: SOPInfo.sops,
-        });
-  
-        if (saveSOPInfoRes.message === '完全成功') {
-          toast.success('保存成功', {
-            position: toast.POSITION.TOP_CENTER,
-            autoClose: 2000,
-            hideProgressBar: true,
-            closeOnClick: false,
-            pauseOnHover: true,
-          });
-          setSOPInfo(null);
-          // setTimeout(() => { window.location.href = "/knowledge"}, 2000)
 
-        } 
-        else {
-          return toast.error(saveSOPInfoRes.message, {
-            position: toast.POSITION.TOP_CENTER,
-            autoClose: 2000,
-            hideProgressBar: true,
-            closeOnClick: false,
-            pauseOnHover: true,
-          });
-        }
+        toast.success("保存成功", {
+          position: toast.POSITION.TOP_CENTER,
+          autoClose: 2000,
+          hideProgressBar: true,
+          closeOnClick: false,
+          pauseOnHover: true,
+        });
+        setSOPInfo(null); // Reset or update SOP information
+        // setTimeout(() => { window.location.href = "/knowledge"}, 2000);
       } catch (err) {
-        console.log(err)
+        console.error("保存知识库失败:", err);
+        toast.error(`保存失败，请稍后重试。错误详情: ${err.message}`, {
+          position: toast.POSITION.TOP_CENTER,
+          autoClose: 2000,
+          hideProgressBar: true,
+          closeOnClick: false,
+          pauseOnHover: true,
+        });
       }
     }
   };
