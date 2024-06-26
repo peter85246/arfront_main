@@ -158,47 +158,69 @@ export default function Knowledge() {
       keyword: keyword,
     };
 
-    let knowledgeBasesResponse = await apiGetAllKnowledgeBaseByFilter(sendData);
-    if (knowledgeBasesResponse) {
-      if (knowledgeBasesResponse.code == "0000") {
-        setRawKnowledgeBases(knowledgeBasesResponse.result);
-        setShowKnowledgeBases(
-          knowledgeBasesResponse.result.slice(
-            activePage * pageRow - pageRow,
-            activePage * pageRow,
-          ),
+    try {
+      let knowledgeBasesResponse =
+        await apiGetAllKnowledgeBaseByFilter(sendData);
+      console.log("Knowledge bases response:", knowledgeBasesResponse);
+
+      if (knowledgeBasesResponse && knowledgeBasesResponse.code === "0000") {
+        setKnowledgeBases(knowledgeBasesResponse.result);
+        setShowKnowledgeBases(knowledgeBasesResponse.result.slice(0, pageRow));
+        console.log("Knowledge bases set successfully.");
+      } else {
+        console.error(
+          "Failed to fetch knowledge bases, code:",
+          knowledgeBasesResponse.code,
         );
       }
+    } catch (error) {
+      console.error("Error fetching knowledge bases:", error);
     }
   };
   //#endregion
+
+  useEffect(() => {
+    refreshKnowledgeBases();
+  }, []); // 添加空陣列作為依賴，確保僅在組件掛載時調用一次
 
   //#region 頁碼
   let pageRow = 5; //一頁幾筆
   const [activePage, setActivePage] = useState(1); //目前停留頁碼
 
-  let pages = []; //頁碼
-  for (
-    let number = 1;
-    number <= Math.ceil(knowledgeBases.length / pageRow);
-    number++
-  ) {
-    pages.push(
-      <Pagination.Item
-        key={number}
-        active={number === activePage}
-        onClick={(e) => handleChangePage(e, number)}
-      >
-        {number}
-      </Pagination.Item>,
-    );
-  }
+  useEffect(() => {
+    // console.log("Total entries:", knowledgeBases.length, "Entries per page:", pageRow);
 
-  const handleChangePage = async (e, number) => {
+    let newPages = []; //頁碼
+    let totalPages = Math.ceil(knowledgeBases.length / pageRow);
+    // console.log("Total pages calculated:", totalPages);
+
+    for (
+      let number = 1;
+      number <= Math.ceil(knowledgeBases.length / pageRow);
+      number++
+    ) {
+      newPages.push(
+        <Pagination.Item
+          key={number}
+          active={number === activePage}
+          onClick={() => handleChangePage(number)}
+        >
+          {number}
+        </Pagination.Item>,
+      );
+    }
+    setPages(newPages); // 將生成的頁碼更新到狀態中
+    console.log("Pages set:", newPages);
+  }, [knowledgeBases.length, activePage, pageRow]); // 確保當這些依賴更新時重新計算頁碼
+
+  const [pages, setPages] = useState([]); //保存頁碼按鈕
+
+  const handleChangePage = (number) => {
+    console.log("Changing page to", number);
     setActivePage(number);
-    setShowKnowledgeBases(
-      knowledgeBases.slice(number * pageRow - pageRow, number * pageRow),
-    );
+    const start = (number - 1) * pageRow;
+    const end = number * pageRow;
+    setShowKnowledgeBases(knowledgeBases.slice(start, end));
   };
   //#endregion
 
