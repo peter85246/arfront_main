@@ -60,20 +60,100 @@ const PDFContent = React.forwardRef(({ knowledgeInfo, SOPData }, ref) => {
         </div>
 
         <div className={styles["tools"]} id="tools">
-          <div>
+          <div className="w-full">
             <div className={styles["tools-label"]}>
               <label>Use Tools(使用工具圖片) :</label>
             </div>
-            <div className={styles["image-container-page"]}></div>
+            <div className="w-full flex justify-between py-2 px-6">
+              <div className="flex gap-[8px] items-center">
+                {(() => {
+                  if (knowledgeInfo.knowledgeBaseToolsImage) {
+                    return JSON.parse(
+                      knowledgeInfo?.knowledgeBaseToolsImage
+                    ).map((item, idx) => {
+                      return (
+                        <div className="w-[120px] h-[120px] relative">
+                          <img
+                            key={idx}
+                            src={item}
+                            className="w-full h-full"
+                            alt="Your images Description"
+                          />
+                          <span className="border p-1 px-2 rounded-xl absolute top-0 right-0 bg-white">
+                            {idx}
+                          </span>
+                        </div>
+                      );
+                    });
+                  }
+                })()}
+              </div>
+              <div className="flex flex-col gap-[6px]">
+                {(() => {
+                  if (knowledgeInfo.knowledgeBaseToolsImageNames) {
+                    return JSON.parse(
+                      knowledgeInfo?.knowledgeBaseToolsImageNames
+                    ).map((item, idx) => {
+                      return (
+                        <div className="flex gap-[4px] items-center">
+                          <span className="text-red-600 text-[20px]">{['A', 'B', 'C', 'D', 'E'][idx]}{': '}</span>
+                          <span>{item}</span>
+                        </div>
+                      )
+                    });
+                  }
+                })()}
+              </div>
+            </div>
           </div>
         </div>
-
-        <div className={styles["illustration"]} id="illustration">
-          <div>
-            <div className={styles["illustration-label"]}>
+        
+        <div className={styles["tools"]} id="tools">
+          <div className="w-full">
+            <div className={styles["tools-label"]}>
               <label>Illustration(維修部位說明) :</label>
             </div>
-            <div className={styles["image-container-page"]}></div>
+            <div className="w-full flex justify-between py-2 px-6">
+              <div className="flex gap-[8px] items-center">
+                {(() => {
+                  if (knowledgeInfo.knowledgeBasePositionImage) {
+                    return JSON.parse(
+                      knowledgeInfo?.knowledgeBasePositionImage
+                    ).map((item, idx) => {
+                      return (
+                        <div className="w-[120px] h-[120px] relative">
+                          <img
+                            key={idx}
+                            src={item}
+                            className="w-full h-full"
+                            alt="Your images Description"
+                          />
+                          <span className="border p-1 px-2 rounded-xl absolute top-0 right-0 bg-white">
+                            {idx}
+                          </span>
+                        </div>
+                      );
+                    });
+                  }
+                })()}
+              </div>
+              <div className="flex flex-col gap-[6px]">
+                {(() => {
+                  if (knowledgeInfo.knowledgeBasePositionImageNames) {
+                    return JSON.parse(
+                      knowledgeInfo?.knowledgeBasePositionImageNames
+                    ).map((item, idx) => {
+                      return (
+                        <div className="flex gap-[4px] items-center">
+                          <span className="text-red-600 text-[20px]">{['A', 'B', 'C', 'D', 'E'][idx]}{': '}</span>
+                          <span>{item}</span>
+                        </div>
+                      )
+                    });
+                  }
+                })()}
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -112,7 +192,7 @@ const PDFContent = React.forwardRef(({ knowledgeInfo, SOPData }, ref) => {
             </label>
           </div>
           {SOPData.map((sop, idx) => (
-            <div className={styles["step1"]} id="step1">
+            <div key={idx} className={styles["step1"]} style={idx !== 0 ? { borderTop: '1px solid' } : {}}>
               <div className={styles["step-title1"]}>
                 <span>Step {sop.soP2Step}</span>
               </div>
@@ -125,7 +205,7 @@ const PDFContent = React.forwardRef(({ knowledgeInfo, SOPData }, ref) => {
                 >
                   <img
                     src={sop.soP2Image}
-                    className="w-[200px] h-[200px]"
+                    className={`w-[200px] h-[200px]`}
                     alt="Your images Description"
                   />
                 </div>

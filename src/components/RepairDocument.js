@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import styles from "../scss/global.module.scss";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import React, { useEffect, useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
@@ -29,6 +29,7 @@ export function RepairDocument() {
 
   const [knowledgeInfo, setKnowledgeInfo] = useState([]);
   const [SOPData, setSOPData] = useState([]);
+  const navigate = useNavigate(); // 使用 navigate 來處理導航
   console.log("item", item);
 
   const pdfRef = React.useRef();
@@ -118,15 +119,12 @@ export function RepairDocument() {
           {" "}
           知識庫
         </Link>
-        <Link
-          to={{
-            pathname: "/database",
-            state: { item },
-          }}
+        <div
           className={"fas fa-angle-left"}
+          onClick={() => navigate("/database", { state: { item } })}
         >
           資料庫
-        </Link>
+        </div>
       </div>
 
       {/* <!--中間欄位內容--> */}

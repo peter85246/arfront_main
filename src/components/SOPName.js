@@ -52,6 +52,10 @@ export function SOPName({ onClose }) {
     setErrors(newErrors);
 
     if (!hasError) {
+      const modelImageObj = SOPInfo.knowledgeInfo?.knowledgeBaseModelImageObj?.map(item => item.name)
+      const toolsImageObj = SOPInfo.knowledgeInfo?.knowledgeBaseToolsImageObj?.map(item => item.name)
+      const positionImageObj = SOPInfo.knowledgeInfo?.knowledgeBasePositionImageObj?.map(item => item.name)
+
       const formData = new FormData();
       formData.append("MachineAddId", SOPInfo.machineAddId.toString());
       formData.append("machineName", SOPInfo.machineInfo.machineName);
@@ -93,6 +97,16 @@ export function SOPName({ onClose }) {
           }
         });
       });
+
+      modelImageObj.forEach((name, idx) => {
+        formData.append(`KnowledgeBases[0].KnowledgeBaseModelImageNames[${idx}]`, name)
+      })
+      toolsImageObj.forEach((name, idx) => {
+        formData.append(`KnowledgeBases[0].KnowledgeBaseToolsImageNames[${idx}]`, name)
+      })
+      positionImageObj.forEach((name, idx) => {
+        formData.append(`KnowledgeBases[0].KnowledgeBasePositionImageNames[${idx}]`, name)
+      })
 
       // 檢查是否有文件被添加
       if (!fileIncluded) {
