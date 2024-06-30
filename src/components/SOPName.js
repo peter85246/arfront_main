@@ -4,12 +4,7 @@ import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 import { useStore } from "../zustand/store";
 import { fetchDataCallFile } from "../utils/Api";
-
-import {
-  apiMachineInfo,
-  apiSaveKnowledgeBase,
-  apiSaveSOP2,
-} from "../utils/Api";
+import { apiSaveSOP2 } from "../utils/Api";
 
 export function SOPName({ onClose }) {
   const { SOPInfo, setSOPInfo } = useStore();
@@ -115,7 +110,7 @@ export function SOPName({ onClose }) {
         const saveKnowledgeBaseRes = await fetchDataCallFile(
           "SaveKnowledgeBase",
           "PUT",
-          formData,
+          formData
         );
 
         if (saveKnowledgeBaseRes.message !== "完全成功") {
@@ -129,13 +124,73 @@ export function SOPName({ onClose }) {
           return;
         }
 
-        toast.success("保存成功", {
-          position: toast.POSITION.TOP_CENTER,
-          autoClose: 2000,
-          hideProgressBar: true,
-          closeOnClick: false,
-          pauseOnHover: true,
+        const SOPFormData = new FormData();
+        SOPFormData.append(`MachineAddId`, SOPInfo.machineAddId.toString());
+        SOPFormData.append(`KnowledgeBaseId`, saveKnowledgeBaseRes.result);
+
+        SOPInfo.sops.forEach((sop, idx) => {
+          SOPFormData.append(`SOP2s[${idx}].deleted`, sop.deleted);
+          SOPFormData.append(`SOP2s[${idx}].isDeletedSOPImage`, sop.isDeletedSOPImage);
+          SOPFormData.append(`SOP2s[${idx}].isDeletedSOPRemarksImage`, sop.isDeletedSOPRemarksImage);
+          SOPFormData.append(`SOP2s[${idx}].isDeletedSOPVideo`, sop.isDeletedSOPVideo);
+          SOPFormData.append(`SOP2s[${idx}].sopId`, sop.sopId);
+          SOPFormData.append(`SOP2s[${idx}].soP2Image`, sop.sopImage);
+          SOPFormData.append(`SOP2s[${idx}].soP2ImageObj`, sop.sopImageObj);
+          SOPFormData.append(`SOP2s[${idx}].soP2RemarkImage`, sop.sopRemarksImage);
+          SOPFormData.append(`SOP2s[${idx}].soP2RemarkImageObj`, sop.sopRemarksImageObj);
+          SOPFormData.append(`SOP2s[${idx}].soP2Message`, sop.sopMessage);
+          SOPFormData.append(`SOP2s[${idx}].soP2Step`, sop.sopStep);
+          SOPFormData.append(`SOP2s[${idx}].sopVideo`, sop.sopVideo);
+          SOPFormData.append(`SOP2s[${idx}].sopVideoObj`, sop.sopVideoObj);
+          SOPFormData.append(`SOP2s[${idx}].sopPLC1`, sop.sopplC1);
+          SOPFormData.append(`SOP2s[${idx}].sopPLC2`, sop.sopplC2);
+          SOPFormData.append(`SOP2s[${idx}].sopPLC3`, sop.sopplC3);
+          SOPFormData.append(`SOP2s[${idx}].sopPLC4`, sop.sopplC4);
+
+          sop.sopModels.forEach((sopModel, j) => {
+            SOPFormData.append(
+              `SOP2s[${idx}].sopModels[${j}].sopModelId`,
+              sopModel.sopModelId
+            );
+            SOPFormData.append(
+              `SOP2s[${idx}].sopModels[${j}].deleted`,
+              sopModel.deleted
+            );
+            SOPFormData.append(
+              `SOP2s[${idx}].sopModels[${j}].sopId`,
+              sopModel.sopId
+            );
+            SOPFormData.append(
+              `SOP2s[${idx}].sopModels[${j}].sopModelImage`,
+              sopModel.sopModelImage
+            );
+            SOPFormData.append(
+              `SOP2s[${idx}].sopModels[${j}].sopModelImageObj`,
+              sopModel.sopModelImageObj
+            );
+            SOPFormData.append(
+              `SOP2s[${idx}].sopModels[${j}].sopModelFile`,
+              sopModel.sopModelFile
+            );
+            SOPFormData.append(
+              `SOP2s[${idx}].sopModels[${j}].sopModelFileObj`,
+              sopModel.sopModelFileObj
+            );
+          })
         });
+
+        const saveSOPInfoRes = await apiSaveSOP2(SOPFormData);
+
+        if (saveSOPInfoRes.message === "完全成功") {
+          toast.success("保存成功", {
+            position: toast.POSITION.TOP_CENTER,
+            autoClose: 2000,
+            hideProgressBar: true,
+            closeOnClick: false,
+            pauseOnHover: true,
+          });
+        }
+
         setSOPInfo(null); // Reset or update SOP information
         // setTimeout(() => { window.location.href = "/knowledge"}, 2000);
       } catch (err) {

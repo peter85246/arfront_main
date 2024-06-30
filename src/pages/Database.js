@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next"; //語系
 import { Link, useNavigate } from "react-router-dom";
 import PdfContent from "../components/PDFContent";
 import { useLocation } from "react-router-dom";
+import { toast } from "react-toastify";
 import { useDatabase } from "../components/useDatabse";
 import { apiSaveKnowledgeBase, apiSaveSOP2 } from "../utils/Api";
 import {
@@ -38,12 +39,15 @@ export default function Database() {
 
   const handleDelete = async () => {
     try {
-      await apiSaveSOP2({
-        machineAddId: item.machineAddId,
-        knowledgeBaseId: item.knowledgeBaseId,
-        deleted: 1,
-      });
-      await apiSaveKnowledgeBase({
+      if (SOPData.length) {
+        await apiSaveSOP2({
+          machineAddId: item.machineAddId,
+          knowledgeBaseId: item.knowledgeBaseId,
+          deleted: 1,
+        });
+      }
+      
+      const res = await apiSaveKnowledgeBase({
         machineAddId: item.machineAddId,
         KnowledgeBases: [
           {
@@ -52,6 +56,17 @@ export default function Database() {
           },
         ],
       });
+
+      if (res?.message === "完全成功") {
+        toast.success('保存成功', {
+          position: toast.POSITION.TOP_CENTER,
+          autoClose: 2000,
+          hideProgressBar: true,
+          closeOnClick: false,
+          pauseOnHover: true,
+        });
+        setTimeout(() => { window.location.href = "/knowledge"}, 1000);
+      }
     } catch (err) {
       console.log(err);
     }
@@ -77,9 +92,10 @@ export default function Database() {
     const getSOPInfo = async () => {
       const res = await apiGetAllSOPByMachineAddId({ Id: machineAddId });
       if (res?.message === "完全成功") {
+        console.log('res.result', res.result)
         const sop = res.result.filter(
           (item) => item.knowledgeBaseId === knowledgeBaseId,
-        )[0];
+        );
         setSOPData(sop);
       }
     };
@@ -125,12 +141,12 @@ export default function Database() {
           >
             刪除
           </div>
-          <Link
-            to="/repairDocument"
+          <div
             className={classNames(styles["button"], styles["btn-pdf"])}
+            onClick={() => navigate("/repairDocument", { state: { item } })}
           >
             PDF
-          </Link>
+          </div>
         </div>
 
         {/* <!--中間欄位內容--> */}
