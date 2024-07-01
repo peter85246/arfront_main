@@ -8,10 +8,14 @@ import { jsPDF } from "jspdf";
 import { Document, Page, Text, View, StyleSheet } from "@react-pdf/renderer";
 import PdfContent from "./PDFContent";
 import { useTranslation } from "react-i18next"; //語系
+<<<<<<< HEAD
 import {
   apiGetAllKnowledgeBaseByMachineAddId,
   apiGetAllSOPByMachineAddId,
 } from "../utils/Api";
+=======
+import { apiGetAllKnowledgeBaseByMachineAddId, apiGetAllSOPByMachineAddId } from "../utils/Api";
+>>>>>>> 45944680588431b3e71825cd3cbddf5ad78dd61f
 
 // React PDF Styles
 const pdfStyles = StyleSheet.create({
@@ -81,7 +85,11 @@ export function RepairDocument() {
     const getSOPInfo = async () => {
       const res = await apiGetAllSOPByMachineAddId({ Id: machineAddId });
       if (res?.message === "完全成功") {
+<<<<<<< HEAD
         console.log("res.result", res.result);
+=======
+        console.log('res.result', res.result)
+>>>>>>> 45944680588431b3e71825cd3cbddf5ad78dd61f
         const sop = res.result.filter(
           (item) => item.knowledgeBaseId === knowledgeBaseId,
         );
@@ -133,11 +141,15 @@ export function RepairDocument() {
       {/* <!--中間欄位內容--> */}
       <div className={styles["content-box"]}>
         <div className={styles["content-box-middle-bigView"]}>
+<<<<<<< HEAD
           <PdfContent
             ref={pdfRef}
             knowledgeInfo={knowledgeInfo}
             SOPData={SOPData}
           />
+=======
+          <PdfContent ref={pdfRef} knowledgeInfo={knowledgeInfo} SOPData={SOPData} />
+>>>>>>> 45944680588431b3e71825cd3cbddf5ad78dd61f
         </div>
       </div>
     </main>
