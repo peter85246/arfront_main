@@ -186,6 +186,7 @@ export function SOPName({ onClose }) {
             sop.sopRemarksImageObj
           );
           SOPFormData.append(`SOP2s[${idx}].soP2Message`, sop.sopMessage);
+          SOPFormData.append(`SOP2s[${idx}].soP2Remark`, sop.sopRemark);
           SOPFormData.append(`SOP2s[${idx}].soP2Step`, sop.sopStep);
           SOPFormData.append(`SOP2s[${idx}].soP2Name`, sop.sopName);
           SOPFormData.append(`SOP2s[${idx}].sopVideo`, sop.sopVideo);
@@ -240,9 +241,9 @@ export function SOPName({ onClose }) {
         }
 
         setSOPInfo(null); // Reset or update SOP information
-        setTimeout(() => {
-          window.location.href = '/knowledge';
-        }, 2000);
+        // setTimeout(() => {
+        //   window.location.href = '/knowledge';
+        // }, 2000);
       } catch (err) {
         console.error('保存知識庫失败:', err);
         toast.error(`保存失败，請稍后重试。錯誤詳情: ${err.message}`, {

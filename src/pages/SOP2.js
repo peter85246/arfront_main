@@ -128,7 +128,7 @@ function SOP2() {
       sopImageObj: null,
       isDeletedSOPImage: false,
       /* 新增：sopRemarksMessage、sopRemarksImage、sopRemarksImageObj 三元素 */
-      sopRemarksMessage: '',
+      sopRemark: '',
       sopRemarksImage: '',
       sopRemarksImageObj: null,
       isDeletedSOPRemarksImage: false,
@@ -878,9 +878,9 @@ function SOP2() {
                               <textarea
                                 className="form-control"
                                 rows="8"
-                                name="sopRemarksMessage"
+                                name="sopRemark"
                                 maxLength="1000"
-                                value={selectSOP.sopRemarksMessage}
+                                value={selectSOP.sopRemark}
                                 onChange={(e) => handleSelectSOPChange(e)}
                                 style={{ color: textColor }}
                               ></textarea>

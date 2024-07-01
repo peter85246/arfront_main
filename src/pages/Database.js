@@ -14,9 +14,12 @@ import {
 import { useEffect, useState } from 'react';
 import { useStore } from '../zustand/store';
 
+
 export default function Database() {
   const location = useLocation();
   const item = location.state?.item; // 訪問傳遞的狀態
+  const currentPage = location.state?.currentPage || 1; // 接收當前頁碼，默認為1
+  const pageRow = location.state?.pageRow || 5; // 接收每頁行數，默認為5
 
   const { t } = useTranslation();
   const { setSOPInfo } = useStore();
@@ -37,7 +40,7 @@ export default function Database() {
     navigate('/document-editor', { state: { knowledgeInfo, SOPData } });
   };
 
-  const handleDelete = async () => {
+  const handleDelete = async () => {  
     try {
       if (SOPData.length) {
         await apiSaveSOP2({
@@ -167,9 +170,19 @@ export default function Database() {
                   </tr>
                 </thead>
                 <tbody>
-                  {item ? (
+                  {/* 根據資料庫內的KnowledgeeBaseId顯示 */}
+                  {/* {item ? (
                     <tr className={styles['row-database']}>
                       <td>{item.knowledgeBaseId}</td>
+                      <td>{item.knowledgeBaseDeviceType}</td>
+                      <td>{item.knowledgeBaseDeviceParts}</td>
+                      <td>{item.knowledgeBaseRepairItems}</td>
+                      <td>{item.knowledgeBaseRepairType}</td>
+                    </tr> */}
+                    
+                  {item ? (
+                    <tr className={styles['row-database']}>
+                      <td>{(currentPage - 1) * pageRow + item.index + 1}</td> {/* 自定義序列，顯示自動排序，不因刪除欄位而產生缺口 */}
                       <td>{item.knowledgeBaseDeviceType}</td>
                       <td>{item.knowledgeBaseDeviceParts}</td>
                       <td>{item.knowledgeBaseRepairItems}</td>

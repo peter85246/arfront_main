@@ -99,6 +99,7 @@ export default function Knowledge() {
       SlicedData.push(filteredData.slice(i, i + rows));
     }
     setGroupedData(SlicedData);
+    setCurrentPage(1); // 重置到第一頁
   };
 
   useEffect(() => {
@@ -218,6 +219,7 @@ export default function Knowledge() {
   const handleChangePage = (number) => {
     console.log('Changing page to', number);
     setActivePage(number);
+    setCurrentPage(number); // 更新當前頁碼
     const start = (number - 1) * pageRow;
     const end = number * pageRow;
     setShowKnowledgeBases(knowledgeBases.slice(start, end));
@@ -272,8 +274,14 @@ export default function Knowledge() {
 
   const navigate = useNavigate();
 
-  const handleRowClick = (item) => {
-    navigate('/database', { state: { item } });
+  const handleRowClick = (item, index) => {
+    navigate('/database', {
+      state: {
+        item: { ...item, index },
+        currentPage, // 傳遞當前頁碼
+        pageRow, // 傳遞每頁行數
+      },
+    });
   };
 
   return (
@@ -366,9 +374,10 @@ export default function Knowledge() {
                           <tr
                             key={item.knowledgeBaseId}
                             className={styles['row']}
-                            onClick={() => handleRowClick(item)}
+                            onClick={() => handleRowClick(item, index)}
                           >
-                            <td>{item.knowledgeBaseId}</td>
+                            <td>{(currentPage - 1) * pageRow + index + 1}</td>
+                            {/* <td>{item.knowledgeBaseId}</td> */}
                             <td>{item.knowledgeBaseDeviceType}</td>
                             <td>{item.knowledgeBaseDeviceParts}</td>
                             <td>{item.knowledgeBaseRepairItems}</td>

@@ -186,7 +186,7 @@ const MenuTest = () => {
 
   const fetchData = async () => {
     try {
-      const params = { MachineAddId: 12 };
+      const params = { MachineAddId: 1 };
       const data = await apiGetMachineAddMindMap(params);
 
       // 檢查數據是否為期望的格式
