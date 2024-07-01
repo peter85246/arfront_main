@@ -110,7 +110,7 @@ const PDFContent = React.forwardRef(({ knowledgeInfo, SOPData }, ref) => {
             </div>
             <div
               className="w-full flex justify-between py-2 px-6"
-              style={{ minWidth: '80vw' }}
+              style={{ minWidth: '60vw' }}
             >
               <div
                 style={{
@@ -175,7 +175,10 @@ const PDFContent = React.forwardRef(({ knowledgeInfo, SOPData }, ref) => {
                     ).map((item, idx) => (
                       <div
                         className="flex gap-[4px] items-center"
-                        style={{ minWidth: '15vw' }}
+                        style={{
+                          minWidth: '20vw',  // 增加最小寬度
+                          wordWrap: 'break-word',  // 允許在達到邊緣時換行
+                        }}
                       >
                         <span className="text-red-600 text-[20px]">
                           {['A', 'B', 'C', 'D', 'E', 'F'][idx]}
@@ -196,7 +199,8 @@ const PDFContent = React.forwardRef(({ knowledgeInfo, SOPData }, ref) => {
             <div className={styles['tools-label']}>
               <label>Illustration(維修部位說明) :</label>
             </div>
-            <div className="w-full flex justify-between py-2 px-6">
+            <div className="w-full flex justify-between py-2 px-6" 
+              style={{ minWidth: '60vw' }}>
               <div
                 style={{
                   display: 'flex',
