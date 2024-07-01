@@ -1,44 +1,44 @@
-import { useEffect, useState } from "react";
-import { AddingKnowledge } from "../components/AddingKnowledge";
-import { ConditionSearchDialog } from "../components/ConditionSearchDialog";
-import styles from "../scss/global.module.scss";
-import classNames from "classnames";
-import { useTranslation } from "react-i18next"; //語系
-import { DebounceInput } from "react-debounce-input";
-import Pagination from "react-bootstrap/Pagination";
-import { ToastContainer, toast } from "react-toastify";
-import { setWindowClass, removeWindowClass } from "../utils/helpers";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from 'react';
+import { AddingKnowledge } from '../components/AddingKnowledge';
+import { ConditionSearchDialog } from '../components/ConditionSearchDialog';
+import styles from '../scss/global.module.scss';
+import classNames from 'classnames';
+import { useTranslation } from 'react-i18next'; //語系
+import { DebounceInput } from 'react-debounce-input';
+import Pagination from 'react-bootstrap/Pagination';
+import { ToastContainer, toast } from 'react-toastify';
+import { setWindowClass, removeWindowClass } from '../utils/helpers';
+import { useNavigate } from 'react-router-dom';
 
 import {
   apiGetAllKnowledgeBaseByFilter,
   apiAddKnowledgeBase,
-} from "../utils/Api";
+} from '../utils/Api';
 
 const DataArray = [
   {
     id: 1,
-    KnowledgeBaseDeviceType: "銑床",
-    KnowledgeBaseDeviceParts: "冷卻系統",
-    RepairItem: "主軸油冷機故障:1004",
-    KnowledgeBaseRepairType: "機械故障",
-    KnowledgeBaseFileNo: "TS31103",
+    KnowledgeBaseDeviceType: '銑床',
+    KnowledgeBaseDeviceParts: '冷卻系統',
+    RepairItem: '主軸油冷機故障:1004',
+    KnowledgeBaseRepairType: '機械故障',
+    KnowledgeBaseFileNo: 'TS31103',
   },
   {
     id: 2,
-    KnowledgeBaseDeviceType: "車床",
-    KnowledgeBaseDeviceParts: "主軸",
-    RepairItem: "機械目前處於是車工件的狀態:2014",
-    KnowledgeBaseRepairType: "電控層面",
-    KnowledgeBaseFileNo: "TS23001",
+    KnowledgeBaseDeviceType: '車床',
+    KnowledgeBaseDeviceParts: '主軸',
+    RepairItem: '機械目前處於是車工件的狀態:2014',
+    KnowledgeBaseRepairType: '電控層面',
+    KnowledgeBaseFileNo: 'TS23001',
   },
   {
     id: 3,
-    KnowledgeBaseDeviceType: "等離子切割機",
-    KnowledgeBaseDeviceParts: "保養調教",
-    RepairItem: "電線鬆脫:3021",
-    KnowledgeBaseRepairType: "零組件",
-    KnowledgeBaseFileNo: "TS18331",
+    KnowledgeBaseDeviceType: '等離子切割機',
+    KnowledgeBaseDeviceParts: '保養調教',
+    RepairItem: '電線鬆脫:3021',
+    KnowledgeBaseRepairType: '零組件',
+    KnowledgeBaseFileNo: 'TS18331',
   },
 ];
 
@@ -52,7 +52,7 @@ export default function Knowledge() {
   const [currentPage, setCurrentPage] = useState(1);
 
   const { t } = useTranslation();
-  const [keyword, setKeyword] = useState(""); //關鍵字
+  const [keyword, setKeyword] = useState(''); //關鍵字
   const [knowledgeBases, setKnowledgeBases] = useState([]); //知識庫列表
   const [showKnowledgeBases, setShowKnowledgeBases] = useState([]); //知識庫列表(顯示前端)
   const [rawKnowledgeBases, setRawKnowledgeBases] = useState([]); //原始知識庫列表
@@ -64,19 +64,19 @@ export default function Knowledge() {
   const [addKnowledgeBase, setAddKnowledgeBase] = useState({
     //新增單一使用者
     userId: 0,
-    userName: "",
-    userAccount: "",
-    userPaw: "",
-    userAgainPaw: "",
+    userName: '',
+    userAccount: '',
+    userPaw: '',
+    userAgainPaw: '',
     userLevel: 0,
   });
 
   const [addKnowledgeBaseErrors, setAddKnowledgeBaseErrors] = useState({
     //新增單一使用者錯誤訊息
-    userName: "",
-    userAccount: "",
-    userPaw: "",
-    userAgainPaw: "",
+    userName: '',
+    userAccount: '',
+    userPaw: '',
+    userAgainPaw: '',
   });
 
   // 篩選資料
@@ -121,7 +121,7 @@ export default function Knowledge() {
 
   //#region 初始載入
   useEffect(() => {
-    removeWindowClass("login-page");
+    removeWindowClass('login-page');
 
     const fetchData = async () => {
       await refreshKnowledgeBases();
@@ -133,21 +133,21 @@ export default function Knowledge() {
 
   useEffect(() => {
     if (selectedConditions) {
-      console.log("rawKnowledgeBases", rawKnowledgeBases);
-      console.log("selectedConditions", selectedConditions);
+      console.log('rawKnowledgeBases', rawKnowledgeBases);
+      console.log('selectedConditions', selectedConditions);
 
       const filteredData = Object.entries(selectedConditions).reduce(
         (result, [key, value]) => {
-          console.log("value", value);
+          console.log('value', value);
           if (value) {
             return result.filter((item) => item[key] == value.label);
           }
           return result;
         },
-        rawKnowledgeBases,
+        rawKnowledgeBases
       );
 
-      console.log("filteredData", filteredData);
+      console.log('filteredData', filteredData);
       setShowKnowledgeBases(filteredData);
     }
   }, [selectedConditions, rawKnowledgeBases]);
@@ -161,20 +161,20 @@ export default function Knowledge() {
     try {
       let knowledgeBasesResponse =
         await apiGetAllKnowledgeBaseByFilter(sendData);
-      console.log("Knowledge bases response:", knowledgeBasesResponse);
+      console.log('Knowledge bases response:', knowledgeBasesResponse);
 
-      if (knowledgeBasesResponse && knowledgeBasesResponse.code === "0000") {
+      if (knowledgeBasesResponse && knowledgeBasesResponse.code === '0000') {
         setKnowledgeBases(knowledgeBasesResponse.result);
         setShowKnowledgeBases(knowledgeBasesResponse.result.slice(0, pageRow));
-        console.log("Knowledge bases set successfully.");
+        console.log('Knowledge bases set successfully.');
       } else {
         console.error(
-          "Failed to fetch knowledge bases, code:",
-          knowledgeBasesResponse.code,
+          'Failed to fetch knowledge bases, code:',
+          knowledgeBasesResponse.code
         );
       }
     } catch (error) {
-      console.error("Error fetching knowledge bases:", error);
+      console.error('Error fetching knowledge bases:', error);
     }
   };
   //#endregion
@@ -206,17 +206,17 @@ export default function Knowledge() {
           onClick={() => handleChangePage(number)}
         >
           {number}
-        </Pagination.Item>,
+        </Pagination.Item>
       );
     }
     setPages(newPages); // 將生成的頁碼更新到狀態中
-    console.log("Pages set:", newPages);
+    console.log('Pages set:', newPages);
   }, [knowledgeBases.length, activePage, pageRow]); // 確保當這些依賴更新時重新計算頁碼
 
   const [pages, setPages] = useState([]); //保存頁碼按鈕
 
   const handleChangePage = (number) => {
-    console.log("Changing page to", number);
+    console.log('Changing page to', number);
     setActivePage(number);
     const start = (number - 1) * pageRow;
     const end = number * pageRow;
@@ -236,18 +236,18 @@ export default function Knowledge() {
     e.preventDefault();
     setAddKnowledgeBase({
       userId: 0,
-      userName: "",
-      userAccount: "",
-      userPaw: "",
-      userAgainPaw: "",
+      userName: '',
+      userAccount: '',
+      userPaw: '',
+      userAgainPaw: '',
       userLevel: 1,
     });
 
     setAddKnowledgeBaseErrors({
-      userName: "",
-      userAccount: "",
-      userPaw: "",
-      userAgainPaw: "",
+      userName: '',
+      userAccount: '',
+      userPaw: '',
+      userAgainPaw: '',
     });
 
     setShowAddKnowledgeBaseModal(true);
@@ -273,7 +273,7 @@ export default function Knowledge() {
   const navigate = useNavigate();
 
   const handleRowClick = (item) => {
-    navigate("/database", { state: { item } });
+    navigate('/database', { state: { item } });
   };
 
   return (
@@ -285,7 +285,7 @@ export default function Knowledge() {
             <div className="content-header-text-color">
               <h1>
                 <strong>
-                  {t("knowledgeBase.content.header")}
+                  {t('knowledgeBase.content.header')}
                   {/*知識庫*/}
                 </strong>
               </h1>
@@ -296,8 +296,8 @@ export default function Knowledge() {
                 className="btn btn-add"
                 onClick={() => setIsAddingKnowledge((prev) => !prev)}
               >
-                <i className="fas fa-plus" style={{ marginLeft: "2px" }}></i>{" "}
-                {t("knowledgeBase.btn.add")}
+                <i className="fas fa-plus" style={{ marginLeft: '2px' }}></i>{' '}
+                {t('knowledgeBase.btn.add')}
                 {/*新增知識*/}
               </button>
               <button
@@ -305,16 +305,16 @@ export default function Knowledge() {
                 className="btn btn-search"
                 onClick={() => setIsConditionSearch((prev) => !prev)}
               >
-                <i className="fa fa-search"></i>{" "}
-                {t("ConditionSearchDialog.btn.search")}
+                <i className="fa fa-search"></i>{' '}
+                {t('ConditionSearchDialog.btn.search')}
                 {/*條件查詢*/}
               </button>
               <button
                 type="button"
                 className="btn btn-search"
                 style={{
-                  background: hover ? "#b10000" : "#f83c3c",
-                  borderColor: "#f83c3c",
+                  background: hover ? '#b10000' : '#f83c3c',
+                  borderColor: '#f83c3c',
                 }}
                 onMouseEnter={() => setHover(true)}
                 onMouseLeave={() => setHover(false)}
@@ -323,7 +323,7 @@ export default function Knowledge() {
                   refreshKnowledgeBases();
                 }}
               >
-                <i className="fa fa-window-close"></i> {"清除條件"}
+                <i className="fa fa-window-close"></i> {'清除條件'}
                 {/*條件查詢*/}
               </button>
             </div>
@@ -338,7 +338,7 @@ export default function Knowledge() {
                 <DebounceInput
                   debounceTimeout={300}
                   type="search"
-                  placeholder={t("keyword.placeholder")}
+                  placeholder={t('keyword.placeholder')}
                   onChange={(e) => handleChangeKeyword(e)}
                 />
                 {/*請輸入關鍵字*/}
@@ -365,7 +365,7 @@ export default function Knowledge() {
                         return (
                           <tr
                             key={item.knowledgeBaseId}
-                            className={styles["row"]}
+                            className={styles['row']}
                             onClick={() => handleRowClick(item)}
                           >
                             <td>{item.knowledgeBaseId}</td>
@@ -381,8 +381,8 @@ export default function Knowledge() {
                   ) : (
                     <>
                       <tr>
-                        <td colSpan="6" style={{ textAlign: "center" }}>
-                          {t("table.empty")}
+                        <td colSpan="6" style={{ textAlign: 'center' }}>
+                          {t('table.empty')}
                           {/*查無資料*/}
                         </td>
                       </tr>

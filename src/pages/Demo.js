@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { Button, FormControl, Container, Row, Col } from "react-bootstrap";
+import React, { useState, useEffect } from 'react';
+import { Button, FormControl, Container, Row, Col } from 'react-bootstrap';
 
 const Demo = () => {
-  const [inputValue, setInputValue] = useState("");
+  const [inputValue, setInputValue] = useState('');
   const [responses, setResponses] = useState([]);
   let eventSource = null; // 声明 eventSource 作为组件的局部变量
 
@@ -11,11 +11,11 @@ const Demo = () => {
   };
 
   const handleSubmit = () => {
-    const eventSource = new EventSource("http://localhost:5000/conversation", {
-      method: "POST",
-      mode: "cors", // 確保設定了 CORS 模式
+    const eventSource = new EventSource('http://localhost:5000/conversation', {
+      method: 'POST',
+      mode: 'cors', // 確保設定了 CORS 模式
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({ query: inputValue }),
     });
@@ -26,13 +26,13 @@ const Demo = () => {
     };
 
     eventSource.onerror = function () {
-      console.error("EventSource failed");
+      console.error('EventSource failed');
       eventSource.close();
     };
   };
 
   useEffect(() => {
-    console.log("組件已掛載，顯示輸入欄位和按鈕");
+    console.log('組件已掛載，顯示輸入欄位和按鈕');
     return () => {
       eventSource && eventSource.close(); // 組件卸載時關閉 EventSource
     };

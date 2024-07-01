@@ -1,15 +1,15 @@
-﻿import React, { useContext, useState, useEffect, useRef } from "react";
-import { useTranslation } from "react-i18next"; //語系
-import { setWindowClass, removeWindowClass } from "../utils/helpers";
-import { MyUserContext } from "../contexts/MyUserContext";
-import { DebounceInput } from "react-debounce-input";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import Modal from "react-bootstrap/Modal";
-import Spinner from "react-bootstrap/Spinner";
-import SimpleReactValidator from "simple-react-validator";
-import reactStringReplace from "react-string-replace";
-import Pagination from "react-bootstrap/Pagination";
+﻿import React, { useContext, useState, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next'; //語系
+import { setWindowClass, removeWindowClass } from '../utils/helpers';
+import { MyUserContext } from '../contexts/MyUserContext';
+import { DebounceInput } from 'react-debounce-input';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Modal from 'react-bootstrap/Modal';
+import Spinner from 'react-bootstrap/Spinner';
+import SimpleReactValidator from 'simple-react-validator';
+import reactStringReplace from 'react-string-replace';
+import Pagination from 'react-bootstrap/Pagination';
 
 import {
   apiGetAllUserinfoByFilter,
@@ -17,44 +17,44 @@ import {
   apiEditUserinfo,
   apiDeleteUserinfo,
   apiUserinfoChangePaw,
-} from "../utils/Api";
+} from '../utils/Api';
 
 function UserManage() {
   const { t } = useTranslation();
   const { myUser } = useContext(MyUserContext);
-  const [keyword, setKeyword] = useState(""); //關鍵字
+  const [keyword, setKeyword] = useState(''); //關鍵字
   const [userinfos, setUserinfos] = useState([]); //使用者列表
   const [showUserinfos, setShowUserinfos] = useState([]); //使用者列表(顯示前端)
   const [showAddUserinfoModal, setShowAddUserinfoModal] = useState(false); //顯示"新增使用者modal"
   const [addUserinfo, setAddUserinfo] = useState({
     //新增單一使用者
     userId: 0,
-    userName: "",
-    userAccount: "",
-    userPaw: "",
-    userAgainPaw: "",
+    userName: '',
+    userAccount: '',
+    userPaw: '',
+    userAgainPaw: '',
     userLevel: 0,
   });
   const [addUserinfoErrors, setAddUserinfoErrors] = useState({
     //新增單一使用者錯誤訊息
-    userName: "",
-    userAccount: "",
-    userPaw: "",
-    userAgainPaw: "",
+    userName: '',
+    userAccount: '',
+    userPaw: '',
+    userAgainPaw: '',
   });
   const [saveUserinfoLoading, setSaveUserinfoLoading] = useState(false);
   const [showEditUserinfoModal, setEditUserinfoModal] = useState(false); //顯示"修改使用者modal"
   const [editUserinfo, setEditUserinfo] = useState({
     //修改單一使用者
     userId: 0,
-    userName: "",
-    userAccount: "",
+    userName: '',
+    userAccount: '',
     userLevel: 0,
   });
   const [editUserinfoErrors, setEditUserinfoErrors] = useState({
     //修改單一使用者錯誤訊息
-    userName: "",
-    userLevel: "",
+    userName: '',
+    userLevel: '',
   });
   const [saveEditUserinfoLoading, setSaveEditUserinfoLoading] = useState(false);
 
@@ -70,15 +70,15 @@ function UserManage() {
     useState(false);
   const [userinfoChangePawErrors, setUserinfoChangePawErrors] = useState({
     //修改密碼錯誤訊息
-    newPaw: "",
-    againPaw: "",
+    newPaw: '',
+    againPaw: '',
   });
 
-  const userPaw = useRef(""); //密碼
-  const userAgainPaw = useRef(""); //再次輸入密碼
+  const userPaw = useRef(''); //密碼
+  const userAgainPaw = useRef(''); //再次輸入密碼
 
-  const newPaw = useRef(""); //新密碼
-  const againPaw = useRef(""); //再次輸入密碼
+  const newPaw = useRef(''); //新密碼
+  const againPaw = useRef(''); //再次輸入密碼
 
   const validator = new SimpleReactValidator({
     validators: {
@@ -90,15 +90,15 @@ function UserManage() {
             return result;
           }
 
-          let strRep = reactStringReplace(val, /(\d+)/g, (match, i) => "");
-          strRep = reactStringReplace(strRep, /([a-zA-Z])/g, (match, i) => "");
+          let strRep = reactStringReplace(val, /(\d+)/g, (match, i) => '');
+          strRep = reactStringReplace(strRep, /([a-zA-Z])/g, (match, i) => '');
           strRep = reactStringReplace(
             strRep,
             /([,.~!@#$%^&*_+-=])/g,
-            (match, i) => "",
+            (match, i) => ''
           );
 
-          if (strRep.join("") == "") {
+          if (strRep.join('') == '') {
             result = true;
           }
 
@@ -111,7 +111,7 @@ function UserManage() {
 
   //#region 初始載入
   useEffect(() => {
-    removeWindowClass("login-page");
+    removeWindowClass('login-page');
 
     const fetchData = async () => {
       await refreshUserinfos();
@@ -129,13 +129,13 @@ function UserManage() {
 
     let userinfosResponse = await apiGetAllUserinfoByFilter(sendData);
     if (userinfosResponse) {
-      if (userinfosResponse.code == "0000") {
+      if (userinfosResponse.code == '0000') {
         setUserinfos(userinfosResponse.result);
         setShowUserinfos(
           userinfosResponse.result.slice(
             activePage * pageRow - pageRow,
-            activePage * pageRow,
-          ),
+            activePage * pageRow
+          )
         );
       }
     }
@@ -158,14 +158,14 @@ function UserManage() {
         onClick={(e) => handleChangePage(e, number)}
       >
         {number}
-      </Pagination.Item>,
+      </Pagination.Item>
     );
   }
 
   const handleChangePage = async (e, number) => {
     setActivePage(number);
     setShowUserinfos(
-      userinfos.slice(number * pageRow - pageRow, number * pageRow),
+      userinfos.slice(number * pageRow - pageRow, number * pageRow)
     );
   };
   //#endregion
@@ -182,18 +182,18 @@ function UserManage() {
     e.preventDefault();
     setAddUserinfo({
       userId: 0,
-      userName: "",
-      userAccount: "",
-      userPaw: "",
-      userAgainPaw: "",
+      userName: '',
+      userAccount: '',
+      userPaw: '',
+      userAgainPaw: '',
       userLevel: 1,
     });
 
     setAddUserinfoErrors({
-      userName: "",
-      userAccount: "",
-      userPaw: "",
-      userAgainPaw: "",
+      userName: '',
+      userAccount: '',
+      userPaw: '',
+      userAgainPaw: '',
     });
 
     setShowAddUserinfoModal(true);
@@ -225,69 +225,69 @@ function UserManage() {
   //#endregion
 
   //#region 新增使用者 欄位驗證
-  const checkAddValidator = async (name = "", val = "") => {
+  const checkAddValidator = async (name = '', val = '') => {
     let result = true;
     let newAddUserinfoErrors = { ...addUserinfoErrors };
 
-    if (name == "userName" || name == "") {
-      if (!validator.check(addUserinfo.userName, "required")) {
-        newAddUserinfoErrors.userName = "required";
+    if (name == 'userName' || name == '') {
+      if (!validator.check(addUserinfo.userName, 'required')) {
+        newAddUserinfoErrors.userName = 'required';
         result = false;
-      } else if (!validator.check(addUserinfo.userName, "max:50")) {
-        newAddUserinfoErrors.userName = "max";
+      } else if (!validator.check(addUserinfo.userName, 'max:50')) {
+        newAddUserinfoErrors.userName = 'max';
         result = false;
       } else {
-        newAddUserinfoErrors.userName = "";
+        newAddUserinfoErrors.userName = '';
       }
     }
 
-    if (name == "userAccount" || name == "") {
-      if (!validator.check(addUserinfo.userAccount, "required")) {
-        newAddUserinfoErrors.userAccount = "required";
+    if (name == 'userAccount' || name == '') {
+      if (!validator.check(addUserinfo.userAccount, 'required')) {
+        newAddUserinfoErrors.userAccount = 'required';
         result = false;
-      } else if (!validator.check(addUserinfo.userAccount, "max:50")) {
-        newAddUserinfoErrors.userAccount = "max";
+      } else if (!validator.check(addUserinfo.userAccount, 'max:50')) {
+        newAddUserinfoErrors.userAccount = 'max';
         result = false;
       } else {
-        newAddUserinfoErrors.userAccount = "";
+        newAddUserinfoErrors.userAccount = '';
       }
     }
 
     var tempPaw = userPaw.current.value;
     var tempAgainPaw = userAgainPaw.current.value;
 
-    if (name == "userPaw" || name == "") {
+    if (name == 'userPaw' || name == '') {
       var tempPaw = userPaw.current.value;
 
-      if (!validator.check(tempPaw, "required")) {
-        newAddUserinfoErrors.userPaw = "required";
+      if (!validator.check(tempPaw, 'required')) {
+        newAddUserinfoErrors.userPaw = 'required';
         result = false;
-      } else if (!validator.check(tempPaw, "pawFormat")) {
-        newAddUserinfoErrors.userPaw = "pawFormat";
+      } else if (!validator.check(tempPaw, 'pawFormat')) {
+        newAddUserinfoErrors.userPaw = 'pawFormat';
         result = false;
       } else if (
         tempPaw != tempAgainPaw &&
-        addUserinfoErrors.userAgainPaw == ""
+        addUserinfoErrors.userAgainPaw == ''
       ) {
-        newAddUserinfoErrors.userAgainPaw = "again";
+        newAddUserinfoErrors.userAgainPaw = 'again';
         result = false;
       } else {
-        newAddUserinfoErrors.userPaw = "";
+        newAddUserinfoErrors.userPaw = '';
       }
     }
 
-    if (name == "userAgainPaw" || name == "") {
-      if (!validator.check(tempAgainPaw, "required")) {
-        newAddUserinfoErrors.userAgainPaw = "required";
+    if (name == 'userAgainPaw' || name == '') {
+      if (!validator.check(tempAgainPaw, 'required')) {
+        newAddUserinfoErrors.userAgainPaw = 'required';
         result = false;
-      } else if (!validator.check(tempAgainPaw, "pawFormat")) {
-        newAddUserinfoErrors.userAgainPaw = "pawFormat";
+      } else if (!validator.check(tempAgainPaw, 'pawFormat')) {
+        newAddUserinfoErrors.userAgainPaw = 'pawFormat';
         result = false;
       } else if (tempPaw != tempAgainPaw) {
-        newAddUserinfoErrors.userAgainPaw = "again";
+        newAddUserinfoErrors.userAgainPaw = 'again';
         result = false;
       } else {
-        newAddUserinfoErrors.userAgainPaw = "";
+        newAddUserinfoErrors.userAgainPaw = '';
       }
     }
 
@@ -313,8 +313,8 @@ function UserManage() {
 
       let addUserinfoResponse = await apiAddUserinfo(sendData);
       if (addUserinfoResponse) {
-        if (addUserinfoResponse.code == "0000") {
-          toast.success(t("toast.add.success"), {
+        if (addUserinfoResponse.code == '0000') {
+          toast.success(t('toast.add.success'), {
             position: toast.POSITION.TOP_CENTER,
             autoClose: 3000,
             hideProgressBar: true,
@@ -375,16 +375,16 @@ function UserManage() {
   //#endregion
 
   //#region 修改使用者 欄位驗證
-  const checkEditValidator = async (name = "", val = "") => {
+  const checkEditValidator = async (name = '', val = '') => {
     let result = true;
     let newEditUserinfoErrors = { ...editUserinfoErrors };
 
-    if (name == "userName" || name == "") {
-      if (!validator.check(editUserinfo.userName, "required")) {
-        newEditUserinfoErrors.userName = "required";
+    if (name == 'userName' || name == '') {
+      if (!validator.check(editUserinfo.userName, 'required')) {
+        newEditUserinfoErrors.userName = 'required';
         result = false;
       } else {
-        newEditUserinfoErrors.userName = "";
+        newEditUserinfoErrors.userName = '';
       }
     }
 
@@ -408,8 +408,8 @@ function UserManage() {
 
       let editUserinfoResponse = await apiEditUserinfo(sendData);
       if (editUserinfoResponse) {
-        if (editUserinfoResponse.code == "0000") {
-          toast.success(t("toast.edit.success"), {
+        if (editUserinfoResponse.code == '0000') {
+          toast.success(t('toast.edit.success'), {
             position: toast.POSITION.TOP_CENTER,
             autoClose: 3000,
             hideProgressBar: true,
@@ -462,46 +462,46 @@ function UserManage() {
   //#endregion
 
   //#region 修改密碼 欄位驗證
-  const checkChangePawValidator = async (name = "", val = "") => {
+  const checkChangePawValidator = async (name = '', val = '') => {
     let result = true;
     let newUserinfoChangePawErrors = { ...userinfoChangePawErrors };
 
-    if (name == "newPaw" || name == "") {
+    if (name == 'newPaw' || name == '') {
       var tempNewPaw = newPaw.current.value;
       var tempAgainPaw = againPaw.current.value;
 
-      if (!validator.check(tempNewPaw, "required")) {
-        newUserinfoChangePawErrors.newPaw = "required";
+      if (!validator.check(tempNewPaw, 'required')) {
+        newUserinfoChangePawErrors.newPaw = 'required';
         result = false;
-      } else if (!validator.check(tempNewPaw, "pawFormat")) {
-        newUserinfoChangePawErrors.newPaw = "pawFormat";
+      } else if (!validator.check(tempNewPaw, 'pawFormat')) {
+        newUserinfoChangePawErrors.newPaw = 'pawFormat';
         result = false;
       } else if (
         tempNewPaw != tempAgainPaw &&
-        userinfoChangePawErrors.againPaw == ""
+        userinfoChangePawErrors.againPaw == ''
       ) {
-        newUserinfoChangePawErrors.againPaw = "again";
+        newUserinfoChangePawErrors.againPaw = 'again';
         result = false;
       } else {
-        newUserinfoChangePawErrors.newPaw = "";
+        newUserinfoChangePawErrors.newPaw = '';
       }
     }
 
-    if (name == "againPaw" || name == "") {
+    if (name == 'againPaw' || name == '') {
       var tempNewPaw = newPaw.current.value;
       var tempAgainPaw = againPaw.current.value;
 
-      if (!validator.check(tempAgainPaw, "required")) {
-        newUserinfoChangePawErrors.againPaw = "required";
+      if (!validator.check(tempAgainPaw, 'required')) {
+        newUserinfoChangePawErrors.againPaw = 'required';
         result = false;
-      } else if (!validator.check(tempAgainPaw, "pawFormat")) {
-        newUserinfoChangePawErrors.againPaw = "pawFormat";
+      } else if (!validator.check(tempAgainPaw, 'pawFormat')) {
+        newUserinfoChangePawErrors.againPaw = 'pawFormat';
         result = false;
       } else if (tempNewPaw != tempAgainPaw) {
-        newUserinfoChangePawErrors.againPaw = "again";
+        newUserinfoChangePawErrors.againPaw = 'again';
         result = false;
       } else {
-        newUserinfoChangePawErrors.againPaw = "";
+        newUserinfoChangePawErrors.againPaw = '';
       }
     }
 
@@ -525,8 +525,8 @@ function UserManage() {
 
       let userinfoChangePawResponse = await apiUserinfoChangePaw(sendData);
       if (userinfoChangePawResponse) {
-        if (userinfoChangePawResponse.code == "0000") {
-          toast.success(t("toast.edit.success"), {
+        if (userinfoChangePawResponse.code == '0000') {
+          toast.success(t('toast.edit.success'), {
             position: toast.POSITION.TOP_CENTER,
             autoClose: 3000,
             hideProgressBar: true,
@@ -580,8 +580,8 @@ function UserManage() {
 
     let deleteUserinfoResponse = await apiDeleteUserinfo(sendData);
     if (deleteUserinfoResponse) {
-      if (deleteUserinfoResponse.code == "0000") {
-        toast.success(t("toast.delete.success"), {
+      if (deleteUserinfoResponse.code == '0000') {
+        toast.success(t('toast.delete.success'), {
           position: toast.POSITION.TOP_CENTER,
           autoClose: 3000,
           hideProgressBar: true,
@@ -616,7 +616,7 @@ function UserManage() {
             <div className="content-header-text-color">
               <h1>
                 <strong>
-                  {t("userManage.content.header")}
+                  {t('userManage.content.header')}
                   {/*使用者管理*/}
                 </strong>
               </h1>
@@ -626,7 +626,7 @@ function UserManage() {
               className="btn btn-primary btn-add"
               onClick={(e) => handleOpenAddUserinfoModal(e)}
             >
-              <i className="fas fa-plus"></i> {t("userManage.btn.add")}
+              <i className="fas fa-plus"></i> {t('userManage.btn.add')}
               {/*新增使用者*/}
             </button>
           </div>
@@ -640,7 +640,7 @@ function UserManage() {
                 <DebounceInput
                   debounceTimeout={300}
                   type="search"
-                  placeholder={t("keyword.placeholder")}
+                  placeholder={t('keyword.placeholder')}
                   onChange={(e) => handleChangeKeyword(e)}
                 />
                 {/*請輸入關鍵字*/}
@@ -653,23 +653,23 @@ function UserManage() {
                 <thead>
                   <tr>
                     <th>
-                      {t("userManage.userId")}
+                      {t('userManage.userId')}
                       {/*編號*/}
                     </th>
                     <th>
-                      {t("userManage.userName")}
+                      {t('userManage.userName')}
                       {/*名稱*/}
                     </th>
                     <th>
-                      {t("userManage.userAccount")}
+                      {t('userManage.userAccount')}
                       {/*帳號*/}
                     </th>
                     <th>
-                      {t("userManage.userLevel")}
+                      {t('userManage.userLevel')}
                       {/*層級*/}
                     </th>
                     <th>
-                      {t("userManage.fun")}
+                      {t('userManage.fun')}
                       {/*功能*/}
                     </th>
                   </tr>
@@ -692,9 +692,9 @@ function UserManage() {
                                   handleOpenEditUserinfoModal(item.userId)
                                 }
                               >
-                                {t("userManage.btn.edit")}
+                                {t('userManage.btn.edit')}
                                 {/*編輯*/}
-                              </button>{" "}
+                              </button>{' '}
                               {myUser && myUser.userId != item.userId ? (
                                 <>
                                   <button
@@ -702,14 +702,14 @@ function UserManage() {
                                     className="btn btn-outline-info"
                                     onClick={() =>
                                       handleOpenUserinfoChangePawModal(
-                                        item.userId,
+                                        item.userId
                                       )
                                     }
                                   >
-                                    {" "}
-                                    {t("userManage.changePaw")}
+                                    {' '}
+                                    {t('userManage.changePaw')}
                                     {/*修改密碼*/}
-                                  </button>{" "}
+                                  </button>{' '}
                                 </>
                               ) : (
                                 <></>
@@ -722,7 +722,7 @@ function UserManage() {
                                     handleOpenDeleteUserinfoModal(item.userId)
                                   }
                                 >
-                                  {t("userManage.btn.del")}
+                                  {t('userManage.btn.del')}
                                   {/*刪除*/}
                                 </button>
                               ) : (
@@ -736,8 +736,8 @@ function UserManage() {
                   ) : (
                     <>
                       <tr>
-                        <td colSpan="5" style={{ textAlign: "center" }}>
-                          {t("table.empty")}
+                        <td colSpan="5" style={{ textAlign: 'center' }}>
+                          {t('table.empty')}
                           {/*查無資料*/}
                         </td>
                       </tr>
@@ -762,7 +762,7 @@ function UserManage() {
       >
         <Modal.Header closeButton>
           <Modal.Title>
-            {t("userManage.add")}
+            {t('userManage.add')}
             {/*新增使用者*/}
           </Modal.Title>
         </Modal.Header>
@@ -772,7 +772,7 @@ function UserManage() {
               <div className="col-12 form-group">
                 <label className="form-label">
                   <span className="text-danger">*</span>
-                  {t("userManage.userName")}
+                  {t('userManage.userName')}
                   {/*名稱*/}
                 </label>
                 <input
@@ -786,18 +786,18 @@ function UserManage() {
                 />
                 {(() => {
                   switch (addUserinfoErrors.userName) {
-                    case "required":
+                    case 'required':
                       return (
                         <div className="invalid-feedback d-block">
-                          <i className="fas fa-exclamation-circle"></i>{" "}
-                          {t("helpWord.required")} {/*不得空白*/}
+                          <i className="fas fa-exclamation-circle"></i>{' '}
+                          {t('helpWord.required')} {/*不得空白*/}
                         </div>
                       );
-                    case "max":
+                    case 'max':
                       return (
                         <div className="invalid-feedback d-block">
-                          <i className="fas fa-exclamation-circle"></i>{" "}
-                          {t("helpWord.max", { e: 50 })}
+                          <i className="fas fa-exclamation-circle"></i>{' '}
+                          {t('helpWord.max', { e: 50 })}
                           {/*超過上限{{e}}個字元*/}
                         </div>
                       );
@@ -811,7 +811,7 @@ function UserManage() {
               <div className="col-12 form-group">
                 <label className="form-label">
                   <span className="text-danger">*</span>
-                  {t("userManage.userAccount")}
+                  {t('userManage.userAccount')}
                   {/*帳號*/}
                 </label>
                 <input
@@ -825,18 +825,18 @@ function UserManage() {
                 />
                 {(() => {
                   switch (addUserinfoErrors.userAccount) {
-                    case "required":
+                    case 'required':
                       return (
                         <div className="invalid-feedback d-block">
-                          <i className="fas fa-exclamation-circle"></i>{" "}
-                          {t("helpWord.required")} {/*不得空白*/}
+                          <i className="fas fa-exclamation-circle"></i>{' '}
+                          {t('helpWord.required')} {/*不得空白*/}
                         </div>
                       );
-                    case "max":
+                    case 'max':
                       return (
                         <div className="invalid-feedback d-block">
-                          <i className="fas fa-exclamation-circle"></i>{" "}
-                          {t("helpWord.max", { e: 50 })}
+                          <i className="fas fa-exclamation-circle"></i>{' '}
+                          {t('helpWord.max', { e: 50 })}
                           {/*超過上限{{e}}個字元*/}
                         </div>
                       );
@@ -850,32 +850,32 @@ function UserManage() {
               <div className="col-12 form-group">
                 <label className="form-label">
                   <span className="text-danger">*</span>
-                  {t("userManage.userPaw")}
+                  {t('userManage.userPaw')}
                   {/*密碼*/}
                 </label>
                 <input
                   type="password"
                   className="form-control"
                   name="userPaw"
-                  placeholder={t("pawFormat.placeholder")}
+                  placeholder={t('pawFormat.placeholder')}
                   onBlur={(e) => handleAddBlur(e)}
                   ref={userPaw}
                   autoComplete="off"
                 />
                 {(() => {
                   switch (addUserinfoErrors.userPaw) {
-                    case "required":
+                    case 'required':
                       return (
                         <div className="invalid-feedback d-block">
-                          <i className="fas fa-exclamation-circle"></i>{" "}
-                          {t("helpWord.required")} {/*不得空白*/}
+                          <i className="fas fa-exclamation-circle"></i>{' '}
+                          {t('helpWord.required')} {/*不得空白*/}
                         </div>
                       );
-                    case "pawFormat":
+                    case 'pawFormat':
                       return (
                         <div className="invalid-feedback d-block">
-                          <i className="fas fa-exclamation-circle"></i>{" "}
-                          {t("helpWord.format")} {/*格式有誤*/}
+                          <i className="fas fa-exclamation-circle"></i>{' '}
+                          {t('helpWord.format')} {/*格式有誤*/}
                         </div>
                       );
                     default:
@@ -888,39 +888,39 @@ function UserManage() {
               <div className="col-12 form-group">
                 <label className="form-label">
                   <span className="text-danger">*</span>
-                  {t("userManage.userAgainPaw")}
+                  {t('userManage.userAgainPaw')}
                   {/*再次輸入密碼*/}
                 </label>
                 <input
                   type="password"
                   className="form-control"
                   name="userAgainPaw"
-                  placeholder={t("pawFormat.placeholder")}
+                  placeholder={t('pawFormat.placeholder')}
                   onBlur={(e) => handleAddBlur(e)}
                   ref={userAgainPaw}
                   autoComplete="off"
                 />
                 {(() => {
                   switch (addUserinfoErrors.userAgainPaw) {
-                    case "required":
+                    case 'required':
                       return (
                         <div className="invalid-feedback d-block">
-                          <i className="fas fa-exclamation-circle"></i>{" "}
-                          {t("helpWord.required")} {/*不得空白*/}
+                          <i className="fas fa-exclamation-circle"></i>{' '}
+                          {t('helpWord.required')} {/*不得空白*/}
                         </div>
                       );
-                    case "pawFormat":
+                    case 'pawFormat':
                       return (
                         <div className="invalid-feedback d-block">
-                          <i className="fas fa-exclamation-circle"></i>{" "}
-                          {t("helpWord.format")} {/*格式有誤*/}
+                          <i className="fas fa-exclamation-circle"></i>{' '}
+                          {t('helpWord.format')} {/*格式有誤*/}
                         </div>
                       );
-                    case "again":
+                    case 'again':
                       return (
                         <div className="invalid-feedback d-block">
-                          <i className="fas fa-exclamation-circle"></i>{" "}
-                          {t("helpWord.pwdIn")} {/*兩次密碼輸入不相同*/}
+                          <i className="fas fa-exclamation-circle"></i>{' '}
+                          {t('helpWord.pwdIn')} {/*兩次密碼輸入不相同*/}
                         </div>
                       );
                     default:
@@ -933,7 +933,7 @@ function UserManage() {
               <div className="col-12 form-group">
                 <label className="form-label">
                   <span className="text-danger">*</span>
-                  {t("userManage.userLevel")}
+                  {t('userManage.userLevel')}
                   {/*層級*/}
                 </label>
                 <div>
@@ -952,7 +952,7 @@ function UserManage() {
                         htmlFor="user_level_0"
                         className="custom-control-label"
                       >
-                        {t("userManage.userLevel.admin")}
+                        {t('userManage.userLevel.admin')}
                         {/*最高管理者*/}
                       </label>
                     </div>
@@ -972,7 +972,7 @@ function UserManage() {
                         htmlFor="user_level_1"
                         className="custom-control-label"
                       >
-                        {t("userManage.userLevel.expert")}
+                        {t('userManage.userLevel.expert')}
                         {/*專家*/}
                       </label>
                     </div>
@@ -992,7 +992,7 @@ function UserManage() {
                         htmlFor="user_level_2"
                         className="custom-control-label"
                       >
-                        {t("userManage.userLevel.user")}
+                        {t('userManage.userLevel.user')}
                         {/*一般用戶*/}
                       </label>
                     </div>
@@ -1008,7 +1008,7 @@ function UserManage() {
             className="btn btn-secondary"
             onClick={(e) => handleCloseAddUserinfoModal(e)}
           >
-            {t("btn.cancel")}
+            {t('btn.cancel')}
             {/*取消*/}
           </button>
           <button
@@ -1028,7 +1028,7 @@ function UserManage() {
               </>
             ) : (
               <span>
-                {t("btn.save")}
+                {t('btn.save')}
                 {/*儲存*/}
               </span>
             )}
@@ -1043,7 +1043,7 @@ function UserManage() {
       >
         <Modal.Header closeButton>
           <Modal.Title>
-            {t("userManage.edit")}
+            {t('userManage.edit')}
             {/*編輯使用者*/}
           </Modal.Title>
         </Modal.Header>
@@ -1052,7 +1052,7 @@ function UserManage() {
             <div className="row mb-3">
               <div className="col-12 form-group">
                 <label className="form-label">
-                  {t("userManage.userId")}
+                  {t('userManage.userId')}
                   {/*編號*/}
                 </label>
                 <span className="form-text">{editUserinfo.userId}</span>
@@ -1062,7 +1062,7 @@ function UserManage() {
               <div className="col-12 form-group">
                 <label className="form-label">
                   <span className="text-danger">*</span>
-                  {t("userManage.userName")}
+                  {t('userManage.userName')}
                   {/*名稱*/}
                 </label>
                 <input
@@ -1076,18 +1076,18 @@ function UserManage() {
                 />
                 {(() => {
                   switch (editUserinfoErrors.userName) {
-                    case "required":
+                    case 'required':
                       return (
                         <div className="invalid-feedback d-block">
-                          <i className="fas fa-exclamation-circle"></i>{" "}
-                          {t("helpWord.required")} {/*不得空白*/}
+                          <i className="fas fa-exclamation-circle"></i>{' '}
+                          {t('helpWord.required')} {/*不得空白*/}
                         </div>
                       );
-                    case "max":
+                    case 'max':
                       return (
                         <div className="invalid-feedback d-block">
-                          <i className="fas fa-exclamation-circle"></i>{" "}
-                          {t("helpWord.max", { e: 50 })}
+                          <i className="fas fa-exclamation-circle"></i>{' '}
+                          {t('helpWord.max', { e: 50 })}
                           {/*超過上限{{e}}個字元*/}
                         </div>
                       );
@@ -1100,7 +1100,7 @@ function UserManage() {
             <div className="row mb-3">
               <div className="col-12 form-group">
                 <label className="form-label">
-                  {t("userManage.userAccount")}
+                  {t('userManage.userAccount')}
                   {/*帳號*/}
                 </label>
                 <input
@@ -1117,7 +1117,7 @@ function UserManage() {
               <div className="col-12 form-group">
                 <label className="form-label">
                   <span className="text-danger">*</span>
-                  {t("userManage.userLevel")}
+                  {t('userManage.userLevel')}
                   {/*層級*/}
                 </label>
                 <div>
@@ -1136,7 +1136,7 @@ function UserManage() {
                         htmlFor="user_level_0"
                         className="custom-control-label"
                       >
-                        {t("userManage.userLevel.admin")}
+                        {t('userManage.userLevel.admin')}
                         {/*最高管理者*/}
                       </label>
                     </div>
@@ -1156,7 +1156,7 @@ function UserManage() {
                         htmlFor="user_level_1"
                         className="custom-control-label"
                       >
-                        {t("userManage.userLevel.expert")}
+                        {t('userManage.userLevel.expert')}
                         {/*專家*/}
                       </label>
                     </div>
@@ -1176,7 +1176,7 @@ function UserManage() {
                         htmlFor="user_level_2"
                         className="custom-control-label"
                       >
-                        {t("userManage.userLevel.user")}
+                        {t('userManage.userLevel.user')}
                         {/*一般用戶*/}
                       </label>
                     </div>
@@ -1192,7 +1192,7 @@ function UserManage() {
             className="btn btn-secondary"
             onClick={(e) => handleCloseEditUserinfoModal(e)}
           >
-            {t("btn.cancel")}
+            {t('btn.cancel')}
             {/*取消*/}
           </button>
           <button
@@ -1212,7 +1212,7 @@ function UserManage() {
               </>
             ) : (
               <span>
-                {t("btn.save")}
+                {t('btn.save')}
                 {/*儲存*/}
               </span>
             )}
@@ -1227,13 +1227,13 @@ function UserManage() {
       >
         <Modal.Header closeButton>
           <Modal.Title>
-            {t("userManage.delete")}
+            {t('userManage.delete')}
             {/*刪除使用者*/}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <p>
-            {t("userManage.deleteContent")}
+            {t('userManage.deleteContent')}
             {/*您確定要刪除該筆資料嗎?*/}
           </p>
         </Modal.Body>
@@ -1243,7 +1243,7 @@ function UserManage() {
             className="btn btn-secondary"
             onClick={(e) => handleCloseDeleteUserinfoModal(e)}
           >
-            {t("btn.cancel")}
+            {t('btn.cancel')}
             {/*取消*/}
           </button>
           <button
@@ -1263,7 +1263,7 @@ function UserManage() {
               </>
             ) : (
               <span>
-                {t("btn.confirm")}
+                {t('btn.confirm')}
                 {/*確定*/}
               </span>
             )}
@@ -1278,7 +1278,7 @@ function UserManage() {
       >
         <Modal.Header closeButton>
           <Modal.Title>
-            {t("header.changePaw")}
+            {t('header.changePaw')}
             {/*修改密碼*/}
           </Modal.Title>
         </Modal.Header>
@@ -1288,32 +1288,32 @@ function UserManage() {
               <div className="col-12 form-group">
                 <label className="form-label">
                   <span className="text-danger">*</span>
-                  {t("header.newPaw")}
+                  {t('header.newPaw')}
                   {/*新密碼*/}
                 </label>
                 <input
                   type="password"
                   className="form-control"
                   name="newPaw"
-                  placeholder={t("pawFormat.placeholder")}
+                  placeholder={t('pawFormat.placeholder')}
                   onBlur={(e) => handleChangePawBlur(e)}
                   ref={newPaw}
                   autoComplete="off"
                 />
                 {(() => {
                   switch (userinfoChangePawErrors.newPaw) {
-                    case "required":
+                    case 'required':
                       return (
                         <div className="invalid-feedback d-block">
-                          <i className="fas fa-exclamation-circle"></i>{" "}
-                          {t("helpWord.required")} {/*不得空白*/}
+                          <i className="fas fa-exclamation-circle"></i>{' '}
+                          {t('helpWord.required')} {/*不得空白*/}
                         </div>
                       );
-                    case "pawFormat":
+                    case 'pawFormat':
                       return (
                         <div className="invalid-feedback d-block">
-                          <i className="fas fa-exclamation-circle"></i>{" "}
-                          {t("helpWord.format")} {/*格式有誤*/}
+                          <i className="fas fa-exclamation-circle"></i>{' '}
+                          {t('helpWord.format')} {/*格式有誤*/}
                         </div>
                       );
                     default:
@@ -1326,39 +1326,39 @@ function UserManage() {
               <div className="col-12 form-group">
                 <label className="form-label">
                   <span className="text-danger">*</span>
-                  {t("header.againPaw")}
+                  {t('header.againPaw')}
                   {/*再次輸入密碼*/}
                 </label>
                 <input
                   type="password"
                   className="form-control"
                   name="againPaw"
-                  placeholder={t("pawFormat.placeholder")}
+                  placeholder={t('pawFormat.placeholder')}
                   onBlur={(e) => handleChangePawBlur(e)}
                   ref={againPaw}
                   autoComplete="off"
                 />
                 {(() => {
                   switch (userinfoChangePawErrors.againPaw) {
-                    case "required":
+                    case 'required':
                       return (
                         <div className="invalid-feedback d-block">
-                          <i className="fas fa-exclamation-circle"></i>{" "}
-                          {t("helpWord.required")} {/*不得空白*/}
+                          <i className="fas fa-exclamation-circle"></i>{' '}
+                          {t('helpWord.required')} {/*不得空白*/}
                         </div>
                       );
-                    case "pawFormat":
+                    case 'pawFormat':
                       return (
                         <div className="invalid-feedback d-block">
-                          <i className="fas fa-exclamation-circle"></i>{" "}
-                          {t("helpWord.format")} {/*格式有誤*/}
+                          <i className="fas fa-exclamation-circle"></i>{' '}
+                          {t('helpWord.format')} {/*格式有誤*/}
                         </div>
                       );
-                    case "again":
+                    case 'again':
                       return (
                         <div className="invalid-feedback d-block">
-                          <i className="fas fa-exclamation-circle"></i>{" "}
-                          {t("helpWord.pwdIn")} {/*兩次密碼輸入不相同*/}
+                          <i className="fas fa-exclamation-circle"></i>{' '}
+                          {t('helpWord.pwdIn')} {/*兩次密碼輸入不相同*/}
                         </div>
                       );
                     default:
@@ -1375,7 +1375,7 @@ function UserManage() {
             className="btn btn-secondary"
             onClick={(e) => handleCloseUserinfoChangePawModal(e)}
           >
-            {t("btn.cancel")}
+            {t('btn.cancel')}
             {/*取消*/}
           </button>
           <button
@@ -1395,7 +1395,7 @@ function UserManage() {
               </>
             ) : (
               <span>
-                {t("btn.save")}
+                {t('btn.save')}
                 {/*儲存*/}
               </span>
             )}

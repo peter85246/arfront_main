@@ -1,11 +1,11 @@
-import React, { useState, useEffect, forwardRef } from "react";
-import styles from "../scss/PDFDesign.module.scss";
-import classNames from "classnames";
-import { useLocation } from "react-router-dom";
+import React, { useState, useEffect, forwardRef } from 'react';
+import styles from '../scss/PDFDesign.module.scss';
+import classNames from 'classnames';
+import { useLocation } from 'react-router-dom';
 
 const PDFContent = React.forwardRef(({ knowledgeInfo, SOPData }, ref) => {
-  console.log("knowledgeInfo", knowledgeInfo);
-  console.log("SOPData", SOPData);
+  console.log('knowledgeInfo', knowledgeInfo);
+  console.log('SOPData', SOPData);
   const location = useLocation();
   const item = location.state?.item; // 訪問傳遞的狀態
 
@@ -17,23 +17,27 @@ const PDFContent = React.forwardRef(({ knowledgeInfo, SOPData }, ref) => {
     paginatedSOPData.push(SOPData.slice(i, i + stepsPerPage));
   }
 
+  // SOPData 是一個包含多個 SOP 相關數據的陣列
+  // 顯示第一個 SOP 的名稱，確保數據已正確加載
+  const sopName = SOPData.length > 0 ? SOPData[0].soP2Name  : 'Default SOP Name';
+
   return (
-    <div className={styles["content-box"]} ref={ref}>
+    <div className={styles['content-box']} ref={ref}>
       {/* PDF內容放在這裡 */}
-      <div className={styles["page-outline"]}>
-        <div className={styles["file-title"]} id="file-title">
-          <div className={styles["page"]}>
+      <div className={styles['page-outline']}>
+        <div className={styles['file-title']} id="file-title">
+          <div className={styles['page']}>
             <h1>Trouble Shooting</h1>
-            <div className={styles["preview-content"]}>
-              <div className={styles["info-box"]}>
+            <div className={styles['preview-content']}>
+              <div className={styles['info-box']}>
                 {item ? (
-                  <p style={{ textAlign: "left" }}>
+                  <p style={{ textAlign: 'left' }}>
                     File No : {item.knowledgeBaseFileNo}
                     <br></br>
                     Error Code : {item.knowledgeBaseAlarmCode}
                   </p>
                 ) : (
-                  <p style={{ textAlign: "left" }}>
+                  <p style={{ textAlign: 'left' }}>
                     File No : 12345<br></br>
                     Error Code : 00000
                   </p>
@@ -41,23 +45,23 @@ const PDFContent = React.forwardRef(({ knowledgeInfo, SOPData }, ref) => {
               </div>
             </div>
             <img
-              className={styles["logo-img"]}
-              style={{ border: "1px solid #a0a0a0", borderRadius: "8px" }}
-              src={require("../public/圖片TS31103/LOGO.jpg")}
+              className={styles['logo-img']}
+              style={{ border: '1px solid #a0a0a0', borderRadius: '8px' }}
+              src={require('../public/圖片TS31103/LOGO.jpg')}
               alt="LOGO"
             />
           </div>
-          <label className={styles["sop-section"]}>
-            SOP名稱 : Adjustment of Backlash for GXA-S series GXA-S背隙調整
+          <label className={styles['sop-section']}>
+              SOP名稱: {sopName}
           </label>
         </div>
 
-        <div className={styles["model-label"]}>
+        <div className={styles['model-label']}>
           <label>
             For Model 機型 : GXA-S GXA-H GVA GFA-S GFA-H GTF GTFAE Series
           </label>
         </div>
-        <div className={styles["model"]} id="model">
+        <div className={styles['model']} id="model">
           <div>
             {/* <div className={styles["image-container-page-model"]}>
               <img
@@ -70,22 +74,22 @@ const PDFContent = React.forwardRef(({ knowledgeInfo, SOPData }, ref) => {
                 {(() => {
                   if (knowledgeInfo.knowledgeBaseModelImage) {
                     return JSON.parse(
-                      knowledgeInfo?.knowledgeBaseModelImage,
+                      knowledgeInfo?.knowledgeBaseModelImage
                     ).map((item, idx) => {
                       return (
                         <div
                           className="w-[500px] h-[250px] relative"
-                          style={{ overflow: "hidden" }}
+                          style={{ overflow: 'hidden' }}
                         >
                           <img
                             key={idx}
                             src={item}
                             style={{
-                              width: "100%",
-                              height: "100%",
-                              borderRadius: "8px",
-                              border: "1px solid #c0c0c0",
-                              objectFit: "contain", // 確保圖片覆蓋整個容器
+                              width: '100%',
+                              height: '100%',
+                              borderRadius: '8px',
+                              border: '1px solid #c0c0c0',
+                              objectFit: 'contain', // 確保圖片覆蓋整個容器
                             }}
                             alt="Your images Description"
                           />
@@ -99,67 +103,66 @@ const PDFContent = React.forwardRef(({ knowledgeInfo, SOPData }, ref) => {
           </div>
         </div>
 
-        <div className={styles["tools"]} id="tools">
+        <div className={styles['tools']} id="tools">
           <div className="w-full">
-            <div className={styles["tools-label"]}>
+            <div className={styles['tools-label']}>
               <label>Use Tools(使用工具圖片) :</label>
             </div>
             <div
               className="w-full flex justify-between py-2 px-6"
-              style={{ minWidth: "80vw" }}
+              style={{ minWidth: '80vw' }}
             >
               <div
                 style={{
-                  display: "flex",
-                  flexWrap: "wrap",
-                  justifyContent: "flex-start",
-                  gap: "8px",
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  justifyContent: 'flex-start',
+                  gap: '8px',
                 }}
               >
                 {(() => {
                   // 檢查 knowledgeBaseToolsImage 是否存在並有內容
                   if (knowledgeInfo.knowledgeBaseToolsImage) {
                     return JSON.parse(
-                      knowledgeInfo?.knowledgeBaseToolsImage,
+                      knowledgeInfo?.knowledgeBaseToolsImage
                     ).map((item, idx) => (
                       <div
                         style={{
-                          width: "140px",
-                          height: "200px",
-                          position: "relative",
+                          width: '140px',
+                          height: '200px',
+                          position: 'relative',
                         }}
                       >
                         <img
                           key={idx}
                           src={item}
                           style={{
-                            width: "100%",
-                            height: "100%",
-                            borderRadius: "8px",
-                            border: "1px solid #c0c0c0",
-                            objectFit: "contain", // 確保圖片覆蓋整個容器並適當裁切
+                            width: '100%',
+                            height: '100%',
+                            borderRadius: '8px',
+                            border: '1px solid #c0c0c0',
+                            objectFit: 'contain', // 確保圖片覆蓋整個容器並適當裁切
                           }}
                           alt="Your images Description"
                         />
                         <span
                           style={{
-                            border: "1px solid red",
-                            padding: "1px 2px",
-                            borderRadius: "8px",
-                            position: "absolute",
-                            top: "1px",
-                            right: "1px",
-                            backgroundColor: "white",
+                            border: '1px solid red',
+                            padding: '1px 2px',
+                            borderRadius: '8px',
+                            position: 'absolute',
+                            top: '1px',
+                            right: '1px',
+                            backgroundColor: 'white',
                           }}
                         >
-                          {["A", "B", "C", "D", "E", "F"][idx]}
+                          {['A', 'B', 'C', 'D', 'E', 'F'][idx]}
                         </span>
                       </div>
                     ));
                   } else {
                     // 如果沒有圖片數據，可以顯示預設文字或者不顯示此區塊
                     return <div>No images available</div>;
-
                   }
                 })()}
               </div>
@@ -168,20 +171,19 @@ const PDFContent = React.forwardRef(({ knowledgeInfo, SOPData }, ref) => {
                   // 檢查 knowledgeBaseToolsImageNames 是否存在並有內容
                   if (knowledgeInfo.knowledgeBaseToolsImageNames) {
                     return JSON.parse(
-                      knowledgeInfo?.knowledgeBaseToolsImageNames,
+                      knowledgeInfo?.knowledgeBaseToolsImageNames
                     ).map((item, idx) => (
                       <div
                         className="flex gap-[4px] items-center"
-                        style={{ minWidth: "15vw" }}
+                        style={{ minWidth: '15vw' }}
                       >
                         <span className="text-red-600 text-[20px]">
-                          {["A", "B", "C", "D", "E", "F"][idx]}
-                          {": "}
+                          {['A', 'B', 'C', 'D', 'E', 'F'][idx]}
+                          {': '}
                         </span>
                         <span>{item}</span>
                       </div>
                     ));
-
                   }
                 })()}
               </div>
@@ -189,56 +191,56 @@ const PDFContent = React.forwardRef(({ knowledgeInfo, SOPData }, ref) => {
           </div>
         </div>
 
-        <div className={styles["tools"]} id="tools">
+        <div className={styles['tools']} id="tools">
           <div className="w-full">
-            <div className={styles["tools-label"]}>
+            <div className={styles['tools-label']}>
               <label>Illustration(維修部位說明) :</label>
             </div>
             <div className="w-full flex justify-between py-2 px-6">
               <div
                 style={{
-                  display: "flex",
-                  flexWrap: "wrap",
-                  justifyContent: "flex-start",
-                  gap: "8px",
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  justifyContent: 'flex-start',
+                  gap: '8px',
                 }}
               >
                 {(() => {
                   if (knowledgeInfo.knowledgeBasePositionImage) {
                     return JSON.parse(
-                      knowledgeInfo?.knowledgeBasePositionImage,
+                      knowledgeInfo?.knowledgeBasePositionImage
                     ).map((item, idx) => (
                       <div
                         style={{
-                          width: "calc(33.333% - 8px)",
-                          height: "200px",
-                          position: "relative",
+                          width: 'calc(33.333% - 8px)',
+                          height: '200px',
+                          position: 'relative',
                         }}
                       >
                         <img
                           key={idx}
                           src={item}
                           style={{
-                            width: "100%",
-                            height: "100%",
-                            borderRadius: "8px",
-                            border: "1px solid #c0c0c0",
-                            objectFit: "contain", // 使圖片保持比例且完全顯示
+                            width: '100%',
+                            height: '100%',
+                            borderRadius: '8px',
+                            border: '1px solid #c0c0c0',
+                            objectFit: 'contain', // 使圖片保持比例且完全顯示
                           }}
                           alt="Your images Description"
                         />
                         <span
                           style={{
-                            border: "1px solid red",
-                            padding: "1px 2px",
-                            borderRadius: "8px",
-                            position: "absolute",
-                            top: "1px",
-                            right: "2px",
-                            backgroundColor: "white",
+                            border: '1px solid red',
+                            padding: '1px 2px',
+                            borderRadius: '8px',
+                            position: 'absolute',
+                            top: '1px',
+                            right: '2px',
+                            backgroundColor: 'white',
                           }}
                         >
-                          {["A", "B", "C", "D", "E", "F"][idx]}
+                          {['A', 'B', 'C', 'D', 'E', 'F'][idx]}
                         </span>
                       </div>
                     ));
@@ -247,20 +249,20 @@ const PDFContent = React.forwardRef(({ knowledgeInfo, SOPData }, ref) => {
               </div>
               <div
                 className="flex flex-col gap-[6px]"
-                style={{ marginLeft: "2vw" }}
+                style={{ marginLeft: '2vw' }}
               >
                 {(() => {
                   if (knowledgeInfo.knowledgeBasePositionImageNames) {
                     return JSON.parse(
-                      knowledgeInfo?.knowledgeBasePositionImageNames,
+                      knowledgeInfo?.knowledgeBasePositionImageNames
                     ).map((item, idx) => (
                       <div
                         className="flex gap-[4px] items-center"
-                        style={{ minWidth: "15vw" }}
+                        style={{ minWidth: '15vw' }}
                       >
                         <span className="text-red-600 text-[20px]">
-                          {["A", "B", "C", "D", "E", "F"][idx]}
-                          {": "}
+                          {['A', 'B', 'C', 'D', 'E', 'F'][idx]}
+                          {': '}
                         </span>
                         <span>{item}</span>
                       </div>
@@ -279,20 +281,20 @@ const PDFContent = React.forwardRef(({ knowledgeInfo, SOPData }, ref) => {
             <p></p>
             <br />
           </div>
-          <div className={styles["page-outline"]} key={pageIndex}>
-            <div className={styles["file-title"]} id="file-title">
-              <div className={styles["page"]}>
+          <div className={styles['page-outline']} key={pageIndex}>
+            <div className={styles['file-title']} id="file-title">
+              <div className={styles['page']}>
                 <h1>Trouble Shooting</h1>
-                <div className={styles["preview-content"]}>
-                  <div className={styles["info-box"]}>
+                <div className={styles['preview-content']}>
+                  <div className={styles['info-box']}>
                     {item ? (
-                      <p style={{ textAlign: "left" }}>
+                      <p style={{ textAlign: 'left' }}>
                         File No : {item.knowledgeBaseFileNo}
                         <br></br>
                         Error Code : {item.knowledgeBaseAlarmCode}
                       </p>
                     ) : (
-                      <p style={{ textAlign: "left" }}>
+                      <p style={{ textAlign: 'left' }}>
                         File No : 12345<br></br>
                         Error Code : 00000
                       </p>
@@ -300,65 +302,69 @@ const PDFContent = React.forwardRef(({ knowledgeInfo, SOPData }, ref) => {
                   </div>
                 </div>
                 <img
-                  className={styles["logo-img"]}
-                  style={{ border: "1px solid #a0a0a0", borderRadius: "8px" }}
-                  src={require("../public/圖片TS31103/LOGO.jpg")}
+                  className={styles['logo-img']}
+                  style={{ border: '1px solid #a0a0a0', borderRadius: '8px' }}
+                  src={require('../public/圖片TS31103/LOGO.jpg')}
                   alt="LOGO"
                 />
               </div>
-              <label className={styles["sop-section"]}>
-                SOP名稱 : Adjustment of Backlash for GXA-S series GXA-S背隙調整
+              <label className={styles['sop-section']}>
+                SOP名稱: {sopName}
               </label>
             </div>
             {pageSteps.map((sop, idx) => (
               <div
                 key={idx}
-                className={styles["step1"]}
-                style={idx !== 0 ? { borderTop: "1px solid" } : {}}
+                className={styles['step1']}
+                style={idx !== 0 ? { borderTop: '1px solid' } : {}}
               >
-                <div className={styles["step-title1"]}>
+                <div className={styles['step-title1']}>
                   <span>Step {sop.soP2Step}</span>
                 </div>
-                <div className={styles["step-content"]}>
+                <div className={styles['step-content']}>
                   <div
                     className={classNames(
-                      styles["content-section"],
-                      styles["image-container"],
+                      styles['content-section'],
+                      styles['image-container']
                     )}
                   >
                     {sop.soP2Image ? (
                       <img
                         src={sop.soP2Image}
                         style={{
-                          width: "250px", // 直接在 style 中設定寬度
-                          height: "250px", // 直接在 style 中設定高度
-                          objectFit: "contain", // 保持圖片原始比例並填滿容器
-                          borderRadius: "8px", // 如果需要圓角
-                          border: "1px solid #c0c0c0", // 只有當圖片存在時顯示邊框
+                          width: '250px', // 直接在 style 中設定寬度
+                          height: '250px', // 直接在 style 中設定高度
+                          objectFit: 'contain', // 保持圖片原始比例並填滿容器
+                          borderRadius: '8px', // 如果需要圓角
+                          border: '1px solid #c0c0c0', // 只有當圖片存在時顯示邊框
                         }}
                         alt="Your images Description"
                       />
                     ) : null}
                   </div>
-                  <div className={styles["content-section"]}>
+                  <div className={styles['content-section']}>
                     <p>Illustration(步驟說明)：</p>
-                    <div className={styles["step-content-box"]}>
+                    <div className={styles['step-content-box']}>
                       {sop.soP2Message}
                     </div>
                   </div>
-                  <div className={styles["content-section"]}>
+                  <div className={styles['content-section']}>
                     <p>Remark(備註補充)：</p>
-                    <div className={styles["step-content-box"]}>
-                      (Tool A)
-                      <br />
+                    <div className={styles['step-content-box']} style={{ maxWidth: '300px', wordWrap: 'break-word' }}>
+                      {sop.soP2Remark && (
+                        <>
+                          {sop.soP2Remark}
+                          <br />
+                        </>
+                      )}
                       {sop.soP2RemarkImage ? (
                         <img
                           src={sop.soP2RemarkImage}
                           className={`w-[170px] h-[170px]`}
                           style={{
-                            objectFit: "contain", // 保持圖片原始比例並填滿容器
-                            borderRadius: "8px", // 如果需要圓角
-                            border: "1px solid #c0c0c0", // 只有當圖片存在時顯示邊框
+                            objectFit: 'contain', // 保持圖片原始比例並填滿容器
+                            borderRadius: '8px', // 如果需要圓角
+                            border: '1px solid #c0c0c0', // 只有當圖片存在時顯示邊框
                           }}
                           alt="Your images Description"
                         />

@@ -1,23 +1,23 @@
-﻿import React, { useState, useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { Button, Form, InputGroup } from "react-bootstrap";
-import Spinner from "react-bootstrap/Spinner";
-import { setWindowClass } from "../utils/helpers";
-import { ToastContainer, toast } from "react-toastify";
-import SimpleReactValidator from "simple-react-validator";
-import reactStringReplace from "react-string-replace";
-import { setAuthToken } from "../utils/TokenUtil";
-import { apiSignIn } from "../utils/Api";
+﻿import React, { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Button, Form, InputGroup } from 'react-bootstrap';
+import Spinner from 'react-bootstrap/Spinner';
+import { setWindowClass } from '../utils/helpers';
+import { ToastContainer, toast } from 'react-toastify';
+import SimpleReactValidator from 'simple-react-validator';
+import reactStringReplace from 'react-string-replace';
+import { setAuthToken } from '../utils/TokenUtil';
+import { apiSignIn } from '../utils/Api';
 
 function Login() {
   const navigate = useNavigate();
   const [isAuthLoading, setAuthLoading] = useState(false);
-  const [account, setAccount] = useState(""); //帳號
-  const paw = useRef(""); //密碼
+  const [account, setAccount] = useState(''); //帳號
+  const paw = useRef(''); //密碼
 
   const [errors, setErrors] = useState({
-    account: "",
-    paw: "",
+    account: '',
+    paw: '',
   });
 
   const validator = new SimpleReactValidator({
@@ -30,11 +30,11 @@ function Login() {
             return result;
           }
 
-          let strRep = reactStringReplace(val, /(\d+)/g, (match, i) => "");
-          strRep = reactStringReplace(strRep, /([a-zA-Z])/g, (match, i) => "");
-          strRep = reactStringReplace(strRep, /([-)(*#+])/g, (match, i) => "");
+          let strRep = reactStringReplace(val, /(\d+)/g, (match, i) => '');
+          strRep = reactStringReplace(strRep, /([a-zA-Z])/g, (match, i) => '');
+          strRep = reactStringReplace(strRep, /([-)(*#+])/g, (match, i) => '');
 
-          if (strRep.join("") == "") {
+          if (strRep.join('') == '') {
             result = true;
           }
 
@@ -67,30 +67,30 @@ function Login() {
   //#endregion
 
   //#region 欄位驗證
-  const checkValidator = async (name = "", val = "") => {
+  const checkValidator = async (name = '', val = '') => {
     let result = true;
     let newErrors = { ...errors };
 
-    if (name == "account" || name == "") {
-      if (!validator.check(account, "required")) {
-        newErrors.account = "required";
+    if (name == 'account' || name == '') {
+      if (!validator.check(account, 'required')) {
+        newErrors.account = 'required';
         result = false;
       } else {
-        newErrors.account = "";
+        newErrors.account = '';
       }
     }
 
-    if (name == "password" || name == "") {
+    if (name == 'password' || name == '') {
       var tempPaw = paw.current.value;
 
-      if (!validator.check(tempPaw, "required")) {
-        newErrors.paw = "required";
+      if (!validator.check(tempPaw, 'required')) {
+        newErrors.paw = 'required';
         result = false;
-      } else if (!validator.check(tempPaw, "pawFormat")) {
-        newErrors.paw = "pawFormat";
+      } else if (!validator.check(tempPaw, 'pawFormat')) {
+        newErrors.paw = 'pawFormat';
         result = false;
       } else {
-        newErrors.paw = "";
+        newErrors.paw = '';
       }
     }
 
@@ -112,9 +112,9 @@ function Login() {
 
       let signInResponse = await apiSignIn(sendData);
       if (signInResponse) {
-        if (signInResponse.code == "0000") {
+        if (signInResponse.code == '0000') {
           setAuthToken(signInResponse.result);
-          navigate("machine");
+          navigate('machine');
         } else {
           toast.error(signInResponse.message, {
             position: toast.POSITION.TOP_CENTER,
@@ -132,14 +132,14 @@ function Login() {
   };
   //#endregion
 
-  setWindowClass("login-page");
+  setWindowClass('login-page');
 
   return (
     <>
       <div className="login-box">
         <div className="card card-outline card-primary">
           <div className="card-header text-center">
-            <h1 style={{ fontSize: "25px" }}>AR管理系統</h1>
+            <h1 style={{ fontSize: '25px' }}>AR管理系統</h1>
           </div>
           <div className="card-body">
             <p className="login-box-msg">登入</p>
@@ -162,10 +162,10 @@ function Login() {
                   </InputGroup.Append>
                   {(() => {
                     switch (errors.account) {
-                      case "required":
+                      case 'required':
                         return (
                           <div className="invalid-feedback d-block">
-                            <i className="fas fa-exclamation-circle"></i>{" "}
+                            <i className="fas fa-exclamation-circle"></i>{' '}
                             不得空白
                           </div>
                         );
@@ -192,17 +192,17 @@ function Login() {
                   </InputGroup.Append>
                   {(() => {
                     switch (errors.paw) {
-                      case "required":
+                      case 'required':
                         return (
                           <div className="invalid-feedback d-block">
-                            <i className="fas fa-exclamation-circle"></i>{" "}
+                            <i className="fas fa-exclamation-circle"></i>{' '}
                             不得空白
                           </div>
                         );
-                      case "pawFormat":
+                      case 'pawFormat':
                         return (
                           <div className="invalid-feedback d-block">
-                            <i className="fas fa-exclamation-circle"></i>{" "}
+                            <i className="fas fa-exclamation-circle"></i>{' '}
                             格式有誤
                           </div>
                         );

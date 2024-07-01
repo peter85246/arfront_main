@@ -1,20 +1,20 @@
-﻿import React, { useState, useEffect, useRef } from "react";
-import { useTranslation } from "react-i18next"; //語系
-import { useParams, useNavigate } from "react-router-dom";
-import { setWindowClass, removeWindowClass } from "../utils/helpers";
-import { DebounceInput } from "react-debounce-input";
-import { ToastContainer, toast } from "react-toastify";
-import Modal from "react-bootstrap/Modal";
-import Spinner from "react-bootstrap/Spinner";
-import SimpleReactValidator from "simple-react-validator";
-import Pagination from "react-bootstrap/Pagination";
+﻿import React, { useState, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next'; //語系
+import { useParams, useNavigate } from 'react-router-dom';
+import { setWindowClass, removeWindowClass } from '../utils/helpers';
+import { DebounceInput } from 'react-debounce-input';
+import { ToastContainer, toast } from 'react-toastify';
+import Modal from 'react-bootstrap/Modal';
+import Spinner from 'react-bootstrap/Spinner';
+import SimpleReactValidator from 'simple-react-validator';
+import Pagination from 'react-bootstrap/Pagination';
 
 import {
   apiGetAllMachineAlarmByFilter,
   apiAddMachineAlarm,
   apiEditMachineAlarm,
   apiDeleteMachineAlarm,
-} from "../utils/Api";
+} from '../utils/Api';
 
 function MachineAlarm() {
   const { t } = useTranslation();
@@ -22,7 +22,7 @@ function MachineAlarm() {
   const validator = new SimpleReactValidator({
     autoForceUpdate: this,
   });
-  const [keyword, setKeyword] = useState(""); //關鍵字
+  const [keyword, setKeyword] = useState(''); //關鍵字
   const { machineId } = useParams();
   const [machineAlarms, setMachineAlarms] = useState([]); //Alarm列表
   const [showMachineAlarms, setShowMachineAlarms] = useState([]); //Alarm列表(顯示前端)
@@ -31,13 +31,13 @@ function MachineAlarm() {
     //單一Alarm
     machineAlarmId: 0,
     machineId: machineId,
-    machineAlarmCode: "",
-    machineAlarmAbstract: "",
+    machineAlarmCode: '',
+    machineAlarmAbstract: '',
   });
   const [machineAlarmErrors, setMachineAlarmErrors] = useState({
     //機台Alarm錯誤訊息
-    machineAlarmCode: "",
-    machineAlarmAbstract: "",
+    machineAlarmCode: '',
+    machineAlarmAbstract: '',
   });
   const [saveMachineAlarmLoading, setSaveMachineAlarmLoading] = useState(false);
   const [selectDeleteId, setSelectDeleteId] = useState(0); //要刪除的Alarm id
@@ -48,7 +48,7 @@ function MachineAlarm() {
 
   //#region 初始載入
   useEffect(() => {
-    removeWindowClass("login-page");
+    removeWindowClass('login-page');
 
     const fetchData = async () => {
       await refreshMachineAlarms();
@@ -67,13 +67,13 @@ function MachineAlarm() {
 
     let machineAlarmResponse = await apiGetAllMachineAlarmByFilter(sendData);
     if (machineAlarmResponse) {
-      if (machineAlarmResponse.code == "0000") {
+      if (machineAlarmResponse.code == '0000') {
         setMachineAlarms(machineAlarmResponse.result);
         setShowMachineAlarms(
           machineAlarmResponse.result.slice(
             activePage * pageRow - pageRow,
-            activePage * pageRow,
-          ),
+            activePage * pageRow
+          )
         );
       }
     }
@@ -96,14 +96,14 @@ function MachineAlarm() {
         onClick={(e) => handleChangePage(e, number)}
       >
         {number}
-      </Pagination.Item>,
+      </Pagination.Item>
     );
   }
 
   const handleChangePage = async (e, number) => {
     setActivePage(number);
     setShowMachineAlarms(
-      machineAlarms.slice(number * pageRow - pageRow, number * pageRow),
+      machineAlarms.slice(number * pageRow - pageRow, number * pageRow)
     );
   };
   //#endregion
@@ -121,19 +121,19 @@ function MachineAlarm() {
       setMachineAlarm({
         machineAlarmId: 0,
         machineId: machineId,
-        machineAlarmCode: "",
-        machineAlarmAbstract: "",
+        machineAlarmCode: '',
+        machineAlarmAbstract: '',
       });
     } else {
       var tempMachineAlarm = machineAlarms.find(
-        (x) => x.machineAlarmId == machineAlarmId,
+        (x) => x.machineAlarmId == machineAlarmId
       );
       setMachineAlarm(tempMachineAlarm);
     }
 
     setMachineAlarmErrors({
-      machineAlarmCode: "",
-      machineAlarmAbstract: "",
+      machineAlarmCode: '',
+      machineAlarmAbstract: '',
     });
 
     setShowMachineAlarmModal(true);
@@ -165,33 +165,33 @@ function MachineAlarm() {
   //#endregion
 
   //#region 機台Alarm 欄位驗證
-  const checkEditValidator = async (name = "", val = "") => {
+  const checkEditValidator = async (name = '', val = '') => {
     let result = true;
     let newMachineAlarmErrors = { ...machineAlarmErrors };
 
-    if (name == "machineAlarmCode" || name == "") {
-      if (!validator.check(machineAlarm.machineAlarmCode, "required")) {
-        newMachineAlarmErrors.machineAlarmCode = "required";
+    if (name == 'machineAlarmCode' || name == '') {
+      if (!validator.check(machineAlarm.machineAlarmCode, 'required')) {
+        newMachineAlarmErrors.machineAlarmCode = 'required';
         result = false;
-      } else if (!validator.check(machineAlarm.machineAlarmCode, "max:50")) {
-        newMachineAlarmErrors.machineAlarmCode = "max";
+      } else if (!validator.check(machineAlarm.machineAlarmCode, 'max:50')) {
+        newMachineAlarmErrors.machineAlarmCode = 'max';
         result = false;
       } else {
-        newMachineAlarmErrors.machineAlarmCode = "";
+        newMachineAlarmErrors.machineAlarmCode = '';
       }
     }
 
-    if (name == "machineAlarmAbstract" || name == "") {
-      if (!validator.check(machineAlarm.machineAlarmAbstract, "required")) {
-        newMachineAlarmErrors.machineAlarmAbstract = "required";
+    if (name == 'machineAlarmAbstract' || name == '') {
+      if (!validator.check(machineAlarm.machineAlarmAbstract, 'required')) {
+        newMachineAlarmErrors.machineAlarmAbstract = 'required';
         result = false;
       } else if (
-        !validator.check(machineAlarm.machineAlarmAbstract, "max:1000")
+        !validator.check(machineAlarm.machineAlarmAbstract, 'max:1000')
       ) {
-        newMachineAlarmErrors.machineAlarmAbstract = "max";
+        newMachineAlarmErrors.machineAlarmAbstract = 'max';
         result = false;
       } else {
-        newMachineAlarmErrors.machineAlarmAbstract = "";
+        newMachineAlarmErrors.machineAlarmAbstract = '';
       }
     }
 
@@ -210,8 +210,8 @@ function MachineAlarm() {
       if (machineAlarm.machineAlarmId == 0) {
         let addMachineAlarmResponse = await apiAddMachineAlarm(machineAlarm);
         if (addMachineAlarmResponse) {
-          if (addMachineAlarmResponse.code == "0000") {
-            toast.success(t("toast.add.success"), {
+          if (addMachineAlarmResponse.code == '0000') {
+            toast.success(t('toast.add.success'), {
               position: toast.POSITION.TOP_CENTER,
               autoClose: 3000,
               hideProgressBar: true,
@@ -237,8 +237,8 @@ function MachineAlarm() {
       } else {
         let editMachineAlarmResponse = await apiEditMachineAlarm(machineAlarm);
         if (editMachineAlarmResponse) {
-          if (editMachineAlarmResponse.code == "0000") {
-            toast.success(t("toast.edit.success"), {
+          if (editMachineAlarmResponse.code == '0000') {
+            toast.success(t('toast.edit.success'), {
               position: toast.POSITION.TOP_CENTER,
               autoClose: 3000,
               hideProgressBar: true,
@@ -300,8 +300,8 @@ function MachineAlarm() {
 
     let deleteMachineAlarmResponse = await apiDeleteMachineAlarm(sendData);
     if (deleteMachineAlarmResponse) {
-      if (deleteMachineAlarmResponse.code == "0000") {
-        toast.success(t("toast.delete.success"), {
+      if (deleteMachineAlarmResponse.code == '0000') {
+        toast.success(t('toast.delete.success'), {
           position: toast.POSITION.TOP_CENTER,
           autoClose: 3000,
           hideProgressBar: true,
@@ -335,14 +335,14 @@ function MachineAlarm() {
             <div>
               <a href={`/machine`} className="d-flex align-items-center">
                 <i className="fas fa-angle-left"></i>&nbsp;&nbsp;
-                {t("machine.content.header")}
+                {t('machine.content.header')}
                 {/*機台管理*/}
               </a>
             </div>
             <div className="content-header-text-color">
               <h1>
                 <strong>
-                  {t("machineAlarm.content.header")}
+                  {t('machineAlarm.content.header')}
                   {/*Alarm管理*/}
                 </strong>
               </h1>
@@ -352,7 +352,7 @@ function MachineAlarm() {
               className="btn btn-primary btn-add"
               onClick={() => handleOpenMachineAlarmModal(0)}
             >
-              <i className="fas fa-plus"></i> {t("machineAlarm.btn.add")}
+              <i className="fas fa-plus"></i> {t('machineAlarm.btn.add')}
               {/*新增Alarm*/}
             </button>
           </div>
@@ -366,7 +366,7 @@ function MachineAlarm() {
                 <DebounceInput
                   debounceTimeout={300}
                   type="search"
-                  placeholder={t("keyword.placeholder")}
+                  placeholder={t('keyword.placeholder')}
                   onChange={(e) => handleChangeKeyword(e)}
                 />
                 {/*請輸入關鍵字*/}
@@ -379,19 +379,19 @@ function MachineAlarm() {
                 <thead>
                   <tr>
                     <th>
-                      {t("machineAlarm.MachineAlarmId")}
+                      {t('machineAlarm.MachineAlarmId')}
                       {/*編號*/}
                     </th>
                     <th>
-                      {t("machineAlarm.MachineAlarmCode")}
+                      {t('machineAlarm.MachineAlarmCode')}
                       {/*故障代碼*/}
                     </th>
                     <th>
-                      {t("machineAlarm.MachineAlarmAbstract")}
+                      {t('machineAlarm.MachineAlarmAbstract')}
                       {/*故障說明*/}
                     </th>
                     <th>
-                      {t("machineAlarm.fun")}
+                      {t('machineAlarm.fun')}
                       {/*功能*/}
                     </th>
                   </tr>
@@ -411,13 +411,13 @@ function MachineAlarm() {
                                 className="btn btn-outline-primary"
                                 onClick={() =>
                                   handleOpenMachineAlarmModal(
-                                    item.machineAlarmId,
+                                    item.machineAlarmId
                                   )
                                 }
                               >
-                                {t("machineAlarm.btn.edit")}
+                                {t('machineAlarm.btn.edit')}
                                 {/*編輯*/}
-                              </button>{" "}
+                              </button>{' '}
                               <button
                                 type="button"
                                 className="btn btn-outline-info"
@@ -425,26 +425,26 @@ function MachineAlarm() {
                                   handleGotoSOP(item.machineAlarmId)
                                 }
                               >
-                                {t("machineAlarm.btn.sop")}
+                                {t('machineAlarm.btn.sop')}
                                 {/*SOP*/}
-                              </button>{" "}
+                              </button>{' '}
                               <button
                                 type="button"
                                 className="btn btn-outline-danger"
                                 onClick={() =>
                                   handleOpenDeleteMachineAlarmModal(
-                                    item.machineAlarmId,
+                                    item.machineAlarmId
                                   )
                                 }
                               >
-                                {t("machineAlarm.btn.del")}
+                                {t('machineAlarm.btn.del')}
                                 {/*刪除*/}
-                              </button>{" "}
+                              </button>{' '}
                               <button
                                 type="button"
                                 className="btn btn-outline-secondary"
                               >
-                                {t("machineAlarm.btn.pdf")}
+                                {t('machineAlarm.btn.pdf')}
                                 {/*PDF*/}
                               </button>
                             </td>
@@ -455,8 +455,8 @@ function MachineAlarm() {
                   ) : (
                     <>
                       <tr>
-                        <td colSpan="4" style={{ textAlign: "center" }}>
-                          {t("table.empty")}
+                        <td colSpan="4" style={{ textAlign: 'center' }}>
+                          {t('table.empty')}
                           {/*查無資料*/}
                         </td>
                       </tr>
@@ -482,8 +482,8 @@ function MachineAlarm() {
         <Modal.Header closeButton>
           <Modal.Title>
             {machineAlarm.machineAlarmId == 0
-              ? t("machineAlarm.add")
-              : t("machineAlarm.edit")}
+              ? t('machineAlarm.add')
+              : t('machineAlarm.edit')}
             {/*新增Alarm : 編輯Alarm*/}
           </Modal.Title>
         </Modal.Header>
@@ -493,7 +493,7 @@ function MachineAlarm() {
               <div className="row mb-3">
                 <div className="col-12 form-group">
                   <label className="form-label">
-                    {t("machineAlarm.MachineAlarmId")}
+                    {t('machineAlarm.MachineAlarmId')}
                     {/*編號*/}
                   </label>
                   <span className="form-text">
@@ -508,7 +508,7 @@ function MachineAlarm() {
               <div className="col-12 form-group">
                 <label className="form-label">
                   <span className="text-danger">*</span>
-                  {t("machineAlarm.MachineAlarmCode")}
+                  {t('machineAlarm.MachineAlarmCode')}
                   {/*故障代碼*/}
                 </label>
                 <input
@@ -522,18 +522,18 @@ function MachineAlarm() {
                 />
                 {(() => {
                   switch (machineAlarmErrors.machineAlarmCode) {
-                    case "required":
+                    case 'required':
                       return (
                         <div className="invalid-feedback d-block">
-                          <i className="fas fa-exclamation-circle"></i>{" "}
-                          {t("helpWord.required")} {/*不得空白*/}
+                          <i className="fas fa-exclamation-circle"></i>{' '}
+                          {t('helpWord.required')} {/*不得空白*/}
                         </div>
                       );
-                    case "max":
+                    case 'max':
                       return (
                         <div className="invalid-feedback d-block">
-                          <i className="fas fa-exclamation-circle"></i>{" "}
-                          {t("helpWord.max", { e: 50 })}
+                          <i className="fas fa-exclamation-circle"></i>{' '}
+                          {t('helpWord.max', { e: 50 })}
                           {/*超過上限{{e}}個字元*/}
                         </div>
                       );
@@ -547,7 +547,7 @@ function MachineAlarm() {
               <div className="col-12 form-group">
                 <label className="form-label">
                   <span className="text-danger">*</span>
-                  {t("machineAlarm.MachineAlarmAbstract")}
+                  {t('machineAlarm.MachineAlarmAbstract')}
                   {/*故障說明*/}
                 </label>
                 <input
@@ -561,18 +561,18 @@ function MachineAlarm() {
                 />
                 {(() => {
                   switch (machineAlarmErrors.machineAlarmAbstract) {
-                    case "required":
+                    case 'required':
                       return (
                         <div className="invalid-feedback d-block">
-                          <i className="fas fa-exclamation-circle"></i>{" "}
-                          {t("helpWord.required")} {/*不得空白*/}
+                          <i className="fas fa-exclamation-circle"></i>{' '}
+                          {t('helpWord.required')} {/*不得空白*/}
                         </div>
                       );
-                    case "max":
+                    case 'max':
                       return (
                         <div className="invalid-feedback d-block">
-                          <i className="fas fa-exclamation-circle"></i>{" "}
-                          {t("helpWord.max", { e: 1000 })}
+                          <i className="fas fa-exclamation-circle"></i>{' '}
+                          {t('helpWord.max', { e: 1000 })}
                           {/*超過上限{{e}}個字元*/}
                         </div>
                       );
@@ -590,7 +590,7 @@ function MachineAlarm() {
             className="btn btn-secondary"
             onClick={(e) => handleCloseMachineAlarmModal(e)}
           >
-            {t("btn.cancel")}
+            {t('btn.cancel')}
             {/*取消*/}
           </button>
           <button
@@ -611,7 +611,7 @@ function MachineAlarm() {
               </>
             ) : (
               <span>
-                {t("btn.save")}
+                {t('btn.save')}
                 {/*儲存*/}
               </span>
             )}
@@ -626,13 +626,13 @@ function MachineAlarm() {
       >
         <Modal.Header closeButton>
           <Modal.Title>
-            {t("machineAlarm.delete")}
+            {t('machineAlarm.delete')}
             {/*刪除Alarm*/}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <p>
-            {t("machineAlarm.deleteContent")}
+            {t('machineAlarm.deleteContent')}
             {/*您確定要刪除該筆資料嗎?*/}
           </p>
         </Modal.Body>
@@ -642,7 +642,7 @@ function MachineAlarm() {
             className="btn btn-secondary"
             onClick={(e) => handleCloseDeleteMachineAlarmModal(e)}
           >
-            {t("btn.cancel")}
+            {t('btn.cancel')}
             {/*取消*/}
           </button>
           <button
@@ -663,7 +663,7 @@ function MachineAlarm() {
               </>
             ) : (
               <span>
-                {t("btn.confirm")}
+                {t('btn.confirm')}
                 {/*確定*/}
               </span>
             )}

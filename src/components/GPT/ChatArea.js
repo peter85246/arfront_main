@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef } from "react";
-import Select from "react-select";
-import styles from "../../scss/gpt.module.scss";
-import { Button, Input, Flex } from "antd";
+import React, { useState, useEffect, useRef } from 'react';
+import Select from 'react-select';
+import styles from '../../scss/gpt.module.scss';
+import { Button, Input, Flex } from 'antd';
 
 const ChatArea = ({
   input,
@@ -18,14 +18,14 @@ const ChatArea = ({
 
   // 將LLM設為初始選中選項
   const [selectedModel, setSelectedModel] = useState({
-    value: "GPT-4",
-    label: "GPT-4",
+    value: 'GPT-4',
+    label: 'GPT-4',
   });
 
   // 處理 Q&A 選項變更並提交
   const handleSelectChange = async (selectedOption) => {
     setSelectedOption(selectedOption); // 更新選中的選項
-    setResponse(""); // 重置回應內容
+    setResponse(''); // 重置回應內容
     setIsLoading(true); // 保留加載狀態
 
     setQuestion(selectedOption.label); // 更新顯示在user-question中的文字（只顯示選擇的選項label）
@@ -62,11 +62,11 @@ const ChatArea = ({
 
   const handleSubmission = () => {
     // 檢查 input 是否有內容或 selectedOption 是否被選擇
-    if (input.trim() === "" && !selectedOption) {
-      window.alert("Please enter some Text or select a Question~!");
+    if (input.trim() === '' && !selectedOption) {
+      window.alert('Please enter some Text or select a Question~!');
     } else {
       enterLoading(0); // 加入Loading效果
-      const submitValue = input.trim() !== "" ? input : selectedOption.value;
+      const submitValue = input.trim() !== '' ? input : selectedOption.value;
       onSubmit(submitValue); // 使用 input 或 selectedOption 的值提交
     }
   };
@@ -84,108 +84,108 @@ const ChatArea = ({
   };
 
   const options_model = [
-    { value: "LLM", label: "LLM" },
-    { value: "GPT-3.5", label: "GPT-3.5" },
-    { value: "GPT-4", label: "GPT-4" },
+    { value: 'LLM', label: 'LLM' },
+    { value: 'GPT-3.5', label: 'GPT-3.5' },
+    { value: 'GPT-4', label: 'GPT-4' },
   ];
 
   const options_data = [
-    { value: "德川公司介紹", label: "德川公司介紹" },
-    { value: "德川公司獲獎報導", label: "德川公司獲獎報導" },
-    { value: "德川公司今年參展計畫", label: "德川公司今年參展計畫" },
-    { value: "德川公司聯絡資訊", label: "德川公司聯絡資訊" },
+    { value: '德川公司介紹', label: '德川公司介紹' },
+    { value: '德川公司獲獎報導', label: '德川公司獲獎報導' },
+    { value: '德川公司今年參展計畫', label: '德川公司今年參展計畫' },
+    { value: '德川公司聯絡資訊', label: '德川公司聯絡資訊' },
     {
-      value: "GXA-S背隙調整",
-      label: "GXA-S背隙調整",
+      value: 'GXA-S背隙調整',
+      label: 'GXA-S背隙調整',
       videos: [
         {
-          step: "Step1",
-          path: "public/detron_data/GXA170S背隙調整/step1打開塞蓋.mp4",
+          step: 'Step1',
+          path: 'public/detron_data/GXA170S背隙調整/step1打開塞蓋.mp4',
         },
         {
-          step: "Step2",
-          path: "public/detron_data/GXA170S背隙調整/step2拆鬆聯軸器螺絲.mp4",
+          step: 'Step2',
+          path: 'public/detron_data/GXA170S背隙調整/step2拆鬆聯軸器螺絲.mp4',
         },
         {
-          step: "Step3",
-          path: "public/detron_data/GXA170S背隙調整/step3拆蜗桿封蓋.mp4",
+          step: 'Step3',
+          path: 'public/detron_data/GXA170S背隙調整/step3拆蜗桿封蓋.mp4',
         },
         {
-          step: "Step4",
-          path: "public/detron_data/GXA170S背隙調整/step4放鬆M4螺絲2只.mp4",
+          step: 'Step4',
+          path: 'public/detron_data/GXA170S背隙調整/step4放鬆M4螺絲2只.mp4',
         },
         {
-          step: "Step5",
-          path: "public/detron_data/GXA170S背隙調整/step5旋轉套管座M6X50螺絲.mp4",
+          step: 'Step5',
+          path: 'public/detron_data/GXA170S背隙調整/step5旋轉套管座M6X50螺絲.mp4',
         },
         {
-          step: "Step6",
-          path: "public/detron_data/GXA170S背隙調整/step6鎖緊M3螺絲2只.mp4",
+          step: 'Step6',
+          path: 'public/detron_data/GXA170S背隙調整/step6鎖緊M3螺絲2只.mp4',
         },
         {
-          step: "Step7",
-          path: "public/detron_data/GXA170S背隙調整/step7量測背隙.mp4",
+          step: 'Step7',
+          path: 'public/detron_data/GXA170S背隙調整/step7量測背隙.mp4',
         },
         {
-          step: "Step8",
-          path: "public/detron_data/GXA170S背隙調整/step8聯軸器鎖緊及鎖塞蓋.mp4",
+          step: 'Step8',
+          path: 'public/detron_data/GXA170S背隙調整/step8聯軸器鎖緊及鎖塞蓋.mp4',
         },
         {
-          step: "Step9",
-          path: "public/detron_data/GXA170S背隙調整/step9安裝蜗桿封蓋.mp4",
+          step: 'Step9',
+          path: 'public/detron_data/GXA170S背隙調整/step9安裝蜗桿封蓋.mp4',
         },
       ],
     },
-    { value: "油壓缸檢查更換", label: "油壓缸檢查更換" },
+    { value: '油壓缸檢查更換', label: '油壓缸檢查更換' },
     {
-      value: "壓力開關(IFM宜福門)調整及使用",
-      label: "壓力開關(IFM宜福門)調整及使用",
+      value: '壓力開關(IFM宜福門)調整及使用',
+      label: '壓力開關(IFM宜福門)調整及使用',
     },
-    { value: "GXA-H安裝煞車環", label: "GXA-H安裝煞車環" },
-    { value: "更換氣壓缸", label: "更換氣壓缸" },
-    { value: "電磁閥檢查及更換", label: "電磁閥檢查及更換" }, //bug閃文字
-    { value: "GXA-S潤滑油更換", label: "GXA-S潤滑油更換" },
+    { value: 'GXA-H安裝煞車環', label: 'GXA-H安裝煞車環' },
+    { value: '更換氣壓缸', label: '更換氣壓缸' },
+    { value: '電磁閥檢查及更換', label: '電磁閥檢查及更換' }, //bug閃文字
+    { value: 'GXA-S潤滑油更換', label: 'GXA-S潤滑油更換' },
   ];
 
   const customStyles = {
     container: (provided) => ({
       ...provided,
-      width: "100%",
-      margin: "5px 0px 0px 0px",
-      border: "solid 1px black",
-      borderRadius: "5px",
+      width: '100%',
+      margin: '5px 0px 0px 0px',
+      border: 'solid 1px black',
+      borderRadius: '5px',
     }),
     control: (provided) => ({
       ...provided,
-      color: "white",
-      height: "6vh",
-      borderRadius: "5px",
-      textAlignLast: "center",
-      fontSize: "16px",
-      cursor: "pointer",
-      overflowY: "auto",
+      color: 'white',
+      height: '6vh',
+      borderRadius: '5px',
+      textAlignLast: 'center',
+      fontSize: '16px',
+      cursor: 'pointer',
+      overflowY: 'auto',
     }),
     option: (provided, state) => ({
       ...provided,
-      fontSize: "16px",
-      padding: "8px",
-      borderRadius: "0",
-      cursor: "pointer",
+      fontSize: '16px',
+      padding: '8px',
+      borderRadius: '0',
+      cursor: 'pointer',
     }),
   };
 
   const { TextArea } = Input;
 
   return (
-    <div className={styles["chat-area"]}>
+    <div className={styles['chat-area']}>
       <Flex vertical gap={32}>
         <TextArea
           style={{
-            resize: "none",
-            height: "40vh", // 直接設定高度為視窗高度的百分比
+            resize: 'none',
+            height: '40vh', // 直接設定高度為視窗高度的百分比
           }}
           id="chat-input"
-          className={styles["chat-input"]}
+          className={styles['chat-input']}
           placeholder="Enter Information !"
           // defaultValue="請介紹貴公司??"
           value={input}
@@ -208,7 +208,7 @@ const ChatArea = ({
         onChange={handleSelectChange}
         placeholder="Select the Question"
       />
-      <div className={styles["chat-controls"]}>
+      <div className={styles['chat-controls']}>
         <Button id="send" loading={loadings[0]} onClick={handleSubmission}>
           Submit
         </Button>

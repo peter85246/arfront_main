@@ -1,11 +1,11 @@
-import classNames from "classnames";
-import styles from "../scss/ConditionSearchDialog.module.scss";
-import React, { useState, useEffect } from "react";
-import { Modal, Button, Form } from "react-bootstrap";
-import Select from "react-select";
-import { useTranslation } from "react-i18next";
+import classNames from 'classnames';
+import styles from '../scss/ConditionSearchDialog.module.scss';
+import React, { useState, useEffect } from 'react';
+import { Modal, Button, Form } from 'react-bootstrap';
+import Select from 'react-select';
+import { useTranslation } from 'react-i18next';
 
-import { apiGetAllKnowledgeBaseByFilter } from "../utils/Api";
+import { apiGetAllKnowledgeBaseByFilter } from '../utils/Api';
 
 // 創建一個重用的 SelectField 組件
 const SelectField = ({
@@ -56,7 +56,7 @@ export function ConditionSearchDialog({ onClose, setSelectedConditions }) {
     knowledgeBaseProductName: null,
   });
   const [errors, setErrors] = useState({});
-  const [searchFilter, setSearchFilter] = useState(""); // 用於保存搜索過濾的字符串
+  const [searchFilter, setSearchFilter] = useState(''); // 用於保存搜索過濾的字符串
   const [databaseItems, setDatabaseItems] = useState([]); // 用於儲存從資料庫撈取的項目
 
   const allowDrop = (event) => {
@@ -66,14 +66,14 @@ export function ConditionSearchDialog({ onClose, setSelectedConditions }) {
   const { t } = useTranslation();
 
   // 當組件掛載時，執行資料獲取
-  const fetchData = async (keyword = "") => {
+  const fetchData = async (keyword = '') => {
     const response = await apiGetAllKnowledgeBaseByFilter({ keyword });
-    console.log("API Response:", response);
-    if (response && response.code === "0000") {
+    console.log('API Response:', response);
+    if (response && response.code === '0000') {
       setDatabaseItems(response.result);
-      console.log("Fetched Items:", response.result);
+      console.log('Fetched Items:', response.result);
     } else {
-      console.error("Error fetching data:", response?.message);
+      console.error('Error fetching data:', response?.message);
     }
   };
 
@@ -89,7 +89,7 @@ export function ConditionSearchDialog({ onClose, setSelectedConditions }) {
       const response = await apiGetAllKnowledgeBaseByFilter({
         keyword: searchValue,
       });
-      if (response && response.code === "0000") {
+      if (response && response.code === '0000') {
         // 過濾數據，確保包括數字和文本類型的數據
         const filteredItems = response.result.reduce((acc, item) => {
           const filteredEntry = {};
@@ -119,7 +119,7 @@ export function ConditionSearchDialog({ onClose, setSelectedConditions }) {
         }, []);
         setDatabaseItems(filteredItems); // 更新顯示項目
       } else {
-        console.error("Error fetching data:", response?.message);
+        console.error('Error fetching data:', response?.message);
       }
     } else {
       fetchData(); // 如果沒有搜索關鍵字，則重新獲取所有數據
@@ -128,7 +128,7 @@ export function ConditionSearchDialog({ onClose, setSelectedConditions }) {
 
   const visibleItems = Array.from(
     { length: 10 },
-    (_, i) => `項目${i + 1}`,
+    (_, i) => `項目${i + 1}`
   ).filter((item) => item.toLowerCase().includes(searchFilter)); // 過濾並確認項目是否應該顯示
 
   // 處理模態窗關閉事件
@@ -147,18 +147,18 @@ export function ConditionSearchDialog({ onClose, setSelectedConditions }) {
 
     // 檢查必填欄位是否都已填寫
     Object.keys(conditionInfo).forEach((key) => {
-      if (!conditionInfo[key] || conditionInfo[key] === "") {
-        newErrors[key] = "required";
+      if (!conditionInfo[key] || conditionInfo[key] === '') {
+        newErrors[key] = 'required';
         hasError = true;
       }
     });
 
     // 如果有錯誤，不進行保存
     if (hasError) {
-      alert("儲存失敗!");
+      alert('儲存失敗!');
     } else {
-      console.log("全部有效，執行保存!");
-      window.location.href = "#";
+      console.log('全部有效，執行保存!');
+      window.location.href = '#';
     }
 
     setErrors(newErrors);
@@ -185,23 +185,23 @@ export function ConditionSearchDialog({ onClose, setSelectedConditions }) {
 
   // 指定需要顯示的鍵
   const displayKeys = [
-    "knowledgeBaseDeviceType",
-    "knowledgeBaseDeviceParts",
-    "knowledgeBaseRepairItems",
-    "knowledgeBaseRepairType",
-    "knowledgeBaseSpec",
-    "knowledgeBaseSystem",
-    "knowledgeBaseProductName",
+    'knowledgeBaseDeviceType',
+    'knowledgeBaseDeviceParts',
+    'knowledgeBaseRepairItems',
+    'knowledgeBaseRepairType',
+    'knowledgeBaseSpec',
+    'knowledgeBaseSystem',
+    'knowledgeBaseProductName',
   ];
 
   const handleDragStart = (event, item) => {
-    event.dataTransfer.setData("text/plain", JSON.stringify(item));
+    event.dataTransfer.setData('text/plain', JSON.stringify(item));
   };
 
   // 更新handleDrop方法以適應拖放操作
   const handleDrop = (event, field) => {
     event.preventDefault();
-    const item = JSON.parse(event.dataTransfer.getData("text/plain"));
+    const item = JSON.parse(event.dataTransfer.getData('text/plain'));
     // 如果欄位已被填入，則覆蓋並將被覆蓋的項目放回到 databaseItems
     const currentValue = conditionInfo[field];
     if (currentValue) {
@@ -224,41 +224,41 @@ export function ConditionSearchDialog({ onClose, setSelectedConditions }) {
         (option, index, self) =>
           index ===
           self.findIndex(
-            (t) => t.label === option.label && t.value === option.value,
-          ),
+            (t) => t.label === option.label && t.value === option.value
+          )
       );
   };
 
   const fieldNames = [
     {
-      field: "knowledgeBaseDeviceType",
-      label: t("ConditionSearchDialog.knowledgeBaseDeviceType"),
+      field: 'knowledgeBaseDeviceType',
+      label: t('ConditionSearchDialog.knowledgeBaseDeviceType'),
     },
     {
-      field: "knowledgeBaseDeviceParts",
-      label: t("ConditionSearchDialog.knowledgeBaseDeviceParts"),
+      field: 'knowledgeBaseDeviceParts',
+      label: t('ConditionSearchDialog.knowledgeBaseDeviceParts'),
     },
     {
-      field: "knowledgeBaseRepairItems",
-      label: t("ConditionSearchDialog.knowledgeBaseRepairItems"),
+      field: 'knowledgeBaseRepairItems',
+      label: t('ConditionSearchDialog.knowledgeBaseRepairItems'),
     },
     {
-      field: "knowledgeBaseRepairType",
-      label: t("ConditionSearchDialog.knowledgeBaseRepairType"),
+      field: 'knowledgeBaseRepairType',
+      label: t('ConditionSearchDialog.knowledgeBaseRepairType'),
     },
     {
-      field: "knowledgeBaseSpec",
-      label: t("ConditionSearchDialog.knowledgeBaseSpec"),
-      labelStyle: { marginLeft: "32px" },
+      field: 'knowledgeBaseSpec',
+      label: t('ConditionSearchDialog.knowledgeBaseSpec'),
+      labelStyle: { marginLeft: '32px' },
     },
     {
-      field: "knowledgeBaseSystem",
-      label: t("ConditionSearchDialog.knowledgeBaseSystem"),
-      labelStyle: { marginLeft: "32px" },
+      field: 'knowledgeBaseSystem',
+      label: t('ConditionSearchDialog.knowledgeBaseSystem'),
+      labelStyle: { marginLeft: '32px' },
     },
     {
-      field: "knowledgeBaseProductName",
-      label: t("ConditionSearchDialog.knowledgeBaseProductName"),
+      field: 'knowledgeBaseProductName',
+      label: t('ConditionSearchDialog.knowledgeBaseProductName'),
     },
   ];
 
@@ -272,11 +272,11 @@ export function ConditionSearchDialog({ onClose, setSelectedConditions }) {
         size="xl"
       >
         <Modal.Header closeButton>
-          <Modal.Title>{t("ConditionSearchDialog.btn.search")}</Modal.Title>
+          <Modal.Title>{t('ConditionSearchDialog.btn.search')}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <div className={styles.leftBoxCondition}>
-            {t("ConditionSearchDialog.canInput")}
+            {t('ConditionSearchDialog.canInput')}
             {/* 可拖動 & 點擊項目填入右側欄位 */}
             <div className={styles.boxCondition1}>
               <input
@@ -291,7 +291,7 @@ export function ConditionSearchDialog({ onClose, setSelectedConditions }) {
                 {databaseItems.map((item, index) =>
                   Object.entries(item)
                     .filter(
-                      ([key, value]) => displayKeys.includes(key) && value,
+                      ([key, value]) => displayKeys.includes(key) && value
                     )
                     .map(([key, value]) => {
                       if (!shownItems.has(value)) {
@@ -306,7 +306,7 @@ export function ConditionSearchDialog({ onClose, setSelectedConditions }) {
                                 [styles.selectedItem]:
                                   conditionInfo[key] &&
                                   conditionInfo[key].value === value,
-                              },
+                              }
                             )}
                             draggable="true"
                             onDoubleClick={() => handleDoubleClick(item, key)}
@@ -316,14 +316,14 @@ export function ConditionSearchDialog({ onClose, setSelectedConditions }) {
                             <div className={styles.icon}>
                               {conditionInfo[key] &&
                               conditionInfo[key].value === value
-                                ? "✓"
-                                : "≡"}
+                                ? '✓'
+                                : '≡'}
                             </div>
                           </div>
                         );
                       }
                       return null;
-                    }),
+                    })
                 )}
               </div>
             </div>

@@ -1,39 +1,39 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
-import i18n from "./i18n";
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import i18n from './i18n';
 import {
   BrowserRouter as Router,
   Routes,
   Route,
   Navigate,
-} from "react-router-dom";
-import PrivateRoute from "./utils/PrivateRoute"; //Private Route
-import Login from "./pages/Login";
-import Home from "./pages/Home";
-import Machine from "./pages/Machine";
-import UserManage from "./pages/UserManage";
-import MachineAlarm from "./pages/MachineAlarm";
-import SOP from "./pages/SOP";
-import SOP2 from "./pages/SOP2";
-import MachineIOTList from "./pages/MachineIOTList";
-import MachineIOT from "./pages/MachineIOT";
-import Knowledge from "./pages/Knowledge";
-import Database from "./pages/Database";
-import Alarm from "./pages/Alarm";
-import PageMindMap from "./pages/PageMindMap";
-import GPT from "./pages/GPT";
+} from 'react-router-dom';
+import PrivateRoute from './utils/PrivateRoute'; //Private Route
+import Login from './pages/Login';
+import Home from './pages/Home';
+import Machine from './pages/Machine';
+import UserManage from './pages/UserManage';
+import MachineAlarm from './pages/MachineAlarm';
+import SOP from './pages/SOP';
+import SOP2 from './pages/SOP2';
+import MachineIOTList from './pages/MachineIOTList';
+import MachineIOT from './pages/MachineIOT';
+import Knowledge from './pages/Knowledge';
+import Database from './pages/Database';
+import Alarm from './pages/Alarm';
+import PageMindMap from './pages/PageMindMap';
+import GPT from './pages/GPT';
 
-import "./App.css";
-import "./index.css";
-import { RepairDocument } from "./components/RepairDocument";
-import { DocumentEditor } from "./components/DocumentEditor";
-import MachineKnowledge from "./pages/MachineKnowledge";
-import Assistant from "./components/Assistant";
-import MenuTest from "./components/MenuTest";
-import PDFDemo from "./pages/PDFDemo";
-import { useDatabase } from "./components/useDatabse";
+import './App.css';
+import './index.css';
+import { RepairDocument } from './components/RepairDocument';
+import { DocumentEditor } from './components/DocumentEditor';
+import MachineKnowledge from './pages/MachineKnowledge';
+import Assistant from './components/Assistant';
+import MenuTest from './components/MenuTest';
+import PDFDemo from './pages/PDFDemo';
+import { useDatabase } from './components/useDatabse';
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
+const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <Router>
     <Routes>
@@ -179,5 +179,5 @@ root.render(
       {/* </Route> */}
     </Routes>
     <Assistant />
-  </Router>,
+  </Router>
 );

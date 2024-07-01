@@ -1,6 +1,6 @@
-﻿import i18n from "i18next";
-import { initReactI18next } from "react-i18next";
-import Backend from "i18next-http-backend";
+﻿import i18n from 'i18next';
+import { initReactI18next } from 'react-i18next';
+import Backend from 'i18next-http-backend';
 const spkitaApiUrl = window.spkitaApiUrl;
 
 i18n
@@ -12,12 +12,12 @@ i18n
   .init({
     backend: {
       //網頁載入時去下載語言檔的位置
-      loadPath: "/lang/{{lng}}.json",
+      loadPath: '/lang/{{lng}}.json',
     },
     // 當目前的語言檔找不到對應的字詞時，會用 fallbackLng (en) 作為預設語言
-    fallbackLng: "zh-TW",
+    fallbackLng: 'zh-TW',
     // 預設語言
-    lng: "zh-TW",
+    lng: 'zh-TW',
     interpolation: {
       // 是否要讓字詞 escaped 來防止 xss 攻擊，這裡因為 React.js 已經做了，就設成 false即可
       escapeValue: false,

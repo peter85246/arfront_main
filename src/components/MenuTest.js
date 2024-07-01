@@ -174,11 +174,11 @@
 
 // export default MenuTest;
 
-import React, { useEffect, useRef } from "react";
-import jsMind from "jsmind";
-import "jsmind/style/jsmind.css";
+import React, { useEffect, useRef } from 'react';
+import jsMind from 'jsmind';
+import 'jsmind/style/jsmind.css';
 
-import { apiGetMachineAddMindMap } from "../utils/Api";
+import { apiGetMachineAddMindMap } from '../utils/Api';
 
 const MenuTest = () => {
   const jmContainerRef = useRef(null);
@@ -196,21 +196,21 @@ const MenuTest = () => {
         !data.result.knowledgeBases ||
         !Array.isArray(data.result.knowledgeBases)
       ) {
-        console.error("Unexpected data format:", data);
+        console.error('Unexpected data format:', data);
         return []; // 返回一個空數組，避免後續操作出錯
       }
 
       return data.result.knowledgeBases; // 返回 knowledgeBases 數組
     } catch (error) {
-      console.error("Failed to fetch data:", error);
+      console.error('Failed to fetch data:', error);
     }
   };
 
   // 將遞迴地處理每個部件和修復類型，並添加到數據陣列中
   const processPart = (part, parentId, direction) => {
-    const partId = `${parentId}_${part.deviceParts.trim().replace(/\s+/g, "_")}`;
+    const partId = `${parentId}_${part.deviceParts.trim().replace(/\s+/g, '_')}`;
     // 父節點方向決定子節點方向
-    const childDirection = direction === "right" ? "left" : "right";
+    const childDirection = direction === 'right' ? 'left' : 'right';
 
     const nodes = [
       {
@@ -222,7 +222,7 @@ const MenuTest = () => {
     ];
 
     part.repairTypes.forEach((type, index) => {
-      const typeId = `${partId}_${type.repairType.trim().replace(/\s+/g, "_")}`;
+      const typeId = `${partId}_${type.repairType.trim().replace(/\s+/g, '_')}`;
       nodes.push({
         id: typeId,
         topic: type.repairType.trim(),
@@ -234,7 +234,7 @@ const MenuTest = () => {
         const kbId = `${typeId}_kb_${kb.knowledgeBaseId}`;
         nodes.push({
           id: kbId,
-          topic: kb.deviceType.trim() || "General Info",
+          topic: kb.deviceType.trim() || 'General Info',
           parentid: typeId,
           direction: childDirection, // 保持同一層級方向一致
         });
@@ -251,8 +251,8 @@ const MenuTest = () => {
           const options = {
             container: jmContainerRef.current,
             editable: true,
-            theme: "primary",
-            mode: "full",
+            theme: 'primary',
+            mode: 'full',
             layout: {
               hspace: 70,
               vspace: 30,
@@ -261,38 +261,38 @@ const MenuTest = () => {
           };
 
           const nodes = [
-            { id: "root", topic: "MindMap", isroot: true, direction: "right" },
+            { id: 'root', topic: 'MindMap', isroot: true, direction: 'right' },
           ];
           knowledgeBases.forEach((part, index) => {
             // 為每個部分交替設定方向
-            const direction = index % 2 === 0 ? "right" : "left";
-            nodes.push(...processPart(part, "root", direction));
+            const direction = index % 2 === 0 ? 'right' : 'left';
+            nodes.push(...processPart(part, 'root', direction));
           });
 
           const mind = {
             meta: {
-              name: "demo",
-              author: "hizzgdev@163.com",
-              version: "0.2",
+              name: 'demo',
+              author: 'hizzgdev@163.com',
+              version: '0.2',
             },
-            format: "node_array",
+            format: 'node_array',
             data: nodes,
           };
 
           jmInstanceRef.current = new jsMind(options);
           jmInstanceRef.current.show(mind);
         } else {
-          console.log("No data to display in the mind map.");
+          console.log('No data to display in the mind map.');
         }
       })
       .catch((error) => {
-        console.error("Error in displaying mind map:", error);
+        console.error('Error in displaying mind map:', error);
       });
   }, []);
 
   return (
     <div>
-      <div ref={jmContainerRef} style={{ height: "90vh" }} />
+      <div ref={jmContainerRef} style={{ height: '90vh' }} />
     </div>
   );
 };

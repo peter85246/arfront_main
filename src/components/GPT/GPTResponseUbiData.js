@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useRef } from "react";
-import ReactMarkdown from "react-markdown";
-import rehypeRaw from "rehype-raw";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { dark } from "react-syntax-highlighter/dist/esm/styles/prism";
-import styles from "../../scss/gpt.module.scss";
-import GPTResponse from "./GPTResponse";
+import React, { useState, useEffect, useRef } from 'react';
+import ReactMarkdown from 'react-markdown';
+import rehypeRaw from 'rehype-raw';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { dark } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import styles from '../../scss/gpt.module.scss';
+import GPTResponse from './GPTResponse';
 
 // 步驟組件，用於將文本和圖片包裝在一起
 // const Step = ({ text, imagePath }) => {
@@ -37,21 +37,21 @@ const GPTResponse = ({ question, response, isLoading, error }) => {
   // 每次 response 更新時，自動滾動到底部
   useEffect(() => {
     if (responseEndRef.current) {
-      responseEndRef.current.scrollIntoView({ behavior: "smooth" });
+      responseEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   }, [response]); // 依賴於 response 的更新
 
   // Loading... 過場動畫
   function LoadingIndicator() {
-    const [dots, setDots] = useState("...");
+    const [dots, setDots] = useState('...');
     useEffect(() => {
       const timer = setInterval(() => {
-        setDots((dots) => (dots.length < 6 ? dots + "." : "..."));
+        setDots((dots) => (dots.length < 6 ? dots + '.' : '...'));
       }, 500);
       return () => clearInterval(timer);
     }, []);
 
-    return <div className={styles["loading-indicator"]}>Loading{dots}</div>;
+    return <div className={styles['loading-indicator']}>Loading{dots}</div>;
   }
 
   // 定義一個自定義渲染方法
@@ -72,12 +72,12 @@ const GPTResponse = ({ question, response, isLoading, error }) => {
               key={`text-${lastIndex}`}
               children={text}
               rehypePlugins={[rehypeRaw]}
-            />,
+            />
           );
         }
         // 然後使用GPTImageParser組件來顯示圖片
         elements.push(
-          <GPTImageParser key={`image-${match.index}`} inputText={imagePath} />,
+          <GPTImageParser key={`image-${match.index}`} inputText={imagePath} />
         );
         lastIndex = regex.lastIndex;
       }
@@ -88,7 +88,7 @@ const GPTResponse = ({ question, response, isLoading, error }) => {
             key={`text-last`}
             children={node.value.substring(lastIndex)}
             rehypePlugins={[rehypeRaw]}
-          />,
+          />
         );
       }
 
@@ -97,7 +97,7 @@ const GPTResponse = ({ question, response, isLoading, error }) => {
 
     // Markdown文字渲染器...
     code({ node, inline, className, children, ...props }) {
-      const match = /language-(\w+)/.exec(className || "");
+      const match = /language-(\w+)/.exec(className || '');
       return !inline && match ? (
         <SyntaxHighlighter
           style={dark}
@@ -105,7 +105,7 @@ const GPTResponse = ({ question, response, isLoading, error }) => {
           PreTag="div"
           {...props}
         >
-          {String(children).replace(/\n$/, "")}
+          {String(children).replace(/\n$/, '')}
         </SyntaxHighlighter>
       ) : (
         <code className={className} {...props}>
@@ -116,18 +116,18 @@ const GPTResponse = ({ question, response, isLoading, error }) => {
   };
 
   return (
-    <div className={styles["gpt-response-area"]}>
-      <div className={styles["user-question"]}>
+    <div className={styles['gpt-response-area']}>
+      <div className={styles['user-question']}>
         {/* 只有當 question 非空時顯示 "發問：" */}
         {question && <p>發問：{question}</p>}
       </div>
-      <div className={styles["gpt-response"]}>
+      <div className={styles['gpt-response']}>
         <ReactMarkdown
           children={response} // 確保 response 變量為包含要渲染的Markdown內容
           rehypePlugins={[rehypeRaw]}
           components={renderers} // 使用自定義渲染器來顯示Markdown內容
         />
-        {!isLoading && <p className={styles["gptContent"]}></p>}
+        {!isLoading && <p className={styles['gptContent']}></p>}
         {isLoading && <LoadingIndicator />}
 
         {/* 圖片png檔案前端渲染器組件 */}

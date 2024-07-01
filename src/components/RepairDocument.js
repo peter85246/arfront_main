@@ -1,24 +1,23 @@
-import classNames from "classnames";
-import styles from "../scss/global.module.scss";
-import { Link, useNavigate } from "react-router-dom";
-import { useLocation } from "react-router-dom";
-import React, { useEffect, useRef, useState } from "react";
-import { useReactToPrint } from "react-to-print";
-import { jsPDF } from "jspdf";
-import { Document, Page, Text, View, StyleSheet } from "@react-pdf/renderer";
-import PdfContent from "./PDFContent";
-import { useTranslation } from "react-i18next"; //語系
+import classNames from 'classnames';
+import styles from '../scss/global.module.scss';
+import { Link, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
+import React, { useEffect, useRef, useState } from 'react';
+import { useReactToPrint } from 'react-to-print';
+import { jsPDF } from 'jspdf';
+import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
+import PdfContent from './PDFContent';
+import { useTranslation } from 'react-i18next'; //語系
 import {
   apiGetAllKnowledgeBaseByMachineAddId,
   apiGetAllSOPByMachineAddId,
-} from "../utils/Api";
-
+} from '../utils/Api';
 
 // React PDF Styles
 const pdfStyles = StyleSheet.create({
   page: {
-    flexDirection: "row",
-    backgroundColor: "#E4E4E4",
+    flexDirection: 'row',
+    backgroundColor: '#E4E4E4',
   },
   section: {
     margin: 10,
@@ -34,7 +33,7 @@ export function RepairDocument() {
   const [knowledgeInfo, setKnowledgeInfo] = useState([]);
   const [SOPData, setSOPData] = useState([]);
   const navigate = useNavigate(); // 使用 navigate 來處理導航
-  console.log("item", item);
+  console.log('item', item);
 
   const pdfRef = React.useRef();
   const [isPrinting, setIsPrinting] = useState(false);
@@ -53,7 +52,7 @@ export function RepairDocument() {
     const pdf = new jsPDF();
     pdf.html(pdfRef.current, {
       callback: function (doc) {
-        doc.save("德川維修手冊.pdf");
+        doc.save('德川維修手冊.pdf');
       },
       // Adjust these options as needed to improve formatting
       x: 10,
@@ -70,9 +69,9 @@ export function RepairDocument() {
       const res = await apiGetAllKnowledgeBaseByMachineAddId({
         Id: machineAddId,
       });
-      if (res?.message === "完全成功") {
+      if (res?.message === '完全成功') {
         const knowledgeInfo = res.result.filter(
-          (item) => item.knowledgeBaseId === knowledgeBaseId,
+          (item) => item.knowledgeBaseId === knowledgeBaseId
         )[0];
         setKnowledgeInfo(knowledgeInfo);
       }
@@ -81,11 +80,11 @@ export function RepairDocument() {
 
     const getSOPInfo = async () => {
       const res = await apiGetAllSOPByMachineAddId({ Id: machineAddId });
-      if (res?.message === "完全成功") {
-        console.log("res.result", res.result);
+      if (res?.message === '完全成功') {
+        console.log('res.result', res.result);
 
         const sop = res.result.filter(
-          (item) => item.knowledgeBaseId === knowledgeBaseId,
+          (item) => item.knowledgeBaseId === knowledgeBaseId
         );
         setSOPData(sop);
       }
@@ -95,14 +94,14 @@ export function RepairDocument() {
 
   return (
     <main>
-      <section className="content-header" style={{ marginBottom: "10px" }}>
+      <section className="content-header" style={{ marginBottom: '10px' }}>
         <div className="container-fluid">
           <div className="row mb-2 justify-content-between">
             <div />
             <div className="content-header-text-color">
               <h1>
                 <strong>
-                  {t("repairDocument.content.header")}
+                  {t('repairDocument.content.header')}
                   {/*維修說明檔案*/}
                 </strong>
               </h1>
@@ -111,30 +110,30 @@ export function RepairDocument() {
           </div>
         </div>
       </section>
-      <div className={styles["buttons-container"]}>
+      <div className={styles['buttons-container']}>
         <button
           onClick={handlePrint}
-          className={classNames(styles["button"], styles["btn-pdf"])}
+          className={classNames(styles['button'], styles['btn-pdf'])}
         >
           印出
         </button>
       </div>
-      <div className={styles["back-page"]}>
-        <Link to="/knowledge" className={"fas fa-angle-left"}>
-          {" "}
+      <div className={styles['back-page']}>
+        <Link to="/knowledge" className={'fas fa-angle-left'}>
+          {' '}
           知識庫
         </Link>
         <div
-          className={"fas fa-angle-left"}
-          onClick={() => navigate("/database", { state: { item } })}
+          className={'fas fa-angle-left'}
+          onClick={() => navigate('/database', { state: { item } })}
         >
           資料庫
         </div>
       </div>
 
       {/* <!--中間欄位內容--> */}
-      <div className={styles["content-box"]}>
-        <div className={styles["content-box-middle-bigView"]}>
+      <div className={styles['content-box']}>
+        <div className={styles['content-box-middle-bigView']}>
           <PdfContent
             ref={pdfRef}
             knowledgeInfo={knowledgeInfo}

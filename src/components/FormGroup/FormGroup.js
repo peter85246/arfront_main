@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from "react";
-import { Select, Input } from "antd";
-import classNames from "classnames";
-import styles from "../../scss/global.module.scss";
+import React, { useState, useEffect } from 'react';
+import { Select, Input } from 'antd';
+import classNames from 'classnames';
+import styles from '../../scss/global.module.scss';
 
 const FormGroup = ({
   label,
   id,
   hasRedStar = false,
-  inputType = "select",
+  inputType = 'select',
   options = [],
 }) => {
   const [inputValue, setInputValue] = useState([]); // 保持為數組以支持標籤模式
@@ -30,15 +30,15 @@ const FormGroup = ({
   };
 
   return (
-    <div className={styles["form-group"]}>
+    <div className={styles['form-group']}>
       <label htmlFor={id}>
         <span className="text-danger">*</span>
         {label}
       </label>
-      {inputType === "select" ? (
+      {inputType === 'select' ? (
         <Select
           mode="tags"
-          style={{ width: "100%" }}
+          style={{ width: '100%' }}
           placeholder="Select content..."
           value={inputValue}
           onChange={handleSelectChange}
@@ -49,7 +49,7 @@ const FormGroup = ({
           placeholder="Enter content..."
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
-          style={{ width: "100%" }}
+          style={{ width: '100%' }}
         />
       )}
     </div>

@@ -1,4 +1,4 @@
-import { create } from "zustand";
+import { create } from 'zustand';
 
 export const useStore = create()((set) => ({
   isCreatingSOP: false,
@@ -8,7 +8,7 @@ export const useStore = create()((set) => ({
   setSOPInfo: (updater) =>
     set((state) => {
       const newSOPInfo =
-        typeof updater === "function" ? updater(state.SOPInfo) : updater;
+        typeof updater === 'function' ? updater(state.SOPInfo) : updater;
       return { SOPInfo: newSOPInfo };
     }),
 }));

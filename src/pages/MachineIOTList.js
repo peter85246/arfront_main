@@ -1,21 +1,21 @@
-﻿import React, { useState, useEffect, useRef } from "react";
-import { useTranslation } from "react-i18next"; //語系
-import { useParams, useNavigate } from "react-router-dom";
-import { setWindowClass, removeWindowClass } from "../utils/helpers";
-import { DebounceInput } from "react-debounce-input";
-import { ToastContainer, toast } from "react-toastify";
-import Modal from "react-bootstrap/Modal";
-import Spinner from "react-bootstrap/Spinner";
-import SimpleReactValidator from "simple-react-validator";
-import reactStringReplace from "react-string-replace";
-import Pagination from "react-bootstrap/Pagination";
+﻿import React, { useState, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next'; //語系
+import { useParams, useNavigate } from 'react-router-dom';
+import { setWindowClass, removeWindowClass } from '../utils/helpers';
+import { DebounceInput } from 'react-debounce-input';
+import { ToastContainer, toast } from 'react-toastify';
+import Modal from 'react-bootstrap/Modal';
+import Spinner from 'react-bootstrap/Spinner';
+import SimpleReactValidator from 'simple-react-validator';
+import reactStringReplace from 'react-string-replace';
+import Pagination from 'react-bootstrap/Pagination';
 
-import { apiIOTOverview, apiDeleteMachineIOT } from "../utils/Api";
+import { apiIOTOverview, apiDeleteMachineIOT } from '../utils/Api';
 
 function MachineIOTList() {
   const { t } = useTranslation();
   const navigate = useNavigate(); //跳轉Router
-  const [keyword, setKeyword] = useState(""); //關鍵字
+  const [keyword, setKeyword] = useState(''); //關鍵字
   const { machineId } = useParams();
   const [machineIOTs, setMachineIOTs] = useState([]); //IOT列表
   const [showMachineIOTs, setShowMachineIOTs] = useState([]); //IOT列表(顯示前端)
@@ -27,7 +27,7 @@ function MachineIOTList() {
 
   //#region 初始載入
   useEffect(() => {
-    removeWindowClass("login-page");
+    removeWindowClass('login-page');
 
     const fetchData = async () => {
       await refreshMachineIOTs();
@@ -46,13 +46,13 @@ function MachineIOTList() {
 
     let iotOverviewResponse = await apiIOTOverview(sendData);
     if (iotOverviewResponse) {
-      if (iotOverviewResponse.code == "0000") {
+      if (iotOverviewResponse.code == '0000') {
         setMachineIOTs(iotOverviewResponse.result);
         setShowMachineIOTs(
           iotOverviewResponse.result.slice(
             activePage * pageRow - pageRow,
-            activePage * pageRow,
-          ),
+            activePage * pageRow
+          )
         );
       }
     }
@@ -75,14 +75,14 @@ function MachineIOTList() {
         onClick={(e) => handleChangePage(e, number)}
       >
         {number}
-      </Pagination.Item>,
+      </Pagination.Item>
     );
   }
 
   const handleChangePage = async (e, number) => {
     setActivePage(number);
     setShowMachineIOTs(
-      machineIOTs.slice(number * pageRow - pageRow, number * pageRow),
+      machineIOTs.slice(number * pageRow - pageRow, number * pageRow)
     );
   };
   //#endregion
@@ -128,8 +128,8 @@ function MachineIOTList() {
 
     let deleteMachineIOTResponse = await apiDeleteMachineIOT(sendData);
     if (deleteMachineIOTResponse) {
-      if (deleteMachineIOTResponse.code == "0000") {
-        toast.success(t("toast.delete.success"), {
+      if (deleteMachineIOTResponse.code == '0000') {
+        toast.success(t('toast.delete.success'), {
           position: toast.POSITION.TOP_CENTER,
           autoClose: 3000,
           hideProgressBar: true,
@@ -164,7 +164,7 @@ function MachineIOTList() {
               <a href={`/machine`} className="d-flex align-items-center">
                 <i className="fas fa-angle-left">
                   &nbsp;&nbsp;
-                  {t("machineIOTList.backButton")}
+                  {t('machineIOTList.backButton')}
                   {/*AR設備控制*/}
                 </i>
               </a>
@@ -172,7 +172,7 @@ function MachineIOTList() {
             <div className="content-header-text-color">
               <h1>
                 <strong>
-                  {t("machineIOTList.content.header")}
+                  {t('machineIOTList.content.header')}
                   {/*IOT管理*/}
                 </strong>
               </h1>
@@ -182,7 +182,7 @@ function MachineIOTList() {
               className="btn btn-primary btn-add"
               onClick={() => handleGotoMachineIOT(0)}
             >
-              <i className="fas fa-plus"></i> {t("machineIOTList.btn.add")}
+              <i className="fas fa-plus"></i> {t('machineIOTList.btn.add')}
               {/*新增IOT*/}
             </button>
           </div>
@@ -196,7 +196,7 @@ function MachineIOTList() {
                 <DebounceInput
                   debounceTimeout={300}
                   type="search"
-                  placeholder={t("keyword.placeholder")}
+                  placeholder={t('keyword.placeholder')}
                   onChange={(e) => handleChangeKeyword(e)}
                 />
                 {/*請輸入關鍵字*/}
@@ -209,23 +209,23 @@ function MachineIOTList() {
                 <thead>
                   <tr>
                     <th>
-                      {t("machineIOTList.machineIOTId")}
+                      {t('machineIOTList.machineIOTId')}
                       {/*編號*/}
                     </th>
                     <th>
-                      {t("machineIOT.machineIOTDeviceName")}
+                      {t('machineIOT.machineIOTDeviceName')}
                       {/*設備名稱*/}
                     </th>
                     <th>
-                      {t("machineIOT.machineIOTMQTTBroker")}
+                      {t('machineIOT.machineIOTMQTTBroker')}
                       {/*Server*/}
                     </th>
                     <th>
-                      {t("machineIOT.machineIOTClientId")}
+                      {t('machineIOT.machineIOTClientId')}
                       {/*Client ID*/}
                     </th>
                     <th>
-                      {t("machineIOTList.fun")}
+                      {t('machineIOTList.fun')}
                       {/*功能*/}
                     </th>
                   </tr>
@@ -248,19 +248,19 @@ function MachineIOTList() {
                                   handleGotoMachineIOT(item.machineIOTId)
                                 }
                               >
-                                {t("machineIOTList.btn.edit")}
+                                {t('machineIOTList.btn.edit')}
                                 {/*編輯*/}
-                              </button>{" "}
+                              </button>{' '}
                               <button
                                 type="button"
                                 className="btn btn-outline-danger"
                                 onClick={() =>
                                   handleOpenDeleteMachineIOTModal(
-                                    item.machineIOTId,
+                                    item.machineIOTId
                                   )
                                 }
                               >
-                                {t("machineIOTList.btn.del")}
+                                {t('machineIOTList.btn.del')}
                                 {/*刪除*/}
                               </button>
                             </td>
@@ -271,8 +271,8 @@ function MachineIOTList() {
                   ) : (
                     <>
                       <tr>
-                        <td colSpan="5" style={{ textAlign: "center" }}>
-                          {t("table.empty")}
+                        <td colSpan="5" style={{ textAlign: 'center' }}>
+                          {t('table.empty')}
                           {/*查無資料*/}
                         </td>
                       </tr>
@@ -297,13 +297,13 @@ function MachineIOTList() {
       >
         <Modal.Header closeButton>
           <Modal.Title>
-            {t("machineIOTList.delete")}
+            {t('machineIOTList.delete')}
             {/*刪除IOT*/}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <p>
-            {t("machineIOTList.deleteContent")}
+            {t('machineIOTList.deleteContent')}
             {/*您確定要刪除該筆資料嗎?*/}
           </p>
         </Modal.Body>
@@ -313,7 +313,7 @@ function MachineIOTList() {
             className="btn btn-secondary"
             onClick={(e) => handleCloseDeleteMachineIOTModal(e)}
           >
-            {t("btn.cancel")}
+            {t('btn.cancel')}
             {/*取消*/}
           </button>
           <button
@@ -334,7 +334,7 @@ function MachineIOTList() {
               </>
             ) : (
               <span>
-                {t("btn.confirm")}
+                {t('btn.confirm')}
                 {/*確定*/}
               </span>
             )}

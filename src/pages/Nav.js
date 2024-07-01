@@ -1,7 +1,7 @@
-﻿import React, { useContext, useState, useEffect, useRef } from "react";
-import { MyUserContext } from "../contexts/MyUserContext";
-import { Link, NavLink } from "react-router-dom";
-import { useLocation } from "react-router-dom";
+﻿import React, { useContext, useState, useEffect, useRef } from 'react';
+import { MyUserContext } from '../contexts/MyUserContext';
+import { Link, NavLink } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 function Nav() {
   const { myUser } = useContext(MyUserContext);
@@ -12,35 +12,35 @@ function Nav() {
   useEffect(() => {
     // 根據當前的路由位置來設置 selectedItem
     const path = location.pathname;
-    if (path.includes("/machine")) {
-      setSelectedItem("machine");
+    if (path.includes('/machine')) {
+      setSelectedItem('machine');
       setDropMenuOpen(false);
-    } else if (path.includes("/userManage")) {
-      setSelectedItem("userManage");
+    } else if (path.includes('/userManage')) {
+      setSelectedItem('userManage');
       setDropMenuOpen(false);
     } else if (
-      path.includes("/knowledge") ||
-      path.includes("/alarm") ||
-      path.includes("/pageMindMap") ||
-      path.includes("/document-editor") ||
-      path.includes("/sop2") ||
-      path.includes("/database") ||
-      path.includes("/repairDocument")
+      path.includes('/knowledge') ||
+      path.includes('/alarm') ||
+      path.includes('/pageMindMap') ||
+      path.includes('/document-editor') ||
+      path.includes('/sop2') ||
+      path.includes('/database') ||
+      path.includes('/repairDocument')
     ) {
       setDropMenuOpen(true); // 保持下拉菜單打開
       if (
-        path.includes("/knowledge") ||
-        path.includes("/document-editor") ||
-        path.includes("/sop2") ||
-        path.includes("/database") ||
-        path.includes("/repairDocument")
+        path.includes('/knowledge') ||
+        path.includes('/document-editor') ||
+        path.includes('/sop2') ||
+        path.includes('/database') ||
+        path.includes('/repairDocument')
       ) {
-        setSelectedItem("knowledge");
+        setSelectedItem('knowledge');
       } else {
-        setSelectedItem("alarm");
+        setSelectedItem('alarm');
       }
-    } else if (path.includes("/gpt")) {
-      setSelectedItem("gpt");
+    } else if (path.includes('/gpt')) {
+      setSelectedItem('gpt');
       setDropMenuOpen(false);
     } else {
       setSelectedItem(null);
@@ -59,7 +59,7 @@ function Nav() {
       <Link to="/machine" className="brand-link">
         <span
           className="brand-text font-weight-light"
-          style={{ marginLeft: "15px" }}
+          style={{ marginLeft: '15px' }}
         >
           AR管理系統
         </span>
@@ -71,11 +71,11 @@ function Nav() {
             <li className="nav-item">
               <NavLink
                 className={(navData) =>
-                  navData.isActive ? "nav-link active" : "nav-link"
+                  navData.isActive ? 'nav-link active' : 'nav-link'
                 }
                 to="/machine"
-                style={{ cursor: "pointer" }}
-                onClick={() => handleNavClick("machine")} // 使用 handleNavClick 函數
+                style={{ cursor: 'pointer' }}
+                onClick={() => handleNavClick('machine')} // 使用 handleNavClick 函數
               >
                 <i className="fas fa-microchip"></i>&nbsp;
                 <p>AR設備控制</p>
@@ -87,11 +87,11 @@ function Nav() {
               <li className="nav-item">
                 <NavLink
                   className={(navData) =>
-                    navData.isActive ? "nav-link active" : "nav-link"
+                    navData.isActive ? 'nav-link active' : 'nav-link'
                   }
                   to="/userManage"
-                  style={{ cursor: "pointer" }}
-                  onClick={() => handleNavClick("userManage")} // 使用 handleNavClick 函數
+                  style={{ cursor: 'pointer' }}
+                  onClick={() => handleNavClick('userManage')} // 使用 handleNavClick 函數
                 >
                   <i className="fas fa-users"></i>&nbsp;
                   <p>使用者管理</p>
@@ -104,38 +104,38 @@ function Nav() {
             <li className="nav-item">
               <NavLink
                 className={(navData) =>
-                  navData.isActive ? "nav-link active" : "nav-link"
+                  navData.isActive ? 'nav-link active' : 'nav-link'
                 }
                 to="/machineKnowledge"
-                style={{ cursor: "pointer" }}
-                onClick={() => handleNavClick("machineKnowledge")} // 使用 handleNavClick 函數
+                style={{ cursor: 'pointer' }}
+                onClick={() => handleNavClick('machineKnowledge')} // 使用 handleNavClick 函數
               >
                 <i className="fa fa-cog" aria-hidden="true"></i>
-                <p style={{ marginLeft: "2px" }}>機台管理</p>
+                <p style={{ marginLeft: '2px' }}>機台管理</p>
               </NavLink>
             </li>
 
             <li
-              className={"nav-item"}
+              className={'nav-item'}
               style={{
-                cursor: "pointer",
-                background: dropMenuOpen ? "#266DF7" : "",
+                cursor: 'pointer',
+                background: dropMenuOpen ? '#266DF7' : '',
               }}
               onClick={() => setDropMenuOpen((prev) => !prev)}
             >
               <span className="nav-link">
                 <i
                   style={{
-                    color: dropMenuOpen ? "white" : "#c2c1c1",
-                    paddingLeft: "1px",
+                    color: dropMenuOpen ? 'white' : '#c2c1c1',
+                    paddingLeft: '1px',
                   }}
                   className="fa fa-database"
                 ></i>
                 &nbsp;
                 <p
                   style={{
-                    color: dropMenuOpen ? "white" : "#c2c1c1",
-                    paddingLeft: "1px",
+                    color: dropMenuOpen ? 'white' : '#c2c1c1',
+                    paddingLeft: '1px',
                   }}
                 >
                   知識管理
@@ -143,42 +143,42 @@ function Nav() {
               </span>
             </li>
             {dropMenuOpen && (
-              <li style={{ background: "#4a4c5b", borderRadius: "5px" }}>
+              <li style={{ background: '#4a4c5b', borderRadius: '5px' }}>
                 <NavLink
                   className={(navData) =>
-                    navData.isActive ? "nav-link " : "nav-link"
+                    navData.isActive ? 'nav-link ' : 'nav-link'
                   }
                   to="/knowledge"
                   style={{
-                    cursor: "pointer",
-                    paddingLeft: "25px",
-                    fontSize: "14px",
-                    color: selectedItem === "knowledge" ? "#ffffff" : "#c2c1c1", // 根據選中狀態來控制顏色
+                    cursor: 'pointer',
+                    paddingLeft: '25px',
+                    fontSize: '14px',
+                    color: selectedItem === 'knowledge' ? '#ffffff' : '#c2c1c1', // 根據選中狀態來控制顏色
                   }}
-                  onClick={() => setSelectedItem("knowledge")} // 設置選中狀態
+                  onClick={() => setSelectedItem('knowledge')} // 設置選中狀態
                 >
                   <i
                     className="fas fa-angle-right"
-                    style={{ marginRight: "8px" }}
+                    style={{ marginRight: '8px' }}
                   ></i>
                   <p>知識庫</p>
                 </NavLink>
                 <NavLink
                   className={(navData) =>
-                    navData.isActive ? "nav-link " : "nav-link"
+                    navData.isActive ? 'nav-link ' : 'nav-link'
                   }
                   to="/alarm"
                   style={{
-                    cursor: "pointer",
-                    paddingLeft: "25px",
-                    fontSize: "14px",
-                    color: selectedItem === "alarm" ? "#ffffff" : "#c2c1c1", // 根據選中狀態來控制顏色
+                    cursor: 'pointer',
+                    paddingLeft: '25px',
+                    fontSize: '14px',
+                    color: selectedItem === 'alarm' ? '#ffffff' : '#c2c1c1', // 根據選中狀態來控制顏色
                   }}
-                  onClick={() => setSelectedItem("alarm")} // 設置選中狀態
+                  onClick={() => setSelectedItem('alarm')} // 設置選中狀態
                 >
                   <i
                     className="fas fa-angle-right"
-                    style={{ marginRight: "8px" }}
+                    style={{ marginRight: '8px' }}
                   ></i>
                   <p>故障庫</p>
                 </NavLink>
@@ -188,11 +188,11 @@ function Nav() {
             <li className="nav-item">
               <NavLink
                 className={(navData) =>
-                  navData.isActive ? "nav-link active" : "nav-link"
+                  navData.isActive ? 'nav-link active' : 'nav-link'
                 }
                 to="/gpt"
-                style={{ cursor: "pointer" }}
-                onClick={() => handleNavClick("gpt")} // 使用 handleNavClick 函數
+                style={{ cursor: 'pointer' }}
+                onClick={() => handleNavClick('gpt')} // 使用 handleNavClick 函數
               >
                 <i className="fa fa-comment"></i>&nbsp;
                 <p>GPT系統</p>

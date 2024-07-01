@@ -1,23 +1,23 @@
-import React, { useState, useEffect, useRef } from "react";
-import { useTranslation } from "react-i18next"; //語系
-import { useParams, useNavigate } from "react-router-dom";
-import { setWindowClass, removeWindowClass } from "../utils/helpers";
-import { ToastContainer, toast } from "react-toastify";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import Modal from "react-bootstrap/Modal";
-import Spinner from "react-bootstrap/Spinner";
-import { SOPName } from "../components/SOPName";
-import styles from "../scss/global.module.scss";
-import classNames from "classnames";
+import React, { useState, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next'; //語系
+import { useParams, useNavigate } from 'react-router-dom';
+import { setWindowClass, removeWindowClass } from '../utils/helpers';
+import { ToastContainer, toast } from 'react-toastify';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import Modal from 'react-bootstrap/Modal';
+import Spinner from 'react-bootstrap/Spinner';
+import { SOPName } from '../components/SOPName';
+import styles from '../scss/global.module.scss';
+import classNames from 'classnames';
 
 // import styles from "../scss/AlarmDescription.module.scss";
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
 
-import { apiGetAllSOPByMachineAddId, apiSaveSOP } from "../utils/Api";
+import { apiGetAllSOPByMachineAddId, apiSaveSOP, apiGetAllKnowledgeBaseByFilter } from '../utils/Api';
 
-import { Space, ColorPicker, theme } from "antd";
-import { generate, red, green, blue } from "@ant-design/colors";
-import { useStore } from "../zustand/store";
+import { Space, ColorPicker, theme } from 'antd';
+import { generate, red, green, blue } from '@ant-design/colors';
+import { useStore } from '../zustand/store';
 
 function SOP2() {
   const { t } = useTranslation();
@@ -28,15 +28,15 @@ function SOP2() {
   const { machineId, machineAddId } = useParams();
 
   const [tempModelNumbers, setTempModelNumbers] = useState(
-    Array.from({ length: 12 }, (_, index) => index + 1),
+    Array.from({ length: 12 }, (_, index) => index + 1)
   ); //建立12格3D Model List
   const [tempModels, setTempModels] = useState([]); //暫存 3D Model List的資料
   const [selectTempModelIndex, setSelectTempModelIndex] = useState(-1); //選擇暫存 3D Model的index
   const [selectTempModel, setSelectTempModel] = useState(null); //選擇暫存 3D Model的物件
   const [selectTempModelErrors, setSelectTempModelErrors] = useState({
     //選擇暫存 3D Model的錯誤訊息
-    tempModelImage: "",
-    tempModelFile: "",
+    tempModelImage: '',
+    tempModelFile: '',
   });
   const [showSaveTempModelModal, setShowSaveTempModelModal] = useState(false);
   const inputTempModelImageRef = useRef(null); //input File類型的 3D Model圖片
@@ -45,26 +45,26 @@ function SOP2() {
   const [selectSOP, setSelectSOP] = useState(null); //選擇的SOP
 
   const inputImageRef = useRef(null); //input File類型的圖片
-  const [imageError, setImageError] = useState(""); //圖片格式錯誤
+  const [imageError, setImageError] = useState(''); //圖片格式錯誤
   const inputVideoRef = useRef(null); //input File類型的影片
   const videoSrcRef = useRef(null); //input File類型的影片
-  const [videoError, setVideoError] = useState(""); //影片格式錯誤
+  const [videoError, setVideoError] = useState(''); //影片格式錯誤
 
   const inputRemarksImageRef = useRef(null); // input File類型的備註圖片
-  const [remarksImageError, setRemarksImageError] = useState(""); // 備註圖片格式錯誤
+  const [remarksImageError, setRemarksImageError] = useState(''); // 備註圖片格式錯誤
 
   const [saveSOPLoading, setSaveSOPLoading] = useState(false); //SOP儲存的轉圈圈
 
   const [selectDeleteSOPIndex, setSelectDeleteSOPIndex] = useState(-1); //要刪除的topic的index
   const [showDeleteSOPModal, setShowDeleteSOPModal] = useState(false); //顯示"刪除SOP modal"
 
-  const [textColor, setTextColor] = useState("#000000"); // 初始文字顏色設為黑色
+  const [textColor, setTextColor] = useState('#000000'); // 初始文字顏色設為黑色
   const [isSOPName, setIsSOPName] = useState(false);
 
   const { token } = theme.useToken();
   // 生成顏色組合
   const presets = Object.entries({
-    primary: generate("#0052cc"), // 這裡使用一個假設的主要顏色
+    primary: generate('#0052cc'), // 這裡使用一個假設的主要顏色
     red: red,
     green: green,
     blue: blue,
@@ -72,15 +72,15 @@ function SOP2() {
 
   //#region 初始載入
   useEffect(() => {
-    removeWindowClass("login-page");
+    removeWindowClass('login-page');
 
     //建立12個待存放3D Model
     let newTempModels = [...tempModels];
     for (var i = 0; i < tempModelNumbers.length; i++) {
       newTempModels.push({
-        tempModelImageName: "",
+        tempModelImageName: '',
         tempModelImageObj: null,
-        tempModelFileName: "",
+        tempModelFileName: '',
         tempModelFileObj: null,
       });
     }
@@ -103,7 +103,7 @@ function SOP2() {
 
     let getAllSOPResponse = await apiGetAllSOPByMachineAddId(sendData);
     if (getAllSOPResponse) {
-      if (getAllSOPResponse.code == "0000") {
+      if (getAllSOPResponse.code == '0000') {
         setSOPs(getAllSOPResponse.result);
         if (getAllSOPResponse.result.length > 0) {
           setSelectSOP(getAllSOPResponse.result[0]);
@@ -122,23 +122,23 @@ function SOP2() {
       deleted: 0,
       machineAddId: machineAddId,
       sopStep: lastSOP != null ? lastSOP.sopStep + 1 : 1,
-      sopMessage: "",
-      sopName: "", //test
-      sopImage: "",
+      sopMessage: '',
+      sopName: '', //test
+      sopImage: '',
       sopImageObj: null,
       isDeletedSOPImage: false,
       /* 新增：sopRemarksMessage、sopRemarksImage、sopRemarksImageObj 三元素 */
-      sopRemarksMessage: "",
-      sopRemarksImage: "",
+      sopRemarksMessage: '',
+      sopRemarksImage: '',
       sopRemarksImageObj: null,
       isDeletedSOPRemarksImage: false,
-      sopVideo: "",
+      sopVideo: '',
       sopVideoObj: null,
       isDeletedSOPVideo: false,
-      sopplC1: "",
-      sopplC2: "",
-      sopplC3: "",
-      sopplC4: "",
+      sopplC1: '',
+      sopplC2: '',
+      sopplC3: '',
+      sopplC4: '',
       sopModels: [],
     };
 
@@ -155,14 +155,14 @@ function SOP2() {
   const handleSelectSOP = (event, index) => {
     const target = event.target;
 
-    if (target.classList.contains("fa-trash")) {
+    if (target.classList.contains('fa-trash')) {
       setSelectDeleteSOPIndex(index);
       setShowDeleteSOPModal(true);
     } else {
       let tempSOP = sops[index];
       setSelectSOP(tempSOP);
-      inputImageRef.current.value = "";
-      inputVideoRef.current.value = "";
+      inputImageRef.current.value = '';
+      inputVideoRef.current.value = '';
     }
   };
   //#endregion
@@ -215,22 +215,22 @@ function SOP2() {
     let newSelectSOP = { ...selectSOP };
     if (file != null) {
       var fileExtension = file.name
-        .substr(file.name.lastIndexOf(".") + 1 - file.name.length)
+        .substr(file.name.lastIndexOf('.') + 1 - file.name.length)
         .toLowerCase();
       if (
         !(
-          fileExtension == "png" ||
-          fileExtension == "jpg" ||
-          fileExtension == "jpeg"
+          fileExtension == 'png' ||
+          fileExtension == 'jpg' ||
+          fileExtension == 'jpeg'
         )
       ) {
-        setImageError("format");
+        setImageError('format');
       } else {
         var img = new Image();
         var objectUrl = URL.createObjectURL(file);
         img.onload = function () {
           newSelectSOP.sopImageObj = file;
-          if (newSelectSOP.sopImage != "") {
+          if (newSelectSOP.sopImage != '') {
             newSelectSOP.isDeletedSOPImage = true;
           }
           setSelectSOP(newSelectSOP);
@@ -246,7 +246,7 @@ function SOP2() {
     e.preventDefault();
     let newSelectSOP = { ...selectSOP };
 
-    newSelectSOP.sopImage = "";
+    newSelectSOP.sopImage = '';
     newSelectSOP.sopImageObj = null;
     newSelectSOP.isDeletedSOPImage = true;
 
@@ -268,13 +268,13 @@ function SOP2() {
     let newSelectSOP = { ...selectSOP };
     if (file != null) {
       var fileExtension = file.name
-        .substr(file.name.lastIndexOf(".") + 1 - file.name.length)
+        .substr(file.name.lastIndexOf('.') + 1 - file.name.length)
         .toLowerCase();
-      if (!fileExtension == "mp4") {
-        setVideoError("format");
+      if (!fileExtension == 'mp4') {
+        setVideoError('format');
       } else {
         newSelectSOP.sopVideoObj = file;
-        if (newSelectSOP.sopVideo != "") {
+        if (newSelectSOP.sopVideo != '') {
           newSelectSOP.isDeletedSOPVideo = true;
         }
         setSelectSOP(newSelectSOP);
@@ -288,7 +288,7 @@ function SOP2() {
     e.preventDefault();
     let newSelectSOP = { ...selectSOP };
 
-    newSelectSOP.sopVideo = "";
+    newSelectSOP.sopVideo = '';
     newSelectSOP.sopVideoObj = null;
     newSelectSOP.isDeletedSOPVideo = true;
 
@@ -310,22 +310,22 @@ function SOP2() {
     let newSelectSOP = { ...selectSOP };
     if (file != null) {
       var fileExtension = file.name
-        .substr(file.name.lastIndexOf(".") + 1 - file.name.length)
+        .substr(file.name.lastIndexOf('.') + 1 - file.name.length)
         .toLowerCase();
       if (
         !(
-          fileExtension == "png" ||
-          fileExtension == "jpg" ||
-          fileExtension == "jpeg"
+          fileExtension == 'png' ||
+          fileExtension == 'jpg' ||
+          fileExtension == 'jpeg'
         )
       ) {
-        setRemarksImageError("format");
+        setRemarksImageError('format');
       } else {
         var img = new Image();
         var objectUrl = URL.createObjectURL(file);
         img.onload = function () {
           newSelectSOP.sopRemarksImageObj = file;
-          if (newSelectSOP.sopRemarksImage != "") {
+          if (newSelectSOP.sopRemarksImage != '') {
             newSelectSOP.isDeletedSOPRemarksImage = true;
           }
           setSelectSOP(newSelectSOP);
@@ -341,7 +341,7 @@ function SOP2() {
     e.preventDefault();
     let newSelectSOP = { ...selectSOP };
 
-    newSelectSOP.sopRemarksImage = "";
+    newSelectSOP.sopRemarksImage = '';
     newSelectSOP.sopRemarksImageObj = null;
     newSelectSOP.isDeletedSOPRemarksImage = true;
 
@@ -416,7 +416,7 @@ function SOP2() {
     // e.preventDefault();
 
     setSaveSOPLoading(true);
-    console.log("sops", sops);
+    console.log('sops', sops);
     setSOPInfo((prev) => ({ ...prev, sops: sops }));
     setIsSOPName((prev) => !prev);
     // let saveSOPResponse = await apiSaveSOP(formData);
@@ -451,12 +451,12 @@ function SOP2() {
   const handleOpenSaveTempModelBtn = (event, index) => {
     const target = event.target;
 
-    if (target.classList.contains("fa-times")) {
+    if (target.classList.contains('fa-times')) {
       let newTempModels = [...tempModels];
       newTempModels[index] = {
-        tempModelImageName: "",
+        tempModelImageName: '',
         tempModelImageObj: null,
-        tempModelFileName: "",
+        tempModelFileName: '',
         tempModelFileObj: null,
       };
       setTempModels(newTempModels);
@@ -464,8 +464,8 @@ function SOP2() {
       setSelectTempModelIndex(index);
       setSelectTempModel(tempModels[index]);
       setSelectTempModelErrors({
-        tempModelImage: "",
-        tempModelFile: "",
+        tempModelImage: '',
+        tempModelFile: '',
       });
       setShowSaveTempModelModal(true);
     }
@@ -496,18 +496,18 @@ function SOP2() {
     if (file != null) {
       let newSelectTempModelErrors = { ...selectTempModelErrors };
       var fileExtension = file.name
-        .substr(file.name.lastIndexOf(".") + 1 - file.name.length)
+        .substr(file.name.lastIndexOf('.') + 1 - file.name.length)
         .toLowerCase();
       if (
         !(
-          fileExtension == "png" ||
-          fileExtension == "jpg" ||
-          fileExtension == "jpeg"
+          fileExtension == 'png' ||
+          fileExtension == 'jpg' ||
+          fileExtension == 'jpeg'
         )
       ) {
-        newSelectTempModelErrors.tempModelImage = "format";
+        newSelectTempModelErrors.tempModelImage = 'format';
 
-        newSelectTempModel.tempModelImageName = "";
+        newSelectTempModel.tempModelImageName = '';
         newSelectTempModel.tempModelImageObj = null;
 
         setSelectTempModel(newSelectTempModel);
@@ -516,7 +516,7 @@ function SOP2() {
         var img = new Image();
         var objectUrl = URL.createObjectURL(file);
         img.onload = function () {
-          newSelectTempModelErrors.tempModelImage = "";
+          newSelectTempModelErrors.tempModelImage = '';
 
           newSelectTempModel.tempModelImageName = file.name;
           newSelectTempModel.tempModelImageObj = file;
@@ -527,7 +527,7 @@ function SOP2() {
         img.src = objectUrl;
       }
     } else {
-      newSelectTempModelErrors.tempModelImage = "";
+      newSelectTempModelErrors.tempModelImage = '';
       setSelectTempModelErrors(newSelectTempModelErrors);
     }
   };
@@ -540,19 +540,19 @@ function SOP2() {
     var file = e.target.files[0];
     if (file != null) {
       var fileExtension = file.name
-        .substr(file.name.lastIndexOf(".") + 1 - file.name.length)
+        .substr(file.name.lastIndexOf('.') + 1 - file.name.length)
         .toLowerCase();
-      if (!(fileExtension == "zip")) {
-        newSelectTempModelErrors.tempModelFile = "format";
+      if (!(fileExtension == 'zip')) {
+        newSelectTempModelErrors.tempModelFile = 'format';
         newSelectTempModel.tempModelFileObj = null;
       } else {
-        newSelectTempModelErrors.tempModelFile = "";
+        newSelectTempModelErrors.tempModelFile = '';
         newSelectTempModel.tempModelFileObj = file;
       }
       setSelectTempModelErrors(newSelectTempModelErrors);
       setSelectTempModel(newSelectTempModel);
     } else {
-      newSelectTempModelErrors.tempModelFile = "";
+      newSelectTempModelErrors.tempModelFile = '';
       setSelectTempModelErrors(newSelectTempModelErrors);
     }
   };
@@ -571,18 +571,18 @@ function SOP2() {
     ) {
       let newSelectTempModelErrors = { ...selectTempModelErrors };
       if (selectTempModel.tempModelImageObj == null) {
-        newSelectTempModelErrors.tempModelImage = "required";
+        newSelectTempModelErrors.tempModelImage = 'required';
       }
 
       if (selectTempModel.tempModelFileObj == null) {
-        newSelectTempModelErrors.tempModelFile = "required";
+        newSelectTempModelErrors.tempModelFile = 'required';
       }
 
       setSelectTempModelErrors(newSelectTempModelErrors);
     } else {
       if (
-        selectTempModelErrors.tempModelImage == "" &&
-        selectTempModelErrors.tempModelFile == ""
+        selectTempModelErrors.tempModelImage == '' &&
+        selectTempModelErrors.tempModelFile == ''
       ) {
         newTempModels[selectTempModelIndex] = selectTempModel;
 
@@ -602,8 +602,8 @@ function SOP2() {
     }
 
     if (
-      source.droppableId == "3DModel" &&
-      destination.droppableId == "3DModel"
+      source.droppableId == '3DModel' &&
+      destination.droppableId == '3DModel'
     ) {
       return;
     }
@@ -618,7 +618,7 @@ function SOP2() {
       return;
     }
 
-    if (destination.droppableId == "3DModel") {
+    if (destination.droppableId == '3DModel') {
       var newModel = {
         sopModelId: 0,
         deleted: 0,
@@ -667,12 +667,12 @@ function SOP2() {
         <div className="container-fluid">
           <div className="d-flex mb-2 justify-content-between align-items-center">
             <div>
-              <Link to="/knowledge" className={"fas fa-angle-left"}>
-                {" "}
+              <Link to="/knowledge" className={'fas fa-angle-left'}>
+                {' '}
                 知識庫
               </Link>
-              <Link to="/document-editor" className={"fas fa-angle-left"}>
-                {" "}
+              <Link to="/document-editor" className={'fas fa-angle-left'}>
+                {' '}
                 故障說明
               </Link>
               {/* <i className="fas fa-angle-left"></i>&nbsp;&nbsp;{t("machineAlarm.content.header")}Alarm管理 */}
@@ -680,46 +680,46 @@ function SOP2() {
             <div className="content-header-text-color">
               <h1>
                 <strong>
-                  {t("sop.content.header")}
+                  {t('sop.content.header')}
                   {/*SOP*/}
                 </strong>
               </h1>
             </div>
             <div>
-              <div className={styles["buttons-container"]}>
+              <div className={styles['buttons-container']}>
                 <button
                   type="button"
-                  className={classNames(styles["button"], styles["btn-save"])}
+                  className={classNames(styles['button'], styles['btn-save'])}
                   onClick={() => handleSaveSOP()}
                 >
                   <span>
-                    {t("btn.save")}
+                    {t('btn.save')}
                     {/*儲存*/}
                   </span>
                   {/* )} */}
                 </button>
                 <a
                   href="/knowledge"
-                  className={classNames(styles["button"], styles["btn-cancel"])}
+                  className={classNames(styles['button'], styles['btn-cancel'])}
                 >
                   取消
                 </a>
                 <a
                   href="/repairDocument"
                   className={classNames(
-                    styles["button"],
-                    styles["btn-preview"],
+                    styles['button'],
+                    styles['btn-preview']
                   )}
                 >
                   預覽
                 </a>
 
-                <div className={styles["showMachine"]}>
+                <div className={styles['showMachine']}>
                   <a
                     href="#"
                     className={classNames(
-                      styles["button"],
-                      styles["btn-showMachine"],
+                      styles['button'],
+                      styles['btn-showMachine']
                     )}
                   >
                     {SOPInfo?.machineInfo?.machineName}
@@ -785,10 +785,10 @@ function SOP2() {
                                     <div
                                       className={`card ${
                                         item.sopStep == selectSOP.sopStep
-                                          ? "bg-info"
-                                          : ""
+                                          ? 'bg-info'
+                                          : ''
                                       }`}
-                                      style={{ cursor: "pointer" }}
+                                      style={{ cursor: 'pointer' }}
                                     >
                                       <div
                                         className="card-body"
@@ -823,7 +823,7 @@ function SOP2() {
                 </DragDropContext>
                 <div
                   className="card"
-                  style={{ cursor: "pointer", marginBottom: 0 }}
+                  style={{ cursor: 'pointer', marginBottom: 0 }}
                   onClick={() => handleAddSOP()}
                 >
                   <div className="card-body text-center text-info">
@@ -840,9 +840,9 @@ function SOP2() {
                       <div className="row mb-3">
                         <div className="col-12">
                           <div className="form-group">
-                            <div className={styles["text-area-container"]}>
+                            <div className={styles['text-area-container']}>
                               <label>
-                                {t("sop.sopMessage")}
+                                {t('sop.sopMessage')}
                                 {/*步驟說明*/}
                               </label>
                               <textarea
@@ -855,7 +855,7 @@ function SOP2() {
                                 style={{ color: textColor }}
                               ></textarea>
                               <div
-                                className={styles["color-picker-container-sop"]}
+                                className={styles['color-picker-container-sop']}
                               >
                                 <Space direction="vertical">
                                   <ColorPicker
@@ -870,9 +870,9 @@ function SOP2() {
                             </div>
                           </div>
                           <div className="form-group">
-                            <div className={styles["text-area-container"]}>
+                            <div className={styles['text-area-container']}>
                               <label>
-                                {t("sop.sopRemarksMessage")}
+                                {t('sop.sopRemarksMessage')}
                                 {/*備註說明*/}
                               </label>
                               <textarea
@@ -885,7 +885,7 @@ function SOP2() {
                                 style={{ color: textColor }}
                               ></textarea>
                               <div
-                                className={styles["color-picker-container-sop"]}
+                                className={styles['color-picker-container-sop']}
                               >
                                 <Space direction="vertical">
                                   <ColorPicker
@@ -905,14 +905,14 @@ function SOP2() {
                         <div className="col-sm-12 col-md-6">
                           <div
                             className="form-group"
-                            style={{ minHeight: "150px" }}
+                            style={{ minHeight: '150px' }}
                           >
                             <label>
-                              {t("sop.sopVideo")}
+                              {t('sop.sopVideo')}
                               {/*步驟影片*/}
                             </label>
                             <div className="d-flex align-items-center justify-content-center sop-file-view">
-                              {selectSOP.sopVideo != "" ||
+                              {selectSOP.sopVideo != '' ||
                               selectSOP.sopVideoObj != null ? (
                                 <video
                                   ref={videoSrcRef}
@@ -921,7 +921,7 @@ function SOP2() {
                                   src={
                                     selectSOP.sopVideoObj != null
                                       ? URL.createObjectURL(
-                                          selectSOP.sopVideoObj,
+                                          selectSOP.sopVideoObj
                                         )
                                       : selectSOP.sopVideo
                                   }
@@ -932,11 +932,11 @@ function SOP2() {
                             </div>
                             {(() => {
                               switch (videoError) {
-                                case "format":
+                                case 'format':
                                   return (
                                     <div className="invalid-feedback d-block">
-                                      <i className="fas fa-exclamation-circle"></i>{" "}
-                                      {t("helpWord.imageFormat")}
+                                      <i className="fas fa-exclamation-circle"></i>{' '}
+                                      {t('helpWord.imageFormat')}
                                       {/*圖片格式不正確*/}
                                     </div>
                                   );
@@ -950,7 +950,7 @@ function SOP2() {
                               className="btn btn-primary"
                               onClick={(e) => handleUploadVideoBtn(e)}
                             >
-                              {t("sop.btn.uploadSopVideo")}
+                              {t('sop.btn.uploadSopVideo')}
                               {/*上傳影片*/}
                             </button>
                             <input
@@ -961,12 +961,12 @@ function SOP2() {
                               onChange={(e) => onVideoChange(e)}
                               autoComplete="off"
                               accept="video/mp4"
-                            />{" "}
+                            />{' '}
                             <button
                               className="btn btn-danger"
                               onClick={(e) => handleRemoveVideoBtn(e)}
                             >
-                              {t("sop.btn.removeSopVideo")}
+                              {t('sop.btn.removeSopVideo')}
                               {/*移除影片*/}
                             </button>
                           </div>
@@ -974,25 +974,25 @@ function SOP2() {
                         <div className="col-sm-12 col-md-6">
                           <div
                             className="form-group"
-                            style={{ minHeight: "150px" }}
+                            style={{ minHeight: '150px' }}
                           >
                             <label>
-                              {t("sop.sopImage")}
+                              {t('sop.sopImage')}
                               {/*步驟圖片*/}
                             </label>
                             <div className="d-flex align-items-center justify-content-center sop-file-view">
-                              {selectSOP.sopImage != "" ||
+                              {selectSOP.sopImage != '' ||
                               selectSOP.sopImageObj != null ? (
                                 <img
                                   alt="not found"
                                   src={
                                     selectSOP.sopImageObj != null
                                       ? URL.createObjectURL(
-                                          selectSOP.sopImageObj,
+                                          selectSOP.sopImageObj
                                         )
                                       : selectSOP.sopImage
                                   }
-                                  style={{ width: "100%" }}
+                                  style={{ width: '100%' }}
                                 />
                               ) : (
                                 <></>
@@ -1000,11 +1000,11 @@ function SOP2() {
                             </div>
                             {(() => {
                               switch (imageError) {
-                                case "format":
+                                case 'format':
                                   return (
                                     <div className="invalid-feedback d-block">
-                                      <i className="fas fa-exclamation-circle"></i>{" "}
-                                      {t("helpWord.imageFormat")}
+                                      <i className="fas fa-exclamation-circle"></i>{' '}
+                                      {t('helpWord.imageFormat')}
                                       {/*圖片格式不正確*/}
                                     </div>
                                   );
@@ -1018,7 +1018,7 @@ function SOP2() {
                               className="btn btn-primary"
                               onClick={(e) => handleUploadImageBtn(e)}
                             >
-                              {t("sop.btn.uploadSopImage")}
+                              {t('sop.btn.uploadSopImage')}
                               {/*上傳圖片*/}
                             </button>
                             <input
@@ -1029,12 +1029,12 @@ function SOP2() {
                               onChange={(e) => onImageChange(e)}
                               autoComplete="off"
                               accept="image/png, image/jpeg"
-                            />{" "}
+                            />{' '}
                             <button
                               className="btn btn-danger"
                               onClick={(e) => handleRemoveImageBtn(e)}
                             >
-                              {t("sop.btn.removeSopImage")}
+                              {t('sop.btn.removeSopImage')}
                               {/*移除圖片*/}
                             </button>
                           </div>
@@ -1042,25 +1042,25 @@ function SOP2() {
                         <div className="col-sm-12 col-md-6">
                           <div
                             className="form-group"
-                            style={{ minHeight: "150px", marginTop: "20px" }}
+                            style={{ minHeight: '150px', marginTop: '20px' }}
                           >
                             <label>
-                              {t("sop.sopRemarksImage")}
+                              {t('sop.sopRemarksImage')}
                               {/*備註圖片*/}
                             </label>
                             <div className="d-flex align-items-center justify-content-center sop-file-view">
-                              {selectSOP.sopRemarksImage != "" ||
+                              {selectSOP.sopRemarksImage != '' ||
                               selectSOP.sopRemarksImageObj != null ? (
                                 <img
                                   alt="not found"
                                   src={
                                     selectSOP.sopRemarksImageObj != null
                                       ? URL.createObjectURL(
-                                          selectSOP.sopRemarksImageObj,
+                                          selectSOP.sopRemarksImageObj
                                         )
                                       : selectSOP.sopRemarksImage
                                   }
-                                  style={{ width: "100%" }}
+                                  style={{ width: '100%' }}
                                 />
                               ) : (
                                 <></>
@@ -1068,11 +1068,11 @@ function SOP2() {
                             </div>
                             {(() => {
                               switch (imageError) {
-                                case "format":
+                                case 'format':
                                   return (
                                     <div className="invalid-feedback d-block">
-                                      <i className="fas fa-exclamation-circle"></i>{" "}
-                                      {t("helpWord.imageFormat")}
+                                      <i className="fas fa-exclamation-circle"></i>{' '}
+                                      {t('helpWord.imageFormat')}
                                       {/*圖片格式不正確*/}
                                     </div>
                                   );
@@ -1086,7 +1086,7 @@ function SOP2() {
                               className="btn btn-primary"
                               onClick={(e) => handleUploadRemarksImageBtn(e)}
                             >
-                              {t("sop.btn.uploadSopRemarksImage")}
+                              {t('sop.btn.uploadSopRemarksImage')}
                               {/*上傳圖片*/}
                             </button>
                             <input
@@ -1097,12 +1097,12 @@ function SOP2() {
                               onChange={(e) => onRemarksImageChange(e)}
                               autoComplete="off"
                               accept="image/png, image/jpeg"
-                            />{" "}
+                            />{' '}
                             <button
                               className="btn btn-danger"
                               onClick={(e) => handleRemoveRemarksImageBtn(e)}
                             >
-                              {t("sop.btn.removeSopRemarksImage")}
+                              {t('sop.btn.removeSopRemarksImage')}
                               {/*移除圖片*/}
                             </button>
                           </div>
@@ -1196,7 +1196,7 @@ function SOP2() {
                                                 onClick={(e) =>
                                                   handleOpenSaveTempModelBtn(
                                                     e,
-                                                    index,
+                                                    index
                                                   )
                                                 }
                                               >
@@ -1205,11 +1205,11 @@ function SOP2() {
                                                   <img
                                                     src={URL.createObjectURL(
                                                       tempModels[index]
-                                                        .tempModelImageObj,
+                                                        .tempModelImageObj
                                                     )}
                                                     style={{
-                                                      width: "100%",
-                                                      height: "100%",
+                                                      width: '100%',
+                                                      height: '100%',
                                                     }}
                                                   />
                                                 ) : (
@@ -1220,9 +1220,9 @@ function SOP2() {
                                                   <div
                                                     className="remove-temp-model"
                                                     style={{
-                                                      position: "absolute",
-                                                      top: "0px",
-                                                      right: "7px",
+                                                      position: 'absolute',
+                                                      top: '0px',
+                                                      right: '7px',
                                                     }}
                                                   >
                                                     <i className="fas fa-times"></i>
@@ -1254,7 +1254,7 @@ function SOP2() {
                                 {(provided) => (
                                   <div
                                     className="row w-100"
-                                    style={{ minHeight: "345px" }}
+                                    style={{ minHeight: '345px' }}
                                     {...provided.droppableProps}
                                     {...provided.dragHandleProps}
                                     ref={provided.innerRef}
@@ -1275,7 +1275,7 @@ function SOP2() {
                                                   {...provided.dragHandleProps}
                                                   ref={provided.innerRef}
                                                 >
-                                                  {item.sopModelImage != "" ||
+                                                  {item.sopModelImage != '' ||
                                                   item.sopModelImageObj !=
                                                     null ? (
                                                     <div className="sop-model-col">
@@ -1284,25 +1284,25 @@ function SOP2() {
                                                           item.sopModelImageObj !=
                                                           null
                                                             ? URL.createObjectURL(
-                                                                item.sopModelImageObj,
+                                                                item.sopModelImageObj
                                                               )
                                                             : item.sopModelImage
                                                         }
                                                         style={{
-                                                          width: "100%",
-                                                          height: "100%",
+                                                          width: '100%',
+                                                          height: '100%',
                                                         }}
                                                       />
                                                       <div
                                                         className="remove-temp-model"
                                                         style={{
-                                                          position: "absolute",
-                                                          top: "0px",
-                                                          right: "7px",
+                                                          position: 'absolute',
+                                                          top: '0px',
+                                                          right: '7px',
                                                         }}
                                                         onClick={() =>
                                                           handleCleanModelBtn(
-                                                            index,
+                                                            index
                                                           )
                                                         }
                                                       >
@@ -1331,11 +1331,11 @@ function SOP2() {
                 ) : (
                   <div
                     className="d-flex justify-content-center align-items-center"
-                    style={{ height: "80vh" }}
+                    style={{ height: '80vh' }}
                   >
                     <div>
                       <strong>
-                        {t("sop.emptySelectSOP")}
+                        {t('sop.emptySelectSOP')}
                         {/*尚未選擇SOP*/}
                       </strong>
                     </div>
@@ -1364,7 +1364,7 @@ function SOP2() {
               <div className="col-12 form-group">
                 <label className="form-label">
                   <span className="text-danger">*</span>
-                  {t("sop.tempModelImage")}
+                  {t('sop.tempModelImage')}
                   {/*3D模型圖片*/}
                 </label>
                 <input
@@ -1378,10 +1378,10 @@ function SOP2() {
                 />
                 <div
                   style={{
-                    borderStyle: "dotted",
-                    borderWidth: "3px", // 調整虛線的大小
-                    cursor: "pointer",
-                    minHeight: "240px",
+                    borderStyle: 'dotted',
+                    borderWidth: '3px', // 調整虛線的大小
+                    cursor: 'pointer',
+                    minHeight: '240px',
                   }}
                   className="d-flex justify-content-center align-items-center"
                   onClick={(e) => handleUploadTempModelImageBtn(e)}
@@ -1390,37 +1390,37 @@ function SOP2() {
                   selectTempModel.tempModelImageObj != null ? (
                     <img
                       alt="not found"
-                      style={{ width: "100px", height: "100px" }}
+                      style={{ width: '100px', height: '100px' }}
                       src={
                         selectTempModel.tempModelImageObj != null
                           ? URL.createObjectURL(
-                              selectTempModel.tempModelImageObj,
+                              selectTempModel.tempModelImageObj
                             )
                           : null
                       }
                     />
                   ) : (
                     <span>
-                      {t("machine.uploadImage")}
+                      {t('machine.uploadImage')}
                       {/*上傳圖片*/}
                     </span>
                   )}
                 </div>
                 {(() => {
                   switch (selectTempModelErrors.tempModelImage) {
-                    case "required":
+                    case 'required':
                       return (
                         <div className="invalid-feedback d-block">
-                          <i className="fas fa-exclamation-circle"></i>{" "}
-                          {t("helpWord.required")}
+                          <i className="fas fa-exclamation-circle"></i>{' '}
+                          {t('helpWord.required')}
                           {/*不得空白*/}
                         </div>
                       );
-                    case "format":
+                    case 'format':
                       return (
                         <div className="invalid-feedback d-block">
-                          <i className="fas fa-exclamation-circle"></i>{" "}
-                          {t("helpWord.imageFormat")}
+                          <i className="fas fa-exclamation-circle"></i>{' '}
+                          {t('helpWord.imageFormat')}
                           {/*圖片格式不正確*/}
                         </div>
                       );
@@ -1432,26 +1432,26 @@ function SOP2() {
               <div className="col-12 form-group">
                 <label className="form-label">
                   <span className="text-danger">*</span>
-                  {t("sop.tempModelFile")}
+                  {t('sop.tempModelFile')}
                   {/*3D模型檔案*/}
                 </label>
                 <br />
                 {(() => {
-                  var fileExtension = "";
+                  var fileExtension = '';
                   if (
                     selectTempModel &&
                     selectTempModel.tempModelFileObj != null
                   ) {
                     fileExtension = selectTempModel.tempModelFileObj.name
                       .substr(
-                        selectTempModel.tempModelFileObj.name.lastIndexOf(".") +
+                        selectTempModel.tempModelFileObj.name.lastIndexOf('.') +
                           1 -
-                          selectTempModel.tempModelFileObj.name.length,
+                          selectTempModel.tempModelFileObj.name.length
                       )
                       .toLowerCase();
                   }
 
-                  return fileExtension != "" ? (
+                  return fileExtension != '' ? (
                     <img src={`/${fileExtension}.png`} />
                   ) : null;
                 })()}
@@ -1465,19 +1465,19 @@ function SOP2() {
                 />
                 {(() => {
                   switch (selectTempModelErrors.tempModelFile) {
-                    case "required":
+                    case 'required':
                       return (
                         <div className="invalid-feedback d-block">
-                          <i className="fas fa-exclamation-circle"></i>{" "}
-                          {t("helpWord.required")}
+                          <i className="fas fa-exclamation-circle"></i>{' '}
+                          {t('helpWord.required')}
                           {/*不得空白*/}
                         </div>
                       );
-                    case "format":
+                    case 'format':
                       return (
                         <div className="invalid-feedback d-block">
-                          <i className="fas fa-exclamation-circle"></i>{" "}
-                          {t("helpWord.imageFormat")}
+                          <i className="fas fa-exclamation-circle"></i>{' '}
+                          {t('helpWord.imageFormat')}
                           {/*檔案格式不正確*/}
                         </div>
                       );
@@ -1495,7 +1495,7 @@ function SOP2() {
             className="btn btn-secondary"
             onClick={(e) => handleCloseSaveTempModelModal(e)}
           >
-            {t("btn.cancel")}
+            {t('btn.cancel')}
             {/*取消*/}
           </button>
           <button
@@ -1504,7 +1504,7 @@ function SOP2() {
             onClick={(e) => handleSaveTempModel(e)}
           >
             <span>
-              {t("btn.confirm")}
+              {t('btn.confirm')}
               {/*確定*/}
             </span>
           </button>
@@ -1520,13 +1520,13 @@ function SOP2() {
       >
         <Modal.Header closeButton>
           <Modal.Title>
-            {t("sop.deleteSOP")}
+            {t('sop.deleteSOP')}
             {/*刪除SOP*/}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <p>
-            {t("sop.deleteContent")}
+            {t('sop.deleteContent')}
             {/*您確定要刪除該筆資料嗎?*/}
           </p>
         </Modal.Body>
@@ -1536,7 +1536,7 @@ function SOP2() {
             className="btn btn-secondary"
             onClick={(e) => handleCloseDeleteSOPModal(e)}
           >
-            {t("btn.cancel")}
+            {t('btn.cancel')}
             {/*取消*/}
           </button>
           <button
@@ -1545,7 +1545,7 @@ function SOP2() {
             onClick={(e) => handleSaveDeleteSOP(e)}
           >
             <span>
-              {t("btn.confirm")}
+              {t('btn.confirm')}
               {/*確定*/}
             </span>
           </button>

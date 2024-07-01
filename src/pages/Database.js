@@ -1,18 +1,18 @@
-import classNames from "classnames";
-import styles from "../scss/global.module.scss";
-import { useTranslation } from "react-i18next"; //語系
-import { Link, useNavigate } from "react-router-dom";
-import PdfContent from "../components/PDFContent";
-import { useLocation } from "react-router-dom";
-import { toast } from "react-toastify";
-import { useDatabase } from "../components/useDatabse";
-import { apiSaveKnowledgeBase, apiSaveSOP2 } from "../utils/Api";
+import classNames from 'classnames';
+import styles from '../scss/global.module.scss';
+import { useTranslation } from 'react-i18next'; //語系
+import { Link, useNavigate } from 'react-router-dom';
+import PdfContent from '../components/PDFContent';
+import { useLocation } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { useDatabase } from '../components/useDatabse';
+import { apiSaveKnowledgeBase, apiSaveSOP2 } from '../utils/Api';
 import {
   apiGetAllKnowledgeBaseByMachineAddId,
   apiGetAllSOPByMachineAddId,
-} from "../utils/Api";
-import { useEffect, useState } from "react";
-import { useStore } from "../zustand/store";
+} from '../utils/Api';
+import { useEffect, useState } from 'react';
+import { useStore } from '../zustand/store';
 
 export default function Database() {
   const location = useLocation();
@@ -34,7 +34,7 @@ export default function Database() {
       knowledgeInfo: knowledgeInfo,
       sops: SOPData,
     });
-    navigate("/document-editor");
+    navigate('/document-editor', { state: { knowledgeInfo, SOPData } });
   };
 
   const handleDelete = async () => {
@@ -57,8 +57,8 @@ export default function Database() {
         ],
       });
 
-      if (res?.message === "完全成功") {
-        toast.success("刪除成功!", {
+      if (res?.message === '完全成功') {
+        toast.success('刪除成功!', {
           position: toast.POSITION.TOP_CENTER,
           autoClose: 2000,
           hideProgressBar: true,
@@ -66,7 +66,7 @@ export default function Database() {
           pauseOnHover: true,
         });
         setTimeout(() => {
-          window.location.href = "/knowledge";
+          window.location.href = '/knowledge';
         }, 1000);
       }
     } catch (err) {
@@ -82,9 +82,9 @@ export default function Database() {
       const res = await apiGetAllKnowledgeBaseByMachineAddId({
         Id: machineAddId,
       });
-      if (res?.message === "完全成功") {
+      if (res?.message === '完全成功') {
         const knowledgeInfo = res.result.filter(
-          (item) => item.knowledgeBaseId === knowledgeBaseId,
+          (item) => item.knowledgeBaseId === knowledgeBaseId
         )[0];
         setKnowledgeInfo(knowledgeInfo);
       }
@@ -93,10 +93,10 @@ export default function Database() {
 
     const getSOPInfo = async () => {
       const res = await apiGetAllSOPByMachineAddId({ Id: machineAddId });
-      if (res?.message === "完全成功") {
-        console.log("res.result", res.result);
+      if (res?.message === '完全成功') {
+        console.log('res.result', res.result);
         const sop = res.result.filter(
-          (item) => item.knowledgeBaseId === knowledgeBaseId,
+          (item) => item.knowledgeBaseId === knowledgeBaseId
         );
         setSOPData(sop);
       }
@@ -107,14 +107,14 @@ export default function Database() {
   return (
     <>
       <main>
-        <section className="content-header" style={{ marginBottom: "10px" }}>
+        <section className="content-header" style={{ marginBottom: '10px' }}>
           <div className="container-fluid">
             <div className="row mb-2 justify-content-between">
               <div />
               <div className="content-header-text-color">
                 <h1>
                   <strong>
-                    {t("database.content.header")}
+                    {t('database.content.header')}
                     {/*資料庫*/}
                   </strong>
                 </h1>
@@ -123,42 +123,42 @@ export default function Database() {
             </div>
           </div>
         </section>
-        <div className={styles["back-page"]}>
-          <Link to="/knowledge" className={"fas fa-angle-left"}>
-            {" "}
+        <div className={styles['back-page']}>
+          <Link to="/knowledge" className={'fas fa-angle-left'}>
+            {' '}
             知識庫
           </Link>
         </div>
-        <div className={styles["buttons-container"]}>
+        <div className={styles['buttons-container']}>
           <div
             type="button"
-            className={classNames(styles["button"], styles["btn-edit"])}
+            className={classNames(styles['button'], styles['btn-edit'])}
             onClick={handleEdit}
           >
             編輯
           </div>
           <div
-            className={classNames(styles["button"], styles["btn-delete"])}
+            className={classNames(styles['button'], styles['btn-delete'])}
             onClick={handleDelete}
           >
             刪除
           </div>
           <div
-            className={classNames(styles["button"], styles["btn-pdf"])}
-            onClick={() => navigate("/repairDocument", { state: { item } })}
+            className={classNames(styles['button'], styles['btn-pdf'])}
+            onClick={() => navigate('/repairDocument', { state: { item } })}
           >
             PDF
           </div>
         </div>
 
         {/* <!--中間欄位內容--> */}
-        <div className={styles["content-box"]}>
-          <div className={styles["content-box-middle"]}>
-            <div className={styles["content-wrapper-database"]}>
-              <p className={styles["mark-text"]}>▶ 查詢資訊結果</p>
+        <div className={styles['content-box']}>
+          <div className={styles['content-box-middle']}>
+            <div className={styles['content-wrapper-database']}>
+              <p className={styles['mark-text']}>▶ 查詢資訊結果</p>
               <table>
                 <thead>
-                  <tr className={styles["row-title-database"]}>
+                  <tr className={styles['row-title-database']}>
                     <th>編號</th>
                     <th>設備種類</th>
                     <th>設備部件</th>
@@ -168,7 +168,7 @@ export default function Database() {
                 </thead>
                 <tbody>
                   {item ? (
-                    <tr className={styles["row-database"]}>
+                    <tr className={styles['row-database']}>
                       <td>{item.knowledgeBaseId}</td>
                       <td>{item.knowledgeBaseDeviceType}</td>
                       <td>{item.knowledgeBaseDeviceParts}</td>
@@ -177,7 +177,7 @@ export default function Database() {
                     </tr>
                   ) : (
                     <tr>
-                      <td colSpan="5" style={{ textAlign: "center" }}>
+                      <td colSpan="5" style={{ textAlign: 'center' }}>
                         查無資料
                       </td>
                     </tr>
@@ -185,19 +185,19 @@ export default function Database() {
                 </tbody>
               </table>
               <p></p>
-              <div className={styles["mark-note"]}>
+              <div className={styles['mark-note']}>
                 {/* <!-- 調整文字位置 --> */}
-                <p className={styles["mark-text"]}>
-                  ▶ 點擊項目說明欄位即可進行編輯
+                <p className={styles['mark-text']} style={{marginBottom:'5px'}}>
+                  ▶ 點擊PDF按鈕即可進行放大預覽 & 印出
                 </p>
                 {/* <!-- 新增放大按鈕 --> */}
-                <a
+                {/* <a
                   href="repairDocument"
-                  className={styles["btn-enlarge"]}
+                  className={styles['btn-enlarge']}
                   type="button"
                 >
                   點擊放大預覽
-                </a>
+                </a> */}
               </div>
               <PdfContent knowledgeInfo={knowledgeInfo} SOPData={SOPData} />
             </div>

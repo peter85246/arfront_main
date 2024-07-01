@@ -1,13 +1,13 @@
-﻿import React, { useState, useEffect } from "react";
-import { useTranslation } from "react-i18next"; //語系
-import { useParams, useNavigate } from "react-router-dom";
-import { setWindowClass, removeWindowClass } from "../utils/helpers";
-import { ToastContainer, toast } from "react-toastify";
-import Modal from "react-bootstrap/Modal";
-import Spinner from "react-bootstrap/Spinner";
-import SimpleReactValidator from "simple-react-validator";
+﻿import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next'; //語系
+import { useParams, useNavigate } from 'react-router-dom';
+import { setWindowClass, removeWindowClass } from '../utils/helpers';
+import { ToastContainer, toast } from 'react-toastify';
+import Modal from 'react-bootstrap/Modal';
+import Spinner from 'react-bootstrap/Spinner';
+import SimpleReactValidator from 'simple-react-validator';
 
-import { apiGetOneMachineIOT, apiSaveMachineIOT } from "../utils/Api";
+import { apiGetOneMachineIOT, apiSaveMachineIOT } from '../utils/Api';
 
 function MachineIOT() {
   const { t } = useTranslation();
@@ -20,21 +20,21 @@ function MachineIOT() {
     //IOT資料
     machineIOTId: machineIOTId,
     machineId: machineId,
-    machineIOTDeviceName: "",
-    machineIOTMQTTBroker: "",
-    machineIOTClientId: "",
-    machineIOTUserName: "",
-    machineIOTPassword: "",
+    machineIOTDeviceName: '',
+    machineIOTMQTTBroker: '',
+    machineIOTClientId: '',
+    machineIOTUserName: '',
+    machineIOTPassword: '',
     machineIOTTopics: [],
   });
 
   const [machineIOTErrors, setMachineIOTErrors] = useState({
     //IOT資料 - 錯誤訊息
-    machineIOTDeviceName: "",
-    machineIOTMQTTBroker: "",
-    machineIOTClientId: "",
-    machineIOTUserName: "",
-    machineIOTPassword: "",
+    machineIOTDeviceName: '',
+    machineIOTMQTTBroker: '',
+    machineIOTClientId: '',
+    machineIOTUserName: '',
+    machineIOTPassword: '',
   });
 
   const [showTopicModal, setShowTopicModal] = useState(false); //顯示"Topic modal"
@@ -44,11 +44,11 @@ function MachineIOT() {
     deleted: 0,
     topicId: 0,
     machineIOTId: 0,
-    topicValue: "",
+    topicValue: '',
   });
   const [topicErrors, setTopicErrors] = useState({
     //Topic - 錯誤訊息
-    topicValue: "",
+    topicValue: '',
   });
 
   const [saveMachineIOTLoading, setSaveMachineIOTLoading] = useState(false); //機台設備儲存的轉圈圈
@@ -58,7 +58,7 @@ function MachineIOT() {
 
   //#region 初始載入
   useEffect(() => {
-    removeWindowClass("login-page");
+    removeWindowClass('login-page');
 
     const fetchData = async () => {
       await refreshMachineIOT();
@@ -77,7 +77,7 @@ function MachineIOT() {
 
       let getOneMachineIOTResponse = await apiGetOneMachineIOT(sendData);
       if (getOneMachineIOTResponse) {
-        if (getOneMachineIOTResponse.code == "0000") {
+        if (getOneMachineIOTResponse.code == '0000') {
           setMachineIOT(getOneMachineIOTResponse.result);
         }
       }
@@ -101,71 +101,71 @@ function MachineIOT() {
   //#endregion
 
   //#region 機台IOT 欄位驗證
-  const checkEditValidator = async (name = "", val = "") => {
+  const checkEditValidator = async (name = '', val = '') => {
     let result = true;
     let newMachineIOTErrors = { ...machineIOTErrors };
 
-    if (name == "machineIOTDeviceName" || name == "") {
-      if (!validator.check(machineIOT.machineIOTDeviceName, "required")) {
-        newMachineIOTErrors.machineIOTDeviceName = "required";
+    if (name == 'machineIOTDeviceName' || name == '') {
+      if (!validator.check(machineIOT.machineIOTDeviceName, 'required')) {
+        newMachineIOTErrors.machineIOTDeviceName = 'required';
         result = false;
       } else if (
-        !validator.check(machineIOT.machineIOTDeviceName, "max:1000")
+        !validator.check(machineIOT.machineIOTDeviceName, 'max:1000')
       ) {
-        newMachineIOTErrors.machineIOTDeviceName = "max";
+        newMachineIOTErrors.machineIOTDeviceName = 'max';
         result = false;
       } else {
-        newMachineIOTErrors.machineIOTDeviceName = "";
+        newMachineIOTErrors.machineIOTDeviceName = '';
       }
     }
 
-    if (name == "machineIOTMQTTBroker" || name == "") {
-      if (!validator.check(machineIOT.machineIOTMQTTBroker, "required")) {
-        newMachineIOTErrors.machineIOTMQTTBroker = "required";
+    if (name == 'machineIOTMQTTBroker' || name == '') {
+      if (!validator.check(machineIOT.machineIOTMQTTBroker, 'required')) {
+        newMachineIOTErrors.machineIOTMQTTBroker = 'required';
         result = false;
       } else if (
-        !validator.check(machineIOT.machineIOTMQTTBroker, "max:1000")
+        !validator.check(machineIOT.machineIOTMQTTBroker, 'max:1000')
       ) {
-        newMachineIOTErrors.machineIOTMQTTBroker = "max";
+        newMachineIOTErrors.machineIOTMQTTBroker = 'max';
         result = false;
       } else {
-        newMachineIOTErrors.machineIOTMQTTBroker = "";
+        newMachineIOTErrors.machineIOTMQTTBroker = '';
       }
     }
 
-    if (name == "machineIOTClientId" || name == "") {
-      if (!validator.check(machineIOT.machineIOTClientId, "required")) {
-        newMachineIOTErrors.machineIOTClientId = "required";
+    if (name == 'machineIOTClientId' || name == '') {
+      if (!validator.check(machineIOT.machineIOTClientId, 'required')) {
+        newMachineIOTErrors.machineIOTClientId = 'required';
         result = false;
-      } else if (!validator.check(machineIOT.machineIOTClientId, "max:1000")) {
-        newMachineIOTErrors.machineIOTClientId = "max";
+      } else if (!validator.check(machineIOT.machineIOTClientId, 'max:1000')) {
+        newMachineIOTErrors.machineIOTClientId = 'max';
         result = false;
       } else {
-        newMachineIOTErrors.machineIOTClientId = "";
+        newMachineIOTErrors.machineIOTClientId = '';
       }
     }
 
-    if (name == "machineIOTUserName" || name == "") {
-      if (!validator.check(machineIOT.machineIOTUserName, "required")) {
-        newMachineIOTErrors.machineIOTUserName = "required";
+    if (name == 'machineIOTUserName' || name == '') {
+      if (!validator.check(machineIOT.machineIOTUserName, 'required')) {
+        newMachineIOTErrors.machineIOTUserName = 'required';
         result = false;
-      } else if (!validator.check(machineIOT.machineIOTUserName, "max:50")) {
-        newMachineIOTErrors.machineIOTUserName = "max";
+      } else if (!validator.check(machineIOT.machineIOTUserName, 'max:50')) {
+        newMachineIOTErrors.machineIOTUserName = 'max';
         result = false;
       } else {
-        newMachineIOTErrors.machineIOTUserName = "";
+        newMachineIOTErrors.machineIOTUserName = '';
       }
     }
 
-    if (name == "machineIOTPassword" || name == "") {
-      if (!validator.check(machineIOT.machineIOTPassword, "required")) {
-        newMachineIOTErrors.machineIOTPassword = "required";
+    if (name == 'machineIOTPassword' || name == '') {
+      if (!validator.check(machineIOT.machineIOTPassword, 'required')) {
+        newMachineIOTErrors.machineIOTPassword = 'required';
         result = false;
-      } else if (!validator.check(machineIOT.machineIOTPassword, "max:50")) {
-        newMachineIOTErrors.machineIOTPassword = "max";
+      } else if (!validator.check(machineIOT.machineIOTPassword, 'max:50')) {
+        newMachineIOTErrors.machineIOTPassword = 'max';
         result = false;
       } else {
-        newMachineIOTErrors.machineIOTPassword = "";
+        newMachineIOTErrors.machineIOTPassword = '';
       }
     }
 
@@ -190,7 +190,7 @@ function MachineIOT() {
         index: -1,
         topicId: 0,
         machineIOTId: 0,
-        topicValue: "",
+        topicValue: '',
       });
     }
 
@@ -223,19 +223,19 @@ function MachineIOT() {
   //#endregion
 
   //#region Topic 欄位驗證
-  const checkTopicValidator = async (name = "", val = "") => {
+  const checkTopicValidator = async (name = '', val = '') => {
     let result = true;
     let newTopicErrors = { ...topicErrors };
 
-    if (name == "topicValue" || name == "") {
-      if (!validator.check(selectTopic.topicValue, "required")) {
-        newTopicErrors.topicValue = "required";
+    if (name == 'topicValue' || name == '') {
+      if (!validator.check(selectTopic.topicValue, 'required')) {
+        newTopicErrors.topicValue = 'required';
         result = false;
-      } else if (!validator.check(selectTopic.topicValue, "max:1000")) {
-        newTopicErrors.topicValue = "max";
+      } else if (!validator.check(selectTopic.topicValue, 'max:1000')) {
+        newTopicErrors.topicValue = 'max';
         result = false;
       } else {
-        newTopicErrors.topicValue = "";
+        newTopicErrors.topicValue = '';
       }
     }
 
@@ -322,12 +322,12 @@ function MachineIOT() {
 
       let saveMachineIOTResponse = await apiSaveMachineIOT(machineIOT);
       if (saveMachineIOTResponse) {
-        if (saveMachineIOTResponse.code == "0000") {
+        if (saveMachineIOTResponse.code == '0000') {
           refreshMachineIOT();
           toast.success(
             machineIOTId == 0
-              ? t("toast.add.success")
-              : t("toast.edit.success"),
+              ? t('toast.add.success')
+              : t('toast.edit.success'),
             {
               position: toast.POSITION.TOP_CENTER,
               autoClose: 3000,
@@ -339,7 +339,7 @@ function MachineIOT() {
                   window.location.href = `/machine/${machineId}/machineIOTList/${saveMachineIOTResponse.result}`;
                 }
               },
-            },
+            }
           );
         } else {
           toast.error(saveMachineIOTResponse.message, {
@@ -370,7 +370,7 @@ function MachineIOT() {
               >
                 <i className="fas fa-angle-left">
                   &nbsp;&nbsp;
-                  {t("machineIOTList.content.header")}
+                  {t('machineIOTList.content.header')}
                   {/*IOT管理*/}
                 </i>
               </a>
@@ -379,8 +379,8 @@ function MachineIOT() {
               <h1>
                 <strong>
                   {machineIOTId == 0
-                    ? t("machineIOT.content.header.add")
-                    : t("machineIOT.content.header.edit")}
+                    ? t('machineIOT.content.header.add')
+                    : t('machineIOT.content.header.edit')}
                   {/*新增IOT:編輯IOT*/}
                 </strong>
               </h1>
@@ -404,7 +404,7 @@ function MachineIOT() {
                   </>
                 ) : (
                   <>
-                    <i className="fas fa-plus"></i> {t("machineIOT.btn.save")}
+                    <i className="fas fa-plus"></i> {t('machineIOT.btn.save')}
                     {/*儲存設定*/}
                   </>
                 )}
@@ -422,7 +422,7 @@ function MachineIOT() {
                   <div className="col form-group">
                     <label className="form-label">
                       <span className="text-danger">*</span>
-                      {t("machineIOT.machineIOTDeviceName")}
+                      {t('machineIOT.machineIOTDeviceName')}
                       {/*設備名稱*/}
                     </label>
                     <input
@@ -436,19 +436,19 @@ function MachineIOT() {
                     />
                     {(() => {
                       switch (machineIOTErrors.machineIOTDeviceName) {
-                        case "required":
+                        case 'required':
                           return (
                             <div className="invalid-feedback d-block">
-                              <i className="fas fa-exclamation-circle"></i>{" "}
-                              {t("helpWord.required")}
+                              <i className="fas fa-exclamation-circle"></i>{' '}
+                              {t('helpWord.required')}
                               {/*不得空白*/}
                             </div>
                           );
-                        case "max":
+                        case 'max':
                           return (
                             <div className="invalid-feedback d-block">
-                              <i className="fas fa-exclamation-circle"></i>{" "}
-                              {t("helpWord.max", { e: 1000 })}
+                              <i className="fas fa-exclamation-circle"></i>{' '}
+                              {t('helpWord.max', { e: 1000 })}
                               {/*超過上限{{e}}個字元*/}
                             </div>
                           );
@@ -462,7 +462,7 @@ function MachineIOT() {
                   <div className="col form-group">
                     <label className="form-label">
                       <span className="text-danger">*</span>
-                      {t("machineIOT.machineIOTMQTTBroker")}
+                      {t('machineIOT.machineIOTMQTTBroker')}
                       {/*Server*/}
                     </label>
                     <input
@@ -476,19 +476,19 @@ function MachineIOT() {
                     />
                     {(() => {
                       switch (machineIOTErrors.machineIOTMQTTBroker) {
-                        case "required":
+                        case 'required':
                           return (
                             <div className="invalid-feedback d-block">
-                              <i className="fas fa-exclamation-circle"></i>{" "}
-                              {t("helpWord.required")}
+                              <i className="fas fa-exclamation-circle"></i>{' '}
+                              {t('helpWord.required')}
                               {/*不得空白*/}
                             </div>
                           );
-                        case "max":
+                        case 'max':
                           return (
                             <div className="invalid-feedback d-block">
-                              <i className="fas fa-exclamation-circle"></i>{" "}
-                              {t("helpWord.max", { e: 1000 })}
+                              <i className="fas fa-exclamation-circle"></i>{' '}
+                              {t('helpWord.max', { e: 1000 })}
                               {/*超過上限{{e}}個字元*/}
                             </div>
                           );
@@ -502,7 +502,7 @@ function MachineIOT() {
                   <div className="col form-group">
                     <label className="form-label">
                       <span className="text-danger">*</span>
-                      {t("machineIOT.machineIOTClientId")}
+                      {t('machineIOT.machineIOTClientId')}
                       {/*Client ID*/}
                     </label>
                     <input
@@ -516,19 +516,19 @@ function MachineIOT() {
                     />
                     {(() => {
                       switch (machineIOTErrors.machineIOTClientId) {
-                        case "required":
+                        case 'required':
                           return (
                             <div className="invalid-feedback d-block">
-                              <i className="fas fa-exclamation-circle"></i>{" "}
-                              {t("helpWord.required")}
+                              <i className="fas fa-exclamation-circle"></i>{' '}
+                              {t('helpWord.required')}
                               {/*不得空白*/}
                             </div>
                           );
-                        case "max":
+                        case 'max':
                           return (
                             <div className="invalid-feedback d-block">
-                              <i className="fas fa-exclamation-circle"></i>{" "}
-                              {t("helpWord.max", { e: 1000 })}
+                              <i className="fas fa-exclamation-circle"></i>{' '}
+                              {t('helpWord.max', { e: 1000 })}
                               {/*超過上限{{e}}個字元*/}
                             </div>
                           );
@@ -542,7 +542,7 @@ function MachineIOT() {
                   <div className="col form-group">
                     <label className="form-label">
                       <span className="text-danger">*</span>
-                      {t("machineIOT.machineIOTUserName")}
+                      {t('machineIOT.machineIOTUserName')}
                       {/*Username*/}
                     </label>
                     <input
@@ -556,19 +556,19 @@ function MachineIOT() {
                     />
                     {(() => {
                       switch (machineIOTErrors.machineIOTUserName) {
-                        case "required":
+                        case 'required':
                           return (
                             <div className="invalid-feedback d-block">
-                              <i className="fas fa-exclamation-circle"></i>{" "}
-                              {t("helpWord.required")}
+                              <i className="fas fa-exclamation-circle"></i>{' '}
+                              {t('helpWord.required')}
                               {/*不得空白*/}
                             </div>
                           );
-                        case "max":
+                        case 'max':
                           return (
                             <div className="invalid-feedback d-block">
-                              <i className="fas fa-exclamation-circle"></i>{" "}
-                              {t("helpWord.max", { e: 50 })}
+                              <i className="fas fa-exclamation-circle"></i>{' '}
+                              {t('helpWord.max', { e: 50 })}
                               {/*超過上限{{e}}個字元*/}
                             </div>
                           );
@@ -582,7 +582,7 @@ function MachineIOT() {
                   <div className="col form-group">
                     <label className="form-label">
                       <span className="text-danger">*</span>
-                      {t("machineIOT.machineIOTPassword")}
+                      {t('machineIOT.machineIOTPassword')}
                       {/*Password*/}
                     </label>
                     <input
@@ -596,19 +596,19 @@ function MachineIOT() {
                     />
                     {(() => {
                       switch (machineIOTErrors.machineIOTPassword) {
-                        case "required":
+                        case 'required':
                           return (
                             <div className="invalid-feedback d-block">
-                              <i className="fas fa-exclamation-circle"></i>{" "}
-                              {t("helpWord.required")}
+                              <i className="fas fa-exclamation-circle"></i>{' '}
+                              {t('helpWord.required')}
                               {/*不得空白*/}
                             </div>
                           );
-                        case "max":
+                        case 'max':
                           return (
                             <div className="invalid-feedback d-block">
-                              <i className="fas fa-exclamation-circle"></i>{" "}
-                              {t("helpWord.max", { e: 50 })}
+                              <i className="fas fa-exclamation-circle"></i>{' '}
+                              {t('helpWord.max', { e: 50 })}
                               {/*超過上限{{e}}個字元*/}
                             </div>
                           );
@@ -629,7 +629,7 @@ function MachineIOT() {
                         <div className="row align-items-center">
                           <div className="col-10">
                             <div>topic:</div>
-                            <div style={{ wordBreak: "break-all" }}>
+                            <div style={{ wordBreak: 'break-all' }}>
                               {item.topicValue}
                             </div>
                           </div>
@@ -681,7 +681,7 @@ function MachineIOT() {
       >
         <Modal.Header closeButton>
           <Modal.Title>
-            {t("machineIOT.updateTopic")}
+            {t('machineIOT.updateTopic')}
             {/*Topic*/}
           </Modal.Title>
         </Modal.Header>
@@ -701,18 +701,18 @@ function MachineIOT() {
                 />
                 {(() => {
                   switch (topicErrors.topicValue) {
-                    case "required":
+                    case 'required':
                       return (
                         <div className="invalid-feedback d-block">
-                          <i className="fas fa-exclamation-circle"></i>{" "}
-                          {t("helpWord.required")} {/*不得空白*/}
+                          <i className="fas fa-exclamation-circle"></i>{' '}
+                          {t('helpWord.required')} {/*不得空白*/}
                         </div>
                       );
-                    case "max":
+                    case 'max':
                       return (
                         <div className="invalid-feedback d-block">
-                          <i className="fas fa-exclamation-circle"></i>{" "}
-                          {t("helpWord.max", { e: 1000 })}
+                          <i className="fas fa-exclamation-circle"></i>{' '}
+                          {t('helpWord.max', { e: 1000 })}
                           {/*超過上限{{e}}個字元*/}
                         </div>
                       );
@@ -730,7 +730,7 @@ function MachineIOT() {
             className="btn btn-secondary"
             onClick={(e) => handleCloseTopicModal(e)}
           >
-            {t("btn.cancel")}
+            {t('btn.cancel')}
             {/*取消*/}
           </button>
           <button
@@ -739,7 +739,7 @@ function MachineIOT() {
             onClick={(e) => handleUpdateTopic(e)}
           >
             <span>
-              {t("btn.confirm")}
+              {t('btn.confirm')}
               {/*確定*/}
             </span>
           </button>
@@ -754,13 +754,13 @@ function MachineIOT() {
       >
         <Modal.Header closeButton>
           <Modal.Title>
-            {t("machineIOT.deleteTopic")}
+            {t('machineIOT.deleteTopic')}
             {/*刪除Topic*/}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <p>
-            {t("machineIOT.deleteContent")}
+            {t('machineIOT.deleteContent')}
             {/*您確定要刪除該筆資料嗎?*/}
           </p>
         </Modal.Body>
@@ -770,7 +770,7 @@ function MachineIOT() {
             className="btn btn-secondary"
             onClick={(e) => handleCloseDeleteTopicModal(e)}
           >
-            {t("btn.cancel")}
+            {t('btn.cancel')}
             {/*取消*/}
           </button>
           <button
@@ -779,7 +779,7 @@ function MachineIOT() {
             onClick={(e) => handleSaveDeleteTopic(e)}
           >
             <span>
-              {t("btn.confirm")}
+              {t('btn.confirm')}
               {/*確定*/}
             </span>
           </button>

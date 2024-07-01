@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect } from 'react';
 
 const Assistant = () => {
   useEffect(() => {
@@ -7,15 +7,15 @@ const Assistant = () => {
         s = d.getElementsByTagName(t)[0];
       v.onload = function () {
         window.voiceflow.chat.load({
-          verify: { projectID: "657966c09e57db431ad839e8" },
-          url: "https://general-runtime.voiceflow.com",
-          versionID: "production",
+          verify: { projectID: '657966c09e57db431ad839e8' },
+          url: 'https://general-runtime.voiceflow.com',
+          versionID: 'production',
         });
       };
-      v.src = "https://cdn.voiceflow.com/widget/bundle.mjs";
-      v.type = "text/javascript";
+      v.src = 'https://cdn.voiceflow.com/widget/bundle.mjs';
+      v.type = 'text/javascript';
       s.parentNode.insertBefore(v, s);
-    })(document, "script");
+    })(document, 'script');
   }, []);
 
   return <div></div>;

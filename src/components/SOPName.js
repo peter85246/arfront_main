@@ -1,15 +1,15 @@
-import React, { useState } from "react";
-import { Modal, Button, Form } from "react-bootstrap";
-import { useTranslation } from "react-i18next";
-import { toast } from "react-toastify";
-import { useStore } from "../zustand/store";
-import { fetchDataCallFile } from "../utils/Api";
-import { apiSaveSOP2 } from "../utils/Api";
+import React, { useState } from 'react';
+import { Modal, Button, Form } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
+import { useStore } from '../zustand/store';
+import { fetchDataCallFile } from '../utils/Api';
+import { apiSaveSOP2 } from '../utils/Api';
 
 export function SOPName({ onClose }) {
   const { SOPInfo, setSOPInfo } = useStore();
   const [showModal, setShowModal] = useState(true);
-  const [sopName, setSopName] = useState("");
+  const [sopName, setSopName] = useState('');
   const [errors, setErrors] = useState({});
   const { t } = useTranslation();
 
@@ -24,7 +24,7 @@ export function SOPName({ onClose }) {
     setSopName(e.target.value);
     setErrors((prevErrors) => ({
       ...prevErrors,
-      sopName: e.target.value ? null : "required",
+      sopName: e.target.value ? null : 'required',
     }));
   };
 
@@ -33,7 +33,7 @@ export function SOPName({ onClose }) {
     if (!sopName.trim()) {
       setErrors((prevErrors) => ({
         ...prevErrors,
-        sopName: "required",
+        sopName: 'required',
       }));
     }
   };
@@ -44,8 +44,8 @@ export function SOPName({ onClose }) {
     let hasError = false;
     const newErrors = {};
 
-    if (!sopName || sopName.trim() === "") {
-      newErrors.sopName = "必填项";
+    if (!sopName || sopName.trim() === '') {
+      newErrors.sopName = '必填项';
       hasError = true;
     }
 
@@ -54,20 +54,20 @@ export function SOPName({ onClose }) {
     if (!hasError) {
       const modelImageObj =
         SOPInfo.knowledgeInfo?.knowledgeBaseModelImageObj?.map(
-          (item) => item.name,
+          (item) => item.name
         );
       const toolsImageObj =
         SOPInfo.knowledgeInfo?.knowledgeBaseToolsImageObj?.map(
-          (item) => item.name,
+          (item) => item.name
         );
       const positionImageObj =
         SOPInfo.knowledgeInfo?.knowledgeBasePositionImageObj?.map(
-          (item) => item.name,
+          (item) => item.name
         );
 
       const formData = new FormData();
-      formData.append("MachineAddId", SOPInfo.machineAddId.toString());
-      formData.append("machineName", SOPInfo.machineInfo.machineName);
+      formData.append('MachineAddId', SOPInfo.machineAddId.toString());
+      formData.append('machineName', SOPInfo.machineInfo.machineName);
 
       // 確保knowledgeInfo是一個陣列，並提供默認值
       const knowledgeInfoArray = SOPInfo.knowledgeInfo
@@ -76,17 +76,17 @@ export function SOPName({ onClose }) {
           : [SOPInfo.knowledgeInfo]
         : [];
 
-      const allowedExtensions = ["png", "jpg", "jpeg"];
+      const allowedExtensions = ['png', 'jpg', 'jpeg'];
       let fileIncluded = false; // 標記是否包含至少一個文件
 
       knowledgeInfoArray.forEach((info, index) => {
         Object.keys(info).forEach((key) => {
-          if (key.includes("ImageObj")) {
+          if (key.includes('ImageObj')) {
             // 檢查info[key]是否存在並具有forEach方法
             if (info[key] && info[key].forEach) {
               info[key].forEach((fileObj) => {
                 const file = fileObj.file; // 確保使用的是原始文件對象
-                const fileExtension = file.name.split(".").pop().toLowerCase();
+                const fileExtension = file.name.split('.').pop().toLowerCase();
                 if (!allowedExtensions.includes(fileExtension)) {
                   toast.error(`不支持的文件類型: ${file.name}`, {
                     position: toast.POSITION.TOP_CENTER,
@@ -110,25 +110,25 @@ export function SOPName({ onClose }) {
       modelImageObj.forEach((name, idx) => {
         formData.append(
           `KnowledgeBases[0].KnowledgeBaseModelImageNames[${idx}]`,
-          name,
+          name
         );
       });
       toolsImageObj.forEach((name, idx) => {
         formData.append(
           `KnowledgeBases[0].KnowledgeBaseToolsImageNames[${idx}]`,
-          name,
+          name
         );
       });
       positionImageObj.forEach((name, idx) => {
         formData.append(
           `KnowledgeBases[0].KnowledgeBasePositionImageNames[${idx}]`,
-          name,
+          name
         );
       });
 
       // 檢查是否有文件被添加
       if (!fileIncluded) {
-        toast.error("請添加至少一個圖片文件。", {
+        toast.error('請添加至少一個圖片文件。', {
           position: toast.POSITION.TOP_CENTER,
           autoClose: 2000,
           hideProgressBar: true,
@@ -140,12 +140,12 @@ export function SOPName({ onClose }) {
 
       try {
         const saveKnowledgeBaseRes = await fetchDataCallFile(
-          "SaveKnowledgeBase",
-          "PUT",
-          formData,
+          'SaveKnowledgeBase',
+          'PUT',
+          formData
         );
 
-        if (saveKnowledgeBaseRes.message !== "完全成功") {
+        if (saveKnowledgeBaseRes.message !== '完全成功') {
           toast.error(saveKnowledgeBaseRes.message, {
             position: toast.POSITION.TOP_CENTER,
             autoClose: 2000,
@@ -164,26 +164,26 @@ export function SOPName({ onClose }) {
           SOPFormData.append(`SOP2s[${idx}].deleted`, sop.deleted);
           SOPFormData.append(
             `SOP2s[${idx}].isDeletedSOPImage`,
-            sop.isDeletedSOPImage,
+            sop.isDeletedSOPImage
           );
           SOPFormData.append(
             `SOP2s[${idx}].isDeletedSOPRemarksImage`,
-            sop.isDeletedSOPRemarksImage,
+            sop.isDeletedSOPRemarksImage
           );
           SOPFormData.append(
             `SOP2s[${idx}].isDeletedSOPVideo`,
-            sop.isDeletedSOPVideo,
+            sop.isDeletedSOPVideo
           );
           SOPFormData.append(`SOP2s[${idx}].sopId`, sop.sopId);
           SOPFormData.append(`SOP2s[${idx}].soP2Image`, sop.sopImage);
           SOPFormData.append(`SOP2s[${idx}].soP2ImageObj`, sop.sopImageObj);
           SOPFormData.append(
             `SOP2s[${idx}].soP2RemarkImage`,
-            sop.sopRemarksImage,
+            sop.sopRemarksImage
           );
           SOPFormData.append(
             `SOP2s[${idx}].soP2RemarkImageObj`,
-            sop.sopRemarksImageObj,
+            sop.sopRemarksImageObj
           );
           SOPFormData.append(`SOP2s[${idx}].soP2Message`, sop.sopMessage);
           SOPFormData.append(`SOP2s[${idx}].soP2Step`, sop.sopStep);
@@ -198,39 +198,39 @@ export function SOPName({ onClose }) {
           sop.sopModels.forEach((sopModel, j) => {
             SOPFormData.append(
               `SOP2s[${idx}].sopModels[${j}].sopModelId`,
-              sopModel.sopModelId,
+              sopModel.sopModelId
             );
             SOPFormData.append(
               `SOP2s[${idx}].sopModels[${j}].deleted`,
-              sopModel.deleted,
+              sopModel.deleted
             );
             SOPFormData.append(
               `SOP2s[${idx}].sopModels[${j}].sopId`,
-              sopModel.sopId,
+              sopModel.sopId
             );
             SOPFormData.append(
               `SOP2s[${idx}].sopModels[${j}].sopModelImage`,
-              sopModel.sopModelImage,
+              sopModel.sopModelImage
             );
             SOPFormData.append(
               `SOP2s[${idx}].sopModels[${j}].sopModelImageObj`,
-              sopModel.sopModelImageObj,
+              sopModel.sopModelImageObj
             );
             SOPFormData.append(
               `SOP2s[${idx}].sopModels[${j}].sopModelFile`,
-              sopModel.sopModelFile,
+              sopModel.sopModelFile
             );
             SOPFormData.append(
               `SOP2s[${idx}].sopModels[${j}].sopModelFileObj`,
-              sopModel.sopModelFileObj,
+              sopModel.sopModelFileObj
             );
           });
         });
 
         const saveSOPInfoRes = await apiSaveSOP2(SOPFormData);
 
-        if (saveSOPInfoRes.message === "完全成功") {
-          toast.success("知識保存成功!", {
+        if (saveSOPInfoRes.message === '完全成功') {
+          toast.success('知識保存成功!', {
             position: toast.POSITION.TOP_CENTER,
             autoClose: 2000,
             hideProgressBar: true,
@@ -241,10 +241,10 @@ export function SOPName({ onClose }) {
 
         setSOPInfo(null); // Reset or update SOP information
         setTimeout(() => {
-          window.location.href = "/knowledge";
+          window.location.href = '/knowledge';
         }, 2000);
       } catch (err) {
-        console.error("保存知識庫失败:", err);
+        console.error('保存知識庫失败:', err);
         toast.error(`保存失败，請稍后重试。錯誤詳情: ${err.message}`, {
           position: toast.POSITION.TOP_CENTER,
           autoClose: 2000,
@@ -288,8 +288,8 @@ export function SOPName({ onClose }) {
               />
               {errors.sopName && (
                 <div className="invalid-feedback d-block">
-                  <i className="fas fa-exclamation-circle"></i>{" "}
-                  {t("helpWord.required")}
+                  <i className="fas fa-exclamation-circle"></i>{' '}
+                  {t('helpWord.required')}
                 </div>
               )}
             </Form.Group>

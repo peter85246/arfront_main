@@ -1,13 +1,13 @@
-﻿import React, { useState, useEffect, useRef } from "react";
-import { useTranslation } from "react-i18next"; //語系
-import { useNavigate } from "react-router-dom";
-import { DebounceInput } from "react-debounce-input";
-import { ToastContainer, toast } from "react-toastify";
-import Spinner from "react-bootstrap/Spinner";
-import { setWindowClass, removeWindowClass } from "../utils/helpers";
-import SimpleReactValidator from "simple-react-validator";
-import Modal from "react-bootstrap/Modal";
-import Pagination from "react-bootstrap/Pagination";
+﻿import React, { useState, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next'; //語系
+import { useNavigate } from 'react-router-dom';
+import { DebounceInput } from 'react-debounce-input';
+import { ToastContainer, toast } from 'react-toastify';
+import Spinner from 'react-bootstrap/Spinner';
+import { setWindowClass, removeWindowClass } from '../utils/helpers';
+import SimpleReactValidator from 'simple-react-validator';
+import Modal from 'react-bootstrap/Modal';
+import Pagination from 'react-bootstrap/Pagination';
 
 import {
   apiMachineOverview,
@@ -16,7 +16,7 @@ import {
   apiDeleteMachine,
   apiGetOneMachineDevice,
   apiEditMachineDevice,
-} from "../utils/Api";
+} from '../utils/Api';
 
 function Machine() {
   const { t } = useTranslation();
@@ -24,7 +24,7 @@ function Machine() {
   const validator = new SimpleReactValidator({
     autoForceUpdate: this,
   });
-  const [keyword, setKeyword] = useState(""); //關鍵字
+  const [keyword, setKeyword] = useState(''); //關鍵字
   const [machineList, setMachineList] = useState([]); //機台列表(全部資料)
   const [showMachineList, setShowMachineList] = useState([]); //機台列表(顯示前端)
 
@@ -32,23 +32,23 @@ function Machine() {
   const [machineInfo, setMachineInfo] = useState({
     //新增以及修改內容
     machineId: 0,
-    machineCode: "", //機台ID
-    machineName: "", //機台名稱
-    machineSpec: "", //機台規格
-    machineImage: "", //機台圖片路徑
+    machineCode: '', //機台ID
+    machineName: '', //機台名稱
+    machineSpec: '', //機台規格
+    machineImage: '', //機台圖片路徑
     machineImageObj: null, //機台圖片物件
     isDeletedMachineImage: false, //是否刪除圖片
-    machineFile: "", //AR檔案路徑
+    machineFile: '', //AR檔案路徑
     machineFileObj: null, //AR檔案物件
     isDeletedMachineFile: false, //是否刪除AR檔案
   });
   const [machineInfoErrors, setMachineInfoErrors] = useState({
     //錯誤訊息
-    machineCode: "", //機台ID
-    machineSpec: "", //機台規格
-    machineName: "", //機台名稱
-    machineImage: "", //機台圖片路徑
-    machineFile: "", //AR檔案路徑
+    machineCode: '', //機台ID
+    machineSpec: '', //機台規格
+    machineName: '', //機台名稱
+    machineImage: '', //機台圖片路徑
+    machineFile: '', //AR檔案路徑
   });
   const inputImageRef = useRef(null); //input File類型的圖片
   const [saveMachineinfoLoading, setSaveMachineinfoLoading] = useState(false); //儲存的轉圈圈
@@ -65,18 +65,18 @@ function Machine() {
     machineDeviceId: 0,
     machineId: 0,
     machineCode: 0,
-    machineDeviceControlerModel: "", //控制器模組
-    machineDeviceServerIP: "", //伺服器IP
-    machineDeviceServerPort: "", //伺服器port
-    machineDeviceMachineIP: "", //機台IP
+    machineDeviceControlerModel: '', //控制器模組
+    machineDeviceServerIP: '', //伺服器IP
+    machineDeviceServerPort: '', //伺服器port
+    machineDeviceMachineIP: '', //機台IP
   });
 
   const [machineDeviceErrors, setMachineDeviceErrors] = useState({
     //機台設備 - 錯誤訊息
-    machineDeviceControlerModel: "", //控制器模組
-    machineDeviceServerIP: "", //伺服器IP
-    machineDeviceServerPort: "", //伺服器port
-    machineDeviceMachineIP: "", //機台IP
+    machineDeviceControlerModel: '', //控制器模組
+    machineDeviceServerIP: '', //伺服器IP
+    machineDeviceServerPort: '', //伺服器port
+    machineDeviceMachineIP: '', //機台IP
   });
 
   const [saveMachineDeviceLoading, setSaveMachineDeviceLoading] =
@@ -84,7 +84,7 @@ function Machine() {
 
   //#region 初始載入
   useEffect(() => {
-    removeWindowClass("login-page");
+    removeWindowClass('login-page');
 
     const fetchData = async () => {
       await refreshMachineinfos();
@@ -102,13 +102,13 @@ function Machine() {
 
     let machineOverviewResponse = await apiMachineOverview(sendData);
     if (machineOverviewResponse) {
-      if (machineOverviewResponse.code == "0000") {
+      if (machineOverviewResponse.code == '0000') {
         setMachineList(machineOverviewResponse.result);
         setShowMachineList(
           machineOverviewResponse.result.slice(
             activePage * pageRow - pageRow,
-            activePage * pageRow,
-          ),
+            activePage * pageRow
+          )
         );
       }
     }
@@ -131,14 +131,14 @@ function Machine() {
         onClick={(e) => handleChangePage(e, number)}
       >
         {number}
-      </Pagination.Item>,
+      </Pagination.Item>
     );
   }
 
   const handleChangePage = async (e, number) => {
     setActivePage(number);
     setShowMachineList(
-      machineList.slice(number * pageRow - pageRow, number * pageRow),
+      machineList.slice(number * pageRow - pageRow, number * pageRow)
     );
   };
   //#endregion
@@ -157,13 +157,13 @@ function Machine() {
     if (machineId == 0) {
       setMachineInfo({
         machineId: 0,
-        machineCode: "", //機台ID
-        machineName: "", //機台名稱
-        machineSpec: "", //機台規格
-        machineImage: "", //機台圖片路徑
+        machineCode: '', //機台ID
+        machineName: '', //機台名稱
+        machineSpec: '', //機台規格
+        machineImage: '', //機台圖片路徑
         machineImageObj: null, //機台圖片物件
         isDeletedMachineImage: false, //是否刪除圖片
-        machineFile: "", //AR檔案路徑
+        machineFile: '', //AR檔案路徑
         machineFileObj: null, //AR檔案物件
         isDeletedMachineFile: false, //是否刪除AR檔案
       });
@@ -174,7 +174,7 @@ function Machine() {
 
       let getOneMachineResponse = await apiGetOneMachine(sendData);
       if (getOneMachineResponse) {
-        if (getOneMachineResponse.code == "0000") {
+        if (getOneMachineResponse.code == '0000') {
           setMachineInfo(getOneMachineResponse.result);
         }
       }
@@ -182,11 +182,11 @@ function Machine() {
 
     setMachineInfoErrors({
       //錯誤訊息
-      machineCode: "", //機台ID
-      machineName: "", //機台名稱
-      machineSpec: "", //機台規格
-      machineImage: "", //機台圖片檔名
-      machineFile: "", //AR檔案檔名
+      machineCode: '', //機台ID
+      machineName: '', //機台名稱
+      machineSpec: '', //機台規格
+      machineImage: '', //機台圖片檔名
+      machineFile: '', //AR檔案檔名
     });
     setSaveMachineinfoLoading(false);
     setShowMachineinfoModal(true);
@@ -218,52 +218,52 @@ function Machine() {
   //#endregion
 
   //#region 機台 欄位驗證
-  const checkEditValidator = async (name = "", val = "") => {
+  const checkEditValidator = async (name = '', val = '') => {
     let result = true;
     let newMachineInfoErrors = { ...machineInfoErrors };
 
-    if (name == "machineCode" || name == "") {
-      if (!validator.check(machineInfo.machineCode, "required")) {
-        newMachineInfoErrors.machineCode = "required";
+    if (name == 'machineCode' || name == '') {
+      if (!validator.check(machineInfo.machineCode, 'required')) {
+        newMachineInfoErrors.machineCode = 'required';
         result = false;
-      } else if (!validator.check(machineInfo.machineCode, "max:100")) {
-        newMachineInfoErrors.machineCode = "max";
+      } else if (!validator.check(machineInfo.machineCode, 'max:100')) {
+        newMachineInfoErrors.machineCode = 'max';
         result = false;
       } else {
-        newMachineInfoErrors.machineCode = "";
+        newMachineInfoErrors.machineCode = '';
       }
     }
 
-    if (name == "machineName" || name == "") {
-      if (!validator.check(machineInfo.machineName, "required")) {
-        newMachineInfoErrors.machineName = "required";
+    if (name == 'machineName' || name == '') {
+      if (!validator.check(machineInfo.machineName, 'required')) {
+        newMachineInfoErrors.machineName = 'required';
         result = false;
-      } else if (!validator.check(machineInfo.machineName, "max:100")) {
-        newMachineInfoErrors.machineName = "max";
+      } else if (!validator.check(machineInfo.machineName, 'max:100')) {
+        newMachineInfoErrors.machineName = 'max';
         result = false;
       } else {
-        newMachineInfoErrors.machineName = "";
+        newMachineInfoErrors.machineName = '';
       }
     }
 
-    if (name == "machineSpec" || name == "") {
-      if (!validator.check(machineInfo.machineSpec, "required")) {
-        newMachineInfoErrors.machineSpec = "required";
+    if (name == 'machineSpec' || name == '') {
+      if (!validator.check(machineInfo.machineSpec, 'required')) {
+        newMachineInfoErrors.machineSpec = 'required';
         result = false;
-      } else if (!validator.check(machineInfo.machineSpec, "max:100")) {
-        newMachineInfoErrors.machineSpec = "max";
+      } else if (!validator.check(machineInfo.machineSpec, 'max:100')) {
+        newMachineInfoErrors.machineSpec = 'max';
         result = false;
       } else {
-        newMachineInfoErrors.machineSpec = "";
+        newMachineInfoErrors.machineSpec = '';
       }
     }
 
-    if (name == "") {
-      if (newMachineInfoErrors.machineImage != "") {
+    if (name == '') {
+      if (newMachineInfoErrors.machineImage != '') {
         result = false;
       }
 
-      if (newMachineInfoErrors.machineFile != "") {
+      if (newMachineInfoErrors.machineFile != '') {
         result = false;
       }
     }
@@ -289,16 +289,16 @@ function Machine() {
     if (file != null) {
       let newMachineInfoErrors = { ...machineInfoErrors };
       var fileExtension = file.name
-        .substr(file.name.lastIndexOf(".") + 1 - file.name.length)
+        .substr(file.name.lastIndexOf('.') + 1 - file.name.length)
         .toLowerCase();
       if (
         !(
-          fileExtension == "png" ||
-          fileExtension == "jpg" ||
-          fileExtension == "jpeg"
+          fileExtension == 'png' ||
+          fileExtension == 'jpg' ||
+          fileExtension == 'jpeg'
         )
       ) {
-        newMachineInfoErrors.machineImage = "format";
+        newMachineInfoErrors.machineImage = 'format';
         newMachineInfo.machineImageObj = null;
 
         setMachineInfoErrors(newMachineInfoErrors);
@@ -306,14 +306,14 @@ function Machine() {
         var img = new Image();
         var objectUrl = URL.createObjectURL(file);
         img.onload = function () {
-          if (!(img.width == "640" && img.height == "480")) {
-            newMachineInfoErrors.machineImage = "size";
+          if (!(img.width == '640' && img.height == '480')) {
+            newMachineInfoErrors.machineImage = 'size';
           } else {
-            newMachineInfoErrors.machineImage = "";
+            newMachineInfoErrors.machineImage = '';
           }
 
           newMachineInfo.machineImageObj = file;
-          if (newMachineInfo.machineImage != "") {
+          if (newMachineInfo.machineImage != '') {
             newMachineInfo.isDeletedMachineImage = true;
           }
 
@@ -323,7 +323,7 @@ function Machine() {
       }
     } else {
       newMachineInfo.machineImageObj = null;
-      newMachineInfoErrors.machineImage = "";
+      newMachineInfoErrors.machineImage = '';
     }
 
     setMachineInfo(newMachineInfo);
@@ -336,7 +336,7 @@ function Machine() {
     e.preventDefault();
     let newMachineInfo = { ...machineInfo };
 
-    newMachineInfo.machineImage = "";
+    newMachineInfo.machineImage = '';
     newMachineInfo.machineImageObj = null;
     newMachineInfo.isDeletedMachineImage = true;
 
@@ -344,7 +344,7 @@ function Machine() {
 
     let newMachineInfoErrors = { ...machineInfoErrors };
 
-    newMachineInfoErrors.machineImage = "";
+    newMachineInfoErrors.machineImage = '';
 
     setMachineInfoErrors(newMachineInfoErrors);
   };
@@ -357,15 +357,15 @@ function Machine() {
     var file = e.target.files[0];
     if (file != null) {
       var fileExtension = file.name
-        .substr(file.name.lastIndexOf(".") + 1 - file.name.length)
+        .substr(file.name.lastIndexOf('.') + 1 - file.name.length)
         .toLowerCase();
-      if (!(fileExtension == "zip")) {
-        newMachineInfoErrors.machineFile = "format";
+      if (!(fileExtension == 'zip')) {
+        newMachineInfoErrors.machineFile = 'format';
         newMachineInfo.machineFileObj = null;
       } else {
-        newMachineInfoErrors.machineFile = "";
+        newMachineInfoErrors.machineFile = '';
         newMachineInfo.machineFileObj = file;
-        if (newMachineInfo.machineFile != "") {
+        if (newMachineInfo.machineFile != '') {
           newMachineInfo.isDeletedMachineFile = true;
         }
       }
@@ -380,7 +380,7 @@ function Machine() {
     e.preventDefault();
     let newMachineInfo = { ...machineInfo };
 
-    newMachineInfo.machineFile = "";
+    newMachineInfo.machineFile = '';
     newMachineInfo.machineFileObj = null;
     newMachineInfo.isDeletedMachineFile = true;
 
@@ -394,11 +394,11 @@ function Machine() {
 
     let newMachineInfoErrors = { ...machineInfoErrors };
     let newMachineInfo = { ...machineInfo };
-    if (newMachineInfoErrors.machineImage != "") {
+    if (newMachineInfoErrors.machineImage != '') {
       newMachineInfo.machineImageObj = null;
     }
 
-    if (newMachineInfoErrors.machineFile != "") {
+    if (newMachineInfoErrors.machineFile != '') {
       newMachineInfo.machineFileObj = null;
     }
 
@@ -406,37 +406,37 @@ function Machine() {
       setSaveMachineinfoLoading(true);
 
       var formData = new FormData();
-      formData.append("machineId", newMachineInfo.machineId);
-      formData.append("machineCode", newMachineInfo.machineCode);
-      formData.append("machineName", newMachineInfo.machineName);
-      formData.append("machineSpec", newMachineInfo.machineSpec);
-      formData.append("machineImage", newMachineInfo.machineImage);
-      formData.append("machineImageObj", newMachineInfo.machineImageObj);
+      formData.append('machineId', newMachineInfo.machineId);
+      formData.append('machineCode', newMachineInfo.machineCode);
+      formData.append('machineName', newMachineInfo.machineName);
+      formData.append('machineSpec', newMachineInfo.machineSpec);
+      formData.append('machineImage', newMachineInfo.machineImage);
+      formData.append('machineImageObj', newMachineInfo.machineImageObj);
       formData.append(
-        "isDeletedMachineImage",
-        newMachineInfo.isDeletedMachineImage,
+        'isDeletedMachineImage',
+        newMachineInfo.isDeletedMachineImage
       );
-      formData.append("machineFile", newMachineInfo.machineFile);
-      formData.append("machineFileObj", newMachineInfo.machineFileObj);
+      formData.append('machineFile', newMachineInfo.machineFile);
+      formData.append('machineFileObj', newMachineInfo.machineFileObj);
       formData.append(
-        "isDeletedMachineFile",
-        newMachineInfo.isDeletedMachineFile,
+        'isDeletedMachineFile',
+        newMachineInfo.isDeletedMachineFile
       );
 
       let machineInfoResponse = await apiMachineInfo(formData);
       if (machineInfoResponse) {
-        if (machineInfoResponse.code == "0000") {
+        if (machineInfoResponse.code == '0000') {
           toast.success(
             newMachineInfo.machineId == 0
-              ? t("toast.add.success")
-              : t("toast.edit.success"),
+              ? t('toast.add.success')
+              : t('toast.edit.success'),
             {
               position: toast.POSITION.TOP_CENTER,
               autoClose: 3000,
               hideProgressBar: true,
               closeOnClick: false,
               pauseOnHover: false,
-            },
+            }
           );
 
           setShowMachineinfoModal(false);
@@ -486,8 +486,8 @@ function Machine() {
 
     let deleteMachineResponse = await apiDeleteMachine(sendData);
     if (deleteMachineResponse) {
-      if (deleteMachineResponse.code == "0000") {
-        toast.success(t("toast.delete.success"), {
+      if (deleteMachineResponse.code == '0000') {
+        toast.success(t('toast.delete.success'), {
           position: toast.POSITION.TOP_CENTER,
           autoClose: 3000,
           hideProgressBar: true,
@@ -521,16 +521,16 @@ function Machine() {
 
     let getOneMachineDeviceResponse = await apiGetOneMachineDevice(sendData);
     if (getOneMachineDeviceResponse) {
-      if (getOneMachineDeviceResponse.code == "0000") {
+      if (getOneMachineDeviceResponse.code == '0000') {
         setMachineDevice(getOneMachineDeviceResponse.result);
       }
     }
     setMachineDeviceErrors({
       //錯誤訊息
-      MachineDeviceControlerModel: "", //控制器模組
-      MachineDeviceServerIP: "", //伺服器IP
-      MachineDeviceServerPort: "", //伺服器port
-      MachineDeviceMachineIP: "", //機台IP
+      MachineDeviceControlerModel: '', //控制器模組
+      MachineDeviceServerIP: '', //伺服器IP
+      MachineDeviceServerPort: '', //伺服器port
+      MachineDeviceMachineIP: '', //機台IP
     });
     setShowMachineDeviceModal(true);
   };
@@ -561,73 +561,73 @@ function Machine() {
   //#endregion
 
   //#region 機台設備 欄位驗證
-  const checkEditMachineDeviceValidator = async (name = "", val = "") => {
+  const checkEditMachineDeviceValidator = async (name = '', val = '') => {
     let result = true;
     let newMachineDeviceErrors = { ...machineDeviceErrors };
 
-    if (name == "machineDeviceControlerModel" || name == "") {
+    if (name == 'machineDeviceControlerModel' || name == '') {
       if (
-        !validator.check(machineDevice.machineDeviceControlerModel, "required")
+        !validator.check(machineDevice.machineDeviceControlerModel, 'required')
       ) {
-        newMachineDeviceErrors.machineDeviceControlerModel = "required";
+        newMachineDeviceErrors.machineDeviceControlerModel = 'required';
         result = false;
       } else if (
-        !validator.check(machineDevice.machineDeviceControlerModel, "max:100")
+        !validator.check(machineDevice.machineDeviceControlerModel, 'max:100')
       ) {
-        newMachineDeviceErrors.machineDeviceControlerModel = "max";
+        newMachineDeviceErrors.machineDeviceControlerModel = 'max';
         result = false;
       } else {
-        newMachineDeviceErrors.machineDeviceControlerModel = "";
+        newMachineDeviceErrors.machineDeviceControlerModel = '';
       }
     }
 
-    if (name == "machineDeviceServerIP" || name == "") {
-      if (!validator.check(machineDevice.machineDeviceServerIP, "required")) {
-        newMachineDeviceErrors.machineDeviceServerIP = "required";
+    if (name == 'machineDeviceServerIP' || name == '') {
+      if (!validator.check(machineDevice.machineDeviceServerIP, 'required')) {
+        newMachineDeviceErrors.machineDeviceServerIP = 'required';
         result = false;
       } else if (
-        !validator.check(machineDevice.machineDeviceServerIP, "max:20")
+        !validator.check(machineDevice.machineDeviceServerIP, 'max:20')
       ) {
-        newMachineDeviceErrors.machineDeviceServerIP = "max";
+        newMachineDeviceErrors.machineDeviceServerIP = 'max';
         result = false;
       } else {
-        newMachineDeviceErrors.machineDeviceServerIP = "";
+        newMachineDeviceErrors.machineDeviceServerIP = '';
       }
     }
 
-    if (name == "machineDeviceServerPort" || name == "") {
-      if (!validator.check(machineDevice.machineDeviceServerPort, "required")) {
-        newMachineDeviceErrors.machineDeviceServerPort = "required";
+    if (name == 'machineDeviceServerPort' || name == '') {
+      if (!validator.check(machineDevice.machineDeviceServerPort, 'required')) {
+        newMachineDeviceErrors.machineDeviceServerPort = 'required';
         result = false;
       } else if (
         !validator.check(
           machineDevice.machineDeviceServerPort.toString(),
-          "max:10",
+          'max:10'
         )
       ) {
-        newMachineDeviceErrors.machineDeviceServerPort = "max";
+        newMachineDeviceErrors.machineDeviceServerPort = 'max';
         result = false;
       } else if (
-        !validator.check(machineDevice.machineDeviceServerPort, "integer")
+        !validator.check(machineDevice.machineDeviceServerPort, 'integer')
       ) {
-        newMachineDeviceErrors.machineDeviceServerPort = "numeric";
+        newMachineDeviceErrors.machineDeviceServerPort = 'numeric';
         result = false;
       } else {
-        newMachineDeviceErrors.machineDeviceServerPort = "";
+        newMachineDeviceErrors.machineDeviceServerPort = '';
       }
     }
 
-    if (name == "machineDeviceMachineIP" || name == "") {
-      if (!validator.check(machineDevice.machineDeviceMachineIP, "required")) {
-        newMachineDeviceErrors.machineDeviceMachineIP = "required";
+    if (name == 'machineDeviceMachineIP' || name == '') {
+      if (!validator.check(machineDevice.machineDeviceMachineIP, 'required')) {
+        newMachineDeviceErrors.machineDeviceMachineIP = 'required';
         result = false;
       } else if (
-        !validator.check(machineDevice.machineDeviceMachineIP, "max:20")
+        !validator.check(machineDevice.machineDeviceMachineIP, 'max:20')
       ) {
-        newMachineDeviceErrors.machineDeviceMachineIP = "max";
+        newMachineDeviceErrors.machineDeviceMachineIP = 'max';
         result = false;
       } else {
-        newMachineDeviceErrors.machineDeviceMachineIP = "";
+        newMachineDeviceErrors.machineDeviceMachineIP = '';
       }
     }
 
@@ -645,8 +645,8 @@ function Machine() {
 
       let editMachineDeviceResponse = await apiEditMachineDevice(machineDevice);
       if (editMachineDeviceResponse) {
-        if (editMachineDeviceResponse.code == "0000") {
-          toast.success(t("toast.edit.success"), {
+        if (editMachineDeviceResponse.code == '0000') {
+          toast.success(t('toast.edit.success'), {
             position: toast.POSITION.TOP_CENTER,
             autoClose: 3000,
             hideProgressBar: true,
@@ -693,7 +693,7 @@ function Machine() {
             <div className="content-header-text-color">
               <h1>
                 <strong>
-                  {t("machine.content.header")}
+                  {t('machine.content.header')}
                   {/*AR設備控制*/}
                 </strong>
               </h1>
@@ -703,7 +703,7 @@ function Machine() {
               className="btn btn-primary btn-add"
               onClick={() => handleOpenMachineinfoModal(0)}
             >
-              <i className="fas fa-plus"></i> {t("machine.btn.add")}
+              <i className="fas fa-plus"></i> {t('machine.btn.add')}
               {/*新增機台*/}
             </button>
           </div>
@@ -717,7 +717,7 @@ function Machine() {
                 <DebounceInput
                   debounceTimeout={300}
                   type="search"
-                  placeholder={t("keyword.placeholder")}
+                  placeholder={t('keyword.placeholder')}
                   onChange={(e) => handleChangeKeyword(e)}
                 />
                 {/*請輸入關鍵字*/}
@@ -757,17 +757,17 @@ function Machine() {
                             </div>
                           </div>
                         </div>
-                        {item.machineImage != "" ? (
+                        {item.machineImage != '' ? (
                           <img
                             className="card-img-top"
                             src={item.machineImage}
                             alt={item.machineCode}
-                            style={{ minHeight: "292px" }}
+                            style={{ minHeight: '292px' }}
                           />
                         ) : (
                           <img
                             src="/default-image.jpg"
-                            style={{ minHeight: "292px" }}
+                            style={{ minHeight: '292px' }}
                           />
                         )}
                         <div className="card-body">
@@ -789,10 +789,10 @@ function Machine() {
                             <button
                               type="button"
                               className="btn btn-info col-4"
-                              style={{ marginRight: "10px" }}
+                              style={{ marginRight: '10px' }}
                               onClick={() =>
                                 handleOpenMachineDeviceModal(
-                                  item.machineDeviceId,
+                                  item.machineDeviceId
                                 )
                               }
                             >
@@ -816,7 +816,7 @@ function Machine() {
               ) : (
                 <div className="w-100 d-flex justify-content-center">
                   <label>
-                    {t("machine.searchEmpty")}
+                    {t('machine.searchEmpty')}
                     {/*查無機台*/}
                   </label>
                 </div>
@@ -824,7 +824,7 @@ function Machine() {
             ) : (
               <div className="w-100 d-flex justify-content-center">
                 <label>
-                  {t("machine.empty")}
+                  {t('machine.empty')}
                   {/*尚無資料*/}
                 </label>
               </div>
@@ -847,8 +847,8 @@ function Machine() {
         <Modal.Header closeButton>
           <Modal.Title>
             {machineInfo.machineId == 0
-              ? t("machine.addTitle")
-              : t("machine.editTitle")}
+              ? t('machine.addTitle')
+              : t('machine.editTitle')}
             {/*新增機台 : 編輯機台*/}
           </Modal.Title>
         </Modal.Header>
@@ -858,7 +858,7 @@ function Machine() {
               <div className="col-12 form-group">
                 <label className="form-label">
                   <span className="text-danger">*</span>
-                  {t("machine.machineCode")}
+                  {t('machine.machineCode')}
                   {/*機台ID*/}
                 </label>
                 <input
@@ -872,19 +872,19 @@ function Machine() {
                 />
                 {(() => {
                   switch (machineInfoErrors.machineCode) {
-                    case "required":
+                    case 'required':
                       return (
                         <div className="invalid-feedback d-block">
-                          <i className="fas fa-exclamation-circle"></i>{" "}
-                          {t("helpWord.required")}
+                          <i className="fas fa-exclamation-circle"></i>{' '}
+                          {t('helpWord.required')}
                           {/*不得空白*/}
                         </div>
                       );
-                    case "max":
+                    case 'max':
                       return (
                         <div className="invalid-feedback d-block">
-                          <i className="fas fa-exclamation-circle"></i>{" "}
-                          {t("helpWord.max", { e: 100 })}
+                          <i className="fas fa-exclamation-circle"></i>{' '}
+                          {t('helpWord.max', { e: 100 })}
                           {/*超過上限{{e}}個字元*/}
                         </div>
                       );
@@ -897,7 +897,7 @@ function Machine() {
               <div className="col-12 form-group">
                 <label className="form-label">
                   <span className="text-danger">*</span>
-                  {t("machine.machineName")}
+                  {t('machine.machineName')}
                   {/*機台名稱*/}
                 </label>
                 <input
@@ -911,19 +911,19 @@ function Machine() {
                 />
                 {(() => {
                   switch (machineInfoErrors.machineName) {
-                    case "required":
+                    case 'required':
                       return (
                         <div className="invalid-feedback d-block">
-                          <i className="fas fa-exclamation-circle"></i>{" "}
-                          {t("helpWord.required")}
+                          <i className="fas fa-exclamation-circle"></i>{' '}
+                          {t('helpWord.required')}
                           {/*不得空白*/}
                         </div>
                       );
-                    case "max":
+                    case 'max':
                       return (
                         <div className="invalid-feedback d-block">
-                          <i className="fas fa-exclamation-circle"></i>{" "}
-                          {t("helpWord.max", { e: 100 })}
+                          <i className="fas fa-exclamation-circle"></i>{' '}
+                          {t('helpWord.max', { e: 100 })}
                           {/*超過上限{{e}}個字元*/}
                         </div>
                       );
@@ -936,7 +936,7 @@ function Machine() {
               <div className="col-12 form-group">
                 <label className="form-label">
                   <span className="text-danger">*</span>
-                  {t("machine.machineSpec")}
+                  {t('machine.machineSpec')}
                   {/*機台規格*/}
                 </label>
                 <input
@@ -950,19 +950,19 @@ function Machine() {
                 />
                 {(() => {
                   switch (machineInfoErrors.machineSpec) {
-                    case "required":
+                    case 'required':
                       return (
                         <div className="invalid-feedback d-block">
-                          <i className="fas fa-exclamation-circle"></i>{" "}
-                          {t("helpWord.required")}
+                          <i className="fas fa-exclamation-circle"></i>{' '}
+                          {t('helpWord.required')}
                           {/*不得空白*/}
                         </div>
                       );
-                    case "max":
+                    case 'max':
                       return (
                         <div className="invalid-feedback d-block">
-                          <i className="fas fa-exclamation-circle"></i>{" "}
-                          {t("helpWord.max", { e: 100 })}
+                          <i className="fas fa-exclamation-circle"></i>{' '}
+                          {t('helpWord.max', { e: 100 })}
                           {/*超過上限{{e}}個字元*/}
                         </div>
                       );
@@ -973,7 +973,7 @@ function Machine() {
               </div>
               <div className="col-12 form-group">
                 <label className="form-label">
-                  {t("machine.machineImage")}
+                  {t('machine.machineImage')}
                   {/*機台圖片*/}(640*480)
                 </label>
                 <input
@@ -987,19 +987,19 @@ function Machine() {
                 />
                 <div
                   style={{
-                    borderStyle: "dotted",
-                    borderWidth: "3px", // 調整虛線的大小
-                    cursor: "pointer",
-                    minHeight: "240px",
+                    borderStyle: 'dotted',
+                    borderWidth: '3px', // 調整虛線的大小
+                    cursor: 'pointer',
+                    minHeight: '240px',
                   }}
                   className="d-flex justify-content-center align-items-center"
                   onClick={(e) => handleUploadImageBtn(e)}
                 >
-                  {machineInfo.machineImage != "" ||
+                  {machineInfo.machineImage != '' ||
                   machineInfo.machineImageObj != null ? (
                     <img
                       alt="not found"
-                      style={{ width: "320px", minHeight: "240px" }}
+                      style={{ width: '320px', minHeight: '240px' }}
                       src={
                         machineInfo.machineImageObj != null
                           ? URL.createObjectURL(machineInfo.machineImageObj)
@@ -1008,26 +1008,26 @@ function Machine() {
                     />
                   ) : (
                     <span>
-                      {t("machine.uploadImage")}
+                      {t('machine.uploadImage')}
                       {/*上傳圖片*/}
                     </span>
                   )}
                 </div>
                 {(() => {
                   switch (machineInfoErrors.machineImage) {
-                    case "format":
+                    case 'format':
                       return (
                         <div className="invalid-feedback d-block">
-                          <i className="fas fa-exclamation-circle"></i>{" "}
-                          {t("helpWord.imageFormat")}
+                          <i className="fas fa-exclamation-circle"></i>{' '}
+                          {t('helpWord.imageFormat')}
                           {/*圖片格式不正確*/}
                         </div>
                       );
-                    case "size":
+                    case 'size':
                       return (
                         <div className="invalid-feedback d-block">
-                          <i className="fas fa-exclamation-circle"></i>{" "}
-                          {t("helpWord.imageRatio")}
+                          <i className="fas fa-exclamation-circle"></i>{' '}
+                          {t('helpWord.imageRatio')}
                           {/*圖片長寬比不正確*/}
                         </div>
                       );
@@ -1039,32 +1039,32 @@ function Machine() {
                   className="btn btn-danger mt-2"
                   onClick={(e) => handleRemoveImageBtn(e)}
                 >
-                  {t("machine.btn.deleteMachineImage")}
+                  {t('machine.btn.deleteMachineImage')}
                   {/*移除圖片*/}
                 </button>
               </div>
               <div className="col-12 form-group">
                 <label className="form-label">
-                  {t("machine.machineFile")}
+                  {t('machine.machineFile')}
                   {/*機台檔案*/}
                 </label>
                 <br />
                 {(() => {
-                  var fileExtension = "";
-                  if (machineInfo.machineFile != "") {
+                  var fileExtension = '';
+                  if (machineInfo.machineFile != '') {
                     fileExtension = machineInfo.machineFile
                       .substr(
-                        machineInfo.machineFile.lastIndexOf(".") +
+                        machineInfo.machineFile.lastIndexOf('.') +
                           1 -
-                          machineInfo.machineFile.length,
+                          machineInfo.machineFile.length
                       )
                       .toLowerCase();
                   } else if (machineInfo.machineFileObj != null) {
                     fileExtension = machineInfo.machineFileObj.name
                       .substr(
-                        machineInfo.machineFileObj.name.lastIndexOf(".") +
+                        machineInfo.machineFileObj.name.lastIndexOf('.') +
                           1 -
-                          machineInfo.machineFileObj.name.length,
+                          machineInfo.machineFileObj.name.length
                       )
                       .toLowerCase();
                   }
@@ -1083,11 +1083,11 @@ function Machine() {
                 />
                 {(() => {
                   switch (machineInfoErrors.machineFile) {
-                    case "format":
+                    case 'format':
                       return (
                         <div className="invalid-feedback d-block">
-                          <i className="fas fa-exclamation-circle"></i>{" "}
-                          {t("helpWord.imageFormat")}
+                          <i className="fas fa-exclamation-circle"></i>{' '}
+                          {t('helpWord.imageFormat')}
                           {/*檔案格式不正確*/}
                         </div>
                       );
@@ -1099,7 +1099,7 @@ function Machine() {
                   className="btn btn-danger mt-2"
                   onClick={(e) => handleRemoveFileBtn(e)}
                 >
-                  {t("machine.btn.deleteMachineFile")}
+                  {t('machine.btn.deleteMachineFile')}
                   {/*移除檔案*/}
                 </button>
               </div>
@@ -1112,7 +1112,7 @@ function Machine() {
             className="btn btn-secondary"
             onClick={(e) => handleCloseMachineinfoModal(e)}
           >
-            {t("btn.cancel")}
+            {t('btn.cancel')}
             {/*取消*/}
           </button>
           <button
@@ -1133,7 +1133,7 @@ function Machine() {
               </>
             ) : (
               <span>
-                {t("btn.save")}
+                {t('btn.save')}
                 {/*儲存*/}
               </span>
             )}
@@ -1150,13 +1150,13 @@ function Machine() {
       >
         <Modal.Header closeButton>
           <Modal.Title>
-            {t("machine.delete")}
+            {t('machine.delete')}
             {/*刪除機台*/}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <p>
-            {t("machine.deleteContent")}
+            {t('machine.deleteContent')}
             {/*您確定要刪除該筆資料嗎?*/}
           </p>
         </Modal.Body>
@@ -1166,7 +1166,7 @@ function Machine() {
             className="btn btn-secondary"
             onClick={(e) => handleCloseDeleteMachineModal(e)}
           >
-            {t("btn.cancel")}
+            {t('btn.cancel')}
             {/*取消*/}
           </button>
           <button
@@ -1186,7 +1186,7 @@ function Machine() {
               </>
             ) : (
               <span>
-                {t("btn.confirm")}
+                {t('btn.confirm')}
                 {/*確定*/}
               </span>
             )}
@@ -1203,7 +1203,7 @@ function Machine() {
       >
         <Modal.Header closeButton>
           <Modal.Title>
-            {t("machineDevice.editTitle")}
+            {t('machineDevice.editTitle')}
             {/*編輯機台設備*/}
           </Modal.Title>
         </Modal.Header>
@@ -1212,7 +1212,7 @@ function Machine() {
             <div className="row mb-3">
               <div className="col-12 form-group">
                 <label className="form-label">
-                  {t("machine.machineCode")}
+                  {t('machine.machineCode')}
                   {/*機台ID*/}
                 </label>
                 <span className="form-text">{machineDevice.machineCode}</span>
@@ -1220,7 +1220,7 @@ function Machine() {
               <div className="col-12 form-group">
                 <label className="form-label">
                   <span className="text-danger">*</span>
-                  {t("machineDevice.machineDeviceControlerModel")}
+                  {t('machineDevice.machineDeviceControlerModel')}
                   {/*控制器模組*/}
                 </label>
                 <input
@@ -1235,19 +1235,19 @@ function Machine() {
                 />
                 {(() => {
                   switch (machineDeviceErrors.machineDeviceControlerModel) {
-                    case "required":
+                    case 'required':
                       return (
                         <div className="invalid-feedback d-block">
-                          <i className="fas fa-exclamation-circle"></i>{" "}
-                          {t("helpWord.required")}
+                          <i className="fas fa-exclamation-circle"></i>{' '}
+                          {t('helpWord.required')}
                           {/*不得空白*/}
                         </div>
                       );
-                    case "max":
+                    case 'max':
                       return (
                         <div className="invalid-feedback d-block">
-                          <i className="fas fa-exclamation-circle"></i>{" "}
-                          {t("helpWord.max", { e: 100 })}
+                          <i className="fas fa-exclamation-circle"></i>{' '}
+                          {t('helpWord.max', { e: 100 })}
                           {/*超過上限{{e}}個字元*/}
                         </div>
                       );
@@ -1259,7 +1259,7 @@ function Machine() {
               <div className="col-12 form-group">
                 <label className="form-label">
                   <span className="text-danger">*</span>
-                  {t("machineDevice.machineDeviceServerIP")}
+                  {t('machineDevice.machineDeviceServerIP')}
                   {/*伺服器IP*/}
                 </label>
                 <input
@@ -1274,19 +1274,19 @@ function Machine() {
                 />
                 {(() => {
                   switch (machineDeviceErrors.machineDeviceServerIP) {
-                    case "required":
+                    case 'required':
                       return (
                         <div className="invalid-feedback d-block">
-                          <i className="fas fa-exclamation-circle"></i>{" "}
-                          {t("helpWord.required")}
+                          <i className="fas fa-exclamation-circle"></i>{' '}
+                          {t('helpWord.required')}
                           {/*不得空白*/}
                         </div>
                       );
-                    case "max":
+                    case 'max':
                       return (
                         <div className="invalid-feedback d-block">
-                          <i className="fas fa-exclamation-circle"></i>{" "}
-                          {t("helpWord.max", { e: 20 })}
+                          <i className="fas fa-exclamation-circle"></i>{' '}
+                          {t('helpWord.max', { e: 20 })}
                           {/*超過上限{{e}}個字元*/}
                         </div>
                       );
@@ -1298,7 +1298,7 @@ function Machine() {
               <div className="col-12 form-group">
                 <label className="form-label">
                   <span className="text-danger">*</span>
-                  {t("machineDevice.machineDeviceServerPort")}
+                  {t('machineDevice.machineDeviceServerPort')}
                   {/*伺服器Port*/}
                 </label>
                 <input
@@ -1313,27 +1313,27 @@ function Machine() {
                 />
                 {(() => {
                   switch (machineDeviceErrors.machineDeviceServerPort) {
-                    case "required":
+                    case 'required':
                       return (
                         <div className="invalid-feedback d-block">
-                          <i className="fas fa-exclamation-circle"></i>{" "}
-                          {t("helpWord.required")}
+                          <i className="fas fa-exclamation-circle"></i>{' '}
+                          {t('helpWord.required')}
                           {/*不得空白*/}
                         </div>
                       );
-                    case "numeric":
+                    case 'numeric':
                       return (
                         <div className="invalid-feedback d-block">
-                          <i className="fas fa-exclamation-circle"></i>{" "}
-                          {t("helpWord.numeric")}
+                          <i className="fas fa-exclamation-circle"></i>{' '}
+                          {t('helpWord.numeric')}
                           {/*需為數字*/}
                         </div>
                       );
-                    case "max":
+                    case 'max':
                       return (
                         <div className="invalid-feedback d-block">
-                          <i className="fas fa-exclamation-circle"></i>{" "}
-                          {t("helpWord.max", { e: 10 })}
+                          <i className="fas fa-exclamation-circle"></i>{' '}
+                          {t('helpWord.max', { e: 10 })}
                           {/*超過上限{{e}}個字元*/}
                         </div>
                       );
@@ -1345,7 +1345,7 @@ function Machine() {
               <div className="col-12 form-group">
                 <label className="form-label">
                   <span className="text-danger">*</span>
-                  {t("machineDevice.machineDeviceMachineIP")}
+                  {t('machineDevice.machineDeviceMachineIP')}
                   {/*機台IP*/}
                 </label>
                 <input
@@ -1360,19 +1360,19 @@ function Machine() {
                 />
                 {(() => {
                   switch (machineDeviceErrors.machineDeviceMachineIP) {
-                    case "required":
+                    case 'required':
                       return (
                         <div className="invalid-feedback d-block">
-                          <i className="fas fa-exclamation-circle"></i>{" "}
-                          {t("helpWord.required")}
+                          <i className="fas fa-exclamation-circle"></i>{' '}
+                          {t('helpWord.required')}
                           {/*不得空白*/}
                         </div>
                       );
-                    case "max":
+                    case 'max':
                       return (
                         <div className="invalid-feedback d-block">
-                          <i className="fas fa-exclamation-circle"></i>{" "}
-                          {t("helpWord.max", { e: 20 })}
+                          <i className="fas fa-exclamation-circle"></i>{' '}
+                          {t('helpWord.max', { e: 20 })}
                           {/*超過上限{{e}}個字元*/}
                         </div>
                       );
@@ -1390,7 +1390,7 @@ function Machine() {
             className="btn btn-secondary"
             onClick={(e) => handleCloseMachineDeviceModal(e)}
           >
-            {t("btn.cancel")}
+            {t('btn.cancel')}
             {/*取消*/}
           </button>
           <button
@@ -1411,7 +1411,7 @@ function Machine() {
               </>
             ) : (
               <span>
-                {t("btn.save")}
+                {t('btn.save')}
                 {/*儲存*/}
               </span>
             )}

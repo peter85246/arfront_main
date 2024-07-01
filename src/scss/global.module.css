@@ -716,7 +716,7 @@ table th {
 }
 
 .red-star::before {
-  content: "★"; /* 使用星星符號 */
+  content: '★'; /* 使用星星符號 */
   position: absolute;
   left: -12px;
   top: 2px;
@@ -1576,7 +1576,7 @@ img {
 
 /* 垂直分隔線 */
 .content-section:not(:last-child)::after {
-  content: "";
+  content: '';
   border-right: 1px solid #000;
   position: absolute;
   top: 0;
@@ -3169,7 +3169,7 @@ img {
 }
 
 .red-star-branch::before {
-  content: "★"; /* 使用星星符號 */
+  content: '★'; /* 使用星星符號 */
   position: absolute;
   left: -12px;
   top: 2px;

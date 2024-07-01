@@ -4,24 +4,24 @@
   useEffect,
   useRef,
   useCallback,
-} from "react";
-import { useTranslation } from "react-i18next"; //語系
-import { useNavigate } from "react-router-dom";
-import { MyUserContext } from "../contexts/MyUserContext";
+} from 'react';
+import { useTranslation } from 'react-i18next'; //語系
+import { useNavigate } from 'react-router-dom';
+import { MyUserContext } from '../contexts/MyUserContext';
 import {
   hasWindowClass,
   addWindowClass,
   removeWindowClass,
-} from "../utils/helpers";
-import { removeAuthToken } from "../utils/TokenUtil";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import Modal from "react-bootstrap/Modal";
-import Spinner from "react-bootstrap/Spinner";
-import SimpleReactValidator from "simple-react-validator";
-import reactStringReplace from "react-string-replace";
+} from '../utils/helpers';
+import { removeAuthToken } from '../utils/TokenUtil';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Modal from 'react-bootstrap/Modal';
+import Spinner from 'react-bootstrap/Spinner';
+import SimpleReactValidator from 'simple-react-validator';
+import reactStringReplace from 'react-string-replace';
 
-import { apiChangePaw } from "../utils/Api";
+import { apiChangePaw } from '../utils/Api';
 
 function Header() {
   const { myUser } = useContext(MyUserContext);
@@ -40,23 +40,23 @@ function Header() {
         setToggleUser(false);
       }
     },
-    [toggleUser],
+    [toggleUser]
   );
 
   const [showChangePawModal, setShowChangePawModal] = useState(false); //顯示"修改密碼modal"
 
   const [changePawErrors, setChangePawErrors] = useState({
     //修改密碼錯誤訊息
-    oldPaw: "",
-    newPaw: "",
-    againPaw: "",
+    oldPaw: '',
+    newPaw: '',
+    againPaw: '',
   });
 
   const [saveChangePawLoading, setSaveChangePawLoading] = useState(false);
 
-  const oldPaw = useRef(""); //舊密碼
-  const newPaw = useRef(""); //新密碼
-  const againPaw = useRef(""); //再次輸入密碼
+  const oldPaw = useRef(''); //舊密碼
+  const newPaw = useRef(''); //新密碼
+  const againPaw = useRef(''); //再次輸入密碼
 
   const validator = new SimpleReactValidator({
     validators: {
@@ -68,15 +68,15 @@ function Header() {
             return result;
           }
 
-          let strRep = reactStringReplace(val, /(\d+)/g, (match, i) => "");
-          strRep = reactStringReplace(strRep, /([a-zA-Z])/g, (match, i) => "");
+          let strRep = reactStringReplace(val, /(\d+)/g, (match, i) => '');
+          strRep = reactStringReplace(strRep, /([a-zA-Z])/g, (match, i) => '');
           strRep = reactStringReplace(
             strRep,
             /([,.~!@#$%^&*_+-=])/g,
-            (match, i) => "",
+            (match, i) => ''
           );
 
-          if (strRep.join("") == "") {
+          if (strRep.join('') == '') {
             result = true;
           }
 
@@ -88,16 +88,16 @@ function Header() {
   });
 
   useEffect(() => {
-    document.addEventListener("mousedown", closeOpenMenus);
+    document.addEventListener('mousedown', closeOpenMenus);
   }, [closeOpenMenus]);
 
   //#region 開關側邊Nav
   const handleToggleNav = (e) => {
     e.preventDefault();
-    if (hasWindowClass("sidebar-collapse")) {
-      removeWindowClass("sidebar-collapse");
+    if (hasWindowClass('sidebar-collapse')) {
+      removeWindowClass('sidebar-collapse');
     } else {
-      addWindowClass("sidebar-collapse");
+      addWindowClass('sidebar-collapse');
     }
   };
   //#endregion
@@ -135,57 +135,57 @@ function Header() {
   //#endregion
 
   //#region 修改密碼 欄位驗證
-  const checkChangePawValidator = async (name = "", val = "") => {
+  const checkChangePawValidator = async (name = '', val = '') => {
     let result = true;
     let newChangePawErrors = { ...changePawErrors };
 
-    if (name == "oldPaw" || name == "") {
+    if (name == 'oldPaw' || name == '') {
       var tempOldPaw = oldPaw.current.value;
 
-      if (!validator.check(tempOldPaw, "required")) {
-        newChangePawErrors.oldPaw = "required";
+      if (!validator.check(tempOldPaw, 'required')) {
+        newChangePawErrors.oldPaw = 'required';
         result = false;
-      } else if (!validator.check(tempOldPaw, "pawFormat")) {
-        newChangePawErrors.oldPaw = "pawFormat";
+      } else if (!validator.check(tempOldPaw, 'pawFormat')) {
+        newChangePawErrors.oldPaw = 'pawFormat';
         result = false;
       } else {
-        newChangePawErrors.oldPaw = "";
+        newChangePawErrors.oldPaw = '';
       }
     }
 
-    if (name == "newPaw" || name == "") {
+    if (name == 'newPaw' || name == '') {
       var tempNewPaw = newPaw.current.value;
       var tempAgainPaw = againPaw.current.value;
 
-      if (!validator.check(tempNewPaw, "required")) {
-        newChangePawErrors.newPaw = "required";
+      if (!validator.check(tempNewPaw, 'required')) {
+        newChangePawErrors.newPaw = 'required';
         result = false;
-      } else if (!validator.check(tempNewPaw, "pawFormat")) {
-        newChangePawErrors.newPaw = "pawFormat";
+      } else if (!validator.check(tempNewPaw, 'pawFormat')) {
+        newChangePawErrors.newPaw = 'pawFormat';
         result = false;
-      } else if (tempNewPaw != tempAgainPaw && changePawErrors.againPaw == "") {
-        newChangePawErrors.againPaw = "again";
+      } else if (tempNewPaw != tempAgainPaw && changePawErrors.againPaw == '') {
+        newChangePawErrors.againPaw = 'again';
         result = false;
       } else {
-        newChangePawErrors.newPaw = "";
+        newChangePawErrors.newPaw = '';
       }
     }
 
-    if (name == "againPaw" || name == "") {
+    if (name == 'againPaw' || name == '') {
       var tempNewPaw = newPaw.current.value;
       var tempAgainPaw = againPaw.current.value;
 
-      if (!validator.check(tempAgainPaw, "required")) {
-        newChangePawErrors.againPaw = "required";
+      if (!validator.check(tempAgainPaw, 'required')) {
+        newChangePawErrors.againPaw = 'required';
         result = false;
-      } else if (!validator.check(tempAgainPaw, "pawFormat")) {
-        newChangePawErrors.againPaw = "pawFormat";
+      } else if (!validator.check(tempAgainPaw, 'pawFormat')) {
+        newChangePawErrors.againPaw = 'pawFormat';
         result = false;
       } else if (tempNewPaw != tempAgainPaw) {
-        newChangePawErrors.againPaw = "again";
+        newChangePawErrors.againPaw = 'again';
         result = false;
       } else {
-        newChangePawErrors.againPaw = "";
+        newChangePawErrors.againPaw = '';
       }
     }
 
@@ -209,8 +209,8 @@ function Header() {
 
       let changePawResponse = await apiChangePaw(sendData);
       if (changePawResponse) {
-        if (changePawResponse.code == "0000") {
-          toast.success(t("toast.edit.success"), {
+        if (changePawResponse.code == '0000') {
+          toast.success(t('toast.edit.success'), {
             position: toast.POSITION.TOP_CENTER,
             autoClose: 3000,
             hideProgressBar: true,
@@ -240,7 +240,7 @@ function Header() {
   const handleSignOut = (e) => {
     e.preventDefault();
     removeAuthToken();
-    navigate("/");
+    navigate('/');
   };
   //#endregion
 
@@ -259,24 +259,24 @@ function Header() {
           </li>
         </ul>
         <ul className="navbar-nav ml-auto" ref={wrapperRef}>
-          <li className={`nav-item dropdown ${toggleUser ? "show" : ""}`}>
+          <li className={`nav-item dropdown ${toggleUser ? 'show' : ''}`}>
             <a
               href={void 0}
               className="nav-link"
               onClick={(e) => handleToggleUserDropdown(e)}
             >
-              {t("header.user", { e: myUser ? myUser.userName : "" })}&nbsp;
+              {t('header.user', { e: myUser ? myUser.userName : '' })}&nbsp;
               <i className="fas fa-user"></i>
             </a>
             <div
-              className={`dropdown-menu dropdown-menu-right ${toggleUser ? "show" : ""}`}
+              className={`dropdown-menu dropdown-menu-right ${toggleUser ? 'show' : ''}`}
             >
               <a
                 href={void 0}
                 className="dropdown-item"
                 onClick={(e) => handleOpenChangePawModal(e)}
               >
-                <i className="fas fa-lock"></i> {t("header.changePaw")}
+                <i className="fas fa-lock"></i> {t('header.changePaw')}
                 {/*修改密碼*/}
               </a>
               <a
@@ -284,7 +284,7 @@ function Header() {
                 className="dropdown-item"
                 onClick={(e) => handleSignOut(e)}
               >
-                <i className="fas fa-sign-out-alt"></i> {t("header.logout")}
+                <i className="fas fa-sign-out-alt"></i> {t('header.logout')}
                 {/*登出*/}
               </a>
             </div>
@@ -301,7 +301,7 @@ function Header() {
       >
         <Modal.Header closeButton>
           <Modal.Title>
-            {t("header.changePaw")}
+            {t('header.changePaw')}
             {/*修改密碼*/}
           </Modal.Title>
         </Modal.Header>
@@ -311,32 +311,32 @@ function Header() {
               <div className="col-12 form-group">
                 <label className="form-label">
                   <span className="text-danger">*</span>
-                  {t("header.oldPaw")}
+                  {t('header.oldPaw')}
                   {/*舊密碼*/}
                 </label>
                 <input
                   type="password"
                   className="form-control"
                   name="oldPaw"
-                  placeholder={t("pawFormat.placeholder")}
+                  placeholder={t('pawFormat.placeholder')}
                   onBlur={(e) => handleChangePawBlur(e)}
                   ref={oldPaw}
                   autoComplete="off"
                 />
                 {(() => {
                   switch (changePawErrors.oldPaw) {
-                    case "required":
+                    case 'required':
                       return (
                         <div className="invalid-feedback d-block">
-                          <i className="fas fa-exclamation-circle"></i>{" "}
-                          {t("helpWord.required")} {/*不得空白*/}
+                          <i className="fas fa-exclamation-circle"></i>{' '}
+                          {t('helpWord.required')} {/*不得空白*/}
                         </div>
                       );
-                    case "pawFormat":
+                    case 'pawFormat':
                       return (
                         <div className="invalid-feedback d-block">
-                          <i className="fas fa-exclamation-circle"></i>{" "}
-                          {t("helpWord.format")} {/*格式有誤*/}
+                          <i className="fas fa-exclamation-circle"></i>{' '}
+                          {t('helpWord.format')} {/*格式有誤*/}
                         </div>
                       );
                     default:
@@ -349,32 +349,32 @@ function Header() {
               <div className="col-12 form-group">
                 <label className="form-label">
                   <span className="text-danger">*</span>
-                  {t("header.newPaw")}
+                  {t('header.newPaw')}
                   {/*新密碼*/}
                 </label>
                 <input
                   type="password"
                   className="form-control"
                   name="newPaw"
-                  placeholder={t("pawFormat.placeholder")}
+                  placeholder={t('pawFormat.placeholder')}
                   onBlur={(e) => handleChangePawBlur(e)}
                   ref={newPaw}
                   autoComplete="off"
                 />
                 {(() => {
                   switch (changePawErrors.newPaw) {
-                    case "required":
+                    case 'required':
                       return (
                         <div className="invalid-feedback d-block">
-                          <i className="fas fa-exclamation-circle"></i>{" "}
-                          {t("helpWord.required")} {/*不得空白*/}
+                          <i className="fas fa-exclamation-circle"></i>{' '}
+                          {t('helpWord.required')} {/*不得空白*/}
                         </div>
                       );
-                    case "pawFormat":
+                    case 'pawFormat':
                       return (
                         <div className="invalid-feedback d-block">
-                          <i className="fas fa-exclamation-circle"></i>{" "}
-                          {t("helpWord.format")} {/*格式有誤*/}
+                          <i className="fas fa-exclamation-circle"></i>{' '}
+                          {t('helpWord.format')} {/*格式有誤*/}
                         </div>
                       );
                     default:
@@ -387,39 +387,39 @@ function Header() {
               <div className="col-12 form-group">
                 <label className="form-label">
                   <span className="text-danger">*</span>
-                  {t("header.againPaw")}
+                  {t('header.againPaw')}
                   {/*再次輸入密碼*/}
                 </label>
                 <input
                   type="password"
                   className="form-control"
                   name="againPaw"
-                  placeholder={t("pawFormat.placeholder")}
+                  placeholder={t('pawFormat.placeholder')}
                   onBlur={(e) => handleChangePawBlur(e)}
                   ref={againPaw}
                   autoComplete="off"
                 />
                 {(() => {
                   switch (changePawErrors.againPaw) {
-                    case "required":
+                    case 'required':
                       return (
                         <div className="invalid-feedback d-block">
-                          <i className="fas fa-exclamation-circle"></i>{" "}
-                          {t("helpWord.required")} {/*不得空白*/}
+                          <i className="fas fa-exclamation-circle"></i>{' '}
+                          {t('helpWord.required')} {/*不得空白*/}
                         </div>
                       );
-                    case "pawFormat":
+                    case 'pawFormat':
                       return (
                         <div className="invalid-feedback d-block">
-                          <i className="fas fa-exclamation-circle"></i>{" "}
-                          {t("helpWord.format")} {/*格式有誤*/}
+                          <i className="fas fa-exclamation-circle"></i>{' '}
+                          {t('helpWord.format')} {/*格式有誤*/}
                         </div>
                       );
-                    case "again":
+                    case 'again':
                       return (
                         <div className="invalid-feedback d-block">
-                          <i className="fas fa-exclamation-circle"></i>{" "}
-                          {t("helpWord.pwdIn")} {/*兩次密碼輸入不相同*/}
+                          <i className="fas fa-exclamation-circle"></i>{' '}
+                          {t('helpWord.pwdIn')} {/*兩次密碼輸入不相同*/}
                         </div>
                       );
                     default:
@@ -436,7 +436,7 @@ function Header() {
             className="btn btn-secondary"
             onClick={(e) => handleCloseChangePawModal(e)}
           >
-            {t("btn.cancel")}
+            {t('btn.cancel')}
             {/*取消*/}
           </button>
           <button
@@ -456,7 +456,7 @@ function Header() {
               </>
             ) : (
               <span>
-                {t("btn.save")}
+                {t('btn.save')}
                 {/*儲存*/}
               </span>
             )}

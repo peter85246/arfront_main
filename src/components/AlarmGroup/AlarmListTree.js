@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Tree } from "antd";
+import React, { useState, useEffect } from 'react';
+import { Tree } from 'antd';
 
 const AlarmListTree = ({
   treeData,
@@ -7,8 +7,8 @@ const AlarmListTree = ({
   selectedKey,
   setSelectedMachineId,
 }) => {
-  const [expandedKeys, setExpandedKeys] = useState(["0-0-0", "0-0-1"]);
-  const [checkedKeys, setCheckedKeys] = useState(["0-0-0"]);
+  const [expandedKeys, setExpandedKeys] = useState(['0-0-0', '0-0-1']);
+  const [checkedKeys, setCheckedKeys] = useState(['0-0-0']);
   const [selectedKeys, setSelectedKeys] = useState([]);
   const [autoExpandParent, setAutoExpandParent] = useState(true);
 
@@ -17,7 +17,7 @@ const AlarmListTree = ({
   }, [selectedKey]);
 
   const onExpand = (expandedKeysValue) => {
-    console.log("onExpand", expandedKeysValue);
+    console.log('onExpand', expandedKeysValue);
     // 确保没有重复的key被添加
     const uniqueKeys = Array.from(new Set(expandedKeysValue));
     setExpandedKeys(uniqueKeys);
@@ -25,12 +25,12 @@ const AlarmListTree = ({
   };
 
   const onCheck = (checkedKeysValue) => {
-    console.log("onCheck", checkedKeysValue);
+    console.log('onCheck', checkedKeysValue);
     setCheckedKeys(checkedKeysValue);
   };
 
   const onSelect = (selectedKeysValue, info) => {
-    console.log("onSelect", info);
+    console.log('onSelect', info);
     setSelectedKeys(selectedKeysValue);
     // 只有當節點是子節點（沒有子節點自己）時，才調用 onSelectMachineName
     if (info && info.node && !info.node.children) {
@@ -50,7 +50,7 @@ const AlarmListTree = ({
       onSelect={onSelect}
       selectedKeys={selectedKeys}
       treeData={treeData}
-      styles={{ padding: "10px" }}
+      styles={{ padding: '10px' }}
     />
   );
 };

@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next"; //語系
-import classNames from "classnames";
-import styles from "../scss/AlarmDescription.module.scss";
-import stylesAlarm from "../scss/Alarm.module.scss";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next'; //語系
+import classNames from 'classnames';
+import styles from '../scss/AlarmDescription.module.scss';
+import stylesAlarm from '../scss/Alarm.module.scss';
+import { Link } from 'react-router-dom';
 
 export default function MindMap() {
   const { t } = useTranslation();
@@ -28,14 +28,14 @@ export default function MindMap() {
         {/* 設定編輯按鈕權限，只有權限夠高的管理員才能導向"故障說明"，否則跳出alert提示"權限不足無法編輯" */}
       </div>
       <div className={styles.backPage}>
-        <Link to="/alarm" className={"fas fa-angle-left"}>
-          {" "}
+        <Link to="/alarm" className={'fas fa-angle-left'}>
+          {' '}
           故障庫
         </Link>
       </div>
       <main>
         <h2>
-          <strong>{t("系列")}</strong>
+          <strong>{t('系列')}</strong>
         </h2>
 
         <div className={stylesAlarm.contentBoxAlarm}>

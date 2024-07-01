@@ -1,16 +1,17 @@
-import { useTranslation } from "react-i18next"; //語系
-import { useState, useEffect, useLayoutEffect, useRef } from "react";
-import { Space, ColorPicker, Input, Select } from "antd";
-import { useNavigate } from "react-router-dom"; // 導入 useNavigate
-import { useSearchParams } from "react-router-dom";
-import { toast } from "react-toastify";
-import { Link } from "react-router-dom";
-import { useStore } from "../zustand/store";
-import { apiGetAllKnowledgeBaseByFilter } from "../utils/Api";
-import styles from "../scss/global.module.scss";
-import classNames from "classnames";
-import Spinner from "react-bootstrap/Spinner";
-import SimpleReactValidator from "simple-react-validator";
+import { useTranslation } from 'react-i18next'; //語系
+import { useState, useEffect, useLayoutEffect, useRef } from 'react';
+import { Space, ColorPicker, Input, Select } from 'antd';
+import { useNavigate } from 'react-router-dom'; // 導入 useNavigate
+import { useSearchParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { Link } from 'react-router-dom';
+import { useStore } from '../zustand/store';
+import styles from '../scss/global.module.scss';
+import classNames from 'classnames';
+import Spinner from 'react-bootstrap/Spinner';
+import SimpleReactValidator from 'simple-react-validator';
+import { useLocation } from 'react-router-dom';
+import { apiGetAllKnowledgeBaseByFilter } from '../utils/Api';
 
 const { TextArea } = Input;
 
@@ -33,6 +34,8 @@ export function DocumentEditor() {
 
   const [searchParams] = useSearchParams();
   const machineName = searchParams.get("name");
+
+  const location = useLocation();
 
   const [knowledgeInfo, setKnowledgeInfo] = useState(
     SOPInfo?.knowledgeInfo || [{
@@ -66,6 +69,40 @@ export function DocumentEditor() {
   const [knowledgeBasePositionImages, setKnowledgeBasePositionImages] = useState(
     SOPInfo?.knowledgeInfo?.[0]?.knowledgeBasePositionImageObj || []
   );
+
+  useEffect(() => {
+    const state = location.state;
+    if (state && state.knowledgeInfo) {
+      setKnowledgeInfo(state.knowledgeInfo);
+      // 解析並設置For Model機型圖片
+      if (state.knowledgeInfo.knowledgeBaseModelImage) {
+        const modelImages = JSON.parse(state.knowledgeInfo.knowledgeBaseModelImage).map((url, index) => ({
+          name: JSON.parse(state.knowledgeInfo.knowledgeBaseModelImageNames)[index],
+          img: url
+        }));
+        setKnowledgeBaseModelImages(modelImages);
+      }
+
+      // 解析並設置Tools工具圖片
+      if (state.knowledgeInfo.knowledgeBaseToolsImage) {
+        const toolsImages = JSON.parse(state.knowledgeInfo.knowledgeBaseToolsImage).map((url, index) => ({
+          name: JSON.parse(state.knowledgeInfo.knowledgeBaseToolsImageNames)[index],
+          img: url
+        }));
+        setKnowledgeBaseToolsImages(toolsImages);
+      }
+
+      // 解析並設置Position位置圖片
+      if (state.knowledgeInfo.knowledgeBasePositionImage) {
+        const positionImages = JSON.parse(state.knowledgeInfo.knowledgeBasePositionImage).map((url, index) => ({
+          name: JSON.parse(state.knowledgeInfo.knowledgeBasePositionImageNames)[index],
+          img: url
+        }));
+        setKnowledgeBasePositionImages(positionImages);
+      }
+    }
+  }, []);
+  
 
   const [formFields, setFormFields] = useState([
     {
@@ -531,13 +568,24 @@ export function DocumentEditor() {
                     key={idx}
                     src={item.img}
                     className={styles["uploaded-image"]}
-                    style={{ objectFit: "cover"}}
+                    style={{ 
+                      objectFit: "contain", // 使圖片完整顯示
+                      objectPosition: "center" // 中心對齊圖片
+                    }}
                     alt="Uploaded Images"
                     id="modelImage"
                   />
                   <input
                     type="text"
                     className="w-full"
+                    style={{ 
+                      width: '100%', 
+                      height: '30px', // 設定固定高度
+                      padding: '0 5px', // 左右內間距
+                      boxSizing: 'border-box', // 邊框和內間距包含在寬度內
+                      border: '1px solid #ccc', // 選擇性：添加邊框
+                      borderRadius: '5px'
+                    }}
                     value={item.name}
                     onChange={(e) => {
                       const newName = e.target.value;
@@ -592,13 +640,21 @@ export function DocumentEditor() {
                     key={idx}
                     src={item.img}
                     className={styles["uploaded-image"]}
-                    style={{ objectFit: "cover"}}
+                    style={{ objectFit: "contain"}}
                     alt="Uploaded Images"
                     id="modelImage"
                   />
                   <input
                     type="text"
                     className="w-full"
+                    style={{ 
+                      width: '100%', 
+                      height: '30px', // 設定固定高度
+                      padding: '0 5px', // 左右內間距
+                      boxSizing: 'border-box', // 邊框和內間距包含在寬度內
+                      border: '1px solid #ccc', // 選擇性：添加邊框
+                      borderRadius: '5px'
+                    }}
                     value={item.name}
                     onChange={(e) => {
                       const newName = e.target.value;
@@ -663,13 +719,21 @@ export function DocumentEditor() {
                     key={idx}
                     src={item.img}
                     className={styles["uploaded-image"]}
-                    style={{ objectFit: "cover"}}
+                    style={{ objectFit: "contain"}}
                     alt="Uploaded Images"
                     id="modelImage"
                   />
                   <input
                     type="text"
                     className="w-full"
+                    style={{ 
+                      width: '100%', 
+                      height: '30px', // 設定固定高度
+                      padding: '0 5px', // 左右內間距
+                      boxSizing: 'border-box', // 邊框和內間距包含在寬度內
+                      border: '1px solid #ccc', // 選擇性：添加邊框
+                      borderRadius: '5px'
+                    }}
                     value={item.name}
                     onChange={(e) => {
                       const newName = e.target.value;

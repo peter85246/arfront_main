@@ -1,23 +1,23 @@
-﻿import React, { useState, useEffect, useRef } from "react";
-import { useTranslation } from "react-i18next"; //語系
-import { useNavigate } from "react-router-dom";
-import { DebounceInput } from "react-debounce-input";
-import { ToastContainer, toast } from "react-toastify";
-import Spinner from "react-bootstrap/Spinner";
-import { setWindowClass, removeWindowClass } from "../utils/helpers";
-import SimpleReactValidator from "simple-react-validator";
-import Modal from "react-bootstrap/Modal";
-import Pagination from "react-bootstrap/Pagination";
-import { CloseCircleOutlined } from "@ant-design/icons";
+﻿import React, { useState, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next'; //語系
+import { useNavigate } from 'react-router-dom';
+import { DebounceInput } from 'react-debounce-input';
+import { ToastContainer, toast } from 'react-toastify';
+import Spinner from 'react-bootstrap/Spinner';
+import { setWindowClass, removeWindowClass } from '../utils/helpers';
+import SimpleReactValidator from 'simple-react-validator';
+import Modal from 'react-bootstrap/Modal';
+import Pagination from 'react-bootstrap/Pagination';
+import { CloseCircleOutlined } from '@ant-design/icons';
 
 import {
   apiMachineAddOverview,
   apiGetOneMachineAdd,
   apiMachineAddInfo,
   apiDeleteMachineAdd,
-} from "../utils/Api";
-import { Select } from "antd";
-import { Option } from "antd/es/mentions";
+} from '../utils/Api';
+import { Select } from 'antd';
+import { Option } from 'antd/es/mentions';
 
 function MachineKnowledge() {
   const { t } = useTranslation();
@@ -25,34 +25,34 @@ function MachineKnowledge() {
   const validator = new SimpleReactValidator({
     autoForceUpdate: this,
   });
-  const [keyword, setKeyword] = useState(""); //關鍵字
+  const [keyword, setKeyword] = useState(''); //關鍵字
   const [machineList, setMachineList] = useState([]); //機台列表(全部資料)
   const [showMachineList, setShowMachineList] = useState([]); //機台列表(顯示前端)
   const [machineCategory, setMachineCategory] = useState([]); //機台種類
   const [machineSeries, setMachineSeries] = useState([]); //機台系列
   const [machineName, setMachineName] = useState([]); //機台名稱
 
-  const [selectedMachineCategory, setSelectedMachineCategory] = useState(""); //選擇的機台種類
-  const [selectedMachineSeries, setSelectedMachineSeries] = useState(""); //選擇的機台系列
-  const [selectedMachineName, setSelectedMachineName] = useState(""); //選擇的機台名稱
+  const [selectedMachineCategory, setSelectedMachineCategory] = useState(''); //選擇的機台種類
+  const [selectedMachineSeries, setSelectedMachineSeries] = useState(''); //選擇的機台系列
+  const [selectedMachineName, setSelectedMachineName] = useState(''); //選擇的機台名稱
 
   const [showMachineinfoModal, setShowMachineinfoModal] = useState(false); //顯示"機台 modal"
   const [machineInfo, setMachineInfo] = useState({
     //新增以及修改內容
     machineAddId: 0,
-    machineType: "", //機台種類
-    modelSeries: "", //型號系列
-    machineName: "", //機台名稱
-    machineImage: "", //機台圖片路徑
+    machineType: '', //機台種類
+    modelSeries: '', //型號系列
+    machineName: '', //機台名稱
+    machineImage: '', //機台圖片路徑
     machineImageObj: null, //機台圖片物件
     isDeletedMachineImage: false, //是否刪除圖片
   });
   const [machineInfoErrors, setMachineInfoErrors] = useState({
     //錯誤訊息
-    machineType: "", //機台種類
-    modelSeries: "", //型號系列
-    machineName: "", //機台名稱
-    machineImage: "", //機台圖片路徑
+    machineType: '', //機台種類
+    modelSeries: '', //型號系列
+    machineName: '', //機台名稱
+    machineImage: '', //機台圖片路徑
   });
   const inputImageRef = useRef(null); //input File類型的圖片
   const [saveMachineinfoLoading, setSaveMachineinfoLoading] = useState(false); //儲存的轉圈圈
@@ -64,7 +64,7 @@ function MachineKnowledge() {
 
   //#region 初始載入
   useEffect(() => {
-    removeWindowClass("login-page");
+    removeWindowClass('login-page');
 
     const fetchData = async () => {
       await refreshMachineinfos();
@@ -86,13 +86,13 @@ function MachineKnowledge() {
 
     let machineOverviewResponse = await apiMachineAddOverview(sendData);
     if (machineOverviewResponse) {
-      if (machineOverviewResponse.code == "0000") {
+      if (machineOverviewResponse.code == '0000') {
         setMachineList(machineOverviewResponse.result);
         setShowMachineList(
           machineOverviewResponse.result.slice(
             activePage * pageRow - pageRow,
-            activePage * pageRow,
-          ),
+            activePage * pageRow
+          )
         );
         setMachineCategory(machineOverviewResponse.machineType);
         setMachineSeries(machineOverviewResponse.modelSeries);
@@ -118,14 +118,14 @@ function MachineKnowledge() {
         onClick={(e) => handleChangePage(e, number)}
       >
         {number}
-      </Pagination.Item>,
+      </Pagination.Item>
     );
   }
 
   const handleChangePage = async (e, number) => {
     setActivePage(number);
     setShowMachineList(
-      machineList.slice(number * pageRow - pageRow, number * pageRow),
+      machineList.slice(number * pageRow - pageRow, number * pageRow)
     );
   };
   //#endregion
@@ -144,10 +144,10 @@ function MachineKnowledge() {
     if (machineAddId == 0) {
       setMachineInfo({
         machineAddId: 0,
-        machineType: "", //機台種類
-        modelSeries: "", //型號系列
-        machineName: "", //機台名稱
-        machineImage: "", //機台圖片路徑
+        machineType: '', //機台種類
+        modelSeries: '', //型號系列
+        machineName: '', //機台名稱
+        machineImage: '', //機台圖片路徑
         machineImageObj: null, //機台圖片物件
         isDeletedMachineImage: false, //是否刪除圖片
       });
@@ -158,7 +158,7 @@ function MachineKnowledge() {
 
       let getOneMachineResponse = await apiGetOneMachineAdd(sendData);
       if (getOneMachineResponse) {
-        if (getOneMachineResponse.code == "0000") {
+        if (getOneMachineResponse.code == '0000') {
           setMachineInfo(getOneMachineResponse.result);
         }
       }
@@ -166,10 +166,10 @@ function MachineKnowledge() {
 
     setMachineInfoErrors({
       //錯誤訊息
-      machineType: "", //機台種類
-      modelSeries: "", //型號系列
-      machineName: "", //機台名稱
-      machineImage: "", //機台圖片檔名
+      machineType: '', //機台種類
+      modelSeries: '', //型號系列
+      machineName: '', //機台名稱
+      machineImage: '', //機台圖片檔名
     });
     setSaveMachineinfoLoading(false);
     setShowMachineinfoModal(true);
@@ -206,48 +206,48 @@ function MachineKnowledge() {
   };
 
   //#region 機台 欄位驗證
-  const checkEditValidator = async (name = "", val = "") => {
+  const checkEditValidator = async (name = '', val = '') => {
     let result = true;
     let newMachineInfoErrors = { ...machineInfoErrors };
 
-    if (name == "machineType" || name == "") {
-      if (!validator.check(machineInfo.machineType, "required")) {
-        newMachineInfoErrors.machineType = "required";
+    if (name == 'machineType' || name == '') {
+      if (!validator.check(machineInfo.machineType, 'required')) {
+        newMachineInfoErrors.machineType = 'required';
         result = false;
-      } else if (!validator.check(machineInfo.machineType, "max:100")) {
-        newMachineInfoErrors.machineType = "max";
+      } else if (!validator.check(machineInfo.machineType, 'max:100')) {
+        newMachineInfoErrors.machineType = 'max';
         result = false;
       } else {
-        newMachineInfoErrors.machineType = "";
+        newMachineInfoErrors.machineType = '';
       }
     }
 
-    if (name == "modelSeries" || name == "") {
-      if (!validator.check(machineInfo.modelSeries, "required")) {
-        newMachineInfoErrors.modelSeries = "required";
+    if (name == 'modelSeries' || name == '') {
+      if (!validator.check(machineInfo.modelSeries, 'required')) {
+        newMachineInfoErrors.modelSeries = 'required';
         result = false;
-      } else if (!validator.check(machineInfo.modelSeries, "max:100")) {
-        newMachineInfoErrors.modelSeries = "max";
+      } else if (!validator.check(machineInfo.modelSeries, 'max:100')) {
+        newMachineInfoErrors.modelSeries = 'max';
         result = false;
       } else {
-        newMachineInfoErrors.modelSeries = "";
+        newMachineInfoErrors.modelSeries = '';
       }
     }
 
-    if (name == "machineName" || name == "") {
-      if (!validator.check(machineInfo.machineName, "required")) {
-        newMachineInfoErrors.machineName = "required";
+    if (name == 'machineName' || name == '') {
+      if (!validator.check(machineInfo.machineName, 'required')) {
+        newMachineInfoErrors.machineName = 'required';
         result = false;
-      } else if (!validator.check(machineInfo.machineName, "max:100")) {
-        newMachineInfoErrors.machineName = "max";
+      } else if (!validator.check(machineInfo.machineName, 'max:100')) {
+        newMachineInfoErrors.machineName = 'max';
         result = false;
       } else {
-        newMachineInfoErrors.machineName = "";
+        newMachineInfoErrors.machineName = '';
       }
     }
 
-    if (name == "") {
-      if (newMachineInfoErrors.machineImage != "") {
+    if (name == '') {
+      if (newMachineInfoErrors.machineImage != '') {
         result = false;
       }
     }
@@ -273,16 +273,16 @@ function MachineKnowledge() {
     if (file != null) {
       let newMachineInfoErrors = { ...machineInfoErrors };
       var fileExtension = file.name
-        .substr(file.name.lastIndexOf(".") + 1 - file.name.length)
+        .substr(file.name.lastIndexOf('.') + 1 - file.name.length)
         .toLowerCase();
       if (
         !(
-          fileExtension == "png" ||
-          fileExtension == "jpg" ||
-          fileExtension == "jpeg"
+          fileExtension == 'png' ||
+          fileExtension == 'jpg' ||
+          fileExtension == 'jpeg'
         )
       ) {
-        newMachineInfoErrors.machineImage = "format";
+        newMachineInfoErrors.machineImage = 'format';
         newMachineInfo.machineImageObj = null;
 
         setMachineInfoErrors(newMachineInfoErrors);
@@ -290,14 +290,14 @@ function MachineKnowledge() {
         var img = new Image();
         var objectUrl = URL.createObjectURL(file);
         img.onload = function () {
-          if (!(img.width == "640" && img.height == "480")) {
-            newMachineInfoErrors.machineImage = "size";
+          if (!(img.width == '640' && img.height == '480')) {
+            newMachineInfoErrors.machineImage = 'size';
           } else {
-            newMachineInfoErrors.machineImage = "";
+            newMachineInfoErrors.machineImage = '';
           }
 
           newMachineInfo.machineImageObj = file;
-          if (newMachineInfo.machineImage != "") {
+          if (newMachineInfo.machineImage != '') {
             newMachineInfo.isDeletedMachineImage = true;
           }
 
@@ -307,7 +307,7 @@ function MachineKnowledge() {
       }
     } else {
       newMachineInfo.machineImageObj = null;
-      newMachineInfoErrors.machineImage = "";
+      newMachineInfoErrors.machineImage = '';
     }
 
     setMachineInfo(newMachineInfo);
@@ -320,7 +320,7 @@ function MachineKnowledge() {
     e.preventDefault();
     let newMachineInfo = { ...machineInfo };
 
-    newMachineInfo.machineImage = "";
+    newMachineInfo.machineImage = '';
     newMachineInfo.machineImageObj = null;
     newMachineInfo.isDeletedMachineImage = true;
 
@@ -328,7 +328,7 @@ function MachineKnowledge() {
 
     let newMachineInfoErrors = { ...machineInfoErrors };
 
-    newMachineInfoErrors.machineImage = "";
+    newMachineInfoErrors.machineImage = '';
 
     setMachineInfoErrors(newMachineInfoErrors);
   };
@@ -344,7 +344,7 @@ function MachineKnowledge() {
       setMachineInfoErrors((prevErrors) => ({
         ...prevErrors,
       }));
-      toast.error(t("相同機台重複"), {
+      toast.error(t('相同機台重複'), {
         position: toast.POSITION.TOP_CENTER,
         autoClose: 5000,
         hideProgressBar: true,
@@ -357,7 +357,7 @@ function MachineKnowledge() {
     // 如果機台名稱不重複，則繼續之前的儲存邏輯
     let newMachineInfoErrors = { ...machineInfoErrors };
     let newMachineInfo = { ...machineInfo };
-    if (newMachineInfoErrors.machineImage != "") {
+    if (newMachineInfoErrors.machineImage != '') {
       newMachineInfo.machineImageObj = null;
     }
 
@@ -365,31 +365,31 @@ function MachineKnowledge() {
       setSaveMachineinfoLoading(true);
 
       var formData = new FormData();
-      formData.append("machineAddId", newMachineInfo.machineAddId);
-      formData.append("machineType", newMachineInfo.machineType);
-      formData.append("modelSeries", newMachineInfo.modelSeries);
-      formData.append("machineName", newMachineInfo.machineName);
-      formData.append("machineImage", newMachineInfo.machineImage);
-      formData.append("machineImageObj", newMachineInfo.machineImageObj);
+      formData.append('machineAddId', newMachineInfo.machineAddId);
+      formData.append('machineType', newMachineInfo.machineType);
+      formData.append('modelSeries', newMachineInfo.modelSeries);
+      formData.append('machineName', newMachineInfo.machineName);
+      formData.append('machineImage', newMachineInfo.machineImage);
+      formData.append('machineImageObj', newMachineInfo.machineImageObj);
       formData.append(
-        "isDeletedMachineImage",
-        newMachineInfo.isDeletedMachineImage,
+        'isDeletedMachineImage',
+        newMachineInfo.isDeletedMachineImage
       );
 
       let machineInfoResponse = await apiMachineAddInfo(formData);
       if (machineInfoResponse) {
-        if (machineInfoResponse.code == "0000") {
+        if (machineInfoResponse.code == '0000') {
           toast.success(
             newMachineInfo.machineAddId == 0
-              ? t("toast.add.success")
-              : t("toast.edit.success"),
+              ? t('toast.add.success')
+              : t('toast.edit.success'),
             {
               position: toast.POSITION.TOP_CENTER,
               autoClose: 3000,
               hideProgressBar: true,
               closeOnClick: false,
               pauseOnHover: false,
-            },
+            }
           );
 
           setShowMachineinfoModal(false);
@@ -439,8 +439,8 @@ function MachineKnowledge() {
 
     let deleteMachineResponse = await apiDeleteMachineAdd(sendData);
     if (deleteMachineResponse) {
-      if (deleteMachineResponse.code == "0000") {
-        toast.success(t("toast.delete.success"), {
+      if (deleteMachineResponse.code == '0000') {
+        toast.success(t('toast.delete.success'), {
           position: toast.POSITION.TOP_CENTER,
           autoClose: 3000,
           hideProgressBar: true,
@@ -475,7 +475,7 @@ function MachineKnowledge() {
             <div className="content-header-text-color">
               <h1>
                 <strong>
-                  {t("machineKnowledge.content.header")}
+                  {t('machineKnowledge.content.header')}
                   {/*機台管理*/}
                 </strong>
               </h1>
@@ -485,7 +485,7 @@ function MachineKnowledge() {
               className="btn btn-primary btn-add"
               onClick={() => handleOpenMachineinfoModal(0)}
             >
-              <i className="fas fa-plus"></i> {t("machine.btn.add")}
+              <i className="fas fa-plus"></i> {t('machine.btn.add')}
               {/*新增機台*/}
             </button>
           </div>
@@ -496,8 +496,8 @@ function MachineKnowledge() {
           <div className="w-full flex justify-between items-center mb-3">
             <div className="flex gap-[8px]">
               <div className="p-2 flex items-center gap-[2px]">
-                <strong style={{ color: "#1672ad", fontSize: "18px" }}>
-                  {t("機台種類：")}
+                <strong style={{ color: '#1672ad', fontSize: '18px' }}>
+                  {t('機台種類：')}
                 </strong>
                 <Select
                   className="w-[160px]"
@@ -508,7 +508,7 @@ function MachineKnowledge() {
                     refreshMachineinfos({ machineType: v });
                   }}
                   onClear={() => {
-                    setSelectedMachineCategory("");
+                    setSelectedMachineCategory('');
                     refreshMachineinfos();
                   }}
                 >
@@ -520,8 +520,8 @@ function MachineKnowledge() {
                 </Select>
               </div>
               <div className="p-2 flex items-center gap-[2px]">
-                <strong style={{ color: "#1672ad", fontSize: "18px" }}>
-                  {t("機台系列：")}
+                <strong style={{ color: '#1672ad', fontSize: '18px' }}>
+                  {t('機台系列：')}
                 </strong>
                 <Select
                   className="w-[160px]"
@@ -532,7 +532,7 @@ function MachineKnowledge() {
                     refreshMachineinfos({ series: v });
                   }}
                   onClear={() => {
-                    setSelectedMachineSeries("");
+                    setSelectedMachineSeries('');
                     refreshMachineinfos();
                   }}
                 >
@@ -544,8 +544,8 @@ function MachineKnowledge() {
                 </Select>
               </div>
               <div className="p-2 flex items-center gap-[2px]">
-                <strong style={{ color: "#1672ad", fontSize: "18px" }}>
-                  {t("機台名稱：")}
+                <strong style={{ color: '#1672ad', fontSize: '18px' }}>
+                  {t('機台名稱：')}
                 </strong>
                 <Select
                   className="w-[160px]"
@@ -556,7 +556,7 @@ function MachineKnowledge() {
                     refreshMachineinfos({ name: v });
                   }}
                   onClear={() => {
-                    setSelectedMachineName("");
+                    setSelectedMachineName('');
                     refreshMachineinfos();
                   }}
                 >
@@ -573,7 +573,7 @@ function MachineKnowledge() {
                 <DebounceInput
                   debounceTimeout={300}
                   type="search"
-                  placeholder={t("keyword.placeholder")}
+                  placeholder={t('keyword.placeholder')}
                   onChange={(e) => handleChangeKeyword(e)}
                 />
                 {/*請輸入關鍵字*/}
@@ -587,7 +587,7 @@ function MachineKnowledge() {
                 showMachineList.map((item, index) => {
                   return (
                     <div key={index} className="col-12 col-sm-4 col-md-3">
-                      <div className="card" style={{ borderRadius: "30px" }}>
+                      <div className="card" style={{ borderRadius: '30px' }}>
                         <div className="card-header">
                           <div className="row">
                             <div className="col-8 h3"></div>
@@ -606,7 +606,7 @@ function MachineKnowledge() {
                                 className="btn btn-outline-danger btn-circle btn-sm ml-1"
                                 onClick={() =>
                                   handleOpenDeleteMachineModal(
-                                    item.machineAddId,
+                                    item.machineAddId
                                   )
                                 }
                               >
@@ -615,16 +615,16 @@ function MachineKnowledge() {
                             </div>
                           </div>
                         </div>
-                        {item.machineImage != "" ? (
+                        {item.machineImage != '' ? (
                           <img
                             className="card-img-top"
                             src={item.machineImage}
-                            style={{ minHeight: "200px" }}
+                            style={{ minHeight: '200px' }}
                           />
                         ) : (
                           <img
                             src="/default-image.jpg"
-                            style={{ minHeight: "100px" }}
+                            style={{ minHeight: '100px' }}
                           />
                         )}
                         <div className="card-body">
@@ -639,7 +639,7 @@ function MachineKnowledge() {
               ) : (
                 <div className="w-100 d-flex justify-content-center">
                   <label>
-                    {t("machine.searchEmpty")}
+                    {t('machine.searchEmpty')}
                     {/*查無機台*/}
                   </label>
                 </div>
@@ -647,7 +647,7 @@ function MachineKnowledge() {
             ) : (
               <div className="w-100 d-flex justify-content-center">
                 <label>
-                  {t("machine.empty")}
+                  {t('machine.empty')}
                   {/*尚無資料*/}
                 </label>
               </div>
@@ -670,8 +670,8 @@ function MachineKnowledge() {
         <Modal.Header closeButton>
           <Modal.Title>
             {machineInfo.machineAddId == 0
-              ? t("machineKnowledge.addTitle")
-              : t("machineKnowledge.editTitle")}
+              ? t('machineKnowledge.addTitle')
+              : t('machineKnowledge.editTitle')}
             {/*新增機台 : 編輯機台*/}
           </Modal.Title>
         </Modal.Header>
@@ -681,7 +681,7 @@ function MachineKnowledge() {
               <div className="col-12 form-group">
                 <label className="form-label">
                   <span className="text-danger">*</span>
-                  {t("machineKnowledge.machineType")}
+                  {t('machineKnowledge.machineType')}
                   {/*機台種類*/}
                 </label>
                 <input
@@ -695,19 +695,19 @@ function MachineKnowledge() {
                 />
                 {(() => {
                   switch (machineInfoErrors.machineType) {
-                    case "required":
+                    case 'required':
                       return (
                         <div className="invalid-feedback d-block">
-                          <i className="fas fa-exclamation-circle"></i>{" "}
-                          {t("helpWord.required")}
+                          <i className="fas fa-exclamation-circle"></i>{' '}
+                          {t('helpWord.required')}
                           {/*不得空白*/}
                         </div>
                       );
-                    case "max":
+                    case 'max':
                       return (
                         <div className="invalid-feedback d-block">
-                          <i className="fas fa-exclamation-circle"></i>{" "}
-                          {t("helpWord.max", { e: 100 })}
+                          <i className="fas fa-exclamation-circle"></i>{' '}
+                          {t('helpWord.max', { e: 100 })}
                           {/*超過上限{{e}}個字元*/}
                         </div>
                       );
@@ -719,7 +719,7 @@ function MachineKnowledge() {
               <div className="col-12 form-group">
                 <label className="form-label">
                   <span className="text-danger">*</span>
-                  {t("machineKnowledge.modelSeries")}
+                  {t('machineKnowledge.modelSeries')}
                   {/*型號系列*/}
                 </label>
                 <input
@@ -733,19 +733,19 @@ function MachineKnowledge() {
                 />
                 {(() => {
                   switch (machineInfoErrors.modelSeries) {
-                    case "required":
+                    case 'required':
                       return (
                         <div className="invalid-feedback d-block">
-                          <i className="fas fa-exclamation-circle"></i>{" "}
-                          {t("helpWord.required")}
+                          <i className="fas fa-exclamation-circle"></i>{' '}
+                          {t('helpWord.required')}
                           {/*不得空白*/}
                         </div>
                       );
-                    case "max":
+                    case 'max':
                       return (
                         <div className="invalid-feedback d-block">
-                          <i className="fas fa-exclamation-circle"></i>{" "}
-                          {t("helpWord.max", { e: 100 })}
+                          <i className="fas fa-exclamation-circle"></i>{' '}
+                          {t('helpWord.max', { e: 100 })}
                           {/*超過上限{{e}}個字元*/}
                         </div>
                       );
@@ -758,7 +758,7 @@ function MachineKnowledge() {
               <div className="col-12 form-group">
                 <label className="form-label">
                   <span className="text-danger">*</span>
-                  {t("machineKnowledge.machineName")}
+                  {t('machineKnowledge.machineName')}
                   {/*機台名稱*/}
                 </label>
                 <input
@@ -772,19 +772,19 @@ function MachineKnowledge() {
                 />
                 {(() => {
                   switch (machineInfoErrors.machineName) {
-                    case "required":
+                    case 'required':
                       return (
                         <div className="invalid-feedback d-block">
-                          <i className="fas fa-exclamation-circle"></i>{" "}
-                          {t("helpWord.required")}
+                          <i className="fas fa-exclamation-circle"></i>{' '}
+                          {t('helpWord.required')}
                           {/*不得空白*/}
                         </div>
                       );
-                    case "max":
+                    case 'max':
                       return (
                         <div className="invalid-feedback d-block">
-                          <i className="fas fa-exclamation-circle"></i>{" "}
-                          {t("helpWord.max", { e: 100 })}
+                          <i className="fas fa-exclamation-circle"></i>{' '}
+                          {t('helpWord.max', { e: 100 })}
                           {/*超過上限{{e}}個字元*/}
                         </div>
                       );
@@ -795,7 +795,7 @@ function MachineKnowledge() {
               </div>
               <div className="col-12 form-group">
                 <label className="form-label">
-                  {t("machineKnowledge.machineImage")}
+                  {t('machineKnowledge.machineImage')}
                   {/*機台圖片*/}(640*480)
                 </label>
                 <input
@@ -809,20 +809,20 @@ function MachineKnowledge() {
                 />
                 <div
                   style={{
-                    borderStyle: "dotted",
-                    borderWidth: "3px", // 調整虛線的大小
-                    borderColor: "#0003",
-                    cursor: "pointer",
-                    minHeight: "240px",
+                    borderStyle: 'dotted',
+                    borderWidth: '3px', // 調整虛線的大小
+                    borderColor: '#0003',
+                    cursor: 'pointer',
+                    minHeight: '240px',
                   }}
                   className="d-flex justify-content-center align-items-center"
                   onClick={(e) => handleUploadImageBtn(e)}
                 >
-                  {machineInfo.machineImage != "" ||
+                  {machineInfo.machineImage != '' ||
                   machineInfo.machineImageObj != null ? (
                     <img
                       alt="not found"
-                      style={{ width: "320px", minHeight: "240px" }}
+                      style={{ width: '320px', minHeight: '240px' }}
                       src={
                         machineInfo.machineImageObj != null
                           ? URL.createObjectURL(machineInfo.machineImageObj)
@@ -831,26 +831,26 @@ function MachineKnowledge() {
                     />
                   ) : (
                     <span>
-                      {t("machineKnowledge.uploadImage")}
+                      {t('machineKnowledge.uploadImage')}
                       {/*上傳圖片*/}
                     </span>
                   )}
                 </div>
                 {(() => {
                   switch (machineInfoErrors.machineImage) {
-                    case "format":
+                    case 'format':
                       return (
                         <div className="invalid-feedback d-block">
-                          <i className="fas fa-exclamation-circle"></i>{" "}
-                          {t("helpWord.imageFormat")}
+                          <i className="fas fa-exclamation-circle"></i>{' '}
+                          {t('helpWord.imageFormat')}
                           {/*圖片格式不正確*/}
                         </div>
                       );
-                    case "size":
+                    case 'size':
                       return (
                         <div className="invalid-feedback d-block">
-                          <i className="fas fa-exclamation-circle"></i>{" "}
-                          {t("helpWord.imageRatio")}
+                          <i className="fas fa-exclamation-circle"></i>{' '}
+                          {t('helpWord.imageRatio')}
                           {/*圖片長寬比不正確*/}
                         </div>
                       );
@@ -862,7 +862,7 @@ function MachineKnowledge() {
                   className="btn btn-danger mt-2"
                   onClick={(e) => handleRemoveImageBtn(e)}
                 >
-                  {t("machineKnowledge.btn.deleteMachineImage")}
+                  {t('machineKnowledge.btn.deleteMachineImage')}
                   {/*移除圖片*/}
                 </button>
               </div>
@@ -875,7 +875,7 @@ function MachineKnowledge() {
             className="btn btn-secondary"
             onClick={(e) => handleCloseMachineinfoModal(e)}
           >
-            {t("btn.cancel")}
+            {t('btn.cancel')}
             {/*取消*/}
           </button>
           <button
@@ -896,7 +896,7 @@ function MachineKnowledge() {
               </>
             ) : (
               <span>
-                {t("btn.save")}
+                {t('btn.save')}
                 {/*儲存*/}
               </span>
             )}
@@ -913,13 +913,13 @@ function MachineKnowledge() {
       >
         <Modal.Header closeButton>
           <Modal.Title>
-            {t("machineKnowledge.delete")}
+            {t('machineKnowledge.delete')}
             {/*刪除機台*/}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <p>
-            {t("machineKnowledge.deleteContent")}
+            {t('machineKnowledge.deleteContent')}
             {/*您確定要刪除該筆資料嗎?*/}
           </p>
         </Modal.Body>
@@ -929,7 +929,7 @@ function MachineKnowledge() {
             className="btn btn-secondary"
             onClick={(e) => handleCloseDeleteMachineModal(e)}
           >
-            {t("btn.cancel")}
+            {t('btn.cancel')}
             {/*取消*/}
           </button>
           <button
@@ -949,7 +949,7 @@ function MachineKnowledge() {
               </>
             ) : (
               <span>
-                {t("btn.confirm")}
+                {t('btn.confirm')}
                 {/*確定*/}
               </span>
             )}

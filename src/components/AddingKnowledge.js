@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
-import { Modal, Button, Form } from "react-bootstrap";
-import Select from "react-select";
-import { useTranslation } from "react-i18next";
-import { apiGetMachineOptions, apiMachineAddOverview } from "../utils/Api";
-import { useStore } from "../zustand/store";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import { Modal, Button, Form } from 'react-bootstrap';
+import Select from 'react-select';
+import { useTranslation } from 'react-i18next';
+import { apiGetMachineOptions, apiMachineAddOverview } from '../utils/Api';
+import { useStore } from '../zustand/store';
+import { useNavigate } from 'react-router-dom';
 
 export function AddingKnowledge({ onClose }) {
   const navigate = useNavigate();
@@ -15,9 +15,9 @@ export function AddingKnowledge({ onClose }) {
   const [showModal, setShowModal] = useState(true);
   const [existsMachines, setExistsMachines] = useState(null);
   const [machineInfo, setMachineInfo] = useState({
-    machineType: "",
-    modelSeries: "",
-    machineName: "",
+    machineType: '',
+    modelSeries: '',
+    machineName: '',
   });
   const [options, setOptions] = useState({
     machineType: [],
@@ -29,7 +29,7 @@ export function AddingKnowledge({ onClose }) {
   const fetchMachineOptions = async () => {
     try {
       const res = await apiMachineAddOverview({
-        keyword: "",
+        keyword: '',
         ...(machineInfo.machineType
           ? { machineType: machineInfo.machineType }
           : {}),
@@ -41,7 +41,7 @@ export function AddingKnowledge({ onClose }) {
           : {}),
       });
 
-      if (res?.code === "0000" && res?.result) {
+      if (res?.code === '0000' && res?.result) {
         console.log(res);
         setOptions({
           machineType: res.machineType.map((label) => ({
@@ -59,10 +59,10 @@ export function AddingKnowledge({ onClose }) {
           completeMachineOptions: res.result,
         });
       } else {
-        console.error("Failed to load options:", res);
+        console.error('Failed to load options:', res);
       }
     } catch (error) {
-      console.error("Failed to fetch machine options:", error);
+      console.error('Failed to fetch machine options:', error);
     }
   };
 
@@ -84,17 +84,17 @@ export function AddingKnowledge({ onClose }) {
     setMachineInfo((prevState) => {
       const newState = { ...prevState, [key]: option.value };
 
-      if (key === "machineName") {
+      if (key === 'machineName') {
         // 當選擇機台名稱時自動填入對應的機台種類和型號系列
         const selectedMachine = options.completeMachineOptions.find(
-          (m) => m.machineName === option.value,
+          (m) => m.machineName === option.value
         );
         if (selectedMachine) {
-          newState.machineType = selectedMachine.machineType || "";
-          newState.modelSeries = selectedMachine.modelSeries || "";
+          newState.machineType = selectedMachine.machineType || '';
+          newState.modelSeries = selectedMachine.modelSeries || '';
         } else {
-          newState.machineType = "";
-          newState.modelSeries = "";
+          newState.machineType = '';
+          newState.modelSeries = '';
         }
       } else {
         // 當機台種類或型號系列被改變時，重新驗證機台名稱的前綴
@@ -103,7 +103,7 @@ export function AddingKnowledge({ onClose }) {
           machineName &&
           !validateSelection(machineName, machineType, modelSeries)
         ) {
-          newState.machineName = ""; // 如果不匹配，清空機台名稱
+          newState.machineName = ''; // 如果不匹配，清空機台名稱
         }
       }
 
@@ -112,7 +112,7 @@ export function AddingKnowledge({ onClose }) {
 
     setErrors((prevErrors) => ({
       ...prevErrors,
-      [key]: option.value ? null : "required",
+      [key]: option.value ? null : 'required',
     }));
   };
 
@@ -121,17 +121,17 @@ export function AddingKnowledge({ onClose }) {
     if (!machineInfo[key].trim()) {
       setErrors((prevErrors) => ({
         ...prevErrors,
-        [key]: "required",
+        [key]: 'required',
       }));
-    } else if (key === "machineName") {
+    } else if (key === 'machineName') {
       if (
         !validateSelection(
           machineInfo.machineName,
           machineInfo.machineType,
-          machineInfo.modelSeries,
+          machineInfo.modelSeries
         )
       ) {
-        alert("機台種類和型號系列必須與機台名稱匹配");
+        alert('機台種類和型號系列必須與機台名稱匹配');
       }
     }
   };
@@ -142,8 +142,8 @@ export function AddingKnowledge({ onClose }) {
     const newErrors = {};
 
     Object.keys(machineInfo).forEach((key) => {
-      if (!machineInfo[key] || machineInfo[key] === "") {
-        newErrors[key] = "required";
+      if (!machineInfo[key] || machineInfo[key] === '') {
+        newErrors[key] = 'required';
         hasError = true;
       }
     });
@@ -152,36 +152,36 @@ export function AddingKnowledge({ onClose }) {
       !validateSelection(
         machineInfo.machineName,
         machineInfo.machineType,
-        machineInfo.modelSeries,
+        machineInfo.modelSeries
       )
     ) {
-      alert("儲存失敗：機台種類和型號系列必須與機台名稱匹配");
+      alert('儲存失敗：機台種類和型號系列必須與機台名稱匹配');
       hasError = true;
     }
 
     setErrors(newErrors);
 
     if (!hasError) {
-      console.log("全部有效，執行保存!");
+      console.log('全部有效，執行保存!');
       const machineAddId = existsMachines.filter(
-        (item) => item.machineName === machineInfo.machineName,
+        (item) => item.machineName === machineInfo.machineName
       )[0].machineAddId;
       setIsCreatingSOP(true);
       setSOPInfo({
         machineInfo: machineInfo,
         machineAddId: machineAddId,
       });
-      navigate("/document-editor");
+      navigate('/document-editor');
     }
   };
 
   useEffect(() => {
     const getExistsMachines = async () => {
-      const res = await apiMachineAddOverview({ keyword: "" });
-      if (res?.code === "0000" && res?.result) {
+      const res = await apiMachineAddOverview({ keyword: '' });
+      if (res?.code === '0000' && res?.result) {
         setExistsMachines(res.result);
       } else {
-        console.error("Failed to load existing machines:", res);
+        console.error('Failed to load existing machines:', res);
       }
     };
     getExistsMachines();
@@ -205,9 +205,9 @@ export function AddingKnowledge({ onClose }) {
           </Form.Group>
           <Form>
             {Object.entries({
-              machineType: "機台種類",
-              modelSeries: "型號系列",
-              machineName: "機台名稱",
+              machineType: '機台種類',
+              modelSeries: '型號系列',
+              machineName: '機台名稱',
             }).map(([key, label]) => (
               <Form.Group className="mb-3" key={key}>
                 <Form.Label>
@@ -221,13 +221,13 @@ export function AddingKnowledge({ onClose }) {
                   onBlur={() => handleEditBlur(key)}
                   onFocus={() => fetchMachineOptions()} // 加載數據
                   value={options[key].find(
-                    (option) => option.value === machineInfo[key],
+                    (option) => option.value === machineInfo[key]
                   )}
                 />
                 {errors[key] && (
                   <div className="invalid-feedback d-block">
-                    <i className="fas fa-exclamation-circle"></i>{" "}
-                    {t("helpWord.required")}
+                    <i className="fas fa-exclamation-circle"></i>{' '}
+                    {t('helpWord.required')}
                   </div>
                 )}
               </Form.Group>
