@@ -1,13 +1,17 @@
 import classNames from "classnames";
 import styles from "../scss/global.module.scss";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
 import { jsPDF } from "jspdf";
 import { Document, Page, Text, View, StyleSheet } from "@react-pdf/renderer";
 import PdfContent from "./PDFContent";
 import { useTranslation } from "react-i18next"; //語系
+import {
+  apiGetAllKnowledgeBaseByMachineAddId,
+  apiGetAllSOPByMachineAddId,
+} from "../utils/Api";
 
 // React PDF Styles
 const pdfStyles = StyleSheet.create({
@@ -23,6 +27,14 @@ const pdfStyles = StyleSheet.create({
 });
 
 export function RepairDocument() {
+  const location = useLocation();
+  const item = location.state?.item; // 訪問傳遞的狀態
+
+  const [knowledgeInfo, setKnowledgeInfo] = useState([]);
+  const [SOPData, setSOPData] = useState([]);
+  const navigate = useNavigate(); // 使用 navigate 來處理導航
+  console.log("item", item);
+
   const pdfRef = React.useRef();
   const [isPrinting, setIsPrinting] = useState(false);
   const { t } = useTranslation();
@@ -49,8 +61,35 @@ export function RepairDocument() {
     });
   };
 
-  const location = useLocation();
-  const item = location.state?.item; // 訪問傳遞的狀態
+  useEffect(() => {
+    const machineAddId = item?.machineAddId;
+    const knowledgeBaseId = item?.knowledgeBaseId;
+
+    const getKnowledgeInfo = async () => {
+      const res = await apiGetAllKnowledgeBaseByMachineAddId({
+        Id: machineAddId,
+      });
+      if (res?.message === "完全成功") {
+        const knowledgeInfo = res.result.filter(
+          (item) => item.knowledgeBaseId === knowledgeBaseId,
+        )[0];
+        setKnowledgeInfo(knowledgeInfo);
+      }
+    };
+    getKnowledgeInfo();
+
+    const getSOPInfo = async () => {
+      const res = await apiGetAllSOPByMachineAddId({ Id: machineAddId });
+      if (res?.message === "完全成功") {
+        console.log("res.result", res.result);
+        const sop = res.result.filter(
+          (item) => item.knowledgeBaseId === knowledgeBaseId,
+        );
+        setSOPData(sop);
+      }
+    };
+    getSOPInfo();
+  }, []);
 
   return (
     <main>
@@ -83,21 +122,22 @@ export function RepairDocument() {
           {" "}
           知識庫
         </Link>
-        <Link
-          to={{
-            pathname: "/database",
-            state: { item },
-          }}
+        <div
           className={"fas fa-angle-left"}
+          onClick={() => navigate("/database", { state: { item } })}
         >
           資料庫
-        </Link>
+        </div>
       </div>
 
       {/* <!--中間欄位內容--> */}
       <div className={styles["content-box"]}>
         <div className={styles["content-box-middle-bigView"]}>
-          <PdfContent ref={pdfRef} />
+          <PdfContent
+            ref={pdfRef}
+            knowledgeInfo={knowledgeInfo}
+            SOPData={SOPData}
+          />
         </div>
       </div>
     </main>

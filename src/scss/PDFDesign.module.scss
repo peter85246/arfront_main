@@ -332,13 +332,60 @@ img {
 }
 
 @media print {
-  body {
+  /* 重设页面和内容的基本边距和填充，以确保没有多余的空间影响打印输出 */
+  body,
+  html {
     margin: 0;
     padding: 0;
   }
-}
 
-@page {
-  size: A4;
-  margin: 10mm 10mm; /* 根据需要调整，为打印页设置外边距 */
+  /* 设置打印时的页面大小为A4，同时调整页面的边距以适应内容 */
+  @page {
+    size: A4;
+    margin: 10mm 10mm 10mm 10mm; /* 上、右、下、左的边距 */
+  }
+
+  /* 控制分页行为，确保每个 page-outline 之后都开始新的一页 */
+  .page-outline {
+    page-break-after: always; /* 在每个 page-outline 的后面插入分页符 */
+  }
+
+  /* 在需要开始新页面的地方插入分页符 */
+  .page-break {
+    page-break-before: always; /* 在此元素前始终开始新的一页 */
+  }
+
+  /* 最后一个元素后避免添加不必要的空白页 */
+  .page-outline:last-child {
+    page-break-after: avoid; /* 避免在最后一个 page-outline 后面插入分页符 */
+  }
+
+  /* 为所有页面内容添加统一的样式设置 */
+  .page-content,
+  .flex-container,
+  .label-item,
+  .flex-item {
+    max-width: 100%; /* 确保所有容器不超过页面宽度 */
+    box-sizing: border-box; /* 边框和内边距包含在宽度内 */
+  }
+
+  /* 图像和文字的适当大小调整，以确保它们不会超出打印区域 */
+  img {
+    max-width: 100%; /* 图片最大宽度不超过其容器宽度 */
+    height: auto; /* 图片高度自适应 */
+  }
+
+  .text-content,
+  .label-text {
+    white-space: nowrap; /* 避免文字自动换行 */
+    overflow: hidden; /* 隐藏超出容器的内容 */
+    text-overflow: ellipsis; /* 超出内容显示省略号 */
+    font-size: 10pt; /* 设置一个适当的字体大小 */
+  }
+
+  .flex-item,
+  .label-item {
+    flex: 1 1 auto; /* 允许内容自适应空间 */
+    min-width: 100px; /* 设置最小宽度，避免内容被过度压缩 */
+  }
 }

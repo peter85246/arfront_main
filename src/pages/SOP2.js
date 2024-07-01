@@ -123,6 +123,7 @@ function SOP2() {
       machineAddId: machineAddId,
       sopStep: lastSOP != null ? lastSOP.sopStep + 1 : 1,
       sopMessage: "",
+      sopName: "", //test
       sopImage: "",
       sopImageObj: null,
       isDeletedSOPImage: false,
