@@ -850,10 +850,11 @@ function SOP2() {
                                 rows="8"
                                 name="sopMessage"
                                 maxLength="1000"
-                                value={selectSOP.sopMessage}
                                 onChange={(e) => handleSelectSOPChange(e)}
                                 style={{ color: textColor }}
-                              ></textarea>
+                              >
+                                {selectSOP.sopMessage || "www"}
+                              </textarea>
                               <div
                                 className={styles['color-picker-container-sop']}
                               >

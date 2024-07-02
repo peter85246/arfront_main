@@ -21,6 +21,14 @@ const PDFContent = React.forwardRef(({ knowledgeInfo, SOPData }, ref) => {
   // 顯示第一個 SOP 的名稱，確保數據已正確加載
   const sopName = SOPData.length > 0 ? SOPData[0].soP2Name  : 'Default SOP Name';
 
+  function safeJsonParse(str) {
+    try {
+      return JSON.parse(str);
+    } catch (e) {
+      return [];
+    }
+  }
+
   return (
     <div className={styles['content-box']} ref={ref}>
       {/* PDF內容放在這裡 */}
@@ -58,7 +66,7 @@ const PDFContent = React.forwardRef(({ knowledgeInfo, SOPData }, ref) => {
 
         <div className={styles['model-label']}>
           <label>
-            For Model 機型 : GXA-S GXA-H GVA GFA-S GFA-H GTF GTFAE Series
+              For Model 機型 : {Array.isArray(safeJsonParse(knowledgeInfo.knowledgeBaseModelImageNames)) ? safeJsonParse(knowledgeInfo.knowledgeBaseModelImageNames).join(', ') : knowledgeInfo.knowledgeBaseModelImageNames}
           </label>
         </div>
         <div className={styles['model']} id="model">
