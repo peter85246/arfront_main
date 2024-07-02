@@ -661,38 +661,6 @@ function SOP2() {
   };
   //#endregion
 
-  const [sopDetails, setSopDetails] = useState({
-    soP2Image: '',
-    soP2ImageObj: null,
-    soP2Message: '',
-    soP2Name: '',
-    soP2Remark: '',
-    soP2RemarkImage: '',
-    soP2RemarkImageObj: null,
-    plC1: '',
-    plC2: '',
-    plC3: '',
-    plC4: ''
-  });
-  
-  const [sopImage, setSopImage] = useState(null);
-  const [sopRemarkImage, setSopRemarkImage] = useState(null);
-  
-  useEffect(() => {
-    const fetchSOPDetails = async () => {
-      const response = await apiGetAllSOPByMachineAddId();
-      if (response && response.code === "0000") {
-        setSopDetails(response.result);
-        setSopImage(new Image());
-        setSopRemarkImage(new Image());
-        sopImage.src = response.result.soP2Image;
-        sopRemarkImage.src = response.result.soP2RemarkImage;
-      }
-    };
-    fetchSOPDetails();
-  }, []);
-  
-
   return (
     <>
       <section className="content-header">
@@ -912,7 +880,7 @@ function SOP2() {
                                 rows="8"
                                 name="sopRemark"
                                 maxLength="1000"
-                                value={selectSOP.sopRemark || ''} // 確保當 selectSOP.sopRemark 為 null 或 undefined 時不會報錯
+                                value={selectSOP.sopRemark}
                                 onChange={(e) => handleSelectSOPChange(e)}
                                 style={{ color: textColor }}
                               ></textarea>
@@ -1026,14 +994,8 @@ function SOP2() {
                                   }
                                   style={{ width: '100%' }}
                                 />
-                              ) : selectSOP.sopImage ? (
-                                <img
-                                  alt="SOP Step Image"
-                                  src={selectSOP.sopImage}
-                                  style={{ width: '100%' }}
-                                />
                               ) : (
-                                <p></p>  // 当没有图片时显示提示
+                                <></>
                               )}
                             </div>
                             {(() => {
