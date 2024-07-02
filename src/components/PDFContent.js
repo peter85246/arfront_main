@@ -52,7 +52,7 @@ const PDFContent = React.forwardRef(({ knowledgeInfo, SOPData }, ref) => {
             />
           </div>
           <label className={styles['sop-section']}>
-              SOP名稱: {sopName}
+              SOP名稱: {knowledgeInfo.knowledgeBaseSOPName}
           </label>
         </div>
 
@@ -215,11 +215,11 @@ const PDFContent = React.forwardRef(({ knowledgeInfo, SOPData }, ref) => {
                       knowledgeInfo?.knowledgeBasePositionImage
                     ).map((item, idx) => (
                       <div
-                        style={{
-                          width: 'calc(33.333% - 8px)',
-                          height: '200px',
-                          position: 'relative',
-                        }}
+                      style={{
+                        width: '220px',
+                        height: '220px',
+                        position: 'relative',
+                      }}
                       >
                         <img
                           key={idx}
@@ -313,7 +313,7 @@ const PDFContent = React.forwardRef(({ knowledgeInfo, SOPData }, ref) => {
                 />
               </div>
               <label className={styles['sop-section']}>
-                SOP名稱: {sopName}
+                SOP名稱: {knowledgeInfo.knowledgeBaseSOPName}
               </label>
             </div>
             {pageSteps.map((sop, idx) => (

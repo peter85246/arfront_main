@@ -44,6 +44,7 @@ export function DocumentEditor() {
       knowledgeBaseRepairItems: "", //維修項目
       knowledgeBaseRepairType: "", //維修類型
       knowledgeBaseFileNo: "", //檔案編號
+      knowledgeBaseSOPName: "",
       knowledgeBaseAlarmCode: "", //故障代碼
       knowledgeBaseSpec: "", //規格
       knowledgeBaseSystem: "", //系統
@@ -74,6 +75,7 @@ export function DocumentEditor() {
     const state = location.state;
     if (state && state.knowledgeInfo) {
       setKnowledgeInfo(state.knowledgeInfo);
+      
       // 解析並設置For Model機型圖片
       if (state.knowledgeInfo.knowledgeBaseModelImage) {
         const modelImages = JSON.parse(state.knowledgeInfo.knowledgeBaseModelImage).map((url, index) => ({
@@ -202,7 +204,7 @@ export function DocumentEditor() {
 
     if (isValid) {
       setSOPInfo((prev) => ({ ...prev, knowledgeInfo: allKnowledgeInfo }));
-      navigate("/sop2");
+      navigate("/sop2", { state: { knowledgeInfo: allKnowledgeInfo } });
     }
   };
 

@@ -9,7 +9,7 @@ import { apiSaveSOP2 } from '../utils/Api';
 export function SOPName({ onClose }) {
   const { SOPInfo, setSOPInfo } = useStore();
   const [showModal, setShowModal] = useState(true);
-  const [sopName, setSopName] = useState('');
+  const [sop2Name, setSopName] = useState('');
   const [errors, setErrors] = useState({});
   const { t } = useTranslation();
 
@@ -24,28 +24,28 @@ export function SOPName({ onClose }) {
     setSopName(e.target.value);
     setErrors((prevErrors) => ({
       ...prevErrors,
-      sopName: e.target.value ? null : 'required',
+      sop2Name: e.target.value ? null : 'required',
     }));
   };
 
   // 處理欄位失焦事件
   const handleEditBlur = () => {
-    if (!sopName.trim()) {
+    if (!sop2Name.trim()) {
       setErrors((prevErrors) => ({
         ...prevErrors,
-        sopName: 'required',
+        sop2Name: 'required',
       }));
     }
   };
 
   // 處理表單儲存事件
   const handleSave = async () => {
-    console.log({ ...SOPInfo, sopName });
+    console.log({ ...SOPInfo, sop2Name });
     let hasError = false;
     const newErrors = {};
 
-    if (!sopName || sopName.trim() === '') {
-      newErrors.sopName = '必填项';
+    if (!sop2Name || sop2Name.trim() === '') {
+      newErrors.sop2Name = '必填项';
       hasError = true;
     }
 
@@ -68,6 +68,7 @@ export function SOPName({ onClose }) {
       const formData = new FormData();
       formData.append('MachineAddId', SOPInfo.machineAddId.toString());
       formData.append('machineName', SOPInfo.machineInfo.machineName);
+      formData.append('KnowledgeBases[0].KnowledgeBaseSOPName', sop2Name); // 添加這一行
 
       // 確保knowledgeInfo是一個陣列，並提供默認值
       const knowledgeInfoArray = SOPInfo.knowledgeInfo
@@ -139,6 +140,11 @@ export function SOPName({ onClose }) {
       }
 
       try {
+        // 查看 formData 內的檔案內容
+        for (let pair of formData.entries()) {
+          console.log(`${pair[0]}, ${pair[1]}`);
+        }
+
         const saveKnowledgeBaseRes = await fetchDataCallFile(
           'SaveKnowledgeBase',
           'PUT',
@@ -188,7 +194,7 @@ export function SOPName({ onClose }) {
           SOPFormData.append(`SOP2s[${idx}].soP2Message`, sop.sopMessage);
           SOPFormData.append(`SOP2s[${idx}].soP2Remark`, sop.sopRemark);
           SOPFormData.append(`SOP2s[${idx}].soP2Step`, sop.sopStep);
-          SOPFormData.append(`SOP2s[${idx}].soP2Name`, sop.sopName);
+          SOPFormData.append(`SOP2s[${idx}].soP2Name`, sop.sop2Name);
           SOPFormData.append(`SOP2s[${idx}].sopVideo`, sop.sopVideo);
           SOPFormData.append(`SOP2s[${idx}].sopVideoObj`, sop.sopVideoObj);
           SOPFormData.append(`SOP2s[${idx}].sopPLC1`, sop.sopplC1);
@@ -281,13 +287,13 @@ export function SOPName({ onClose }) {
               <input
                 type="text"
                 className="form-control"
-                name="sopName"
-                value={sopName}
+                name="knowledgeBaseSOPName"
+                value={sop2Name}
                 onChange={handleEditChange}
                 onBlur={handleEditBlur}
                 autoComplete="off"
               />
-              {errors.sopName && (
+              {errors.sop2Name && (
                 <div className="invalid-feedback d-block">
                   <i className="fas fa-exclamation-circle"></i>{' '}
                   {t('helpWord.required')}
