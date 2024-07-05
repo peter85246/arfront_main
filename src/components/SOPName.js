@@ -68,8 +68,7 @@ export function SOPName({ onClose }) {
 
       const formData = new FormData();
       formData.append('MachineAddId', SOPInfo.machineAddId.toString());
-      const machineName = SOPInfo.machineInfo.machineName; // 確保這裡正確獲取MachineName的值
-      formData.append('KnowledgeBases[0].MachineName', machineName);
+      formData.append('machineName', SOPInfo.machineInfo.machineName);
       formData.append('KnowledgeBases[0].KnowledgeBaseSOPName', sop2Name);
 
       // 如果有 KnowledgeBaseId，加入到 formData (編輯CRUD)
