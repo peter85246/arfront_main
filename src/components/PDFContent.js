@@ -29,6 +29,11 @@ const PDFContent = React.forwardRef(({ knowledgeInfo, SOPData }, ref) => {
     }
   }
 
+  useEffect(() => {
+    console.log("Received knowledgeInfo:", knowledgeInfo);
+    console.log("Received SOPData:", SOPData);
+  }, [knowledgeInfo, SOPData]);
+
   return (
     <div className={styles['content-box']} ref={ref}>
       {/* PDF內容放在這裡 */}

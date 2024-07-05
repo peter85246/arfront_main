@@ -40,6 +40,7 @@ export function SOPName({ onClose }) {
 
   // 處理表單儲存事件
   const handleSave = async () => {
+    console.log("handleSave is triggered");
     console.log({ ...SOPInfo, sop2Name });
     let hasError = false;
     const newErrors = {};
@@ -67,8 +68,14 @@ export function SOPName({ onClose }) {
 
       const formData = new FormData();
       formData.append('MachineAddId', SOPInfo.machineAddId.toString());
-      formData.append('machineName', SOPInfo.machineInfo.machineName);
-      formData.append('KnowledgeBases[0].KnowledgeBaseSOPName', sop2Name); // 添加這一行
+      const machineName = SOPInfo.machineInfo.machineName; // 確保這裡正確獲取MachineName的值
+      formData.append('KnowledgeBases[0].MachineName', machineName);
+      formData.append('KnowledgeBases[0].KnowledgeBaseSOPName', sop2Name);
+
+      // 如果有 KnowledgeBaseId，加入到 formData (編輯CRUD)
+      if (SOPInfo.knowledgeBaseId) {
+        formData.append('KnowledgeBaseId', SOPInfo.knowledgeBaseId);
+      }
 
       // 確保knowledgeInfo是一個陣列，並提供默認值
       const knowledgeInfoArray = SOPInfo.knowledgeInfo

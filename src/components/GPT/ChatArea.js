@@ -108,7 +108,7 @@ const ChatArea = ({
         },
         {
           step: 'Step3',
-          path: 'public/detron_data/GXA170S背隙調整/step3拆蜗桿封蓋.mp4',
+          path: 'public/detron_data/GXA170S背隙調整/step3拆渦桿封蓋.mp4',
         },
         {
           step: 'Step4',
@@ -132,7 +132,7 @@ const ChatArea = ({
         },
         {
           step: 'Step9',
-          path: 'public/detron_data/GXA170S背隙調整/step9安裝蜗桿封蓋.mp4',
+          path: 'public/detron_data/GXA170S背隙調整/step9安裝渦桿封蓋.mp4',
         },
       ],
     },

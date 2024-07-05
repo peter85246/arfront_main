@@ -2,10 +2,13 @@ import { create } from 'zustand';
 
 export const useStore = create()((set) => ({
   isCreatingSOP: false,
-  SOPInfo: null,
-  knowledgeBaseModelImages: [],
-  knowledgeBaseToolsImages: [],
-  knowledgeBasePositionImages: [],
+  SOPInfo: {
+    knowledgeInfo: {
+      knowledgeBaseModelImageObj: [],
+      knowledgeBaseToolsImageObj: [],
+      knowledgeBasePositionImageObj: [],
+    },
+  },
 
   setIsCreatingSOP: (isCreatingSOP) => set({ isCreatingSOP }),
   setSOPInfo: (updater) =>
