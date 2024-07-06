@@ -59,16 +59,16 @@ export function DocumentEditor() {
       knowledgeBasePositionImageObj: [], //Position位置圖片物件
       isDeletedKnowledgeBasePositionImage: false //是否刪除Position位置圖片
     }]
-);
+  );
   
   const [knowledgeBaseModelImages, setKnowledgeBaseModelImages] = useState(
-    SOPInfo?.knowledgeInfo?.[0]?.knowledgeBaseModelImageObj || []
+    SOPInfo?.knowledgeInfo?.knowledgeBaseModelImageObj || []
   );
   const [knowledgeBaseToolsImages, setKnowledgeBaseToolsImages] = useState(
-    SOPInfo?.knowledgeInfo?.[0]?.knowledgeBaseToolsImageObj || []
+    SOPInfo?.knowledgeInfo?.knowledgeBaseToolsImageObj || []
   );
   const [knowledgeBasePositionImages, setKnowledgeBasePositionImages] = useState(
-    SOPInfo?.knowledgeInfo?.[0]?.knowledgeBasePositionImageObj || []
+    SOPInfo?.knowledgeInfo?.knowledgeBasePositionImageObj || []
   );
 
   useEffect(() => {
@@ -289,53 +289,53 @@ export function DocumentEditor() {
 
   useEffect(() => {
     const getDocumentOptions = async () => {
-        try {
-            const res = await apiGetAllKnowledgeBaseByFilter({ keyword: "" });
+      try {
+        const res = await apiGetAllKnowledgeBaseByFilter({ keyword: "" });
 
-            setFormFields((prev) =>
-                prev.map((item) => {
-                    if (item.field === "knowledgeBaseDeviceType") {
-                        return {
-                            ...item,
-                            options: (res.deviceType || []).map((value) => ({
-                                value: value,
-                                label: value,
-                            })),
-                        };
-                    }
-                    if (item.field === "knowledgeBaseDeviceParts") {
-                        return {
-                            ...item,
-                            options: (res.deviceParts || []).map((value) => ({
-                                value: value,
-                                label: value,
-                            })),
-                        };
-                    }
-                    if (item.field === "knowledgeBaseRepairItems") {
-                        return {
-                            ...item,
-                            options: (res.repairItems || []).map((value) => ({
-                                value: value,
-                                label: value,
-                            })),
-                        };
-                    }
-                    if (item.field === "knowledgeBaseRepairType") {
-                        return {
-                            ...item,
-                            options: (res.repairType || []).map((value) => ({
-                                value: value,
-                                label: value,
-                            })),
-                        };
-                    }
-                    return item;
-                }),
-            );
-        } catch (error) {
-            console.error("Error fetching document options:", error);
-        }
+        setFormFields((prev) =>
+          prev.map((item) => {
+            if (item.field === "knowledgeBaseDeviceType") {
+              return {
+                  ...item,
+                  options: (res.deviceType || []).map((value) => ({
+                      value: value,
+                      label: value,
+                  })),
+              };
+            }
+            if (item.field === "knowledgeBaseDeviceParts") {
+              return {
+                  ...item,
+                  options: (res.deviceParts || []).map((value) => ({
+                      value: value,
+                      label: value,
+                  })),
+              };
+            }
+            if (item.field === "knowledgeBaseRepairItems") {
+              return {
+                  ...item,
+                  options: (res.repairItems || []).map((value) => ({
+                      value: value,
+                      label: value,
+                  })),
+              };
+            }
+            if (item.field === "knowledgeBaseRepairType") {
+              return {
+                  ...item,
+                  options: (res.repairType || []).map((value) => ({
+                      value: value,
+                      label: value,
+                  })),
+              };
+            }
+            return item;
+          }),
+        );
+      } catch (error) {
+          console.error("Error fetching document options:", error);
+      }
     };
     getDocumentOptions();
 }, []);
@@ -552,7 +552,7 @@ export function DocumentEditor() {
 
           <span className="text-danger">*</span>
           <label>For Model機型：</label>
-          <div ref={uploadModelRef}>
+          <>
             <div
               className={styles["image-box"]}
               data-step="stepImage"
@@ -605,6 +605,7 @@ export function DocumentEditor() {
             </div>
             <div
               className={styles["image-actions"]}
+              ref={uploadModelRef}
               style={{
                 marginBottom: "10px",
               }}
@@ -620,11 +621,11 @@ export function DocumentEditor() {
               <button className={styles["upload-btn-model"]}>上傳圖片</button>
               <button className={styles["delete-btn-model"]}>刪除圖片</button>
             </div>
-          </div>
+          </>
 
           <span className="text-danger">*</span>
           <label>所有使用工具：</label>
-          <div ref={uploadToolsRef}>
+          <>
             <div
               className={styles["image-box"]}
               data-step="stepImage"
@@ -673,6 +674,7 @@ export function DocumentEditor() {
               ))}
             </div>
             <div
+              ref={uploadToolsRef}
               className={styles["image-actions"]}
               style={{
                 marginBottom: "10px",
@@ -699,11 +701,11 @@ export function DocumentEditor() {
                 刪除圖片
               </button>
             </div>
-          </div>
+          </>
 
           <span className="text-danger">*</span>
           <label>部位位置：</label>
-          <div ref={uploadPositionRef}>
+          <>
             <div
               className={styles["image-box"]}
               data-step="stepImage"
@@ -752,6 +754,7 @@ export function DocumentEditor() {
               ))}
             </div>
             <div
+              ref={uploadPositionRef}
               className={styles["image-actions"]}
               style={{
                 marginBottom: "10px",
@@ -778,7 +781,7 @@ export function DocumentEditor() {
                 刪除圖片
               </button>
             </div>
-          </div>
+          </>
         </div>
       </div>
     </main>
