@@ -3,11 +3,13 @@ import styles from '../scss/PDFDesign.module.scss';
 import classNames from 'classnames';
 import { useLocation } from 'react-router-dom';
 
-const PDFContent = React.forwardRef(({ knowledgeInfo, SOPData }, ref) => {
+const PreviewPDFContent = React.forwardRef(({ knowledgeInfo, SOPData }, ref) => {
   console.log('knowledgeInfo', knowledgeInfo);
   console.log('SOPData', SOPData);
   const location = useLocation();
   const item = location.state?.item; // 訪問傳遞的狀態
+
+  // const [based64SOP, setBased64SOP] = useState(SOPData || []);
 
   const stepsPerPage = 4;
 
@@ -34,6 +36,22 @@ const PDFContent = React.forwardRef(({ knowledgeInfo, SOPData }, ref) => {
     console.log("Received SOPData:", SOPData);
   }, [knowledgeInfo, SOPData]);
 
+  // useEffect(() => {
+  //   SOPData.map((item, idx) => {
+  //     const reader1 = new FileReader();
+  //     const reader2 = new FileReader();
+  //     reader1.readAsDataURL(item.soP2ImageObj);
+  //     reader1.onload = () => {
+  //       setBased64SOP((prev) => [...prev, reader1.result]);
+  //     };
+  //     reader2.readAsDataURL(item.soP2RemarkImageObj);
+  //     reader2.onload = () => {
+  //       setBased64SOP((prev) => [...prev, reader2.result]);
+  //     };
+    
+  //   })
+  // }, [])
+
   return (
     <div className={styles['content-box']} ref={ref}>
       {/* PDF內容放在這裡 */}
@@ -43,18 +61,11 @@ const PDFContent = React.forwardRef(({ knowledgeInfo, SOPData }, ref) => {
             <h1>Trouble Shooting</h1>
             <div className={styles['preview-content']}>
               <div className={styles['info-box']}>
-                {item ? (
                   <p style={{ textAlign: 'left' }}>
-                    File No : {item.knowledgeBaseFileNo}
+                    File No : {knowledgeInfo.knowledgeBaseFileNo}
                     <br></br>
-                    Error Code : {item.knowledgeBaseAlarmCode}
+                    Error Code : {knowledgeInfo.knowledgeBaseAlarmCode}
                   </p>
-                ) : (
-                  <p style={{ textAlign: 'left' }}>
-                    File No : 12345<br></br>
-                    Error Code : 00000
-                  </p>
-                )}
               </div>
             </div>
             <img
@@ -85,18 +96,15 @@ const PDFContent = React.forwardRef(({ knowledgeInfo, SOPData }, ref) => {
             <div className="w-full flex justify-between py-2 px-6">
               <div className="flex gap-[8px] items-center">
                 {(() => {
-                  if (knowledgeInfo.knowledgeBaseModelImage) {
-                    return JSON.parse(
-                      knowledgeInfo?.knowledgeBaseModelImage
-                    ).map((item, idx) => {
-                      return (
+                  if (knowledgeInfo.knowledgeBaseModelImageObj) {
+                    return knowledgeInfo?.knowledgeBaseModelImageObj.map((item, idx) => (
                         <div
                           className="w-[500px] h-[250px] relative"
                           style={{ overflow: 'hidden' }}
                         >
                           <img
                             key={idx}
-                            src={item}
+                            src={item.img}
                             style={{
                               width: '100%',
                               height: '100%',
@@ -107,8 +115,8 @@ const PDFContent = React.forwardRef(({ knowledgeInfo, SOPData }, ref) => {
                             alt="Your images Description"
                           />
                         </div>
-                      );
-                    });
+                      )
+                    );
                   }
                 })()}
               </div>
@@ -135,10 +143,8 @@ const PDFContent = React.forwardRef(({ knowledgeInfo, SOPData }, ref) => {
               >
                 {(() => {
                   // 檢查 knowledgeBaseToolsImage 是否存在並有內容
-                  if (knowledgeInfo.knowledgeBaseToolsImage) {
-                    return JSON.parse(
-                      knowledgeInfo?.knowledgeBaseToolsImage
-                    ).map((item, idx) => (
+                  if (knowledgeInfo.knowledgeBaseToolsImageObj) {
+                    return knowledgeInfo?.knowledgeBaseToolsImageObj.map((item, idx) => (
                       <div
                         style={{
                           width: '140px',
@@ -148,7 +154,7 @@ const PDFContent = React.forwardRef(({ knowledgeInfo, SOPData }, ref) => {
                       >
                         <img
                           key={idx}
-                          src={item}
+                          src={item.img}
                           style={{
                             width: '100%',
                             height: '100%',
@@ -182,10 +188,8 @@ const PDFContent = React.forwardRef(({ knowledgeInfo, SOPData }, ref) => {
               <div className="flex flex-col gap-[6px]">
                 {(() => {
                   // 檢查 knowledgeBaseToolsImageNames 是否存在並有內容
-                  if (knowledgeInfo.knowledgeBaseToolsImageNames) {
-                    return JSON.parse(
-                      knowledgeInfo?.knowledgeBaseToolsImageNames
-                    ).map((item, idx) => (
+                  if (knowledgeInfo.knowledgeBaseToolsImageObj) {
+                    return knowledgeInfo?.knowledgeBaseToolsImageObj.map((item, idx) => (
                       <div
                         className="flex gap-[4px] items-center"
                         style={{
@@ -197,7 +201,7 @@ const PDFContent = React.forwardRef(({ knowledgeInfo, SOPData }, ref) => {
                           {['A', 'B', 'C', 'D', 'E', 'F'][idx]}
                           {': '}
                         </span>
-                        <span>{item}</span>
+                        <span>{item.name}</span>
                       </div>
                     ));
                   }
@@ -223,10 +227,8 @@ const PDFContent = React.forwardRef(({ knowledgeInfo, SOPData }, ref) => {
                 }}
               >
                 {(() => {
-                  if (knowledgeInfo.knowledgeBasePositionImage) {
-                    return JSON.parse(
-                      knowledgeInfo?.knowledgeBasePositionImage
-                    ).map((item, idx) => (
+                  if (knowledgeInfo.knowledgeBasePositionImageObj) {
+                    return knowledgeInfo?.knowledgeBasePositionImageObj.map((item, idx) => (
                       <div
                       style={{
                         width: '220px',
@@ -236,7 +238,7 @@ const PDFContent = React.forwardRef(({ knowledgeInfo, SOPData }, ref) => {
                       >
                         <img
                           key={idx}
-                          src={item}
+                          src={item.img}
                           style={{
                             width: '100%',
                             height: '100%',
@@ -269,10 +271,8 @@ const PDFContent = React.forwardRef(({ knowledgeInfo, SOPData }, ref) => {
                 style={{ marginLeft: '2vw' }}
               >
                 {(() => {
-                  if (knowledgeInfo.knowledgeBasePositionImageNames) {
-                    return JSON.parse(
-                      knowledgeInfo?.knowledgeBasePositionImageNames
-                    ).map((item, idx) => (
+                  if (knowledgeInfo.knowledgeBasePositionImageObj) {
+                    return knowledgeInfo?.knowledgeBasePositionImageObj.map((item, idx) => (
                       <div
                         className="flex gap-[4px] items-center"
                         style={{ minWidth: '15vw' }}
@@ -281,7 +281,7 @@ const PDFContent = React.forwardRef(({ knowledgeInfo, SOPData }, ref) => {
                           {['A', 'B', 'C', 'D', 'E', 'F'][idx]}
                           {': '}
                         </span>
-                        <span>{item}</span>
+                        <span>{item.name}</span>
                       </div>
                     ));
                   }
@@ -345,9 +345,9 @@ const PDFContent = React.forwardRef(({ knowledgeInfo, SOPData }, ref) => {
                       styles['image-container']
                     )}
                   >
-                    {sop.soP2Image ? (
+                    {sop.soP2ImageObj ? (
                       <img
-                        src={sop.soP2Image}
+                        src={URL.createObjectURL(sop.soP2ImageObj)}
                         style={{
                           width: '250px', // 直接在 style 中設定寬度
                           height: '250px', // 直接在 style 中設定高度
@@ -374,9 +374,9 @@ const PDFContent = React.forwardRef(({ knowledgeInfo, SOPData }, ref) => {
                           <br />
                         </>
                       )}
-                      {sop.soP2RemarksImage ? (
+                      {sop.soP2RemarksImageObj ? (
                         <img
-                          src={sop.soP2RemarksImage}
+                          src={URL.createObjectURL(sop.soP2RemarksImageObj)}
                           className={`w-[170px] h-[170px]`}
                           style={{
                             objectFit: 'contain', // 保持圖片原始比例並填滿容器
@@ -398,4 +398,4 @@ const PDFContent = React.forwardRef(({ knowledgeInfo, SOPData }, ref) => {
   );
 });
 
-export default PDFContent;
+export default PreviewPDFContent;

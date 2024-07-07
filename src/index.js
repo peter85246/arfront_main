@@ -32,6 +32,7 @@ import Assistant from './components/Assistant';
 import MenuTest from './components/MenuTest';
 import PDFDemo from './pages/PDFDemo';
 import { useDatabase } from './components/useDatabse';
+import { Preview } from './components/Preview';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -141,6 +142,14 @@ root.render(
         element={
           <Home>
             <RepairDocument />
+          </Home>
+        }
+      />
+      <Route
+        path="/preview"
+        element={
+          <Home>
+            <Preview />
           </Home>
         }
       />

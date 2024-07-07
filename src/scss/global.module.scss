@@ -2488,10 +2488,17 @@ table th {
 .mindmap {
   position: relative;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
   height: 100%;
   width: 100%;
+  overflow: hidden;
+}
+
+.mindmap > * {
+  max-height: 100%; 
+  max-width: 100%;   
 }
 
 .node {

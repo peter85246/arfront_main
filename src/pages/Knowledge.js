@@ -166,6 +166,7 @@ export default function Knowledge() {
 
       if (knowledgeBasesResponse && knowledgeBasesResponse.code === '0000') {
         setKnowledgeBases(knowledgeBasesResponse.result);
+        setRawKnowledgeBases(knowledgeBasesResponse.result);
         setShowKnowledgeBases(knowledgeBasesResponse.result.slice(0, pageRow));
         console.log('Knowledge bases set successfully.');
       } else {

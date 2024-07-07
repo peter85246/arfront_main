@@ -99,117 +99,19 @@
 // };
 // export default MenuTest;
 
-// import React, { useEffect, useRef, useState } from "react";
-// import jsMind from "jsmind"; // 確保 jsMind 已正確引入
-// import "jsmind/style/jsmind.css"; // 確保 CSS 樣式已正確引入
-
-// const MenuTest = () => {
-//   const jmContainerRef = useRef(null);
-//   const jmInstanceRef = useRef(null);
-//   const [currentDirection, setCurrentDirection] = useState("right"); // 初始方向設為右
-
-//   useEffect(() => {
-//     const mind = {
-//       meta: {
-//         name: "demo",
-//         author: "hizzgdev@163.com",
-//         version: "0.2",
-//       },
-//       format: "node_array",
-//       data: [
-//         { id: "root", topic: "jsMind 演示", isroot: true },
-//         {
-//           id: "sub1",
-//           topic: "右子節點1",
-//           parentid: "root",
-//           direction: "right",
-//         },
-//         { id: "sub1_1", topic: "右子節點1.1", parentid: "sub1" },
-//         { id: "sub1_2", topic: "右子節點1.2", parentid: "sub1" },
-//         { id: "sub2", topic: "左子節點1", parentid: "root", direction: "left" },
-//         { id: "sub2_1", topic: "左子節點1.1", parentid: "sub2" },
-//         { id: "sub2_2", topic: "左子節點1.2", parentid: "sub2" },
-//       ],
-//     };
-
-//     const options = {
-//       container: jmContainerRef.current,
-//       editable: true,
-//       theme: "orange",
-//       mode: "full", // 支持雙向布局
-//       layout: {
-//         hspace: 100,
-//         vspace: 50,
-//         pspace: 10,
-//       },
-//     };
-
-//     jmInstanceRef.current = new jsMind(options);
-//     jmInstanceRef.current.show(mind);
-//   }, []);
-
-//   // 函數：添加新節點
-//   const addNode = () => {
-//     const newId = `node_${Date.now()}`; // 使用當前時間戳生成唯一ID
-//     const newTopic = `${currentDirection === "right" ? "右" : "左"}子節點`;
-//     const newNode = {
-//       id: newId,
-//       topic: newTopic,
-//       parentid: "root",
-//       direction: currentDirection,
-//     };
-//     jmInstanceRef.current.add_node("root", newId, newTopic, null, {
-//       direction: currentDirection,
-//     });
-//     setCurrentDirection(currentDirection === "right" ? "left" : "right"); // 交替方向
-//   };
-
-//   return (
-//     <div>
-//       <div ref={jmContainerRef} style={{ height: "500px" }} />
-//       <button onClick={addNode}>添加節點</button> {/* 添加節點按鈕 */}
-//     </div>
-//   );
-// };
-
-// export default MenuTest;
-
 import React, { useEffect, useRef } from 'react';
 import jsMind from 'jsmind';
 import 'jsmind/style/jsmind.css';
-
 import { apiGetMachineAddMindMap } from '../utils/Api';
 
-const MenuTest = () => {
+const MenuTest = ({ machineAddId, defaultZoom = 1 }) => {
+  console.log("MachineAddId in MenuTest:", machineAddId); // Debug 輸出
   const jmContainerRef = useRef(null);
   const jmInstanceRef = useRef(null);
 
-  const fetchData = async () => {
-    try {
-      const params = { MachineAddId: 1 };
-      const data = await apiGetMachineAddMindMap(params);
-
-      // 檢查數據是否為期望的格式
-      if (
-        !data ||
-        !data.result ||
-        !data.result.knowledgeBases ||
-        !Array.isArray(data.result.knowledgeBases)
-      ) {
-        console.error('Unexpected data format:', data);
-        return []; // 返回一個空數組，避免後續操作出錯
-      }
-
-      return data.result.knowledgeBases; // 返回 knowledgeBases 數組
-    } catch (error) {
-      console.error('Failed to fetch data:', error);
-    }
-  };
-
-  // 將遞迴地處理每個部件和修復類型，並添加到數據陣列中
+  // 这个函数负责处理每个部件和维修类型，并将它们添加到数据数组中
   const processPart = (part, parentId, direction) => {
     const partId = `${parentId}_${part.deviceParts.trim().replace(/\s+/g, '_')}`;
-    // 父節點方向決定子節點方向
     const childDirection = direction === 'right' ? 'left' : 'right';
 
     const nodes = [
@@ -217,26 +119,32 @@ const MenuTest = () => {
         id: partId,
         topic: part.deviceParts.trim(),
         parentid: parentId,
-        direction: direction, // 使用從上層傳來的方向
+        direction: direction,
+        'font-size': 13, // 調整字體大小
+        width: 'auto', // 調整寬度
       },
     ];
 
-    part.repairTypes.forEach((type, index) => {
+    part.repairTypes.forEach((type) => {
       const typeId = `${partId}_${type.repairType.trim().replace(/\s+/g, '_')}`;
       nodes.push({
         id: typeId,
         topic: type.repairType.trim(),
         parentid: partId,
-        direction: childDirection, // 子節點使用相反方向
+        direction: childDirection,
+        'font-size': 13, // 調整字體大小
+        width: 'auto', // 調整寬度
       });
 
-      type.knowledgeBases.forEach((kb, i) => {
+      type.knowledgeBases.forEach((kb) => {
         const kbId = `${typeId}_kb_${kb.knowledgeBaseId}`;
         nodes.push({
           id: kbId,
           topic: kb.deviceType.trim() || 'General Info',
           parentid: typeId,
-          direction: childDirection, // 保持同一層級方向一致
+          direction: childDirection,
+          'font-size': 13, // 調整字體大小
+          width: 'auto', // 調整寬度
         });
       });
     });
@@ -244,57 +152,85 @@ const MenuTest = () => {
     return nodes;
   };
 
+  // 适应容器尺寸的函数
+  const adjustToFitContainer = () => {
+    if (jmContainerRef.current && jmInstanceRef.current) {
+      const container = jmContainerRef.current;
+      const containerRect = container.getBoundingClientRect();
+      const mindSize = jmInstanceRef.current.get_size();
+      const scaleX = containerRect.width / mindSize.w;
+      const scaleY = containerRect.height / mindSize.h;
+      const scale = Math.min(scaleX, scaleY, 1); // 避免放大
+      jmInstanceRef.current.view.zoom(scale); // 调整 zoom 级别
+    }
+  };
+
+  // 异步获取数据
+  const fetchData = async () => {
+    try {
+      const params = { MachineAddId: machineAddId };
+      const data = await apiGetMachineAddMindMap(params);
+      if (!data || !data.result || !data.result.knowledgeBases || !Array.isArray(data.result.knowledgeBases)) {
+        console.error('Unexpected data format:', data);
+        return [];
+      }
+      return data.result.knowledgeBases;
+    } catch (error) {
+      console.error('Failed to fetch data:', error);
+      return [];
+    }
+  };
+
   useEffect(() => {
-    fetchData()
-      .then((knowledgeBases) => {
-        if (knowledgeBases && knowledgeBases.length > 0) {
-          const options = {
-            container: jmContainerRef.current,
-            editable: true,
-            theme: 'primary',
-            mode: 'full',
-            layout: {
-              hspace: 70,
-              vspace: 30,
-              pspace: 10,
-            },
-          };
-
-          const nodes = [
-            { id: 'root', topic: 'MindMap', isroot: true, direction: 'right' },
-          ];
-          knowledgeBases.forEach((part, index) => {
-            // 為每個部分交替設定方向
-            const direction = index % 2 === 0 ? 'right' : 'left';
-            nodes.push(...processPart(part, 'root', direction));
-          });
-
-          const mind = {
-            meta: {
-              name: 'demo',
-              author: 'hizzgdev@163.com',
-              version: '0.2',
-            },
-            format: 'node_array',
-            data: nodes,
-          };
-
-          jmInstanceRef.current = new jsMind(options);
-          jmInstanceRef.current.show(mind);
-        } else {
-          console.log('No data to display in the mind map.');
-        }
-      })
-      .catch((error) => {
-        console.error('Error in displaying mind map:', error);
-      });
-  }, []);
+    fetchData().then((knowledgeBases) => {
+      if (knowledgeBases.length > 0) {
+        const options = {
+          container: jmContainerRef.current,
+          editable: false,
+          theme: 'primary',
+          mode: 'full',
+          layout: {
+            hspace: 20, // 可以根据需要调整这些值
+            vspace: 15,
+            pspace: 10,
+          },
+        };
+  
+        const nodes = [{ id: 'root', topic: 'MindMap', isroot: true, direction: 'right', 'font-size': 18, width: 'auto'}];
+        knowledgeBases.forEach((part, index) => {
+          nodes.push(...processPart(part, 'root', index % 2 === 0 ? 'right' : 'left'));
+        });
+  
+        const mind = {
+          meta: { name: 'demo', author: 'hizzgdev@163.com', version: '0.2' },
+          format: 'node_array',
+          data: nodes,
+        };
+  
+        jmInstanceRef.current = new jsMind(options);
+        jmInstanceRef.current.show(mind);
+  
+        // 等待心智图渲染完成后进行缩放调整
+        setTimeout(() => {
+          const contentWidth = jmContainerRef.current.querySelector('.jsmind-inner').offsetWidth;
+          const contentHeight = jmContainerRef.current.querySelector('.jsmind-inner').offsetHeight;
+          const scaleX = jmContainerRef.current.offsetWidth / contentWidth;
+          const scaleY = jmContainerRef.current.offsetHeight / contentHeight;
+          const scale = Math.min(scaleX, scaleY, defaultZoom);  // 使用 defaultZoom 當作最大縮放比例
+          jmInstanceRef.current.view.setZoom(scale); // 调整缩放比例
+        }, 0);
+      }
+    }).catch((error) => {
+      console.error('Error in displaying mind map:', error);
+    });
+  }, [machineAddId, defaultZoom]); // 依賴中新增 defaultZoom
+  
 
   return (
     <div>
-      <div ref={jmContainerRef} style={{ height: '90vh' }} />
+      <div ref={jmContainerRef} style={{ width: '100%', height: '750px', overflow: 'hidden' }} />
     </div>
   );
 };
-
+  
 export default MenuTest;

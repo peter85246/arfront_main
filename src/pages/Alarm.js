@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import classNames from 'classnames';
 import styles from '../scss/global.module.scss';
+import { useNavigate } from 'react-router-dom';  // 導入 useNavigate
 import MindMap from '../components/MindMap';
+import MenuTest from '../components/MenuTest'
 import { Link } from 'react-router-dom';
 import AlarmListTree from '../components/AlarmGroup/AlarmListTree';
 import { useTranslation } from 'react-i18next';
@@ -21,6 +23,7 @@ export default function Alarm() {
   const [selectedMachineId, setSelectedMachineId] = useState(''); // 選中的機台的 ID
   const [isEditing, setIsEditing] = useState(false); // 編輯狀態
   const [isDeleting, setIsDeleting] = useState(false); // 刪除狀態
+  const navigate = useNavigate();  // 創建 navigate 函數實例
 
   const { t } = useTranslation(); // i18n 語言翻譯函數
 
@@ -128,6 +131,19 @@ export default function Alarm() {
   const handleDeleteButtonClick = () => {
     setIsDeleting(true); // 設置為刪除模式
   };
+
+  // 使用 navigate 函數來進行程序化導航
+  const handleMindMapClick = () => {
+    if (selectedMachineId) {
+      navigate('/pageMindMap', { state: { machineAddId: selectedMachineId } });
+    }
+  };
+
+  useEffect(() => {
+    console.log("Selected Machine ID:", selectedMachineId);
+  }, [selectedMachineId]);
+
+  console.log("Before navigation - Selected Machine ID:", selectedMachineId);
 
   return (
     <main>
@@ -237,14 +253,10 @@ export default function Alarm() {
 
         {/* 右側心智圖區域 */}
         <div className={styles['content-box-right-alarm']} id="alarm-mindMap">
-          {selectedMachineId && (
-            <Link to="/pageMindMap">
-              <p className={styles['mark-text']}>▶ 點擊即可展開心智圖</p>
-              <div className={styles['mindmap']}>
-                <MindMap machineAddId={selectedMachineId} />
-              </div>
-            </Link>
-          )}
+          <div className={styles['mindmap']} onClick={handleMindMapClick}>
+            <p className={styles['mark-text']}>▶ 點擊即可展開心智圖</p>
+            <MenuTest machineAddId={selectedMachineId} defaultZoom={0.8} />
+          </div>
         </div>
       </div>
     </main>

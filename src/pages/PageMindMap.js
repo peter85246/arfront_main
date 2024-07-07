@@ -1,14 +1,22 @@
-import { useEffect, useState } from 'react';
+import { React, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next'; //語系
+import { useLocation } from 'react-router-dom';
 import classNames from 'classnames';
 import styles from '../scss/global.module.scss';
 import stylesAlarm from '../scss/Alarm.module.scss';
 import MindMap from '../components/MindMap';
+import MenuTest from '../components/MenuTest'
 import { Link } from 'react-router-dom';
 
 export default function PageMindMap() {
   const { t } = useTranslation();
   const [isEditing, setIsEditing] = useState(false);
+  const location = useLocation();
+  const { machineAddId } = location.state || {};
+
+  useEffect(() => {
+    console.log("Received MachineAddId:", machineAddId); // 檢查是否正確接收
+  }, [machineAddId]);
 
   return (
     <div className={stylesAlarm.content}>
@@ -55,7 +63,7 @@ export default function PageMindMap() {
         <div className={stylesAlarm.contentBoxAlarm}>
           <div className={stylesAlarm.contentBoxMindMap}>
             <div className={styles['mindmap']}>
-              <MindMap />
+              {machineAddId && <MenuTest machineAddId={machineAddId} defaultZoom={0.7} />}
             </div>
           </div>
         </div>
