@@ -18,6 +18,7 @@ const { TextArea } = Input;
 // prettier-ignore
 export function DocumentEditor() {
   const { SOPInfo, setSOPInfo } = useStore();
+
   const navigate = useNavigate(); // 使用 navigate 來處理導航
   const { t } = useTranslation();
 
@@ -208,6 +209,17 @@ export function DocumentEditor() {
     }
   };
 
+  const handlePreview = () => {
+    const allKnowledgeInfo = {
+      ...knowledgeInfo,
+      knowledgeBaseModelImageObj: knowledgeBaseModelImages,
+      knowledgeBaseToolsImageObj: knowledgeBaseToolsImages,
+      knowledgeBasePositionImageObj: knowledgeBasePositionImages
+    }
+    setSOPInfo((prev) => ({ ...prev, knowledgeInfo: allKnowledgeInfo }));
+    navigate("/preview");
+  }
+
   useLayoutEffect(() => {
     const uploadRefArray = [
       uploadModelRef.current,
@@ -389,12 +401,12 @@ export function DocumentEditor() {
           >
             取消
           </a>
-          <a
-            href="/repairDocument"
+          <div
             className={classNames(styles["button"], styles["btn-preview"])}
+            onClick={handlePreview}
           >
             預覽
-          </a>
+          </div>
 
           <div className={styles["showMachine"]}>
             <a

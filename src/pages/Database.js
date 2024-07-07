@@ -70,7 +70,7 @@ export default function Database() {
         });
         setTimeout(() => {
           window.location.href = '/knowledge';
-        }, 1000);
+        }, 500);
       }
     } catch (err) {
       console.log(err);

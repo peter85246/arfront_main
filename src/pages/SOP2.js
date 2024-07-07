@@ -21,6 +21,7 @@ import { useStore } from '../zustand/store';
 
 function SOP2() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   const { SOPInfo, setSOPInfo } = useStore();
   console.log(SOPInfo);
@@ -113,6 +114,16 @@ function SOP2() {
   };
   //#endregion
 
+  useEffect(() => {
+    if (SOPInfo.sops) {
+      const convertedSOPData = SOPInfo.sops?.map(item => ({
+        ...item, sopModels: []
+      }))
+      setSOPs(convertedSOPData);
+      setSelectSOP(convertedSOPData[0]);
+    }
+  }, [SOPInfo])
+
   //#region 新增SOP
   const handleAddSOP = (e) => {
     let lastSOP = sops[sops.length - 1];
@@ -121,16 +132,16 @@ function SOP2() {
       sopId: 0,
       deleted: 0,
       machineAddId: machineAddId,
-      sopStep: lastSOP != null ? lastSOP.sopStep + 1 : 1,
-      sopMessage: '',
-      sopName: '', //test
-      sopImage: '',
-      sopImageObj: null,
+      soP2Step: lastSOP != null ? lastSOP.soP2Step + 1 : 1,
+      soP2Message: '',
+      soP2Name: '', //test
+      soP2Image: '',
+      soP2ImageObj: null,
       isDeletedSOPImage: false,
       /* 新增：sopRemarksMessage、sopRemarksImage、sopRemarksImageObj 三元素 */
-      sopRemark: '',
-      sopRemarksImage: '',
-      sopRemarksImageObj: null,
+      soP2Remark: '',
+      soP2RemarksImage: '',
+      soP2RemarksImageObj: null,
       isDeletedSOPRemarksImage: false,
       sopVideo: '',
       sopVideoObj: null,
@@ -184,7 +195,7 @@ function SOP2() {
     newSOPs.map((item, index) => {
       if (item.deleted != 1) {
         i++;
-        return (item.sopStep = i);
+        return (item.soP2Step = i);
       } else {
         return item;
       }
@@ -229,8 +240,8 @@ function SOP2() {
         var img = new Image();
         var objectUrl = URL.createObjectURL(file);
         img.onload = function () {
-          newSelectSOP.sopImageObj = file;
-          if (newSelectSOP.sopImage != '') {
+          newSelectSOP.soP2ImageObj = file;
+          if (newSelectSOP.soP2Image != '') {
             newSelectSOP.isDeletedSOPImage = true;
           }
           setSelectSOP(newSelectSOP);
@@ -246,8 +257,8 @@ function SOP2() {
     e.preventDefault();
     let newSelectSOP = { ...selectSOP };
 
-    newSelectSOP.sopImage = '';
-    newSelectSOP.sopImageObj = null;
+    newSelectSOP.soP2Image = '';
+    newSelectSOP.soP2ImageObj = null;
     newSelectSOP.isDeletedSOPImage = true;
 
     setSelectSOP(newSelectSOP);
@@ -324,8 +335,8 @@ function SOP2() {
         var img = new Image();
         var objectUrl = URL.createObjectURL(file);
         img.onload = function () {
-          newSelectSOP.sopRemarksImageObj = file;
-          if (newSelectSOP.sopRemarksImage != '') {
+          newSelectSOP.soP2RemarksImageObj = file;
+          if (newSelectSOP.soP2RemarksImage != '') {
             newSelectSOP.isDeletedSOPRemarksImage = true;
           }
           setSelectSOP(newSelectSOP);
@@ -341,8 +352,8 @@ function SOP2() {
     e.preventDefault();
     let newSelectSOP = { ...selectSOP };
 
-    newSelectSOP.sopRemarksImage = '';
-    newSelectSOP.sopRemarksImageObj = null;
+    newSelectSOP.soP2RemarksImage = '';
+    newSelectSOP.soP2RemarksImageObj = null;
     newSelectSOP.isDeletedSOPRemarksImage = true;
 
     setSelectSOP(newSelectSOP);
@@ -358,7 +369,7 @@ function SOP2() {
       if (selectSOP.sopId > 0) {
         index = newSOPs.findIndex((x) => x.sopId == selectSOP.sopId);
       } else {
-        index = newSOPs.findIndex((x) => x.sopStep == selectSOP.sopStep);
+        index = newSOPs.findIndex((x) => x.soP2Step == selectSOP.soP2Step);
       }
 
       newSOPs[index] = selectSOP;
@@ -397,14 +408,14 @@ function SOP2() {
     newSOPs.map((item, index) => {
       if (item.deleted != 1) {
         i++;
-        return (item.sopStep = i);
+        return (item.soP2Step = i);
       } else {
         return item;
       }
     });
 
     setSOPs(newSOPs);
-    if (tempSOP.sopStep == selectSOP.sopStep) {
+    if (tempSOP.soP2Step == selectSOP.soP2Step) {
       setSelectSOP(newSOPs[selectDeleteSOPIndex - 1]);
     }
     setShowDeleteSOPModal(false);
@@ -446,6 +457,12 @@ function SOP2() {
     // }
   };
   //#endregion
+
+  const handlePreview = () => {
+    setSOPInfo((prev) => ({ ...prev, sops: sops }));
+    navigate('/preview', { state: { step: 'sop2' } })
+  }
+
 
   //#region 開啟上傳暫存3DModel Modal / 清空暫存3DModel
   const handleOpenSaveTempModelBtn = (event, index) => {
@@ -633,7 +650,7 @@ function SOP2() {
     }
 
     //更新整個sops
-    var index = newSOPs.findIndex((x) => x.sopStep == selectSOP.sopStep);
+    var index = newSOPs.findIndex((x) => x.soP2Step == selectSOP.soP2Step);
     newSOPs[index] = newSelectSOP;
 
     setSelectSOP(newSelectSOP);
@@ -653,7 +670,7 @@ function SOP2() {
     }
 
     //更新整個sops
-    var sopIndex = newSOPs.findIndex((x) => x.sopStep == selectSOP.sopStep);
+    var sopIndex = newSOPs.findIndex((x) => x.soP2Step == selectSOP.soP2Step);
     newSOPs[sopIndex] = newSelectSOP;
 
     setSelectSOP(newSelectSOP);
@@ -704,15 +721,15 @@ function SOP2() {
                 >
                   取消
                 </a>
-                <a
-                  href="/repairDocument"
+                <div
                   className={classNames(
                     styles['button'],
                     styles['btn-preview']
                   )}
+                  onClick={handlePreview}
                 >
                   預覽
-                </a>
+                </div>
 
                 <div className={styles['showMachine']}>
                   <a
@@ -773,7 +790,7 @@ function SOP2() {
                             return (
                               <Draggable
                                 key={index}
-                                draggableId={item.sopStep.toString()}
+                                draggableId={item.soP2Step.toString()}
                                 index={index}
                               >
                                 {(provided) => (
@@ -784,7 +801,7 @@ function SOP2() {
                                   >
                                     <div
                                       className={`card ${
-                                        item.sopStep == selectSOP.sopStep
+                                        item.soP2Step == selectSOP.soP2Step
                                           ? 'bg-info'
                                           : ''
                                       }`}
@@ -798,7 +815,7 @@ function SOP2() {
                                       >
                                         <div className="row">
                                           <div className="col-10">
-                                            <span>Step {item.sopStep}</span>
+                                            <span>Step {item.soP2Step}</span>
                                           </div>
                                           {index != 0 ? (
                                             <div className="col-2">
@@ -848,13 +865,12 @@ function SOP2() {
                               <textarea
                                 className="form-control"
                                 rows="8"
-                                name="sopMessage"
+                                name="soP2Message"
                                 maxLength="1000"
+                                value={selectSOP.soP2Message}
                                 onChange={(e) => handleSelectSOPChange(e)}
                                 style={{ color: textColor }}
-                              >
-                                {selectSOP.sopMessage || "www"}
-                              </textarea>
+                              ></textarea>
                               <div
                                 className={styles['color-picker-container-sop']}
                               >
@@ -879,9 +895,9 @@ function SOP2() {
                               <textarea
                                 className="form-control"
                                 rows="8"
-                                name="sopRemark"
+                                name="soP2Remark"
                                 maxLength="1000"
-                                value={selectSOP.sopRemark}
+                                value={selectSOP.soP2Remark}
                                 onChange={(e) => handleSelectSOPChange(e)}
                                 style={{ color: textColor }}
                               ></textarea>
@@ -957,7 +973,7 @@ function SOP2() {
                             <input
                               type="file"
                               className="form-control d-none"
-                              name="sopImage"
+                              name="soP2Image"
                               ref={inputVideoRef}
                               onChange={(e) => onVideoChange(e)}
                               autoComplete="off"
@@ -982,16 +998,16 @@ function SOP2() {
                               {/*步驟圖片*/}
                             </label>
                             <div className="d-flex align-items-center justify-content-center sop-file-view">
-                              {selectSOP.sopImage != '' ||
-                              selectSOP.sopImageObj != null ? (
+                              {selectSOP.soP2Image != '' ||
+                              selectSOP.soP2ImageObj != null ? (
                                 <img
                                   alt="not found"
                                   src={
-                                    selectSOP.sopImageObj != null
+                                    selectSOP.soP2ImageObj != null
                                       ? URL.createObjectURL(
-                                          selectSOP.sopImageObj
+                                          selectSOP.soP2ImageObj
                                         )
-                                      : selectSOP.sopImage
+                                      : selectSOP.soP2Image
                                   }
                                   style={{ width: '100%' }}
                                 />
@@ -1025,7 +1041,7 @@ function SOP2() {
                             <input
                               type="file"
                               className="form-control d-none"
-                              name="sopImage"
+                              name="soP2Image"
                               ref={inputImageRef}
                               onChange={(e) => onImageChange(e)}
                               autoComplete="off"
@@ -1050,16 +1066,16 @@ function SOP2() {
                               {/*備註圖片*/}
                             </label>
                             <div className="d-flex align-items-center justify-content-center sop-file-view">
-                              {selectSOP.sopRemarksImage != '' ||
-                              selectSOP.sopRemarksImageObj != null ? (
+                              {selectSOP.soP2RemarksImage != '' ||
+                              selectSOP.soP2RemarksImageObj != null ? (
                                 <img
                                   alt="not found"
                                   src={
-                                    selectSOP.sopRemarksImageObj != null
+                                    selectSOP.soP2RemarksImageObj != null
                                       ? URL.createObjectURL(
-                                          selectSOP.sopRemarksImageObj
+                                          selectSOP.soP2RemarksImageObj
                                         )
-                                      : selectSOP.sopRemarksImage
+                                      : selectSOP.soP2RemarksImage
                                   }
                                   style={{ width: '100%' }}
                                 />
@@ -1093,7 +1109,7 @@ function SOP2() {
                             <input
                               type="file"
                               className="form-control d-none"
-                              name="sopImage"
+                              name="soP2Image"
                               ref={inputRemarksImageRef}
                               onChange={(e) => onRemarksImageChange(e)}
                               autoComplete="off"

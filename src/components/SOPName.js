@@ -187,20 +187,20 @@ export function SOPName({ onClose }) {
             sop.isDeletedSOPVideo
           );
           SOPFormData.append(`SOP2s[${idx}].sopId`, sop.sopId);
-          SOPFormData.append(`SOP2s[${idx}].soP2Image`, sop.sopImage);
-          SOPFormData.append(`SOP2s[${idx}].soP2ImageObj`, sop.sopImageObj);
+          SOPFormData.append(`SOP2s[${idx}].soP2Image`, sop.soP2Image);
+          SOPFormData.append(`SOP2s[${idx}].soP2ImageObj`, sop.soP2ImageObj);
           SOPFormData.append(
             `SOP2s[${idx}].soP2RemarkImage`,
-            sop.sopRemarksImage
+            sop.soP2RemarkImage
           );
           SOPFormData.append(
             `SOP2s[${idx}].soP2RemarkImageObj`,
-            sop.sopRemarksImageObj
+            sop.soP2RemarkImageObj
           );
-          SOPFormData.append(`SOP2s[${idx}].soP2Message`, sop.sopMessage);
-          SOPFormData.append(`SOP2s[${idx}].soP2Remark`, sop.sopRemark);
-          SOPFormData.append(`SOP2s[${idx}].soP2Step`, sop.sopStep);
-          SOPFormData.append(`SOP2s[${idx}].soP2Name`, sop.sop2Name);
+          SOPFormData.append(`SOP2s[${idx}].soP2Message`, sop.soP2Message);
+          SOPFormData.append(`SOP2s[${idx}].soP2Remark`, sop.soP2Remark);
+          SOPFormData.append(`SOP2s[${idx}].soP2Step`, sop.soP2Step);
+          SOPFormData.append(`SOP2s[${idx}].soP2Name`, sop.soP2Name);
           SOPFormData.append(`SOP2s[${idx}].sopVideo`, sop.sopVideo);
           SOPFormData.append(`SOP2s[${idx}].sopVideoObj`, sop.sopVideoObj);
           SOPFormData.append(`SOP2s[${idx}].sopPLC1`, sop.sopplC1);
