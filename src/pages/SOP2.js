@@ -124,16 +124,27 @@ function SOP2() {
   //   }
   // }, [SOPInfo])
 
+  // useEffect(() => {
+  //   if (SOPInfo && SOPInfo.sops) {
+  //     const convertedSOPData = SOPInfo.sops.map(item => ({
+  //       ...item, sopModels: []
+  //     }));
+  //     setSOPs(convertedSOPData);
+  //     setSelectSOP(convertedSOPData[0]);
+  //   }
+  // }, [SOPInfo]);
+  
+
   useEffect(() => {
-    if (SOPInfo && SOPInfo.sops) {
-      const convertedSOPData = SOPInfo.sops.map(item => ({
+    if (SOPInfo.sops) {
+      const convertedSOPData = SOPInfo.sops?.map(item => ({
         ...item, sopModels: []
-      }));
+      }))
       setSOPs(convertedSOPData);
       setSelectSOP(convertedSOPData[0]);
     }
-  }, [SOPInfo]);
-  
+  }, [SOPInfo])
+
 
   //#region 新增SOP
   const handleAddSOP = (e) => {
