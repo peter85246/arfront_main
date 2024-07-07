@@ -183,6 +183,10 @@ const MenuTest = ({ machineAddId, defaultZoom = 1 }) => {
 
   useEffect(() => {
     fetchData().then((knowledgeBases) => {
+      if (jmContainerRef.current) {
+        jmContainerRef.current.style.overflow = 'hidden';  // 初次渲染時隱藏滾動條
+      }
+      
       if (knowledgeBases.length > 0) {
         const options = {
           container: jmContainerRef.current,
