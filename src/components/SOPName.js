@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
@@ -12,6 +12,17 @@ export function SOPName({ onClose }) {
   const [sop2Name, setSopName] = useState('');
   const [errors, setErrors] = useState({});
   const { t } = useTranslation();
+
+  // 這個 useEffect 會在 SOPInfo 變更時更新，包括組件初次渲染
+  useEffect(() => {
+    // 如果存在 SOPInfo 且其內有 knowledgeInfo，則從中提取 knowledgeBaseSOPName
+    if (SOPInfo && SOPInfo.knowledgeInfo && SOPInfo.knowledgeInfo.knowledgeBaseSOPName) {
+      setSopName(SOPInfo.knowledgeInfo.knowledgeBaseSOPName);
+    } else {
+      // 如果沒有提供有效的 SOP 名稱，設置為空以便新建
+      setSopName('');
+    }
+  }, [SOPInfo]);  
 
   // 處理模態窗關閉事件
   const handleCloseModal = () => {
@@ -45,6 +56,9 @@ export function SOPName({ onClose }) {
     let hasError = false;
     const newErrors = {};
 
+    const SOPFormData = new FormData();
+    SOPFormData.append(`MachineAddId`, SOPInfo.machineAddId.toString());
+
     if (!sop2Name || sop2Name.trim() === '') {
       newErrors.sop2Name = '必填项';
       hasError = true;
@@ -68,7 +82,7 @@ export function SOPName({ onClose }) {
 
       const formData = new FormData();
       formData.append('MachineAddId', SOPInfo.machineAddId.toString());
-      formData.append('machineName', SOPInfo.machineInfo.machineName);
+      // formData.append('machineName', SOPInfo.machineInfo.machineName);
       formData.append('KnowledgeBases[0].KnowledgeBaseSOPName', sop2Name);
 
       // 如果有 KnowledgeBaseId，加入到 formData (編輯CRUD)
@@ -92,6 +106,7 @@ export function SOPName({ onClose }) {
             // 檢查info[key]是否存在並具有forEach方法
             if (info[key] && info[key].forEach) {
               info[key].forEach((fileObj) => {
+                if (fileObj && fileObj.file) {  // 添加這一行來進行檢查
                 const file = fileObj.file; // 確保使用的是原始文件對象
                 const fileExtension = file.name.split('.').pop().toLowerCase();
                 if (!allowedExtensions.includes(fileExtension)) {
@@ -105,6 +120,7 @@ export function SOPName({ onClose }) {
                 } else {
                   formData.append(`KnowledgeBases[${index}].${key}`, file);
                   fileIncluded = true;
+                }
                 }
               });
             }
@@ -135,7 +151,7 @@ export function SOPName({ onClose }) {
 
       // 檢查是否有文件被添加
       if (!fileIncluded) {
-        toast.error('請添加至少一個圖片文件。', {
+        toast.error('故障說明 & SOP請添加至少更新圖片文件。', {
           position: toast.POSITION.TOP_CENTER,
           autoClose: 2000,
           hideProgressBar: true,
@@ -151,11 +167,21 @@ export function SOPName({ onClose }) {
           console.log(`${pair[0]}, ${pair[1]}`);
         }
 
+        for (let pair of SOPFormData.entries()) {
+          console.log(`${pair[0]}: ${pair[1]}`);
+        }
+        
         const saveKnowledgeBaseRes = await fetchDataCallFile(
           'SaveKnowledgeBase',
           'PUT',
           formData
         );
+
+        // const saveKnowledgeBaseRes = await fetchDataCallFile(
+        //   SOPInfo.knowledgeBaseId ? 'UpdateKnowledgeBase' : 'SaveKnowledgeBase',
+        //   'PUT',
+        //   formData
+        // );
 
         if (saveKnowledgeBaseRes.message !== '完全成功') {
           toast.error(saveKnowledgeBaseRes.message, {
@@ -168,8 +194,7 @@ export function SOPName({ onClose }) {
           return;
         }
 
-        const SOPFormData = new FormData();
-        SOPFormData.append(`MachineAddId`, SOPInfo.machineAddId.toString());
+        
         SOPFormData.append(`KnowledgeBaseId`, saveKnowledgeBaseRes.result);
 
         SOPInfo.sops.forEach((sop, idx) => {
@@ -203,10 +228,10 @@ export function SOPName({ onClose }) {
           SOPFormData.append(`SOP2s[${idx}].soP2Name`, sop.soP2Name);
           SOPFormData.append(`SOP2s[${idx}].sopVideo`, sop.sopVideo);
           SOPFormData.append(`SOP2s[${idx}].sopVideoObj`, sop.sopVideoObj);
-          SOPFormData.append(`SOP2s[${idx}].sopPLC1`, sop.sopplC1);
-          SOPFormData.append(`SOP2s[${idx}].sopPLC2`, sop.sopplC2);
-          SOPFormData.append(`SOP2s[${idx}].sopPLC3`, sop.sopplC3);
-          SOPFormData.append(`SOP2s[${idx}].sopPLC4`, sop.sopplC4);
+          SOPFormData.append(`SOP2s[${idx}].PL1`, sop.sopplC1);
+          SOPFormData.append(`SOP2s[${idx}].PL2`, sop.sopplC2);
+          SOPFormData.append(`SOP2s[${idx}].PL3`, sop.sopplC3);
+          SOPFormData.append(`SOP2s[${idx}].PL4`, sop.sopplC4);
 
           sop.sopModels.forEach((sopModel, j) => {
             SOPFormData.append(
@@ -237,13 +262,20 @@ export function SOPName({ onClose }) {
               `SOP2s[${idx}].sopModels[${j}].sopModelFileObj`,
               sopModel.sopModelFileObj
             );
+            // 此處確保即使sopT3DModels為空也能傳遞空數組[]
+            // SOPFormData.append(`SOP2s[${idx}].sopModels[${j}].sopT3DModels`, JSON.stringify(sopModel.sopT3DModels || []));
+            // 处理 3D 模型数据，使用 JSON.stringify 确保格式正确
+            // const t3dModelsData = sop.T3DModels && Array.isArray(sop.T3DModels) ? sop.T3DModels : [];
+            // formData.append(`SOP2s[${idx}].T3DModels`, JSON.stringify(t3dModelsData));
+            
           });
         });
 
         const saveSOPInfoRes = await apiSaveSOP2(SOPFormData);
 
         if (saveSOPInfoRes.message === '完全成功') {
-          toast.success('知識保存成功!', {
+          const successMessage = SOPInfo.knowledgeBaseId ? '編輯保存成功!' : '知識保存成功!';
+          toast.success(successMessage, {
             position: toast.POSITION.TOP_CENTER,
             autoClose: 2000,
             hideProgressBar: true,
@@ -253,9 +285,9 @@ export function SOPName({ onClose }) {
         }
 
         setSOPInfo(null); // Reset or update SOP information
-        // setTimeout(() => {
-        //   window.location.href = '/knowledge';
-        // }, 2000);
+        setTimeout(() => {
+          window.location.href = '/knowledge';
+        }, 2000);
       } catch (err) {
         console.error('保存知識庫失败:', err);
         toast.error(`保存失败，請稍后重试。錯誤詳情: ${err.message}`, {

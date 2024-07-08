@@ -5,7 +5,8 @@ import { useLocation } from 'react-router-dom';
 import React, { useEffect, useRef, useState } from 'react';
 import { useReactToPrint } from 'react-to-print';
 import { jsPDF } from 'jspdf';
-import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
+import html2canvas from 'html2canvas';
+import { PDFDownloadLink, Document, Page, Text, StyleSheet, View } from '@react-pdf/renderer';
 import PdfContent from './PDFContent';
 import { useTranslation } from 'react-i18next'; //語系
 import {
@@ -13,17 +14,23 @@ import {
   apiGetAllSOPByMachineAddId,
 } from '../utils/Api';
 
-// React PDF Styles
+// 定義 PDF 的樣式
 const pdfStyles = StyleSheet.create({
   page: {
-    flexDirection: 'row',
-    backgroundColor: '#E4E4E4',
-  },
-  section: {
-    margin: 10,
+    flexDirection: 'column',
+    backgroundColor: '#FFF',
     padding: 10,
-    flexGrow: 1,
   },
+  text: {
+    margin: 10,
+    fontSize: 14,
+    textAlign: 'justify'
+  },
+  header: {
+    fontSize: 18,
+    textAlign: 'center',
+    margin: 10,
+  }
 });
 
 export function RepairDocument() {
@@ -44,20 +51,56 @@ export function RepairDocument() {
     onBeforePrint: () => setIsPrinting(true),
     onAfterPrint: () => {
       setIsPrinting(false);
-      // savePdf();  // 確保在列印完成後保存 PDF 文件
+      savePdf();  // 確保在列印完成後保存 PDF 文件
     },
   });
 
   const savePdf = () => {
-    const pdf = new jsPDF();
-    pdf.html(pdfRef.current, {
-      callback: function (doc) {
-        doc.save('德川維修手冊.pdf');
-      },
-      // Adjust these options as needed to improve formatting
-      x: 10,
-      y: 10,
-      width: 180,
+    html2canvas(pdfRef.current, {
+      scale: 2, // 提高渲染質量
+      useCORS: true // 允許加載跨域圖片
+    }).then(canvas => {
+      const pdf = new jsPDF({
+        orientation: 'p',
+        unit: 'px',
+        format: [canvas.width, canvas.height]
+      });
+      pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, canvas.width, canvas.height);
+      pdf.save('德川維修手冊.pdf');
+    });
+  };
+
+  const handleDownloadPdf = () => {
+    html2canvas(pdfRef.current, {
+      scale: 2,  // 提高渲染質量
+      useCORS: true,
+    }).then(canvas => {
+      const pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4'
+      });
+      const imgWidth = 210;  // A4 width in mm
+      const imgHeight = 297;  // A4 height in mm
+      const contentAspectRatio = canvas.width / canvas.height;
+      const a4AspectRatio = imgWidth / imgHeight;
+  
+      let finalWidth, finalHeight;
+      if (contentAspectRatio > a4AspectRatio) {
+        // Width is the limiting factor
+        finalWidth = imgWidth;
+        finalHeight = imgWidth / contentAspectRatio;
+      } else {
+        // Height is the limiting factor
+        finalHeight = imgHeight;
+        finalWidth = imgHeight * contentAspectRatio;
+      }
+  
+      const xOffset = (imgWidth - finalWidth) / 2;  // Center horizontally
+      const yOffset = (imgHeight - finalHeight) / 2; // Center vertically
+  
+      pdf.addImage(canvas.toDataURL('image/png'), 'PNG', xOffset, yOffset, finalWidth, finalHeight);
+      pdf.save('maintenance-manual.pdf');
     });
   };
 
@@ -116,6 +159,9 @@ export function RepairDocument() {
           className={classNames(styles['button'], styles['btn-pdf'])}
         >
           印出
+        </button>
+        <button onClick={handleDownloadPdf} className={classNames(styles['button'], styles['btn-pdf'])}>
+          下載 PDF
         </button>
       </div>
       <div className={styles['back-page']}>

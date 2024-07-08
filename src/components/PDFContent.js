@@ -43,18 +43,11 @@ const PDFContent = React.forwardRef(({ knowledgeInfo, SOPData }, ref) => {
             <h1>Trouble Shooting</h1>
             <div className={styles['preview-content']}>
               <div className={styles['info-box']}>
-                {item ? (
-                  <p style={{ textAlign: 'left' }}>
-                    File No : {item.knowledgeBaseFileNo}
+                <p style={{ textAlign: 'left' }}>
+                    File No : {knowledgeInfo.knowledgeBaseFileNo}
                     <br></br>
-                    Error Code : {item.knowledgeBaseAlarmCode}
-                  </p>
-                ) : (
-                  <p style={{ textAlign: 'left' }}>
-                    File No : 12345<br></br>
-                    Error Code : 00000
-                  </p>
-                )}
+                    Error Code : {knowledgeInfo.knowledgeBaseAlarmCode}
+                </p>
               </div>
             </div>
             <img
@@ -304,18 +297,11 @@ const PDFContent = React.forwardRef(({ knowledgeInfo, SOPData }, ref) => {
                 <h1>Trouble Shooting</h1>
                 <div className={styles['preview-content']}>
                   <div className={styles['info-box']}>
-                    {item ? (
-                      <p style={{ textAlign: 'left' }}>
-                        File No : {item.knowledgeBaseFileNo}
-                        <br></br>
-                        Error Code : {item.knowledgeBaseAlarmCode}
-                      </p>
-                    ) : (
-                      <p style={{ textAlign: 'left' }}>
-                        File No : 12345<br></br>
-                        Error Code : 00000
-                      </p>
-                    )}
+                    <p style={{ textAlign: 'left' }}>
+                      File No : {knowledgeInfo.knowledgeBaseFileNo}
+                      <br></br>
+                      Error Code : {knowledgeInfo.knowledgeBaseAlarmCode}
+                    </p>
                   </div>
                 </div>
                 <img
@@ -374,9 +360,9 @@ const PDFContent = React.forwardRef(({ knowledgeInfo, SOPData }, ref) => {
                           <br />
                         </>
                       )}
-                      {sop.soP2RemarksImage ? (
+                      {sop.soP2RemarkImage ? (
                         <img
-                          src={sop.soP2RemarksImage}
+                          src={sop.soP2RemarkImage}
                           className={`w-[170px] h-[170px]`}
                           style={{
                             objectFit: 'contain', // 保持圖片原始比例並填滿容器

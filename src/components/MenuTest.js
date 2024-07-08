@@ -102,12 +102,24 @@
 import React, { useEffect, useRef } from 'react';
 import jsMind from 'jsmind';
 import 'jsmind/style/jsmind.css';
+import { useNavigate } from 'react-router-dom';
 import { apiGetMachineAddMindMap } from '../utils/Api';
 
 const MenuTest = ({ machineAddId, defaultZoom = 1 }) => {
   console.log("MachineAddId in MenuTest:", machineAddId); // Debug 輸出
   const jmContainerRef = useRef(null);
   const jmInstanceRef = useRef(null);
+
+  const navigate = useNavigate();
+
+  // 添加節點點擊事件的處理函數
+  const handleNodeClick = (event, data) => {
+    // 檢查節點 ID 是否符合導航到 database 的格式
+    if (data.node.id.startsWith('root_') && data.node.id.includes('_kb_')) {
+      const knowledgeBaseId = data.node.id.split('_kb_')[1];
+      navigate(`/database`, { state: { knowledgeBaseId: knowledgeBaseId } });
+    }
+  };
 
   // 这个函数负责处理每个部件和维修类型，并将它们添加到数据数组中
   const processPart = (part, parentId, direction) => {
@@ -213,6 +225,9 @@ const MenuTest = ({ machineAddId, defaultZoom = 1 }) => {
   
         jmInstanceRef.current = new jsMind(options);
         jmInstanceRef.current.show(mind);
+
+        // 添加節點點擊事件監聽
+        jmInstanceRef.current.add_event_listener('click', handleNodeClick);
   
         // 等待心智图渲染完成后进行缩放调整
         setTimeout(() => {
@@ -227,12 +242,12 @@ const MenuTest = ({ machineAddId, defaultZoom = 1 }) => {
     }).catch((error) => {
       console.error('Error in displaying mind map:', error);
     });
-  }, [machineAddId, defaultZoom]); // 依賴中新增 defaultZoom
+  }, [machineAddId, defaultZoom, navigate]); // 依賴中新增 defaultZoom
   
 
   return (
     <div>
-      <div ref={jmContainerRef} style={{ width: '100%', height: '750px', overflow: 'hidden' }} />
+      <div ref={jmContainerRef} style={{ width: '100%', height: '80vh', overflow: 'hidden' }} />
     </div>
   );
 };

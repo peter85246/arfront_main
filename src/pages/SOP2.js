@@ -135,15 +135,36 @@ function SOP2() {
   // }, [SOPInfo]);
   
 
+  // useEffect(() => {
+  //   if (SOPInfo.sops) {
+  //     const convertedSOPData = SOPInfo.sops?.map(item => ({
+  //       ...item, sopModels: []
+  //     }))
+  //     setSOPs(convertedSOPData);
+  //     setSelectSOP(convertedSOPData[0]);
+  //   }
+  // }, [SOPInfo])
+
   useEffect(() => {
-    if (SOPInfo.sops) {
-      const convertedSOPData = SOPInfo.sops?.map(item => ({
-        ...item, sopModels: []
-      }))
-      setSOPs(convertedSOPData);
-      setSelectSOP(convertedSOPData[0]);
+    // 確保 SOPInfo 不是 null 且 SOPInfo.sops 存在
+    if (SOPInfo && SOPInfo.sops) {
+        const convertedSOPData = SOPInfo.sops.map(item => ({
+            ...item,
+            sopModels: [] // 重置或初始化 sopModels
+        }));
+        setSOPs(convertedSOPData);
+        if (convertedSOPData.length > 0) {
+            setSelectSOP(convertedSOPData[0]); // 選擇第一個 SOP
+        } else {
+            setSelectSOP(null); // 沒有 SOPs 時設置為 null
+        }
+    } else {
+        // SOPInfo 為 null 或沒有 sops 時的處理
+        setSOPs([]); // 清空 SOPs
+        setSelectSOP(null); // 沒有選中的 SOP
     }
-  }, [SOPInfo])
+}, [SOPInfo]);
+
 
 
   //#region 新增SOP
@@ -162,8 +183,8 @@ function SOP2() {
       isDeletedSOPImage: false,
       /* 新增：sopRemarksMessage、sopRemarksImage、sopRemarksImageObj 三元素 */
       soP2Remark: '',
-      soP2RemarksImage: '',
-      soP2RemarksImageObj: null,
+      soP2RemarkImage: '',
+      soP2RemarkImageObj: null,
       isDeletedSOPRemarksImage: false,
       sopVideo: '',
       sopVideoObj: null,
@@ -357,8 +378,8 @@ function SOP2() {
         var img = new Image();
         var objectUrl = URL.createObjectURL(file);
         img.onload = function () {
-          newSelectSOP.soP2RemarksImageObj = file;
-          if (newSelectSOP.soP2RemarksImage != '') {
+          newSelectSOP.soP2RemarkImageObj = file;
+          if (newSelectSOP.soP2RemarkImage != '') {
             newSelectSOP.isDeletedSOPRemarksImage = true;
           }
           setSelectSOP(newSelectSOP);
@@ -374,8 +395,8 @@ function SOP2() {
     e.preventDefault();
     let newSelectSOP = { ...selectSOP };
 
-    newSelectSOP.soP2RemarksImage = '';
-    newSelectSOP.soP2RemarksImageObj = null;
+    newSelectSOP.soP2RemarkImage = '';
+    newSelectSOP.soP2RemarkImageObj = null;
     newSelectSOP.isDeletedSOPRemarksImage = true;
 
     setSelectSOP(newSelectSOP);
@@ -1087,15 +1108,15 @@ function SOP2() {
                               {/*備註圖片*/}
                             </label>
                             <div className="d-flex align-items-center justify-content-center sop-file-view">
-                              {selectSOP.soP2RemarksImage != '' ||
-                              selectSOP.soP2RemarksImageObj != null ? (
+                              {selectSOP.soP2RemarkImage != '' ||
+                              selectSOP.soP2RemarkImageObj != null ? (
                                 <img
                                   src={
-                                    selectSOP.soP2RemarksImageObj != null
+                                    selectSOP.soP2RemarkImageObj != null
                                       ? URL.createObjectURL(
-                                          selectSOP.soP2RemarksImageObj
+                                          selectSOP.soP2RemarkImageObj
                                         )
-                                      : selectSOP.soP2RemarksImage
+                                      : selectSOP.soP2RemarkImage
                                   }
                                   style={{ width: '100%' }}
                                 />
