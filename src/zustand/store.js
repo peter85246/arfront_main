@@ -18,8 +18,11 @@ export const useStore = create()((set) => ({
       return { SOPInfo: newSOPInfo };
     }),
 
-    // 添加用於更新圖片數據的方法
-    setKnowledgeBaseModelImages: (images) => set({ knowledgeBaseModelImages: images }),
-    setKnowledgeBaseToolsImages: (images) => set({ knowledgeBaseToolsImages: images }),
-    setKnowledgeBasePositionImages: (images) => set({ knowledgeBasePositionImages: images }),
+  // 添加用於更新圖片數據的方法
+  setKnowledgeBaseModelImages: (images) =>
+    set({ knowledgeBaseModelImages: images }),
+  setKnowledgeBaseToolsImages: (images) =>
+    set({ knowledgeBaseToolsImages: images }),
+  setKnowledgeBasePositionImages: (images) =>
+    set({ knowledgeBasePositionImages: images }),
 }));

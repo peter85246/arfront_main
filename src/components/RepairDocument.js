@@ -2,11 +2,10 @@ import classNames from 'classnames';
 import styles from '../scss/global.module.scss';
 import { Link, useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
-import React, { useEffect, useRef, useState } from 'react';
-import { useReactToPrint } from 'react-to-print';
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
-import { PDFDownloadLink, Document, Page, Text, StyleSheet, View } from '@react-pdf/renderer';
+import React, { useEffect, useRef, useState } from 'react';
+import { useReactToPrint } from 'react-to-print';
 import PdfContent from './PDFContent';
 import { useTranslation } from 'react-i18next'; //語系
 import {
@@ -14,95 +13,66 @@ import {
   apiGetAllSOPByMachineAddId,
 } from '../utils/Api';
 
-// 定義 PDF 的樣式
-const pdfStyles = StyleSheet.create({
-  page: {
-    flexDirection: 'column',
-    backgroundColor: '#FFF',
-    padding: 10,
-  },
-  text: {
-    margin: 10,
-    fontSize: 14,
-    textAlign: 'justify'
-  },
-  header: {
-    fontSize: 18,
-    textAlign: 'center',
-    margin: 10,
-  }
-});
-
 export function RepairDocument() {
   const location = useLocation();
-  const item = location.state?.item; // 訪問傳遞的狀態
+  const [item, setItem] = useState(location.state?.item); // 假設通過location.state傳遞item
 
   const [knowledgeInfo, setKnowledgeInfo] = useState([]);
   const [SOPData, setSOPData] = useState([]);
   const navigate = useNavigate(); // 使用 navigate 來處理導航
   console.log('item', item);
 
-  const pdfRef = React.useRef();
+  const pdfRef = useRef();
+  // const pdfRef = React.useRef();
   const [isPrinting, setIsPrinting] = useState(false);
   const { t } = useTranslation();
+
+  const handleAllImagesLoaded = () => {
+    console.log('All images have been loaded, ready to print or generate PDF.');
+  };
 
   const handlePrint = useReactToPrint({
     content: () => pdfRef.current,
     onBeforePrint: () => setIsPrinting(true),
     onAfterPrint: () => {
       setIsPrinting(false);
-      savePdf();  // 確保在列印完成後保存 PDF 文件
+      // savePdf();  // 確保在列印完成後保存 PDF 文件
     },
   });
 
-  const savePdf = () => {
-    html2canvas(pdfRef.current, {
-      scale: 2, // 提高渲染質量
-      useCORS: true // 允許加載跨域圖片
-    }).then(canvas => {
-      const pdf = new jsPDF({
-        orientation: 'p',
-        unit: 'px',
-        format: [canvas.width, canvas.height]
-      });
-      pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, canvas.width, canvas.height);
-      pdf.save('德川維修手冊.pdf');
+  // PDF 下載處理
+  const handleDownloadPdf = async () => {
+    const canvas = await html2canvas(pdfRef.current);
+    const imgData = canvas.toDataURL('image/png');
+    const pdf = new jsPDF({
+      orientation: 'p',
+      unit: 'px',
+      format: [canvas.width, canvas.height],
     });
+    pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
+    pdf.save('download.pdf');
   };
 
-  const handleDownloadPdf = () => {
-    html2canvas(pdfRef.current, {
-      scale: 2,  // 提高渲染質量
-      useCORS: true,
-    }).then(canvas => {
-      const pdf = new jsPDF({
-        orientation: 'portrait',
-        unit: 'mm',
-        format: 'a4'
+  useEffect(() => {
+    if (item) {
+      apiGetAllKnowledgeBaseByMachineAddId({ Id: item.machineAddId }).then(
+        (res) => {
+          if (res?.message === '完全成功') {
+            setKnowledgeInfo(
+              res.result.find(
+                (k) => k.knowledgeBaseId === item.knowledgeBaseId
+              ) || {}
+            );
+          }
+        }
+      );
+      apiGetAllSOPByMachineAddId({ Id: item.machineAddId }).then((res) => {
+        if (res?.message === '完全成功') {
+          setSOPData(res.result);
+        }
       });
-      const imgWidth = 210;  // A4 width in mm
-      const imgHeight = 297;  // A4 height in mm
-      const contentAspectRatio = canvas.width / canvas.height;
-      const a4AspectRatio = imgWidth / imgHeight;
-  
-      let finalWidth, finalHeight;
-      if (contentAspectRatio > a4AspectRatio) {
-        // Width is the limiting factor
-        finalWidth = imgWidth;
-        finalHeight = imgWidth / contentAspectRatio;
-      } else {
-        // Height is the limiting factor
-        finalHeight = imgHeight;
-        finalWidth = imgHeight * contentAspectRatio;
-      }
-  
-      const xOffset = (imgWidth - finalWidth) / 2;  // Center horizontally
-      const yOffset = (imgHeight - finalHeight) / 2; // Center vertically
-  
-      pdf.addImage(canvas.toDataURL('image/png'), 'PNG', xOffset, yOffset, finalWidth, finalHeight);
-      pdf.save('maintenance-manual.pdf');
-    });
-  };
+    }
+  }, [item]);
 
   useEffect(() => {
     const machineAddId = item?.machineAddId;
@@ -160,7 +130,10 @@ export function RepairDocument() {
         >
           印出
         </button>
-        <button onClick={handleDownloadPdf} className={classNames(styles['button'], styles['btn-pdf'])}>
+        <button
+          onClick={handleDownloadPdf}
+          className={classNames(styles['button'], styles['btn-pdf'])}
+        >
           下載 PDF
         </button>
       </div>
@@ -182,8 +155,10 @@ export function RepairDocument() {
         <div className={styles['content-box-middle-bigView']}>
           <PdfContent
             ref={pdfRef}
+            item={item}
             knowledgeInfo={knowledgeInfo}
             SOPData={SOPData}
+            onAllImagesLoaded={handleAllImagesLoaded} // 將函數作為 prop 傳遞
           />
         </div>
       </div>

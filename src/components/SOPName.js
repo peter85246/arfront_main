@@ -16,13 +16,17 @@ export function SOPName({ onClose }) {
   // 這個 useEffect 會在 SOPInfo 變更時更新，包括組件初次渲染
   useEffect(() => {
     // 如果存在 SOPInfo 且其內有 knowledgeInfo，則從中提取 knowledgeBaseSOPName
-    if (SOPInfo && SOPInfo.knowledgeInfo && SOPInfo.knowledgeInfo.knowledgeBaseSOPName) {
+    if (
+      SOPInfo &&
+      SOPInfo.knowledgeInfo &&
+      SOPInfo.knowledgeInfo.knowledgeBaseSOPName
+    ) {
       setSopName(SOPInfo.knowledgeInfo.knowledgeBaseSOPName);
     } else {
       // 如果沒有提供有效的 SOP 名稱，設置為空以便新建
       setSopName('');
     }
-  }, [SOPInfo]);  
+  }, [SOPInfo]);
 
   // 處理模態窗關閉事件
   const handleCloseModal = () => {
@@ -51,7 +55,7 @@ export function SOPName({ onClose }) {
 
   // 處理表單儲存事件
   const handleSave = async () => {
-    console.log("handleSave is triggered");
+    console.log('handleSave is triggered');
     console.log({ ...SOPInfo, sop2Name });
     let hasError = false;
     const newErrors = {};
@@ -106,21 +110,25 @@ export function SOPName({ onClose }) {
             // 檢查info[key]是否存在並具有forEach方法
             if (info[key] && info[key].forEach) {
               info[key].forEach((fileObj) => {
-                if (fileObj && fileObj.file) {  // 添加這一行來進行檢查
-                const file = fileObj.file; // 確保使用的是原始文件對象
-                const fileExtension = file.name.split('.').pop().toLowerCase();
-                if (!allowedExtensions.includes(fileExtension)) {
-                  toast.error(`不支持的文件類型: ${file.name}`, {
-                    position: toast.POSITION.TOP_CENTER,
-                    autoClose: 2000,
-                    hideProgressBar: true,
-                    closeOnClick: false,
-                    pauseOnHover: true,
-                  });
-                } else {
-                  formData.append(`KnowledgeBases[${index}].${key}`, file);
-                  fileIncluded = true;
-                }
+                if (fileObj && fileObj.file) {
+                  // 添加這一行來進行檢查
+                  const file = fileObj.file; // 確保使用的是原始文件對象
+                  const fileExtension = file.name
+                    .split('.')
+                    .pop()
+                    .toLowerCase();
+                  if (!allowedExtensions.includes(fileExtension)) {
+                    toast.error(`不支持的文件類型: ${file.name}`, {
+                      position: toast.POSITION.TOP_CENTER,
+                      autoClose: 2000,
+                      hideProgressBar: true,
+                      closeOnClick: false,
+                      pauseOnHover: true,
+                    });
+                  } else {
+                    formData.append(`KnowledgeBases[${index}].${key}`, file);
+                    fileIncluded = true;
+                  }
                 }
               });
             }
@@ -170,7 +178,7 @@ export function SOPName({ onClose }) {
         for (let pair of SOPFormData.entries()) {
           console.log(`${pair[0]}: ${pair[1]}`);
         }
-        
+
         const saveKnowledgeBaseRes = await fetchDataCallFile(
           'SaveKnowledgeBase',
           'PUT',
@@ -194,7 +202,6 @@ export function SOPName({ onClose }) {
           return;
         }
 
-        
         SOPFormData.append(`KnowledgeBaseId`, saveKnowledgeBaseRes.result);
 
         SOPInfo.sops.forEach((sop, idx) => {
@@ -265,16 +272,23 @@ export function SOPName({ onClose }) {
             // 此處確保即使sopT3DModels為空也能傳遞空數組[]
             // SOPFormData.append(`SOP2s[${idx}].sopModels[${j}].sopT3DModels`, JSON.stringify(sopModel.sopT3DModels || []));
             // 处理 3D 模型数据，使用 JSON.stringify 确保格式正确
-            // const t3dModelsData = sop.T3DModels && Array.isArray(sop.T3DModels) ? sop.T3DModels : [];
-            // formData.append(`SOP2s[${idx}].T3DModels`, JSON.stringify(t3dModelsData));
-            
+            const t3dModelsData =
+              sop.T3DModels && Array.isArray(sop.T3DModels)
+                ? sop.T3DModels
+                : [];
+            formData.append(
+              `SOP2s[${idx}].T3DModels`,
+              JSON.stringify(t3dModelsData)
+            );
           });
         });
 
         const saveSOPInfoRes = await apiSaveSOP2(SOPFormData);
 
         if (saveSOPInfoRes.message === '完全成功') {
-          const successMessage = SOPInfo.knowledgeBaseId ? '編輯保存成功!' : '知識保存成功!';
+          const successMessage = SOPInfo.knowledgeBaseId
+            ? '編輯保存成功!'
+            : '知識保存成功!';
           toast.success(successMessage, {
             position: toast.POSITION.TOP_CENTER,
             autoClose: 2000,

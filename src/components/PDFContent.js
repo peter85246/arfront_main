@@ -19,7 +19,8 @@ const PDFContent = React.forwardRef(({ knowledgeInfo, SOPData }, ref) => {
 
   // SOPData 是一個包含多個 SOP 相關數據的陣列
   // 顯示第一個 SOP 的名稱，確保數據已正確加載
-  const sopName = SOPData?.length > 0 ? SOPData[0].soP2Name  : 'Default SOP Name';
+  const sopName =
+    SOPData?.length > 0 ? SOPData[0].soP2Name : 'Default SOP Name';
 
   function safeJsonParse(str) {
     try {
@@ -30,8 +31,8 @@ const PDFContent = React.forwardRef(({ knowledgeInfo, SOPData }, ref) => {
   }
 
   useEffect(() => {
-    console.log("Received knowledgeInfo:", knowledgeInfo);
-    console.log("Received SOPData:", SOPData);
+    console.log('Received knowledgeInfo:', knowledgeInfo);
+    console.log('Received SOPData:', SOPData);
   }, [knowledgeInfo, SOPData]);
 
   return (
@@ -44,9 +45,9 @@ const PDFContent = React.forwardRef(({ knowledgeInfo, SOPData }, ref) => {
             <div className={styles['preview-content']}>
               <div className={styles['info-box']}>
                 <p style={{ textAlign: 'left' }}>
-                    File No : {knowledgeInfo.knowledgeBaseFileNo}
-                    <br></br>
-                    Error Code : {knowledgeInfo.knowledgeBaseAlarmCode}
+                  File No : {knowledgeInfo.knowledgeBaseFileNo}
+                  <br></br>
+                  Error Code : {knowledgeInfo.knowledgeBaseAlarmCode}
                 </p>
               </div>
             </div>
@@ -58,13 +59,20 @@ const PDFContent = React.forwardRef(({ knowledgeInfo, SOPData }, ref) => {
             />
           </div>
           <label className={styles['sop-section']}>
-              SOP名稱: {knowledgeInfo.knowledgeBaseSOPName}
+            SOP名稱: {knowledgeInfo.knowledgeBaseSOPName}
           </label>
         </div>
 
         <div className={styles['model-label']}>
           <label>
-              For Model 機型 : {Array.isArray(safeJsonParse(knowledgeInfo.knowledgeBaseModelImageNames)) ? safeJsonParse(knowledgeInfo.knowledgeBaseModelImageNames).join(', ') : knowledgeInfo.knowledgeBaseModelImageNames}
+            For Model 機型 :{' '}
+            {Array.isArray(
+              safeJsonParse(knowledgeInfo.knowledgeBaseModelImageNames)
+            )
+              ? safeJsonParse(knowledgeInfo.knowledgeBaseModelImageNames).join(
+                  ', '
+                )
+              : knowledgeInfo.knowledgeBaseModelImageNames}
           </label>
         </div>
         <div className={styles['model']} id="model">
@@ -182,8 +190,8 @@ const PDFContent = React.forwardRef(({ knowledgeInfo, SOPData }, ref) => {
                       <div
                         className="flex gap-[4px] items-center"
                         style={{
-                          minWidth: '20vw',  // 增加最小寬度
-                          wordWrap: 'break-word',  // 允許在達到邊緣時換行
+                          minWidth: '20vw', // 增加最小寬度
+                          wordWrap: 'break-word', // 允許在達到邊緣時換行
                         }}
                       >
                         <span className="text-red-600 text-[20px]">
@@ -205,8 +213,10 @@ const PDFContent = React.forwardRef(({ knowledgeInfo, SOPData }, ref) => {
             <div className={styles['tools-label']}>
               <label>Illustration(維修部位說明) :</label>
             </div>
-            <div className="w-full flex justify-between py-2 px-6" 
-              style={{ minWidth: '60vw' }}>
+            <div
+              className="w-full flex justify-between py-2 px-6"
+              style={{ minWidth: '60vw' }}
+            >
               <div
                 style={{
                   display: 'flex',
@@ -221,11 +231,11 @@ const PDFContent = React.forwardRef(({ knowledgeInfo, SOPData }, ref) => {
                       knowledgeInfo?.knowledgeBasePositionImage
                     ).map((item, idx) => (
                       <div
-                      style={{
-                        width: '220px',
-                        height: '220px',
-                        position: 'relative',
-                      }}
+                        style={{
+                          width: '220px',
+                          height: '220px',
+                          position: 'relative',
+                        }}
                       >
                         <img
                           key={idx}
@@ -353,7 +363,10 @@ const PDFContent = React.forwardRef(({ knowledgeInfo, SOPData }, ref) => {
                   </div>
                   <div className={styles['content-section']}>
                     <p>Remark(備註補充)：</p>
-                    <div className={styles['step-content-box']} style={{ maxWidth: '300px', wordWrap: 'break-word' }}>
+                    <div
+                      className={styles['step-content-box']}
+                      style={{ maxWidth: '300px', wordWrap: 'break-word' }}
+                    >
                       {sop.soP2Remark && (
                         <>
                           {sop.soP2Remark}

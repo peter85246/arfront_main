@@ -105,8 +105,8 @@ import 'jsmind/style/jsmind.css';
 import { useNavigate } from 'react-router-dom';
 import { apiGetMachineAddMindMap } from '../utils/Api';
 
-const MenuTest = ({ machineAddId, defaultZoom = 1 }) => {
-  console.log("MachineAddId in MenuTest:", machineAddId); // Debug 輸出
+const MenuTest = ({ machineAddId, machineName, defaultZoom = 1 }) => {
+  console.log('MachineAddId in MenuTest:', machineAddId); // Debug 輸出
   const jmContainerRef = useRef(null);
   const jmInstanceRef = useRef(null);
 
@@ -132,7 +132,7 @@ const MenuTest = ({ machineAddId, defaultZoom = 1 }) => {
         topic: part.deviceParts.trim(),
         parentid: parentId,
         direction: direction,
-        'font-size': 13, // 調整字體大小
+        'font-size': 12, // 調整字體大小
         width: 'auto', // 調整寬度
       },
     ];
@@ -144,7 +144,7 @@ const MenuTest = ({ machineAddId, defaultZoom = 1 }) => {
         topic: type.repairType.trim(),
         parentid: partId,
         direction: childDirection,
-        'font-size': 13, // 調整字體大小
+        'font-size': 12, // 調整字體大小
         width: 'auto', // 調整寬度
       });
 
@@ -155,7 +155,7 @@ const MenuTest = ({ machineAddId, defaultZoom = 1 }) => {
           topic: kb.deviceType.trim() || 'General Info',
           parentid: typeId,
           direction: childDirection,
-          'font-size': 13, // 調整字體大小
+          'font-size': 12, // 調整字體大小
           width: 'auto', // 調整寬度
         });
       });
@@ -182,7 +182,12 @@ const MenuTest = ({ machineAddId, defaultZoom = 1 }) => {
     try {
       const params = { MachineAddId: machineAddId };
       const data = await apiGetMachineAddMindMap(params);
-      if (!data || !data.result || !data.result.knowledgeBases || !Array.isArray(data.result.knowledgeBases)) {
+      if (
+        !data ||
+        !data.result ||
+        !data.result.knowledgeBases ||
+        !Array.isArray(data.result.knowledgeBases)
+      ) {
         console.error('Unexpected data format:', data);
         return [];
       }
@@ -194,62 +199,83 @@ const MenuTest = ({ machineAddId, defaultZoom = 1 }) => {
   };
 
   useEffect(() => {
-    fetchData().then((knowledgeBases) => {
-      if (jmContainerRef.current) {
-        jmContainerRef.current.style.overflow = 'hidden';  // 初次渲染時隱藏滾動條
-      }
-      
-      if (knowledgeBases.length > 0) {
-        const options = {
-          container: jmContainerRef.current,
-          editable: false,
-          theme: 'primary',
-          mode: 'full',
-          layout: {
-            hspace: 20, // 可以根据需要调整这些值
-            vspace: 15,
-            pspace: 10,
-          },
-        };
-  
-        const nodes = [{ id: 'root', topic: 'MindMap', isroot: true, direction: 'right', 'font-size': 18, width: 'auto'}];
-        knowledgeBases.forEach((part, index) => {
-          nodes.push(...processPart(part, 'root', index % 2 === 0 ? 'right' : 'left'));
-        });
-  
-        const mind = {
-          meta: { name: 'demo', author: 'hizzgdev@163.com', version: '0.2' },
-          format: 'node_array',
-          data: nodes,
-        };
-  
-        jmInstanceRef.current = new jsMind(options);
-        jmInstanceRef.current.show(mind);
+    fetchData()
+      .then((knowledgeBases) => {
+        if (jmContainerRef.current) {
+          jmContainerRef.current.style.overflow = 'hidden'; // 初次渲染時隱藏滾動條
+        }
 
-        // 添加節點點擊事件監聽
-        jmInstanceRef.current.add_event_listener('click', handleNodeClick);
-  
-        // 等待心智图渲染完成后进行缩放调整
-        setTimeout(() => {
-          const contentWidth = jmContainerRef.current.querySelector('.jsmind-inner').offsetWidth;
-          const contentHeight = jmContainerRef.current.querySelector('.jsmind-inner').offsetHeight;
-          const scaleX = jmContainerRef.current.offsetWidth / contentWidth;
-          const scaleY = jmContainerRef.current.offsetHeight / contentHeight;
-          const scale = Math.min(scaleX, scaleY, defaultZoom);  // 使用 defaultZoom 當作最大縮放比例
-          jmInstanceRef.current.view.setZoom(scale); // 调整缩放比例
-        }, 0);
-      }
-    }).catch((error) => {
-      console.error('Error in displaying mind map:', error);
-    });
-  }, [machineAddId, defaultZoom, navigate]); // 依賴中新增 defaultZoom
-  
+        if (knowledgeBases.length > 0) {
+          const options = {
+            container: jmContainerRef.current,
+            editable: false,
+            theme: 'primary',
+            mode: 'full',
+            layout: {
+              hspace: 20, // 可以根据需要调整这些值
+              vspace: 15,
+              pspace: 10,
+            },
+          };
+
+          const nodes = [
+            {
+              id: 'root',
+              topic: machineName,
+              isroot: true,
+              direction: 'right',
+              'font-size': 15,
+              width: 'auto',
+              'background-color': '#13466b', // jsmind接受直接設置css，深藍節點背景
+              color: '#fff', // jsmind接受直接設置css，白字體
+            },
+          ];
+          knowledgeBases.forEach((part, index) => {
+            nodes.push(
+              ...processPart(part, 'root', index % 2 === 0 ? 'right' : 'left')
+            );
+          });
+
+          const mind = {
+            meta: { name: 'demo', author: 'hizzgdev@163.com', version: '0.2' },
+            format: 'node_array',
+            data: nodes,
+          };
+
+          jmInstanceRef.current = new jsMind(options);
+          jmInstanceRef.current.show(mind);
+
+          // 添加節點點擊事件監聽
+          jmInstanceRef.current.add_event_listener('click', handleNodeClick);
+
+          // 等待心智图渲染完成后进行缩放调整
+          setTimeout(() => {
+            const contentWidth =
+              jmContainerRef.current.querySelector('.jsmind-inner').offsetWidth;
+            const contentHeight =
+              jmContainerRef.current.querySelector(
+                '.jsmind-inner'
+              ).offsetHeight;
+            const scaleX = jmContainerRef.current.offsetWidth / contentWidth;
+            const scaleY = jmContainerRef.current.offsetHeight / contentHeight;
+            const scale = Math.min(scaleX, scaleY, defaultZoom); // 使用 defaultZoom 當作最大縮放比例
+            jmInstanceRef.current.view.setZoom(scale); // 调整缩放比例
+          }, 0);
+        }
+      })
+      .catch((error) => {
+        console.error('Error in displaying mind map:', error);
+      });
+  }, [machineAddId, machineName, defaultZoom, navigate]); // 依賴中新增 defaultZoom
 
   return (
     <div>
-      <div ref={jmContainerRef} style={{ width: '100%', height: '80vh', overflow: 'hidden' }} />
+      <div
+        ref={jmContainerRef}
+        style={{ width: '100%', height: '90vh', overflow: 'hidden' }}
+      />
     </div>
   );
 };
-  
+
 export default MenuTest;

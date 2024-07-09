@@ -14,7 +14,6 @@ import {
 import { useEffect, useState } from 'react';
 import { useStore } from '../zustand/store';
 
-
 export default function Database() {
   const location = useLocation();
   const item = location.state?.item; // 訪問傳遞的狀態
@@ -40,7 +39,7 @@ export default function Database() {
     navigate('/document-editor', { state: { knowledgeInfo, SOPData } });
   };
 
-  const handleDelete = async () => {  
+  const handleDelete = async () => {
     try {
       if (SOPData.length) {
         await apiSaveSOP2({
@@ -179,10 +178,11 @@ export default function Database() {
                       <td>{item.knowledgeBaseRepairItems}</td>
                       <td>{item.knowledgeBaseRepairType}</td>
                     </tr> */}
-                    
+
                   {item ? (
                     <tr className={styles['row-database']}>
-                      <td>{(currentPage - 1) * pageRow + item.index + 1}</td> {/* 自定義序列，顯示自動排序，不因刪除欄位而產生缺口 */}
+                      <td>{(currentPage - 1) * pageRow + item.index + 1}</td>{' '}
+                      {/* 自定義序列，顯示自動排序，不因刪除欄位而產生缺口 */}
                       <td>{item.knowledgeBaseDeviceType}</td>
                       <td>{item.knowledgeBaseDeviceParts}</td>
                       <td>{item.knowledgeBaseRepairItems}</td>
@@ -200,7 +200,10 @@ export default function Database() {
               <p></p>
               <div className={styles['mark-note']}>
                 {/* <!-- 調整文字位置 --> */}
-                <p className={styles['mark-text']} style={{marginBottom:'5px'}}>
+                <p
+                  className={styles['mark-text']}
+                  style={{ marginBottom: '5px' }}
+                >
                   ▶ 點擊PDF按鈕即可進行放大預覽 & 印出
                 </p>
                 {/* <!-- 新增放大按鈕 --> */}

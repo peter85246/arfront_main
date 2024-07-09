@@ -28,7 +28,7 @@ const pdfStyles = StyleSheet.create({
   },
 });
 
-export function Preview () {
+export function Preview() {
   const location = useLocation();
   const item = location.state?.item; // 訪問傳遞的狀態
   const step = location.state?.step; // 訪問傳遞的狀態
@@ -96,7 +96,11 @@ export function Preview () {
         </Link>
         <div
           className={'fas fa-angle-left ml-2'}
-          onClick={() => navigate(step === 'sop2' ? '/sop2' : '/document-editor', { state: { item } })}
+          onClick={() =>
+            navigate(step === 'sop2' ? '/sop2' : '/document-editor', {
+              state: { item },
+            })
+          }
         >
           上一頁
         </div>

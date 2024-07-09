@@ -41,7 +41,7 @@ const AlarmListTree = ({
 
   return (
     <Tree
-      checkable
+      // checkable
       onExpand={onExpand}
       expandedKeys={expandedKeys}
       autoExpandParent={autoExpandParent}

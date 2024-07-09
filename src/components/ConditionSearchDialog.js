@@ -372,4 +372,3 @@ export function ConditionSearchDialog({ onClose, setSelectedConditions }) {
     </div>
   );
 }
-

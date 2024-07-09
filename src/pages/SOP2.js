@@ -13,7 +13,11 @@ import classNames from 'classnames';
 // import styles from "../scss/AlarmDescription.module.scss";
 import { Link } from 'react-router-dom';
 
-import { apiGetAllSOPByMachineAddId, apiSaveSOP, apiGetAllKnowledgeBaseByFilter } from '../utils/Api';
+import {
+  apiGetAllSOPByMachineAddId,
+  apiSaveSOP,
+  apiGetAllKnowledgeBaseByFilter,
+} from '../utils/Api';
 
 import { Space, ColorPicker, theme } from 'antd';
 import { generate, red, green, blue } from '@ant-design/colors';
@@ -133,7 +137,6 @@ function SOP2() {
   //     setSelectSOP(convertedSOPData[0]);
   //   }
   // }, [SOPInfo]);
-  
 
   // useEffect(() => {
   //   if (SOPInfo.sops) {
@@ -148,24 +151,22 @@ function SOP2() {
   useEffect(() => {
     // 確保 SOPInfo 不是 null 且 SOPInfo.sops 存在
     if (SOPInfo && SOPInfo.sops) {
-        const convertedSOPData = SOPInfo.sops.map(item => ({
-            ...item,
-            sopModels: [] // 重置或初始化 sopModels
-        }));
-        setSOPs(convertedSOPData);
-        if (convertedSOPData.length > 0) {
-            setSelectSOP(convertedSOPData[0]); // 選擇第一個 SOP
-        } else {
-            setSelectSOP(null); // 沒有 SOPs 時設置為 null
-        }
+      const convertedSOPData = SOPInfo.sops.map((item) => ({
+        ...item,
+        sopModels: [], // 重置或初始化 sopModels
+      }));
+      setSOPs(convertedSOPData);
+      if (convertedSOPData.length > 0) {
+        setSelectSOP(convertedSOPData[0]); // 選擇第一個 SOP
+      } else {
+        setSelectSOP(null); // 沒有 SOPs 時設置為 null
+      }
     } else {
-        // SOPInfo 為 null 或沒有 sops 時的處理
-        setSOPs([]); // 清空 SOPs
-        setSelectSOP(null); // 沒有選中的 SOP
+      // SOPInfo 為 null 或沒有 sops 時的處理
+      setSOPs([]); // 清空 SOPs
+      setSelectSOP(null); // 沒有選中的 SOP
     }
-}, [SOPInfo]);
-
-
+  }, [SOPInfo]);
 
   //#region 新增SOP
   const handleAddSOP = (e) => {
@@ -503,9 +504,8 @@ function SOP2() {
 
   const handlePreview = () => {
     setSOPInfo((prev) => ({ ...prev, sops: sops }));
-    navigate('/preview', { state: { step: 'sop2' } })
-  }
-
+    navigate('/preview', { state: { step: 'sop2' } });
+  };
 
   //#region 開啟上傳暫存3DModel Modal / 清空暫存3DModel
   const handleOpenSaveTempModelBtn = (event, index) => {
@@ -774,7 +774,7 @@ function SOP2() {
                   預覽
                 </div>
 
-                <div className={styles['showMachine']}>
+                {/* <div className={styles['showMachine']}>
                   <a
                     href="#"
                     className={classNames(
@@ -784,7 +784,7 @@ function SOP2() {
                   >
                     {SOPInfo?.machineInfo?.machineName}
                   </a>
-                </div>
+                </div> */}
               </div>
               {isSOPName && <SOPName onClose={() => setIsSOPName(false)} />}
 
@@ -914,7 +914,8 @@ function SOP2() {
                                 onChange={(e) => handleSelectSOPChange(e)}
                                 style={{ color: textColor }}
                               ></textarea>
-                              <div
+
+                              {/* <div
                                 className={styles['color-picker-container-sop']}
                               >
                                 <Space direction="vertical">
@@ -926,7 +927,7 @@ function SOP2() {
                                     }
                                   />
                                 </Space>
-                              </div>
+                              </div> */}
                             </div>
                           </div>
                           <div className="form-group">
@@ -944,7 +945,8 @@ function SOP2() {
                                 onChange={(e) => handleSelectSOPChange(e)}
                                 style={{ color: textColor }}
                               ></textarea>
-                              <div
+
+                              {/* <div
                                 className={styles['color-picker-container-sop']}
                               >
                                 <Space direction="vertical">
@@ -956,7 +958,7 @@ function SOP2() {
                                     }
                                   />
                                 </Space>
-                              </div>
+                              </div> */}
                             </div>
                           </div>
                         </div>

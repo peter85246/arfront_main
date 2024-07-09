@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import classNames from 'classnames';
 import styles from '../scss/global.module.scss';
-import { useNavigate } from 'react-router-dom';  // 導入 useNavigate
+import { useNavigate } from 'react-router-dom'; // 導入 useNavigate
 import MindMap from '../components/MindMap';
-import MenuTest from '../components/MenuTest'
+import MenuTest from '../components/MenuTest';
 import { Link } from 'react-router-dom';
 import AlarmListTree from '../components/AlarmGroup/AlarmListTree';
 import { useTranslation } from 'react-i18next';
@@ -23,7 +23,7 @@ export default function Alarm() {
   const [selectedMachineId, setSelectedMachineId] = useState(''); // 選中的機台的 ID
   const [isEditing, setIsEditing] = useState(false); // 編輯狀態
   const [isDeleting, setIsDeleting] = useState(false); // 刪除狀態
-  const navigate = useNavigate();  // 創建 navigate 函數實例
+  const navigate = useNavigate(); // 創建 navigate 函數實例
 
   const { t } = useTranslation(); // i18n 語言翻譯函數
 
@@ -134,16 +134,24 @@ export default function Alarm() {
 
   // 使用 navigate 函數來進行程序化導航
   const handleMindMapClick = () => {
-    if (selectedMachineId) {
-      navigate('/pageMindMap', { state: { machineAddId: selectedMachineId } });
+    if (selectedMachineId && selectedMachineName) {
+      const parts = selectedKey.split('-');
+      const modelSeries = parts.length > 1 ? parts[1] : ''; // 假設 key 的格式為 Type-Series-Name，並取第二部分
+      navigate('/pageMindMap', {
+        state: {
+          machineAddId: selectedMachineId,
+          modelSeries: modelSeries, // 將 modelSeries 傳遞
+          machineName: selectedMachineName, // 將 machineName 傳遞
+        },
+      });
     }
   };
 
   useEffect(() => {
-    console.log("Selected Machine ID:", selectedMachineId);
+    console.log('Selected Machine ID:', selectedMachineId);
   }, [selectedMachineId]);
 
-  console.log("Before navigation - Selected Machine ID:", selectedMachineId);
+  console.log('Before navigation - Selected Machine ID:', selectedMachineId);
 
   return (
     <main>
@@ -164,9 +172,9 @@ export default function Alarm() {
       </section>
 
       {/* 按鈕及下拉菜單 */}
-      <div className={styles['buttons-container-item']}>
+      {/* <div className={styles['buttons-container-item']}>
         <div className={styles['buttons-alarm']}>
-          {/* 機台選擇按鈕 */}
+          
           <a
             href="#"
             className={classNames(styles['button'], styles['btn-new'])}
@@ -174,14 +182,14 @@ export default function Alarm() {
           >
             {selectedMachineName || alarmValue}
           </a>
-          {/* 下拉箭頭 */}
+
           <span
             className={styles['drop-down-arrow-alarm']}
             onClick={() => setDropMenuOpen((prev) => !prev)}
           >
             ▼
           </span>
-          {/* 下拉菜單 */}
+
           {dropMenuOpen && (
             <ul className={styles['custom-datalist-alarm']}>
               {machineNames.map((name, index) => (
@@ -200,7 +208,7 @@ export default function Alarm() {
             </ul>
           )}
         </div>
-      </div>
+      </div> */}
 
       {/* 主要內容區域 */}
       <div
@@ -208,7 +216,7 @@ export default function Alarm() {
         style={{ paddingTop: 0, gap: '5px' }}
       >
         {/* 編輯及保存按鈕 */}
-        <div className={styles['edit-container']}>
+        {/* <div className={styles['edit-container']}>
           {isEditing ? (
             <>
               <button
@@ -232,7 +240,7 @@ export default function Alarm() {
               編輯
             </button>
           )}
-        </div>
+        </div> */}
 
         {/* 左側列表 */}
         <div className={styles['content-box-left-alarm']}>
@@ -255,7 +263,12 @@ export default function Alarm() {
         <div className={styles['content-box-right-alarm']} id="alarm-mindMap">
           <div className={styles['mindmap']} onClick={handleMindMapClick}>
             <p className={styles['mark-text']}>▶ 點擊即可展開心智圖</p>
-            <MenuTest key={selectedMachineId} machineAddId={selectedMachineId} defaultZoom={0.8} />
+            <MenuTest
+              key={selectedMachineId}
+              machineAddId={selectedMachineId}
+              machineName={selectedMachineName}
+              defaultZoom={0.8}
+            />
           </div>
         </div>
       </div>

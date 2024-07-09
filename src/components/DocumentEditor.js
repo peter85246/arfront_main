@@ -408,7 +408,7 @@ export function DocumentEditor() {
             預覽
           </div>
 
-          <div className={styles["showMachine"]}>
+          {/* <div className={styles["showMachine"]}>
             <a
               href="#"
               className={classNames(
@@ -418,7 +418,7 @@ export function DocumentEditor() {
             >
               {SOPInfo?.machineInfo?.machineName}
             </a>
-          </div>
+          </div> */}
         </div>
       </div>
       <div className={styles["back-page"]}>
@@ -487,7 +487,8 @@ export function DocumentEditor() {
                 marginBottom: "10px",
               }} // 注意：請確保 textColor 已經定義
             />
-            <div className={styles["color-picker-container"]}>
+            
+            {/* <div className={styles["color-picker-container"]}>
               <Space direction="vertical">
                 <ColorPicker
                   defaultValue={textColor}
@@ -495,7 +496,7 @@ export function DocumentEditor() {
                   onChange={(color) => setTextColor(color.hex)}
                 />
               </Space>
-            </div>
+            </div> */}
           </div>
           <div className={styles["text-area-container"]}>
             <span className="text-danger">*</span>
@@ -518,7 +519,7 @@ export function DocumentEditor() {
                 marginBottom: "10px",
               }} // 注意：請確保 textColor 已經定義
             />
-            <div className={styles["color-picker-container"]}>
+            {/* <div className={styles["color-picker-container"]}>
               <Space direction="vertical">
                 <ColorPicker
                   defaultValue={textColor}
@@ -526,7 +527,7 @@ export function DocumentEditor() {
                   onChange={(color) => setTextColor(color.hex)}
                 />
               </Space>
-            </div>
+            </div> */}
           </div>
 
           <div className={styles["text-area-container"]}>
@@ -551,7 +552,7 @@ export function DocumentEditor() {
               }} // 注意：請確保 textColor 已經定義
             />
 
-            <div className={styles["color-picker-container"]}>
+            {/* <div className={styles["color-picker-container"]}>
               <Space direction="vertical">
                 <ColorPicker
                   defaultValue={textColor}
@@ -559,7 +560,7 @@ export function DocumentEditor() {
                   onChange={(color) => setTextColor(color.hex)}
                 />
               </Space>
-            </div>
+            </div> */}
           </div>
 
           <span className="text-danger">*</span>

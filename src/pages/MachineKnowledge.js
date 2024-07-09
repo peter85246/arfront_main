@@ -201,9 +201,10 @@ function MachineKnowledge() {
   //#endregion
 
   // 檢查機台名稱是否唯一
-  const checkMachineNameUnique = (name) => {
-    return !machineList.some((machine) => machine.machineName === name);
+  const checkMachineNameUnique = (name, editingId) => {
+    return !machineList.some((machine) => machine.machineName === name && machine.machineAddId !== editingId);
   };
+  
 
   //#region 機台 欄位驗證
   const checkEditValidator = async (name = '', val = '') => {
@@ -338,13 +339,10 @@ function MachineKnowledge() {
   const handleSaveMachineinfo = async (e) => {
     e.preventDefault();
 
-    // 檢查機台名稱是否唯一
-    if (!checkMachineNameUnique(machineInfo.machineName)) {
+    // 檢查機台名稱是否唯一，但排除目前正在編輯的機台
+    if (!checkMachineNameUnique(machineInfo.machineName, machineInfo.machineAddId)) {
       // 如果名稱重複，顯示錯誤訊息
-      setMachineInfoErrors((prevErrors) => ({
-        ...prevErrors,
-      }));
-      toast.error(t('相同機台重複'), {
+      toast.error(t('相同機台重複! 此機台已存在!'), {
         position: toast.POSITION.TOP_CENTER,
         autoClose: 5000,
         hideProgressBar: true,
