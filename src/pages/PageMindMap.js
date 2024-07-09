@@ -34,8 +34,7 @@ export default function PageMindMap() {
 
   return (
     <div className={stylesAlarm.content}>
-      <div className={stylesAlarm.buttonsContainerMindMap}>
-        {/* <button type="button" id="btn-save-js" className={styles.btnSave}>儲存</button> */}
+      {/* <div className={stylesAlarm.buttonsContainerMindMap}>
         <Link
           to="/alarm"
           className={classNames(styles.button, stylesAlarm.btnCancelMindMap)}
@@ -48,8 +47,7 @@ export default function PageMindMap() {
         >
           編輯
         </Link>
-        {/* 設定編輯按鈕權限，只有權限夠高的管理員才能導向"故障說明"，否則跳出alert提示"權限不足無法編輯" */}
-      </div>
+      </div> */}
       <div className={styles.backPage}>
         <Link to="/alarm" className={'fas fa-angle-left'}>
           {' '}
@@ -57,7 +55,7 @@ export default function PageMindMap() {
         </Link>
       </div>
       <main>
-        <section className="content-header" style={{ marginBottom: '10px' }}>
+        <section className="content-header" >
           <div className="container-fluid">
             <div className="row mb-2 justify-content-between">
               <div />

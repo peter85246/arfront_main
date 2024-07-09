@@ -22,7 +22,7 @@ export function RepairDocument() {
   const navigate = useNavigate(); // 使用 navigate 來處理導航
   console.log('item', item);
 
-  const pdfRef = useRef();
+  const pdfRef = useRef(null);
   // const pdfRef = React.useRef();
   const [isPrinting, setIsPrinting] = useState(false);
   const { t } = useTranslation();

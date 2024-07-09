@@ -99,10 +99,10 @@
 // };
 // export default MenuTest;
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import jsMind from 'jsmind';
 import 'jsmind/style/jsmind.css';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation, Link  } from 'react-router-dom';
 import { apiGetMachineAddMindMap } from '../utils/Api';
 
 const MenuTest = ({ machineAddId, machineName, defaultZoom = 1 }) => {
@@ -117,9 +117,21 @@ const MenuTest = ({ machineAddId, machineName, defaultZoom = 1 }) => {
     // 檢查節點 ID 是否符合導航到 database 的格式
     if (data.node.id.startsWith('root_') && data.node.id.includes('_kb_')) {
       const knowledgeBaseId = data.node.id.split('_kb_')[1];
-      navigate(`/database`, { state: { knowledgeBaseId: knowledgeBaseId } });
+      navigate(`/database`, { state: { knowledgeBaseId } });
     }
   };
+
+  // 添加節點點擊事件的處理函數
+  // const handleNodeClick = (event, data) => {
+  //   // 檢查節點 ID 是否符合導航到 database 的格式
+  //   if (data.node.id.startsWith('root_') && data.node.id.includes('_kb_')) {
+  //       const knowledgeBaseId = data.node.id.split('_kb_')[1];
+  //       // 假設 knowledgeInfo 和 SOPData 以適當方式被 MenuTest 組件接收
+  //       const relevantKnowledge = knowledgeInfo.find(k => k.knowledgeBaseId === knowledgeBaseId);
+  //       const relevantSOP = SOPData.find(s => s.knowledgeBaseId === knowledgeBaseId);
+  //       navigate('/database', { state: { item: { knowledgeBaseId, ...relevantKnowledge }, SOPData: relevantSOP } });
+  //   }
+  // };
 
   // 这个函数负责处理每个部件和维修类型，并将它们添加到数据数组中
   const processPart = (part, parentId, direction) => {
