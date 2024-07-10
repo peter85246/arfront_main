@@ -1971,7 +1971,7 @@ table th {
   background-color: transparent; /* 或者設置為父容器的背景色 */
   height: 80vh;
   top: 1em; /* 要釘選的位置，例如在頁面頂部 */
-  overflow: none; /* 當內容超出容器時顯示垂直滾動條 */
+  overflow: hidden; /* 當內容超出容器時顯示垂直滾動條 */
   box-sizing: border-box; /* 確保 padding 和 border 被包括在元素的總寬度和高度內 */
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
   cursor: pointer;

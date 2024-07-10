@@ -223,12 +223,27 @@ const MenuTest = ({ machineAddId, machineName, defaultZoom = 1 }) => {
             editable: false,
             theme: 'primary',
             mode: 'full',
-            layout: {
-              hspace: 20, // 可以根据需要调整这些值
-              vspace: 15,
-              pspace: 10,
+          view: {
+            engine: 'canvas',
+            hmargin: 100,
+            vmargin: 50,
+            line_width: 2,
+            line_color: '#555',
+            line_style: 'curved',
+            draggable: true, // 允许拖动画布
+            hide_scrollbars_when_draggable: true, // 拖动时隐藏滚动条
+            zoom: {
+              min: 0.5,
+              max: 2.1,
+              step: 0.1,
             },
-          };
+          },
+          layout: {
+            hspace: 20,
+            vspace: 15,
+            pspace: 10,
+          },
+        };
 
           const nodes = [
             {

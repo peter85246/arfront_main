@@ -167,7 +167,7 @@
   border: 2px solid #b7bfcf;
   border-radius: 15px;
   background-color: #f4f6f9;
-  overflow-y: auto; /* 當內容超出容器時顯示垂直滾動條 */
+  overflow: hidden; /* 當內容超出容器時顯示垂直滾動條 */
   box-sizing: border-box; /* 確保 padding 和 border 被包括在元素的總寬度和高度內 */
   box-shadow: 0px 5px 5px 5px rgba(0, 0, 0, 0.137);
 }

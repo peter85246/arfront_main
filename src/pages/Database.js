@@ -26,6 +26,7 @@ export default function Database() {
 
   const [knowledgeInfo, setKnowledgeInfo] = useState([]);
   const [SOPData, setSOPData] = useState([]);
+  const { nodeId, nodeTopic } = location.state; // 從路由狀態中讀取數據
 
   const handleEdit = () => {
     setSOPInfo({
