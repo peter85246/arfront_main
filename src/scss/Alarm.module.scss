@@ -236,3 +236,13 @@
   border: 2px solid #be3127;
   color: white;
 }
+
+.mindMap-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh; // 让父容器占满整个视口高度
+}
+
+.child {
+  flex: 1; // 让子元素（您的 div）填充所有可用空间
+}

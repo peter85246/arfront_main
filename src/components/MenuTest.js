@@ -104,11 +104,14 @@ import jsMind from 'jsmind';
 import 'jsmind/style/jsmind.css';
 import { useNavigate, useLocation, Link  } from 'react-router-dom';
 import { apiGetMachineAddMindMap } from '../utils/Api';
+import stylesAlarm from '../scss/Alarm.module.scss';
+import classNames from 'classnames';
 
 const MenuTest = ({ machineAddId, machineName, defaultZoom = 1 }) => {
   console.log('MachineAddId in MenuTest:', machineAddId); // Debug 輸出
   const jmContainerRef = useRef(null);
   const jmInstanceRef = useRef(null);
+  const [containerHeight, setContainerHeight] = useState('90vh');
 
   const navigate = useNavigate();
 
@@ -188,6 +191,20 @@ const MenuTest = ({ machineAddId, machineName, defaultZoom = 1 }) => {
       jmInstanceRef.current.view.zoom(scale); // 调整 zoom 级别
     }
   };
+
+  useEffect(() => {
+    const handleResize = () => {
+      // 例如，基于一些条件动态设置高度
+      setContainerHeight(window.innerHeight * 0.9 + 'px');
+    };
+
+    window.addEventListener('resize', handleResize);
+    handleResize(); // 初始调用
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   // 异步获取数据
   const fetchData = async () => {
@@ -296,10 +313,10 @@ const MenuTest = ({ machineAddId, machineName, defaultZoom = 1 }) => {
   }, [machineAddId, machineName, defaultZoom, navigate]); // 依賴中新增 defaultZoom
 
   return (
-    <div>
+    <div className='mindMap-container'>
       <div
         ref={jmContainerRef}
-        style={{ width: '100%', height: '90vh', overflow: 'hidden' }}
+        style={{ width: '100%', height: containerHeight, overflow: 'hidden' }}
       />
     </div>
   );
