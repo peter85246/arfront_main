@@ -18,6 +18,7 @@ const { TextArea } = Input;
 // prettier-ignore
 export function DocumentEditor() {
   const { SOPInfo, setSOPInfo } = useStore();
+  console.log('SOPInfo:', SOPInfo);
 
   const navigate = useNavigate(); // 使用 navigate 來處理導航
   const { t } = useTranslation();
@@ -71,41 +72,6 @@ export function DocumentEditor() {
   const [knowledgeBasePositionImages, setKnowledgeBasePositionImages] = useState(
     SOPInfo?.knowledgeInfo?.knowledgeBasePositionImageObj || []
   );
-
-  useEffect(() => {
-    const state = location.state;
-    if (state && state.knowledgeInfo) {
-      setKnowledgeInfo(state.knowledgeInfo);
-      
-      // 解析並設置For Model機型圖片
-      if (state.knowledgeInfo.knowledgeBaseModelImage) {
-        const modelImages = JSON.parse(state.knowledgeInfo.knowledgeBaseModelImage).map((url, index) => ({
-          name: JSON.parse(state.knowledgeInfo.knowledgeBaseModelImageNames)[index],
-          img: url
-        }));
-        setKnowledgeBaseModelImages(modelImages);
-      }
-
-      // 解析並設置Tools工具圖片
-      if (state.knowledgeInfo.knowledgeBaseToolsImage) {
-        const toolsImages = JSON.parse(state.knowledgeInfo.knowledgeBaseToolsImage).map((url, index) => ({
-          name: JSON.parse(state.knowledgeInfo.knowledgeBaseToolsImageNames)[index],
-          img: url
-        }));
-        setKnowledgeBaseToolsImages(toolsImages);
-      }
-
-      // 解析並設置Position位置圖片
-      if (state.knowledgeInfo.knowledgeBasePositionImage) {
-        const positionImages = JSON.parse(state.knowledgeInfo.knowledgeBasePositionImage).map((url, index) => ({
-          name: JSON.parse(state.knowledgeInfo.knowledgeBasePositionImageNames)[index],
-          img: url
-        }));
-        setKnowledgeBasePositionImages(positionImages);
-      }
-    }
-  }, []);
-  
 
   const [formFields, setFormFields] = useState([
     {
