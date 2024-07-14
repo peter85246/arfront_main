@@ -80,7 +80,7 @@ export default function PageMindMap() {
                 <MenuTest
                   machineAddId={machineAddId}
                   machineName={machineName}
-                  defaultZoom={0.7}
+                  // defaultZoom={0.7}
                 />
               )}
             </div>

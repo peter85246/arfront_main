@@ -7,10 +7,6 @@ const PreviewPDFContent = React.forwardRef(
   ({ knowledgeInfo, SOPData }, ref) => {
     console.log('knowledgeInfo', knowledgeInfo);
     console.log('SOPData', SOPData);
-    const location = useLocation();
-    const item = location.state?.item; // 訪問傳遞的狀態
-
-    // const [based64SOP, setBased64SOP] = useState(SOPData || []);
 
     const stepsPerPage = 4;
 
@@ -19,40 +15,6 @@ const PreviewPDFContent = React.forwardRef(
     for (let i = 0; i < SOPData?.length; i += stepsPerPage) {
       paginatedSOPData.push(SOPData.slice(i, i + stepsPerPage));
     }
-
-    // SOPData 是一個包含多個 SOP 相關數據的陣列
-    // 顯示第一個 SOP 的名稱，確保數據已正確加載
-    const sopName =
-      SOPData?.length > 0 ? SOPData[0].soP2Name : 'Default SOP Name';
-
-    function safeJsonParse(str) {
-      try {
-        return JSON.parse(str);
-      } catch (e) {
-        return [];
-      }
-    }
-
-    useEffect(() => {
-      console.log('Received knowledgeInfo:', knowledgeInfo);
-      console.log('Received SOPData:', SOPData);
-    }, [knowledgeInfo, SOPData]);
-
-    // useEffect(() => {
-    //   SOPData.map((item, idx) => {
-    //     const reader1 = new FileReader();
-    //     const reader2 = new FileReader();
-    //     reader1.readAsDataURL(item.soP2ImageObj);
-    //     reader1.onload = () => {
-    //       setBased64SOP((prev) => [...prev, reader1.result]);
-    //     };
-    //     reader2.readAsDataURL(item.soP2RemarkImageObj);
-    //     reader2.onload = () => {
-    //       setBased64SOP((prev) => [...prev, reader2.result]);
-    //     };
-
-    //   })
-    // }, [])
 
     return (
       <div className={styles['content-box']} ref={ref}>
@@ -85,23 +47,11 @@ const PreviewPDFContent = React.forwardRef(
           <div className={styles['model-label']}>
             <label>
               For Model 機型 :{' '}
-              {Array.isArray(
-                safeJsonParse(knowledgeInfo.knowledgeBaseModelImageNames)
-              )
-                ? safeJsonParse(
-                    knowledgeInfo.knowledgeBaseModelImageNames
-                  ).join(', ')
-                : knowledgeInfo.knowledgeBaseModelImageNames}
+              {knowledgeInfo.knowledgeBaseModelImageObj[0].name}
             </label>
           </div>
           <div className={styles['model']} id="model">
             <div>
-              {/* <div className={styles["image-container-page-model"]}>
-              <img
-                src={require("../public/圖片TS31103/For Model.jpg")}
-                alt="Machine images"
-              />
-            </div> */}
               <div className="w-full flex justify-between py-2 px-6">
                 <div className="flex gap-[8px] items-center">
                   {(() => {

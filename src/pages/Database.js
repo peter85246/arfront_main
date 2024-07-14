@@ -5,6 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import PdfContent from '../components/PDFContent';
 import { useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { getAuthToken } from '../utils/TokenUtil';
 import { useDatabase } from '../components/useDatabse';
 import { apiSaveKnowledgeBase, apiSaveSOP2 } from '../utils/Api';
 import {
@@ -28,16 +29,102 @@ export default function Database() {
   const [SOPData, setSOPData] = useState([]);
   const { nodeId, nodeTopic } = location.state; // 從路由狀態中讀取數據
 
-  const handleEdit = () => {
+  const handleEdit = async () => {
+
+    let knowledgeBaseModelImageObj = []
+    let knowledgeBaseToolsImageObj = []
+    let knowledgeBasePositionImageObj = []
+
+    if (knowledgeInfo.knowledgeBaseModelImage) {
+      knowledgeBaseModelImageObj = JSON.parse(knowledgeInfo.knowledgeBaseModelImage)
+
+      for (const item in knowledgeBaseModelImageObj) {
+        const res = await fetch(knowledgeBaseModelImageObj[item])
+        const blob = await res.blob()
+        const name = JSON.parse(knowledgeInfo.knowledgeBaseModelImageNames)[item]
+        const file = new File([blob], name, { type: blob.type })
+
+        knowledgeBaseModelImageObj[item] = {
+          file: file,
+          name: name,
+          img: knowledgeBaseModelImageObj[item]
+        }
+      }
+    }
+
+    if (knowledgeInfo.knowledgeBaseToolsImage) {
+      knowledgeBaseToolsImageObj = JSON.parse(knowledgeInfo.knowledgeBaseToolsImage)
+
+      for (const item in knowledgeBaseToolsImageObj) {
+        const res = await fetch(knowledgeBaseToolsImageObj[item])
+        const blob = await res.blob()
+        const name = JSON.parse(knowledgeInfo.knowledgeBaseToolsImageNames)[item]
+        const file = new File([blob], name, { type: blob.type })
+
+        knowledgeBaseToolsImageObj[item] = {
+          file: file,
+          name: name,
+          img: knowledgeBaseToolsImageObj[item]
+        }
+      }
+    }
+    
+    if (knowledgeInfo.knowledgeBasePositionImage) {
+      knowledgeBasePositionImageObj = JSON.parse(knowledgeInfo.knowledgeBasePositionImage)
+
+      for (const item in knowledgeBasePositionImageObj) {
+        const res = await fetch(knowledgeBasePositionImageObj[item])
+        const blob = await res.blob()
+        const name = JSON.parse(knowledgeInfo.knowledgeBasePositionImageNames)[item]
+        const file = new File([blob], name, { type: blob.type })
+
+        knowledgeBasePositionImageObj[item] = {
+          file: file,
+          name: name,
+          img: knowledgeBasePositionImageObj[item]
+        }
+      }
+    }
+
+    for (const item of SOPData) {
+      if (item.soP2Image) {
+        const soP2ImageRes = await fetch(item.soP2Image);
+        const soP2ImageBlob = await soP2ImageRes.blob();
+        const soP2ImageName = item.soP2Image.split('/').pop();
+        const soP2ImageFile = new File([soP2ImageBlob], soP2ImageName, {
+          type: soP2ImageBlob.type,
+        });
+        item.soP2ImageObj = soP2ImageFile;
+      }
+
+      if (item.soP2RemarkImage) {
+        const soP2RemarkImageRes = await fetch(item.soP2RemarkImage);
+        const soP2RemarkImageBlob = await soP2RemarkImageRes.blob();
+        const soP2RemarkImageName = item.soP2RemarkImage.split('/').pop();
+        const soP2RemarkImageFile = new File(
+          [soP2RemarkImageBlob],
+          soP2RemarkImageName,
+          { type: soP2RemarkImageBlob.type }
+        );
+        item.soP2RemarkImageObj = soP2RemarkImageFile;
+      }
+    }
+
     setSOPInfo({
       machineAddId: item.machineAddId,
       machineInfo: {
         machineName: knowledgeInfo.machineName,
       },
-      knowledgeInfo: knowledgeInfo,
+      knowledgeInfo: {
+        ...knowledgeInfo,
+        knowledgeBaseModelImageObj: knowledgeBaseModelImageObj,
+        knowledgeBaseToolsImageObj: knowledgeBaseToolsImageObj,
+        knowledgeBasePositionImageObj: knowledgeBasePositionImageObj
+      },
       sops: SOPData,
-    });
-    navigate('/document-editor', { state: { knowledgeInfo, SOPData } });
+    })
+
+    navigate('/document-editor', { state: { knowledgeInfo, SOPData } })
   };
 
   const handleDelete = async () => {

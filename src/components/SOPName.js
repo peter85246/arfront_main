@@ -89,6 +89,13 @@ export function SOPName({ onClose }) {
       // formData.append('machineName', SOPInfo.machineInfo.machineName);
       formData.append('KnowledgeBases[0].KnowledgeBaseSOPName', sop2Name);
 
+      // // 只有在創建新條目時，才添加3D模型相關字段
+      // if (!SOPInfo.knowledgeBaseId) {
+      //   formData.append('KnowledgeBases[0].knowledgeBase3DModelImage', []);
+      //   formData.append('KnowledgeBases[0].knowledgeBase3DModelFile', []);
+      //   formData.append('KnowledgeBases[0].knowledgeBase3DModelFileObj', null);
+      // }
+
       // 如果有 KnowledgeBaseId，加入到 formData (編輯CRUD)
       if (SOPInfo.knowledgeBaseId) {
         formData.append('KnowledgeBaseId', SOPInfo.knowledgeBaseId);
