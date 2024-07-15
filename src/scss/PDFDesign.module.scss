@@ -48,7 +48,6 @@
 
 .sop-section {
   text-align: center;
-  font-size: 25px;
   display: flex;
   flex-direction: column; /* 使子元素垂直排列 */
   align-items: stretch; /* 子元素撐滿容器寬度 */
@@ -58,7 +57,15 @@
   height: auto;
   width: 100%;
   padding-left: 0; /* 移除左側的padding */
-  margin-top: -5px;
+  padding: 0px 0px 10px 0px;
+}
+
+.sop-section p {
+  font-size: 25px;
+  color: black;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 }
 
 .info-box {
@@ -235,10 +242,12 @@ img {
 .step-title3 span,
 .step-title4 span {
   margin-right: 5px; /* 设置文字旁边的间距 */
+  font-size: 18px;
 }
 
 .step-title1 {
   border-top: none;
+  padding-bottom: 10px;
 }
 
 .step-content {
@@ -343,6 +352,15 @@ img {
     padding: 0;
   }
 
+  .sop-section p {
+    color: black;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin-top: -10px;
+    margin-bottom: 10px;
+  }
+
   /* 设置打印时的页面大小为A4，同时调整页面的边距以适应内容 */
   @page {
     size: A4;
@@ -397,4 +415,3 @@ img {
     border: none !important; /* 移除外边线 */
   }
 }
-

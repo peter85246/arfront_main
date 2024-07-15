@@ -56,71 +56,71 @@ export function RepairDocument() {
   // PDF 下載處理
   const handleDownloadPdf = async () => {
     setIsDownloading(true); // 開始下載，禁用按鈕和顯示轉圈圈
+
     if (imagesLoaded >= totalImages) {
-      const pageContents = pdfRef.current.children;
-      let pdf = null;
-
-      for (let i = 0; i < pageContents.length; i++) {
-        const pageContent = pageContents[i];
-        // 确保在生成PDF之前，页面已正确应用最新的CSS
-        pageContent.classList.add('prepare-pdf');
-
-        const canvas = await html2canvas(pageContent, {
-          scale: 2,
-          logging: true,
-          useCORS: true,
-          width: pageContent.offsetWidth,
-          height: pageContent.offsetHeight,
-          windowHeight: document.body.scrollHeight,
-          windowWidth: document.body.scrollWidth,
-        });
-
-        const imgData = canvas.toDataURL('image/png');
-        const format = [595, 842]; // A4纸张大小, 纵向
-
-        if (!pdf) {
-          // 创建PDF实例
-          pdf = new jsPDF({
-            orientation: 'portrait',
-            unit: 'pt',
-            format: format,
-          });
-        } else {
-          // 添加新页面
-          pdf.addPage(format, 'portrait');
-        }
-
-        // 计算适合的缩放比例
-        const scale = Math.min(
-          format[0] / canvas.width,
-          format[1] / canvas.height
-        );
-        const newHeight = canvas.height * scale; // 新的高度
-
-        // 计算偏移量以居中图像
-        const offsetX = (format[0] - canvas.width * scale) / 2; // 水平居中
-        let offsetY = (format[1] - newHeight) / 2; // 垂直居中
-
-        if (canvas.height * scale < format[1]) {
-          offsetY = 0; // 从顶部开始放置，避免底部留白
-        }
-
-        // 添加图像到PDF
-        pdf.addImage(
-          imgData,
-          'PNG',
-          offsetX,
-          offsetY,
-          canvas.width * scale,
-          canvas.height * scale
-        );
-      }
-
-      pdf.save('download.pdf'); // 保存PDF文件
-      setIsDownloading(false); // 完成後恢復按鈕
+      setTimeout(async () => {
+        await generatePdf(); // 执行PDF生成的主要逻辑
+        setIsDownloading(false); // 关闭加载状态
+      }, 0); // 延迟X秒以等待样式应用
     } else {
       console.log('Waiting for images to load...');
       setIsDownloading(false); // 若圖片未加載完成也要恢復按鈕
+    }
+  };
+
+  // 把生成PDF的逻辑单独放在一个函数中
+  const generatePdf = async () => {
+    const pageContents = pdfRef.current.children;
+    const pdf = new jsPDF({
+      orientation: 'portrait',
+      unit: 'pt',
+      format: [595, 842], // A4 纸张大小, 纵向
+    });
+
+    let contentAdded = false; // 跟踪是否已添加内容
+
+    for (let i = 0; i < pageContents.length; i++) {
+      const pageContent = pageContents[i];
+      pageContent.classList.add('prepare-pdf');
+
+      // 简单的检查，确定是否有可见内容
+      if (
+        !pageContent.innerText.trim() &&
+        pageContent.querySelectorAll('img').length === 0
+      ) {
+        continue; // 如果没有文本或图片，跳过此页面
+      }
+
+      const canvas = await html2canvas(pageContent, {
+        scale: 2,
+        logging: true,
+        useCORS: true,
+        width: pageContent.offsetWidth,
+        height: pageContent.offsetHeight,
+      });
+
+      const imgData = canvas.toDataURL('image/png');
+      if (imgData === 'data:,') continue; // 如果无图像数据，跳过此次循环
+
+      if (contentAdded) {
+        pdf.addPage(); // 如果前面已添加内容，则为新内容添加新页面
+      }
+
+      // 添加图像到 PDF，使其完全填满页面
+      pdf.addImage(
+        imgData,
+        'PNG',
+        0,
+        0,
+        pdf.internal.pageSize.getWidth(),
+        pdf.internal.pageSize.getHeight()
+      );
+
+      contentAdded = true; // 标记已添加内容
+    }
+
+    if (contentAdded) {
+      pdf.save('德川維修檔案.pdf'); // 保存PDF文件
     }
   };
 
@@ -195,19 +195,39 @@ export function RepairDocument() {
         </div>
       </section>
       <div className={styles['buttons-container']}>
-      <button
+        <button
           onClick={handlePrint}
           disabled={isPrinting}
           className={classNames(styles.button, styles['btn-pdf'])}
         >
-          {isPrinting ? <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" /> : '印出'}
+          {isPrinting ? (
+            <Spinner
+              as="span"
+              animation="border"
+              size="sm"
+              role="status"
+              aria-hidden="true"
+            />
+          ) : (
+            '印出'
+          )}
         </button>
         <button
           onClick={handleDownloadPdf}
           disabled={isDownloading}
           className={classNames(styles.button, styles['btn-pdf'])}
         >
-          {isDownloading ? <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" /> : '下載 PDF'}
+          {isDownloading ? (
+            <Spinner
+              as="span"
+              animation="border"
+              size="sm"
+              role="status"
+              aria-hidden="true"
+            />
+          ) : (
+            '下載 PDF'
+          )}
         </button>
       </div>
       <div className={styles['back-page']}>
