@@ -364,7 +364,8 @@ img {
   /* 设置打印时的页面大小为A4，同时调整页面的边距以适应内容 */
   @page {
     size: A4;
-    margin: 10mm 10mm 10mm 10mm; /* 上、右、下、左的边距 */
+    // margin: 10mm 10mm 10mm 10mm; /* 上、右、下、左的边距 */
+    margin: 0mm 0mm 0mm 0mm; /* 上、右、下、左的边距 */
   }
 
   /* 控制分页行为，确保每个 page-outline 之后都开始新的一页 */

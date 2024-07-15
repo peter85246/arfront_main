@@ -52,29 +52,29 @@ export function RepairDocument() {
       // savePdf();  // 確保在列印完成後保存 PDF 文件
     },
   });
-
+  
   // PDF 下載處理
   const handleDownloadPdf = async () => {
     setIsDownloading(true); // 開始下載，禁用按鈕和顯示轉圈圈
 
     if (imagesLoaded >= totalImages) {
       setTimeout(async () => {
-        await generatePdf(); // 执行PDF生成的主要逻辑
-        setIsDownloading(false); // 关闭加载状态
-      }, 0); // 延迟X秒以等待样式应用
+        await generatePdf(); // 執行PDF生成的主要邏輯函數
+        setIsDownloading(false); // 關閉轉圈圈狀態
+    }, 0); // 延遲X秒以等待樣式應用
     } else {
       console.log('Waiting for images to load...');
       setIsDownloading(false); // 若圖片未加載完成也要恢復按鈕
     }
   };
 
-  // 把生成PDF的逻辑单独放在一个函数中
+  // 把生成PDF的邏輯單獨放在一个函数中
   const generatePdf = async () => {
     const pageContents = pdfRef.current.children;
     const pdf = new jsPDF({
       orientation: 'portrait',
       unit: 'pt',
-      format: [595, 842], // A4 纸张大小, 纵向
+      format: [595, 842], // A4 紙張大小, 縱向
     });
 
     let contentAdded = false; // 跟踪是否已添加内容
@@ -83,12 +83,9 @@ export function RepairDocument() {
       const pageContent = pageContents[i];
       pageContent.classList.add('prepare-pdf');
 
-      // 简单的检查，确定是否有可见内容
-      if (
-        !pageContent.innerText.trim() &&
-        pageContent.querySelectorAll('img').length === 0
-      ) {
-        continue; // 如果没有文本或图片，跳过此页面
+      // 檢查確定是否有可見內容
+      if (!pageContent.innerText.trim() && pageContent.querySelectorAll('img').length === 0) {
+        continue; // 如果沒有文本或圖片，跳過此頁面 (避免空白頁產生)
       }
 
       const canvas = await html2canvas(pageContent, {
@@ -100,23 +97,16 @@ export function RepairDocument() {
       });
 
       const imgData = canvas.toDataURL('image/png');
-      if (imgData === 'data:,') continue; // 如果无图像数据，跳过此次循环
+      if (imgData === 'data:,') continue; // 如果吾圖片數據，則跳過此次循環(避免空白頁產生)
 
       if (contentAdded) {
-        pdf.addPage(); // 如果前面已添加内容，则为新内容添加新页面
+        pdf.addPage(); // 如果前面已添加内容，則為新內容添加新頁面
       }
 
-      // 添加图像到 PDF，使其完全填满页面
-      pdf.addImage(
-        imgData,
-        'PNG',
-        0,
-        0,
-        pdf.internal.pageSize.getWidth(),
-        pdf.internal.pageSize.getHeight()
-      );
+      // 添加圖片到 PDF，讓圖片完全佔滿版面
+      pdf.addImage(imgData, 'PNG', 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
 
-      contentAdded = true; // 标记已添加内容
+      contentAdded = true; // 標記已添加內容
     }
 
     if (contentAdded) {
@@ -195,39 +185,19 @@ export function RepairDocument() {
         </div>
       </section>
       <div className={styles['buttons-container']}>
-        <button
+        {/* <button
           onClick={handlePrint}
           disabled={isPrinting}
           className={classNames(styles.button, styles['btn-pdf'])}
         >
-          {isPrinting ? (
-            <Spinner
-              as="span"
-              animation="border"
-              size="sm"
-              role="status"
-              aria-hidden="true"
-            />
-          ) : (
-            '印出'
-          )}
-        </button>
+          {isPrinting ? <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" /> : '印出'}
+        </button> */}
         <button
           onClick={handleDownloadPdf}
           disabled={isDownloading}
           className={classNames(styles.button, styles['btn-pdf'])}
         >
-          {isDownloading ? (
-            <Spinner
-              as="span"
-              animation="border"
-              size="sm"
-              role="status"
-              aria-hidden="true"
-            />
-          ) : (
-            '下載 PDF'
-          )}
+          {isDownloading ? <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" /> : '下載 PDF'}
         </button>
       </div>
       <div className={styles['back-page']}>
