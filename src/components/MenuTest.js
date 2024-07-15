@@ -102,7 +102,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import jsMind from 'jsmind';
 import 'jsmind/style/jsmind.css';
-import { useNavigate, useLocation, Link  } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { apiGetMachineAddMindMap } from '../utils/Api';
 import stylesAlarm from '../scss/Alarm.module.scss';
 import classNames from 'classnames';
@@ -139,25 +139,22 @@ const MenuTest = ({ machineAddId, machineName, defaultZoom = 1 }) => {
   // };
 
   const handleNodeClick = (event, data) => {
-    console.log("Clicked node ID:", data.node.id); // 輸出被點擊的節點ID
-    // 檢查點擊的節點是否為按鈕
+    console.log('Clicked node ID:', data.node.id);
     if (data.node.isbutton) {
-      // 檢查節點ID是否包含'button'字樣
+      console.log('Node is a button:', data.node);
       if (data.node.id.includes('_button')) {
-        // 假設每個按鈕節點的ID格式為 typeId_button_knowledgeBaseId
         const parts = data.node.id.split('_button_');
-        const knowledgeBaseId = parts[1]; // 獲取 knowledgeBaseId
-        // 根據是否有 knowledgeBaseId 導航到相應的頁面
-        if (knowledgeBaseId) {
-          navigate(`/database?knowledgeBaseId=${knowledgeBaseId}`);
-        } else {
-          navigate('/database'); // 如果沒有 knowledgeBaseId，導航到一般的 database 頁面
-        }
+        const knowledgeBaseId = parts.length > 1 ? parts[1] : null;
+        console.log('Knowledge Base ID:', knowledgeBaseId);
+        navigate('/database', { state: { knowledgeBaseId } });
+      } else {
+        navigate('/database');
       }
+    } else {
+      console.log('Node is not a button');
     }
   };
-  
-  
+
   // 添加節點點擊事件的處理函數
   // const handleNodeClick = (event, data) => {
   //   // 檢查節點 ID 是否符合導航到 database 的格式
@@ -198,15 +195,17 @@ const MenuTest = ({ machineAddId, machineName, defaultZoom = 1 }) => {
       });
 
       type.knowledgeBases.forEach((kb) => {
-        const kbId = kb.knowledgeBaseId ? `${typeId}_button_${kb.knowledgeBaseId}` : `${typeId}_button`;
+        const kbId = kb.knowledgeBaseId
+          ? `${typeId}_button_${kb.knowledgeBaseId}`
+          : `${typeId}_button`;
         nodes.push({
-            id: kbId,
-            topic: kb.deviceType.trim() || 'General Info',
-            parentid: typeId,
-            direction: childDirection,
-            'font-size': 12,
-            width: 'auto',
-            isbutton: true, // 设置为 button 形式
+          id: kbId,
+          topic: kb.deviceType.trim() || 'General Info',
+          parentid: typeId,
+          direction: childDirection,
+          'font-size': 12,
+          width: 'auto',
+          isbutton: true, // 设置为 button 形式
         });
       });
 
@@ -214,13 +213,13 @@ const MenuTest = ({ machineAddId, machineName, defaultZoom = 1 }) => {
       if (type.knowledgeBases.length === 0) {
         const kbId = `${typeId}_button`; // No knowledgeBaseId provided
         nodes.push({
-            id: kbId,
-            topic: 'General Info', // Default text
-            parentid: typeId,
-            direction: childDirection,
-            'font-size': 12,
-            width: 'auto',
-            isbutton: true, // Set as a button
+          id: kbId,
+          topic: 'General Info', // Default text
+          parentid: typeId,
+          direction: childDirection,
+          'font-size': 12,
+          width: 'auto',
+          isbutton: true, // Set as a button
         });
       }
     });
@@ -234,7 +233,7 @@ const MenuTest = ({ machineAddId, machineName, defaultZoom = 1 }) => {
       const container = jmContainerRef.current;
       const containerRect = container.getBoundingClientRect();
       const jsmindInner = jmContainerRef.current.querySelector('.jsmind-inner');
-      
+
       if (jsmindInner) {
         const mindWidth = jsmindInner.scrollWidth;
         const mindHeight = jsmindInner.scrollHeight;
@@ -269,15 +268,14 @@ const MenuTest = ({ machineAddId, machineName, defaultZoom = 1 }) => {
     const handleResize = () => {
       adjustToFitContainer();
     };
-  
+
     window.addEventListener('resize', handleResize);
     handleResize(); // 初始调用以确保加载时即正确显示
-  
+
     return () => {
       window.removeEventListener('resize', handleResize);
     };
   }, []); // 确保只在组件加载后执行一次
-  
 
   // 异步获取数据
   const fetchData = async () => {
@@ -302,87 +300,103 @@ const MenuTest = ({ machineAddId, machineName, defaultZoom = 1 }) => {
 
   // 獲取數據並渲染心智圖
   useEffect(() => {
-    fetchData().then((knowledgeBases) => {
-      if (jmContainerRef.current) {
-        jmContainerRef.current.style.overflow = 'hidden'; // 初次渲染時隱藏滾動條
-      }
-      if (knowledgeBases.length > 0) {
-        const options = {
-          container: jmContainerRef.current,
-          editable: false,
-          theme: 'primary',
-          mode: 'full',
-          view: {
-            engine: 'canvas',
-            hmargin: 100,
-            vmargin: 50,
-            line_width: 2,
-            line_color: '#555',
-            line_style: 'curved',
-            draggable: true, // 允許拖動畫布
-            hide_scrollbars_when_draggable: true, // 拖動時隱藏滾動條
-            zoom: {
-              min: 0.5,
-              max: 2.1,
-              step: 0.1,
-            },
-            custom_node_render: function(node, element, view) {
-              if (node.isbutton) {
-                element.style.cursor = 'pointer'; // 鼠標懸停顯示手形
-              }
-            }
-          },
-          layout: {
-            hspace: 20,
-            vspace: 15,
-            pspace: 10,
-          },
-        };
-
-        const nodes = [{
-          id: 'root',
-          topic: machineName,
-          isroot: true,
-          direction: 'right',
-          'font-size': 15,
-          width: 'auto',
-          'background-color': '#13466b', // jsmind接受直接設置css，深藍節點背景
-          color: '#fff', // jsmind接受直接設置css，白字體
-        }];
-
-        knowledgeBases.forEach((part, index) => {
-          nodes.push(...processPart(part, 'root', index % 2 === 0 ? 'right' : 'left'));
-        });
-
-        const mind = {
-          meta: { name: 'demo', author: 'hizzgdev@163.com', version: '0.2' },
-          format: 'node_array',
-          data: nodes,
-        };
-
-        if (jmInstanceRef.current) {
-          jmInstanceRef.current.destroy();  // 如果之前有实例，先销毁
+    fetchData()
+      .then((knowledgeBases) => {
+        if (jmContainerRef.current) {
+          jmContainerRef.current.style.overflow = 'hidden'; // 初次渲染時隱藏滾動條
         }
+        if (knowledgeBases.length > 0) {
+          const options = {
+            container: jmContainerRef.current,
+            editable: false,
+            theme: 'primary',
+            mode: 'full',
+            view: {
+              engine: 'canvas',
+              hmargin: 100,
+              vmargin: 50,
+              line_width: 2,
+              line_color: '#555',
+              line_style: 'curved',
+              draggable: true, // 允許拖動畫布
+              hide_scrollbars_when_draggable: true, // 拖動時隱藏滾動條
+              zoom: {
+                min: 0.5,
+                max: 2.1,
+                step: 0.1,
+              },
+              custom_node_render: function (node, element, view) {
+                if (node.isbutton) {
+                  element.style.cursor = 'pointer'; // 鼠標懸停顯示手形
+                  element.onclick = function () {
+                    console.log('Direct click on node:', node.id);
+                  };
+                }
+              },
+            },
+            layout: {
+              hspace: 20,
+              vspace: 15,
+              pspace: 10,
+            },
+          };
 
-        jmInstanceRef.current = new jsMind(options);
-        jmInstanceRef.current.show(mind);
-        jmInstanceRef.current.add_event_listener('click', handleNodeClick);
+          const nodes = [
+            {
+              id: 'root',
+              topic: machineName,
+              isroot: true,
+              direction: 'right',
+              'font-size': 15,
+              width: 'auto',
+              'background-color': '#13466b', // jsmind接受直接設置css，深藍節點背景
+              color: '#fff', // jsmind接受直接設置css，白字體
+            },
+          ];
 
-        setTimeout(() => {
-          adjustToFitContainer(); // 調整畫布尺寸以適應容器
-        }, 0);
-      }
-    }).catch((error) => {
-      console.error('Error in displaying mind map:', error);
-    });
+          knowledgeBases.forEach((part, index) => {
+            nodes.push(
+              ...processPart(part, 'root', index % 2 === 0 ? 'right' : 'left')
+            );
+          });
+
+          const mind = {
+            meta: { name: 'demo', author: 'hizzgdev@163.com', version: '0.2' },
+            format: 'node_array',
+            data: nodes,
+          };
+
+          if (jmInstanceRef.current) {
+            jmInstanceRef.current.destroy(); // 如果之前有实例，先销毁
+          }
+
+          jmInstanceRef.current = new jsMind(options);
+          jmInstanceRef.current.show(mind);
+          jmInstanceRef.current.add_event_listener('click', handleNodeClick);
+
+          setTimeout(() => {
+            adjustToFitContainer(); // 調整畫布尺寸以適應容器
+          }, 0);
+        }
+      })
+      .catch((error) => {
+        console.error('Error in displaying mind map:', error);
+      });
   }, [machineAddId, machineName, defaultZoom, navigate]);
 
   return (
-    <div className='mindMap-container'>
+    <div className="mindMap-container">
       <div
         ref={jmContainerRef}
         style={{ width: '100%', height: containerHeight, overflow: 'hidden' }}
       />
+      <button
+        onClick={() =>
+          navigate('/database', { state: { knowledgeBaseId: 'test' } })
+        }
+      >
+        Test Navigate to Database
+      </button>
     </div>
   );
 };

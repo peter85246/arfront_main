@@ -8,6 +8,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useReactToPrint } from 'react-to-print';
 import PdfContent from './PDFContent';
 import { useTranslation } from 'react-i18next'; //語系
+import Spinner from 'react-bootstrap/Spinner';
 import {
   apiGetAllKnowledgeBaseByMachineAddId,
   apiGetAllSOPByMachineAddId,
@@ -27,6 +28,18 @@ export function RepairDocument() {
   const [isPrinting, setIsPrinting] = useState(false);
   const { t } = useTranslation();
 
+  const [imagesLoaded, setImagesLoaded] = useState(0);
+  const totalImages = 5; // 假設PDF內容中有5張圖片
+
+  const [isDownloading, setIsDownloading] = useState(false); //轉圈圈
+
+  const handleImageLoad = () => {
+    setImagesLoaded((prev) => {
+      console.log(`Image loaded: ${prev + 1}`);
+      return prev + 1;
+    });
+  };
+
   const handleAllImagesLoaded = () => {
     console.log('All images have been loaded, ready to print or generate PDF.');
   };
@@ -42,15 +55,73 @@ export function RepairDocument() {
 
   // PDF 下載處理
   const handleDownloadPdf = async () => {
-    const canvas = await html2canvas(pdfRef.current);
-    const imgData = canvas.toDataURL('image/png');
-    const pdf = new jsPDF({
-      orientation: 'p',
-      unit: 'px',
-      format: [canvas.width, canvas.height],
-    });
-    pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
-    pdf.save('download.pdf');
+    setIsDownloading(true); // 開始下載，禁用按鈕和顯示轉圈圈
+    if (imagesLoaded >= totalImages) {
+      const pageContents = pdfRef.current.children;
+      let pdf = null;
+
+      for (let i = 0; i < pageContents.length; i++) {
+        const pageContent = pageContents[i];
+        // 确保在生成PDF之前，页面已正确应用最新的CSS
+        pageContent.classList.add('prepare-pdf');
+
+        const canvas = await html2canvas(pageContent, {
+          scale: 2,
+          logging: true,
+          useCORS: true,
+          width: pageContent.offsetWidth,
+          height: pageContent.offsetHeight,
+          windowHeight: document.body.scrollHeight,
+          windowWidth: document.body.scrollWidth,
+        });
+
+        const imgData = canvas.toDataURL('image/png');
+        const format = [595, 842]; // A4纸张大小, 纵向
+
+        if (!pdf) {
+          // 创建PDF实例
+          pdf = new jsPDF({
+            orientation: 'portrait',
+            unit: 'pt',
+            format: format,
+          });
+        } else {
+          // 添加新页面
+          pdf.addPage(format, 'portrait');
+        }
+
+        // 计算适合的缩放比例
+        const scale = Math.min(
+          format[0] / canvas.width,
+          format[1] / canvas.height
+        );
+        const newHeight = canvas.height * scale; // 新的高度
+
+        // 计算偏移量以居中图像
+        const offsetX = (format[0] - canvas.width * scale) / 2; // 水平居中
+        let offsetY = (format[1] - newHeight) / 2; // 垂直居中
+
+        if (canvas.height * scale < format[1]) {
+          offsetY = 0; // 从顶部开始放置，避免底部留白
+        }
+
+        // 添加图像到PDF
+        pdf.addImage(
+          imgData,
+          'PNG',
+          offsetX,
+          offsetY,
+          canvas.width * scale,
+          canvas.height * scale
+        );
+      }
+
+      pdf.save('download.pdf'); // 保存PDF文件
+      setIsDownloading(false); // 完成後恢復按鈕
+    } else {
+      console.log('Waiting for images to load...');
+      setIsDownloading(false); // 若圖片未加載完成也要恢復按鈕
+    }
   };
 
   useEffect(() => {
@@ -124,17 +195,19 @@ export function RepairDocument() {
         </div>
       </section>
       <div className={styles['buttons-container']}>
-        <button
+      <button
           onClick={handlePrint}
-          className={classNames(styles['button'], styles['btn-pdf'])}
+          disabled={isPrinting}
+          className={classNames(styles.button, styles['btn-pdf'])}
         >
-          印出
+          {isPrinting ? <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" /> : '印出'}
         </button>
         <button
           onClick={handleDownloadPdf}
-          className={classNames(styles['button'], styles['btn-pdf'])}
+          disabled={isDownloading}
+          className={classNames(styles.button, styles['btn-pdf'])}
         >
-          下載 PDF
+          {isDownloading ? <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" /> : '下載 PDF'}
         </button>
       </div>
       <div className={styles['back-page']}>
@@ -159,6 +232,7 @@ export function RepairDocument() {
             knowledgeInfo={knowledgeInfo}
             SOPData={SOPData}
             onAllImagesLoaded={handleAllImagesLoaded} // 將函數作為 prop 傳遞
+            onImageLoad={handleImageLoad}
           />
         </div>
       </div>

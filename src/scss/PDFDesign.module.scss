@@ -48,14 +48,17 @@
 
 .sop-section {
   text-align: center;
-  font-size: 21px;
+  font-size: 25px;
   display: flex;
   flex-direction: column; /* 使子元素垂直排列 */
   align-items: stretch; /* 子元素撐滿容器寬度 */
+  justify-content: center;
   border-top: 1px solid black;
   border-bottom: 1px solid black;
+  height: auto;
   width: 100%;
   padding-left: 0; /* 移除左側的padding */
+  margin-top: -5px;
 }
 
 .info-box {
@@ -70,7 +73,6 @@
 
 .info-box p {
   color: #000000;
-  font-size: 15px;
   margin: 0px;
   font-size: 15px;
 }
@@ -89,6 +91,7 @@ img {
   align-items: center;
   border-top: 1px solid #000;
   justify-content: space-between;
+  margin-bottom: 10px;
 }
 
 .model {
@@ -215,6 +218,7 @@ img {
   border-top: 1px solid #000;
   border-bottom: 1px solid #000;
   padding-left: 5px;
+  height: auto;
 }
 
 .step-title span {
@@ -387,5 +391,9 @@ img {
   .label-item {
     flex: 1 1 auto; /* 允许内容自适应空间 */
     min-width: 100px; /* 设置最小宽度，避免内容被过度压缩 */
+  }
+
+  .prepare-pdf .page-outline {
+    border: none !important; /* 移除外边线 */
   }
 }

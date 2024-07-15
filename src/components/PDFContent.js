@@ -3,7 +3,7 @@ import styles from '../scss/PDFDesign.module.scss';
 import classNames from 'classnames';
 import { useLocation } from 'react-router-dom';
 
-const PDFContent = React.forwardRef(({ knowledgeInfo, SOPData }, ref) => {
+const PDFContent = React.forwardRef(({ knowledgeInfo, SOPData, onImageLoad }, ref) => {
   console.log('knowledgeInfo', knowledgeInfo);
   console.log('SOPData', SOPData);
   const location = useLocation();
@@ -33,6 +33,18 @@ const PDFContent = React.forwardRef(({ knowledgeInfo, SOPData }, ref) => {
     console.log("Received knowledgeInfo:", knowledgeInfo);
     console.log("Received SOPData:", SOPData);
   }, [knowledgeInfo, SOPData]);
+
+  if (knowledgeInfo && knowledgeInfo.knowledgeBaseModelImage) {
+    try {
+        const images = JSON.parse(knowledgeInfo.knowledgeBaseModelImage);
+        // 使用 images 進行後續操作
+    } catch (e) {
+        console.error('Failed to parse images JSON:', e);
+    }
+  } else {
+      console.log('No image data available or data is undefined');
+  }
+
 
   return (
     <div className={styles['content-box']} ref={ref}>
@@ -84,12 +96,17 @@ const PDFContent = React.forwardRef(({ knowledgeInfo, SOPData }, ref) => {
                     ).map((item, idx) => {
                       return (
                         <div
-                          className="w-[500px] h-[250px] relative"
+                          className="w-[600px] h-[300px] relative"
                           style={{ overflow: 'hidden' }}
                         >
                           <img
                             key={idx}
                             src={item}
+                            onLoad={onImageLoad}
+                            onError={() => {
+                              console.log('Error loading image:', item);
+                              onImageLoad(); // Even on error, trigger load to avoid infinite wait
+                            }}
                             style={{
                               width: '100%',
                               height: '100%',
@@ -135,7 +152,7 @@ const PDFContent = React.forwardRef(({ knowledgeInfo, SOPData }, ref) => {
                       <div
                         style={{
                           width: '140px',
-                          height: '200px',
+                          height: '160px',
                           position: 'relative',
                         }}
                       >
@@ -150,6 +167,7 @@ const PDFContent = React.forwardRef(({ knowledgeInfo, SOPData }, ref) => {
                             objectFit: 'contain', // 確保圖片覆蓋整個容器並適當裁切
                           }}
                           alt="Your images Description"
+                          onLoad={onImageLoad}
                         />
                         <span
                           style={{
@@ -200,9 +218,9 @@ const PDFContent = React.forwardRef(({ knowledgeInfo, SOPData }, ref) => {
           </div>
         </div>
 
-        <div className={styles['tools']} id="tools">
+        <div className={styles['illustration']} id="illustration">
           <div className="w-full">
-            <div className={styles['tools-label']}>
+            <div className={styles['illustration-label']}>
               <label>Illustration(維修部位說明) :</label>
             </div>
             <div className="w-full flex justify-between py-2 px-6" 
@@ -222,7 +240,7 @@ const PDFContent = React.forwardRef(({ knowledgeInfo, SOPData }, ref) => {
                     ).map((item, idx) => (
                       <div
                       style={{
-                        width: '220px',
+                        width: '240px',
                         height: '220px',
                         position: 'relative',
                       }}
@@ -238,6 +256,7 @@ const PDFContent = React.forwardRef(({ knowledgeInfo, SOPData }, ref) => {
                             objectFit: 'contain', // 使圖片保持比例且完全顯示
                           }}
                           alt="Your images Description"
+                          onLoad={onImageLoad}
                         />
                         <span
                           style={{
@@ -335,13 +354,14 @@ const PDFContent = React.forwardRef(({ knowledgeInfo, SOPData }, ref) => {
                       <img
                         src={sop.soP2Image}
                         style={{
-                          width: '250px', // 直接在 style 中設定寬度
-                          height: '250px', // 直接在 style 中設定高度
+                          width: '270px', // 直接在 style 中設定寬度
+                          height: '230px', // 直接在 style 中設定高度
                           objectFit: 'contain', // 保持圖片原始比例並填滿容器
                           borderRadius: '8px', // 如果需要圓角
                           border: '1px solid #c0c0c0', // 只有當圖片存在時顯示邊框
                         }}
                         alt="Your images Description"
+                        onLoad={onImageLoad}
                       />
                     ) : null}
                   </div>
@@ -370,6 +390,7 @@ const PDFContent = React.forwardRef(({ knowledgeInfo, SOPData }, ref) => {
                             border: '1px solid #c0c0c0', // 只有當圖片存在時顯示邊框
                           }}
                           alt="Your images Description"
+                          onLoad={onImageLoad}
                         />
                       ) : null}
                     </div>

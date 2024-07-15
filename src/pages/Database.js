@@ -29,60 +29,85 @@ export default function Database() {
   const [SOPData, setSOPData] = useState([]);
   const { nodeId, nodeTopic } = location.state; // 從路由狀態中讀取數據
 
-  const handleEdit = async () => {
+  const { knowledgeBaseId } = location.state || {}; // 從路由狀態獲取 knowledgeBaseId
 
-    let knowledgeBaseModelImageObj = []
-    let knowledgeBaseToolsImageObj = []
-    let knowledgeBasePositionImageObj = []
+  useEffect(() => {
+    if (knowledgeBaseId) {
+      console.log('Loaded with ID:', knowledgeBaseId);
+      // 基於 knowledgeBaseId 加載相應數據
+    } else {
+      console.log(
+        'No knowledgeBaseId provided, load default data or handle case.'
+      );
+      // 處理沒有 knowledgeBaseId 的情況
+    }
+  }, [knowledgeBaseId]);
+
+  const handleEdit = async () => {
+    let knowledgeBaseModelImageObj = [];
+    let knowledgeBaseToolsImageObj = [];
+    let knowledgeBasePositionImageObj = [];
 
     if (knowledgeInfo.knowledgeBaseModelImage) {
-      knowledgeBaseModelImageObj = JSON.parse(knowledgeInfo.knowledgeBaseModelImage)
+      knowledgeBaseModelImageObj = JSON.parse(
+        knowledgeInfo.knowledgeBaseModelImage
+      );
 
       for (const item in knowledgeBaseModelImageObj) {
-        const res = await fetch(knowledgeBaseModelImageObj[item])
-        const blob = await res.blob()
-        const name = JSON.parse(knowledgeInfo.knowledgeBaseModelImageNames)[item]
-        const file = new File([blob], name, { type: blob.type })
+        const res = await fetch(knowledgeBaseModelImageObj[item]);
+        const blob = await res.blob();
+        const name = JSON.parse(knowledgeInfo.knowledgeBaseModelImageNames)[
+          item
+        ];
+        const file = new File([blob], name, { type: blob.type });
 
         knowledgeBaseModelImageObj[item] = {
           file: file,
           name: name,
-          img: knowledgeBaseModelImageObj[item]
-        }
+          img: knowledgeBaseModelImageObj[item],
+        };
       }
     }
 
     if (knowledgeInfo.knowledgeBaseToolsImage) {
-      knowledgeBaseToolsImageObj = JSON.parse(knowledgeInfo.knowledgeBaseToolsImage)
+      knowledgeBaseToolsImageObj = JSON.parse(
+        knowledgeInfo.knowledgeBaseToolsImage
+      );
 
       for (const item in knowledgeBaseToolsImageObj) {
-        const res = await fetch(knowledgeBaseToolsImageObj[item])
-        const blob = await res.blob()
-        const name = JSON.parse(knowledgeInfo.knowledgeBaseToolsImageNames)[item]
-        const file = new File([blob], name, { type: blob.type })
+        const res = await fetch(knowledgeBaseToolsImageObj[item]);
+        const blob = await res.blob();
+        const name = JSON.parse(knowledgeInfo.knowledgeBaseToolsImageNames)[
+          item
+        ];
+        const file = new File([blob], name, { type: blob.type });
 
         knowledgeBaseToolsImageObj[item] = {
           file: file,
           name: name,
-          img: knowledgeBaseToolsImageObj[item]
-        }
+          img: knowledgeBaseToolsImageObj[item],
+        };
       }
     }
-    
+
     if (knowledgeInfo.knowledgeBasePositionImage) {
-      knowledgeBasePositionImageObj = JSON.parse(knowledgeInfo.knowledgeBasePositionImage)
+      knowledgeBasePositionImageObj = JSON.parse(
+        knowledgeInfo.knowledgeBasePositionImage
+      );
 
       for (const item in knowledgeBasePositionImageObj) {
-        const res = await fetch(knowledgeBasePositionImageObj[item])
-        const blob = await res.blob()
-        const name = JSON.parse(knowledgeInfo.knowledgeBasePositionImageNames)[item]
-        const file = new File([blob], name, { type: blob.type })
+        const res = await fetch(knowledgeBasePositionImageObj[item]);
+        const blob = await res.blob();
+        const name = JSON.parse(knowledgeInfo.knowledgeBasePositionImageNames)[
+          item
+        ];
+        const file = new File([blob], name, { type: blob.type });
 
         knowledgeBasePositionImageObj[item] = {
           file: file,
           name: name,
-          img: knowledgeBasePositionImageObj[item]
-        }
+          img: knowledgeBasePositionImageObj[item],
+        };
       }
     }
 
@@ -119,12 +144,12 @@ export default function Database() {
         ...knowledgeInfo,
         knowledgeBaseModelImageObj: knowledgeBaseModelImageObj,
         knowledgeBaseToolsImageObj: knowledgeBaseToolsImageObj,
-        knowledgeBasePositionImageObj: knowledgeBasePositionImageObj
+        knowledgeBasePositionImageObj: knowledgeBasePositionImageObj,
       },
       sops: SOPData,
-    })
+    });
 
-    navigate('/document-editor', { state: { knowledgeInfo, SOPData } })
+    navigate('/document-editor', { state: { knowledgeInfo, SOPData } });
   };
 
   const handleDelete = async () => {

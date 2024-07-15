@@ -55,7 +55,7 @@ export default function PageMindMap() {
         </Link>
       </div>
       <main>
-        <section className="content-header" >
+        <section className="content-header">
           <div className="container-fluid">
             <div className="row mb-2 justify-content-between">
               <div />

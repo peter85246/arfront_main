@@ -306,9 +306,9 @@ export function SOPName({ onClose }) {
         }
 
         setSOPInfo(null); // Reset or update SOP information
-        setTimeout(() => {
-          window.location.href = '/knowledge';
-        }, 2000);
+        // setTimeout(() => {
+        //   window.location.href = '/knowledge';
+        // }, 2000);
       } catch (err) {
         console.error('保存知識庫失败:', err);
         toast.error(`保存失败，請稍后重试。錯誤詳情: ${err.message}`, {

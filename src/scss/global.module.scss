@@ -3103,3 +3103,44 @@ table th {
   max-width: 150px; /* 最大寬度限制 */
   max-height: 150px; /* 最大高度限制 */
 }
+
+@media print {
+  // body {
+  //     width: 100%;
+  //     max-width: 780px; /* 大约A4纸张宽度的像素值，考虑打印边距 */
+  //     font-size: 90%; /* 根据需要调整字体大小 */
+  // }
+  body,
+  .page-outline {
+    height: auto; // 确保容器高度自适应内容
+    overflow: hidden; // 避免内容溢出造成页面扩展
+    padding-bottom: 0; // 减少底部留白
+  }
+  /* 调整或隐藏不适合打印的元素 */
+  .non-printable {
+    display: none;
+  }
+
+  .prepare-pdf {
+    padding-top: 5px; // 细微调整以避免头部内容被切割
+    margin-bottom: -10px; // 减少底部不必要的空白
+  }
+
+  /* 定义用于PDF生成的样式 */
+  .prepare-pdf .page-outline {
+    border: none !important; /* 移除外边线 */
+  }
+
+  .file-title,
+  .step1 {
+    margin-top: 5px; // 微调顶部边距以防文字下移
+    padding: 0; // 移除不必要的内边距
+  }
+
+  /* 确保容器具有固定尺寸 */
+  .page-outline {
+    width: 595pt; /* A4纸张宽度 */
+    height: 842pt; /* A4纸张高度 */
+    box-sizing: border-box; /* 包括padding和border在内计算宽度和高度 */
+  }
+}
