@@ -40,7 +40,7 @@ const PreviewPDFContent = React.forwardRef(
               />
             </div>
             <label className={styles['sop-section']}>
-              SOP名稱: {knowledgeInfo.knowledgeBaseSOPName}
+              <p>SOP名稱: {knowledgeInfo.knowledgeBaseSOPName}</p>
             </label>
           </div>
 
@@ -289,7 +289,7 @@ const PreviewPDFContent = React.forwardRef(
                   />
                 </div>
                 <label className={styles['sop-section']}>
-                  SOP名稱: {knowledgeInfo.knowledgeBaseSOPName}
+                  <p>SOP名稱: {knowledgeInfo.knowledgeBaseSOPName}</p>
                 </label>
               </div>
               {pageSteps.map((sop, idx) => (

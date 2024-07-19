@@ -103,7 +103,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import jsMind from 'jsmind';
 import 'jsmind/style/jsmind.css';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
-import { apiGetMachineAddMindMap } from '../utils/Api';
+import { apiGetAllKnowledgeBaseByFilter, apiGetMachineAddMindMap } from '../utils/Api';
 import stylesAlarm from '../scss/Alarm.module.scss';
 import classNames from 'classnames';
 
@@ -112,60 +112,62 @@ const MenuTest = ({ machineAddId, machineName, defaultZoom = 1 }) => {
   const jmContainerRef = useRef(null);
   const jmInstanceRef = useRef(null);
   const [containerHeight, setContainerHeight] = useState('75vh');
+  const [knowledgeBases, setKnowledgeBases] = useState([]);
 
   const navigate = useNavigate();
 
-  // 節點點擊事件的處理函數，導航到 database 頁面
   // const handleNodeClick = (event, data) => {
-  //   console.log("Clicked node ID:", data.node.id); // 输出被点击的节点ID
+  //   console.log('Clicked node ID:', data.node.id);
   //   if (data.node.isbutton) {
-  //       const parts = data.node.id.split('_');
-  //       const knowledgeBaseId = parts.length > 2 ? parts[2] : null;
-  //       console.log("Knowledge Base ID:", knowledgeBaseId); // 输出knowledgeBaseId
-
-  //       if (knowledgeBaseId) {
-  //           navigate(`/database?knowledgeBaseId=${knowledgeBaseId}`);
-  //       } else {
-  //           navigate('/database');
-  //       }
+  //     console.log('Node is a button:', data.node);
+  //     const parts = data.node.id.split('_button_');
+  //     const knowledgeBaseId = parts.length > 1 ? parts[1] : null;
+  //     console.log('Knowledge Base ID:', knowledgeBaseId);
+  //     if (knowledgeBaseId) {
+  //       navigate('/database', { state: { knowledgeBaseId: knowledgeBaseId } });
+  //     } else {
+  //       navigate('/database'); // 當沒有 knowledgeBaseId 時導航到一般的 database 頁面
+  //     }
+  //   } else {
+  //     console.log('Node is not a button');
   //   }
-  // };
-
-  // const handleNodeClick = (event, data) => {
-  //   console.log("Clicked node ID:", data.node.id); // 輸出被點擊的節點ID
-  //   if (data.node.id.includes('_button')) {
-  //     navigate('/database'); // 直接導航到 database 頁面，不檢查 knowledgeBaseId
-  //   }
-  // };
+  // };  
 
   const handleNodeClick = (event, data) => {
     console.log('Clicked node ID:', data.node.id);
     if (data.node.isbutton) {
-      console.log('Node is a button:', data.node);
-      if (data.node.id.includes('_button')) {
-        const parts = data.node.id.split('_button_');
-        const knowledgeBaseId = parts.length > 1 ? parts[1] : null;
-        console.log('Knowledge Base ID:', knowledgeBaseId);
-        navigate('/database', { state: { knowledgeBaseId } });
+      const knowledgeBaseId = data.node.knowledgeBaseId;
+      console.log('Knowledge Base ID:', knowledgeBaseId);
+      if (knowledgeBaseId) {
+        navigate('/database', { state: { knowledgeBaseId: knowledgeBaseId } });
       } else {
-        navigate('/database');
+        navigate('/database'); // 當沒有 knowledgeBaseId 時導航到一般的 database 頁面
       }
-    } else {
-      console.log('Node is not a button');
     }
   };
+  
 
-  // 添加節點點擊事件的處理函數
-  // const handleNodeClick = (event, data) => {
-  //   // 檢查節點 ID 是否符合導航到 database 的格式
-  //   if (data.node.id.startsWith('root_') && data.node.id.includes('_kb_')) {
-  //       const knowledgeBaseId = data.node.id.split('_kb_')[1];
-  //       // 假設 knowledgeInfo 和 SOPData 以適當方式被 MenuTest 組件接收
-  //       const relevantKnowledge = knowledgeInfo.find(k => k.knowledgeBaseId === knowledgeBaseId);
-  //       const relevantSOP = SOPData.find(s => s.knowledgeBaseId === knowledgeBaseId);
-  //       navigate('/database', { state: { item: { knowledgeBaseId, ...relevantKnowledge }, SOPData: relevantSOP } });
-  //   }
-  // };
+  // 從後端獲取所有knowledgeBaseId與其Id下的所有資料
+  useEffect(() => {
+    const fetchData = async () => {
+      console.log('Fetching data from API...');
+      try {
+        const params = { keyword: '' }; // 根据需要可能添加更多参数
+        const response = await apiGetAllKnowledgeBaseByFilter(params);
+        console.log('API response:', response);
+        if (response && response.code === '0000' && response.result) {
+          console.log('Knowledge bases loaded:', response.result);
+          setKnowledgeBases(response.result);
+        } else {
+          console.log('No data or error in response:', response);
+        }
+      } catch (error) {
+        console.error('Error fetching knowledge bases:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   // 这个函数负责处理每个部件和维修类型，并将它们添加到数据数组中
   const processPart = (part, parentId, direction) => {
@@ -195,17 +197,17 @@ const MenuTest = ({ machineAddId, machineName, defaultZoom = 1 }) => {
       });
 
       type.knowledgeBases.forEach((kb) => {
-        const kbId = kb.knowledgeBaseId
-          ? `${typeId}_button_${kb.knowledgeBaseId}`
-          : `${typeId}_button`;
+        const kbId = `${typeId}_button_${kb.knowledgeBaseId || 'general'}`;
         nodes.push({
           id: kbId,
-          topic: kb.deviceType.trim() || 'General Info',
+          topic: `<button>${kb.deviceType.trim() || 'General Info'}</button>`, // 将topic设置为HTML按钮
           parentid: typeId,
           direction: childDirection,
           'font-size': 12,
           width: 'auto',
-          isbutton: true, // 设置为 button 形式
+          isbutton: true,  // 明确标记为按钮
+          isHtml: true,  // 标记节点为HTML内容
+          knowledgeBaseId: kb.knowledgeBaseId,
         });
       });
 
@@ -298,8 +300,69 @@ const MenuTest = ({ machineAddId, machineName, defaultZoom = 1 }) => {
     }
   };
 
+  // 定義一個自定義節點渲染方法
+  const customNodeRenderer = (node, element) => {
+    console.log('Rendering node:', node);  // 输出节点信息以便于调试
+    if (node.isbutton && node.isHtml) {
+      // 直接使用 innerHTML 插入带有 onclick 事件的按钮
+      element.innerHTML = `<button onclick="window.handleButtonClick('${node.knowledgeBaseId}')">${node.topic}</button>`;
+  
+      const button = element.querySelector('button');
+      console.log('Button element:', button);  // 检查按钮元素是否正确被创建
+    
+      if (button) {
+        button.style.cursor = 'pointer';  // 设置鼠标为手形指针
+        button.addEventListener('click', (e) => {
+          e.stopPropagation();  // 阻止事件冒泡
+          console.log('Button clicked with knowledgeBaseId:', node.knowledgeBaseId);  // 调试按钮点击
+          if (node.knowledgeBaseId) {
+            console.log('Navigating with ID:', node.knowledgeBaseId);
+            navigate('/database', { state: { knowledgeBaseId: node.knowledgeBaseId } });
+          } else {
+            navigate('/database');  // 当没有 knowledgeBaseId 时导航到一般的 database 页面
+          }
+        });
+      }
+    } else {
+      // 对于非按钮节点，使用普通的渲染方法
+      element.innerHTML = node.topic;
+    }
+  };
+  
+  
+
+  const custom_node_render = (node, element) => {
+    console.log('Rendering node:', node);  // 檢查節點資料
+    if (node.isbutton && node.isHtml) {
+      element.innerHTML = `<button>${node.topic}</button>`;
+      const button = element.querySelector('button');
+      console.log('Button element:', button);  // 檢查按鈕元素是否存在
+
+      if (button) {
+        button.style.cursor = 'pointer';
+        button.addEventListener('click', (e) => {
+            e.stopPropagation();
+            console.log('Button clicked with knowledgeBaseId:', node.knowledgeBaseId); 
+            if (node.knowledgeBaseId) {
+                console.log('Navigating with ID:', node.knowledgeBaseId);
+                navigate('/database', { state: { knowledgeBaseId: node.knowledgeBaseId } });
+            } else {
+                navigate('/database');
+            }
+        });
+      }
+    }
+  };
+  
+
   // 獲取數據並渲染心智圖
   useEffect(() => {
+    // 將 navigate 函數包裹在一個全局可訪問的函數中
+    window.handleButtonClick = (knowledgeBaseId) => {
+      console.log('Button clicked, knowledgeBase ID:', knowledgeBaseId);
+      navigate('/database', { state: { knowledgeBaseId } });
+    };
+
     fetchData()
       .then((knowledgeBases) => {
         if (jmContainerRef.current) {
@@ -311,6 +374,7 @@ const MenuTest = ({ machineAddId, machineName, defaultZoom = 1 }) => {
             editable: false,
             theme: 'primary',
             mode: 'full',
+            support_html: true,  // 確保支持 HTML
             view: {
               engine: 'canvas',
               hmargin: 100,
@@ -325,14 +389,7 @@ const MenuTest = ({ machineAddId, machineName, defaultZoom = 1 }) => {
                 max: 2.1,
                 step: 0.1,
               },
-              custom_node_render: function (node, element, view) {
-                if (node.isbutton) {
-                  element.style.cursor = 'pointer'; // 鼠標懸停顯示手形
-                  element.onclick = function () {
-                    console.log('Direct click on node:', node.id);
-                  };
-                }
-              },
+              custom_node_render: customNodeRenderer, // 使用自定義渲染函數
             },
             layout: {
               hspace: 20,
@@ -382,6 +439,11 @@ const MenuTest = ({ machineAddId, machineName, defaultZoom = 1 }) => {
       .catch((error) => {
         console.error('Error in displaying mind map:', error);
       });
+
+      return () => {
+        // 組件卸載時清理全局函數
+        window.handleButtonClick = null;
+      };
   }, [machineAddId, machineName, defaultZoom, navigate]);
 
   return (
@@ -392,10 +454,10 @@ const MenuTest = ({ machineAddId, machineName, defaultZoom = 1 }) => {
       />
       <button
         onClick={() =>
-          navigate('/database', { state: { knowledgeBaseId: 'test' } })
+          navigate('/database', { state: { knowledgeBaseId: 1 } })
         }
       >
-        Test Navigate to Database
+        Test Navigate to Database with ID 1
       </button>
     </div>
   );

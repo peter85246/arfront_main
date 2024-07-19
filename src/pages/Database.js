@@ -30,6 +30,8 @@ export default function Database() {
   const { nodeId, nodeTopic } = location.state; // 從路由狀態中讀取數據
 
   const { knowledgeBaseId } = location.state || {}; // 從路由狀態獲取 knowledgeBaseId
+  console.log('Database page loaded with ID:', knowledgeBaseId); // 确认 ID 是否被正确传递
+  
 
   useEffect(() => {
     if (knowledgeBaseId) {

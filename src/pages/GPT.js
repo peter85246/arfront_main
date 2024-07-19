@@ -1,8 +1,8 @@
-import React from 'react'; // 確保 React 已被導入
-import { useState, useEffect, useRef } from 'react';
-import styles from '../scss/gpt.module.scss';
-import ChatArea from '../components/GPT/ChatArea';
-import GPTResponse from '../components/GPT/GPTResponse';
+import React from "react"; // 確保 React 已被導入
+import { useState, useEffect, useRef } from "react";
+import styles from "../scss/gpt.module.scss";
+import ChatArea from "../components/GPT/ChatArea";
+import GPTResponse from "../components/GPT/GPTResponse";
 
 // 設定一個模擬的 fetchGPTResponse 函數
 const fetchGPTResponse = async (
@@ -11,13 +11,13 @@ const fetchGPTResponse = async (
   handleNewChunk,
   setLoadingFalse,
   setResponse,
-  setIsLoading
+  setIsLoading,
 ) => {
   try {
-    const response = await fetch('http://localhost:5000/conversation', {
-      method: 'POST',
+    const response = await fetch("http://localhost:5000/conversation", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({ query: input }),
       signal: signal,
@@ -26,7 +26,7 @@ const fetchGPTResponse = async (
     if (response.ok) {
       const reader = response.body.getReader(); // 確保 reader 在此定義
       let isFirstChunk = true; // 用來檢查是否為第一塊資料
-      let fullText = ''; // 累積完整文本，解決閃出文字問題
+      let fullText = ""; // 累積完整文本，解決閃出文字問題
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
@@ -46,15 +46,15 @@ const fetchGPTResponse = async (
         true,
         signal,
         100,
-        500
+        500,
       ); // 一次性呼叫逐字顯示
     } else {
-      throw new Error('Network response was not ok.');
+      throw new Error("Network response was not ok.");
     }
   } catch (error) {
-    console.error('Error:', error);
+    console.error("Error:", error);
     setIsLoading(false); // 確保在出現錯誤時停止加載動畫
-    throw new Error('Failed to fetch response');
+    throw new Error("Failed to fetch response");
   }
 };
 
@@ -70,7 +70,7 @@ const typeWritter = (
   shouldContinue,
   signal,
   defaultDelay = 500,
-  initialDelay = 800
+  initialDelay = 800,
 ) => {
   const startTyping = () => {
     if (signal.aborted || !shouldContinue) {
@@ -89,7 +89,7 @@ const typeWritter = (
           .substring(currentIdx)
           .match(/^(步驟如下：|步\s*驟\s*\d+：)/);
         if (sectionStartMatch) {
-          const sectionStart = sectionStartMatch[0].replace(/：/, ' ： '); // 增加"："的左右間距
+          const sectionStart = sectionStartMatch[0].replace(/：/, " ： "); // 增加"："的左右間距
           nextIdx = currentIdx + sectionStart.length; // 更新索引跳過整個匹配字串
           delay = 500; // 增加延時
         }
@@ -108,9 +108,9 @@ const typeWritter = (
 };
 
 export default function GPT({ options_data }) {
-  const [input, setInput] = useState('');
-  const [question, setQuestion] = useState('');
-  const [response, setResponse] = useState('');
+  const [input, setInput] = useState("");
+  const [question, setQuestion] = useState("");
+  const [response, setResponse] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [fetchController, setFetchController] = useState(new AbortController()); // 創建一個全局控制器
@@ -132,7 +132,7 @@ export default function GPT({ options_data }) {
     setFetchController(newController); // 更新控制器狀態
 
     try {
-      let fullText = '';
+      let fullText = "";
       await fetchGPTResponse(
         inputValue,
         newController.signal,
@@ -143,11 +143,11 @@ export default function GPT({ options_data }) {
         () => {
           setIsLoading(false);
           // typeWritter(fullText, 0, setResponse, () => setIsLoading(false), true, newController.signal, 100, 500);
-        }
+        },
       );
     } catch (error) {
-      if (error.name !== 'AbortError') {
-        setError('Failed to fetch response');
+      if (error.name !== "AbortError") {
+        setError("Failed to fetch response");
       }
       setIsLoading(false);
     }
@@ -159,26 +159,26 @@ export default function GPT({ options_data }) {
     const newController = new AbortController(); // 創建一個新的控制器
     setFetchController(newController); // 更新控制器狀態
 
-    setInput(''); // 清空輸入
-    setQuestion(''); // 清空問題
-    setResponse(''); // 清空回應
+    setInput(""); // 清空輸入
+    setQuestion(""); // 清空問題
+    setResponse(""); // 清空回應
     setIsLoading(false); // 停止加載動畫
   };
 
   // 處理 Clear 按鈕
   const handleClear = () => {
     fetchController.abort(); // 確保中止現有操作
-    setResponse(''); // 清空回應
+    setResponse(""); // 清空回應
     setIsLoading(false); // 停止加载动画
   };
 
   return (
     <main>
       <h2>GPT</h2>
-      <div className={styles['content2']}>
-        <div className={styles['button-function']}></div>
-        <div className={styles['content-wrapper-gpt']}>
-          <div className={styles['container-gpt']}>
+      <div className={styles["content2"]}>
+        <div className={styles["button-function"]}></div>
+        <div className={styles["content-wrapper-gpt"]}>
+          <div className={styles["container-gpt"]}>
             <ChatArea
               input={input}
               onInputChange={setInput}

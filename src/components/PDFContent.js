@@ -23,13 +23,27 @@ const PDFContent = React.forwardRef(
     const sopName =
       SOPData?.length > 0 ? SOPData[0].soP2Name : 'Default SOP Name';
 
-    function safeJsonParse(str) {
-      try {
-        return JSON.parse(str);
-      } catch (e) {
-        return [];
+      function safeJsonParse(str) {
+        let result = str;
+        try {
+          let temp = JSON.parse(result);
+          while (typeof temp === 'string') {
+            result = temp;
+            temp = JSON.parse(result);
+          }
+          return temp; // 返回最後成功解析的 JSON 物件或值
+        } catch (e) {
+          console.error('Failed to parse JSON:', e);
+          return result; // 若解析失敗，返回最後一個成功解析前的字符串
+        }
       }
-    }
+
+      function extractFileName(str) {
+        let result = str;
+        // 去除所有非必要的引號和轉義符
+        result = result.replace(/[\[\]"\\]+/g, '');
+        return result;
+      }
 
     useEffect(() => {
       console.log('Received knowledgeInfo:', knowledgeInfo);
@@ -104,7 +118,7 @@ const PDFContent = React.forwardRef(
                       ).map((item, idx) => {
                         return (
                           <div
-                            className="w-[600px] h-[300px] relative"
+                            className="w-[500px] h-[300px] relative"
                             style={{ overflow: 'hidden' }}
                           >
                             <img
@@ -202,9 +216,9 @@ const PDFContent = React.forwardRef(
                   {(() => {
                     // 檢查 knowledgeBaseToolsImageNames 是否存在並有內容
                     if (knowledgeInfo.knowledgeBaseToolsImageNames) {
-                      return JSON.parse(
-                        knowledgeInfo?.knowledgeBaseToolsImageNames
-                      ).map((item, idx) => (
+                      // 直接解析並提取文件名
+                        const fileNames = safeJsonParse(knowledgeInfo.knowledgeBaseToolsImageNames).map(extractFileName);
+                        return fileNames.map((fileName, idx) => (
                         <div
                           className="flex gap-[4px] items-center"
                           style={{
@@ -216,7 +230,7 @@ const PDFContent = React.forwardRef(
                             {['A', 'B', 'C', 'D', 'E', 'F'][idx]}
                             {': '}
                           </span>
-                          <span>{item}</span>
+                          <span>{fileName}</span>
                         </div>
                       ));
                     }
@@ -292,9 +306,9 @@ const PDFContent = React.forwardRef(
                 >
                   {(() => {
                     if (knowledgeInfo.knowledgeBasePositionImageNames) {
-                      return JSON.parse(
-                        knowledgeInfo?.knowledgeBasePositionImageNames
-                      ).map((item, idx) => (
+                      // 直接解析並提取文件名
+                      const fileNames = safeJsonParse(knowledgeInfo.knowledgeBasePositionImageNames).map(extractFileName);
+                      return fileNames.map((fileName, idx) => (
                         <div
                           className="flex gap-[4px] items-center"
                           style={{ minWidth: '15vw' }}
@@ -303,7 +317,7 @@ const PDFContent = React.forwardRef(
                             {['A', 'B', 'C', 'D', 'E', 'F'][idx]}
                             {': '}
                           </span>
-                          <span>{item}</span>
+                          <span>{fileName}</span>
                         </div>
                       ));
                     }
