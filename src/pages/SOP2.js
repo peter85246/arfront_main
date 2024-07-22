@@ -619,36 +619,80 @@ function SOP2() {
   //#endregion
 
   //#region 儲存暫存 3DModel
+  // const handleSaveTempModel = async (e) => {
+  //   e.preventDefault();
+  //   let newTempModels = [...tempModels];
+
+  //   //判斷圖片/檔案是否為空
+  //   if (
+  //     selectTempModel &&
+  //     (selectTempModel.tempModelImageObj == null ||
+  //       selectTempModel.tempModelFileObj == null)
+  //   ) {
+  //     let newSelectTempModelErrors = { ...selectTempModelErrors };
+  //     if (selectTempModel.tempModelImageObj == null) {
+  //       newSelectTempModelErrors.tempModelImage = 'required';
+  //     }
+
+  //     if (selectTempModel.tempModelFileObj == null) {
+  //       newSelectTempModelErrors.tempModelFile = 'required';
+  //     }
+
+  //     setSelectTempModelErrors(newSelectTempModelErrors);
+  //   } else {
+  //     if (
+  //       selectTempModelErrors.tempModelImage == '' &&
+  //       selectTempModelErrors.tempModelFile == ''
+  //     ) {
+  //       newTempModels[selectTempModelIndex] = selectTempModel;
+
+  //       setTempModels(newTempModels);
+  //       setShowSaveTempModelModal(false);
+  //     }
+  //   }
+  // };
+  //#endregion
+
+  //#region 儲存暫存 3DModel
   const handleSaveTempModel = async (e) => {
     e.preventDefault();
     let newTempModels = [...tempModels];
+    let updatedSops = [...sops];
 
-    //判斷圖片/檔案是否為空
-    if (
-      selectTempModel &&
-      (selectTempModel.tempModelImageObj == null ||
-        selectTempModel.tempModelFileObj == null)
-    ) {
-      let newSelectTempModelErrors = { ...selectTempModelErrors };
-      if (selectTempModel.tempModelImageObj == null) {
-        newSelectTempModelErrors.tempModelImage = 'required';
-      }
-
-      if (selectTempModel.tempModelFileObj == null) {
-        newSelectTempModelErrors.tempModelFile = 'required';
-      }
-
-      setSelectTempModelErrors(newSelectTempModelErrors);
-    } else {
-      if (
-        selectTempModelErrors.tempModelImage == '' &&
-        selectTempModelErrors.tempModelFile == ''
-      ) {
+    // 檢查圖片和檔案是否皆已加載
+    if (selectTempModel && selectTempModel.tempModelImageObj && selectTempModel.tempModelFileObj) {
+        // 更新臨時模型列表
         newTempModels[selectTempModelIndex] = selectTempModel;
-
         setTempModels(newTempModels);
-        setShowSaveTempModelModal(false);
-      }
+
+        // 尋找當前選擇的SOP，並更新其sopModels
+        const updatedSopIndex = updatedSops.findIndex(sop => sop.soP2Step === selectSOP.soP2Step);
+        if (updatedSopIndex !== -1) {
+            updatedSops[updatedSopIndex] = {
+                ...updatedSops[updatedSopIndex],
+                sopModels: [
+                    ...updatedSops[updatedSopIndex].sopModels,
+                    {
+                        sopModelId: 0, // 根據實際情況可調整
+                        sopModelImage: selectTempModel.tempModelImageName,
+                        sopModelImageObj: selectTempModel.tempModelImageObj,
+                        sopModelFile: selectTempModel.tempModelFileName,
+                        sopModelFileObj: selectTempModel.tempModelFileObj,
+                    }
+                ]
+            };
+            setSOPs(updatedSops);
+            setSelectSOP(updatedSops[updatedSopIndex]); // 更新當前選擇的SOP
+        }
+
+        setShowSaveTempModelModal(false); // 關閉模態窗口
+    } else {
+        // 處理錯誤情況：更新錯誤狀態
+        let errors = {
+            tempModelImage: selectTempModel.tempModelImageObj ? '' : 'required',
+            tempModelFile: selectTempModel.tempModelFileObj ? '' : 'required'
+        };
+        setSelectTempModelErrors(errors);
     }
   };
   //#endregion

@@ -97,17 +97,17 @@ export function SOPName({ onClose }) {
       }
 
       // 當存在3D模型數據時添加到表單
-      // if (SOPInfo.knowledgeInfo?.knowledgeBase3DModelImageObj) {
-      //   SOPInfo.knowledgeInfo.knowledgeBase3DModelImageObj.forEach(file => {
-      //     formData.append('KnowledgeBases[0].KnowledgeBase3DModelImageObj', file);
-      //   });
-      // }
+      if (SOPInfo.knowledgeInfo?.knowledgeBase3DModelImageObj) {
+        SOPInfo.knowledgeInfo.knowledgeBase3DModelImageObj.forEach(file => {
+          formData.append('KnowledgeBases[0].KnowledgeBase3DModelImageObj', file);
+        });
+      }
       
-      // if (SOPInfo.knowledgeInfo?.knowledgeBase3DModelFileObj) {
-      //   SOPInfo.knowledgeInfo.knowledgeBase3DModelFileObj.forEach(file => {
-      //     formData.append('KnowledgeBases[0].KnowledgeBase3DModelFileObj', file);
-      //   });
-      // }
+      if (SOPInfo.knowledgeInfo?.knowledgeBase3DModelFileObj) {
+        SOPInfo.knowledgeInfo.knowledgeBase3DModelFileObj.forEach(file => {
+          formData.append('KnowledgeBases[0].KnowledgeBase3DModelFileObj', file);
+        });
+      }
       
 
       // 如果有 KnowledgeBaseId，加入到 formData (編輯CRUD)
@@ -301,22 +301,28 @@ export function SOPName({ onClose }) {
             SOPFormData.append(`SOP2s[${idx}].sopModels[${j}].sopModelId`, sopModel.sopModelId);
             SOPFormData.append(`SOP2s[${idx}].sopModels[${j}].deleted`, sopModel.deleted);
             SOPFormData.append(`SOP2s[${idx}].sopModels[${j}].sopId`, sopModel.sopId);
+
+            // 將圖片和文件無條件加入到 FormData
+            SOPFormData.append(`SOP2s[${idx}].sopModels[${j}].sopModelImage`, sopModel.sopModelImage);
+            SOPFormData.append(`SOP2s[${idx}].sopModels[${j}].sopModelImageObj`, sopModel.sopModelImageObj);
+            SOPFormData.append(`SOP2s[${idx}].sopModels[${j}].sopModelFile`, sopModel.sopModelFile);
+            SOPFormData.append(`SOP2s[${idx}].sopModels[${j}].sopModelFileObj`, sopModel.sopModelFileObj);
           
-            // 檢查圖片是否為文件對象，如果是，則添加；否則不做任何操作
+             // 檢查圖片是否為文件對象，如果是，則添加；否則不做任何操作
             if (sopModel.sopModelImageObj instanceof File) {
               SOPFormData.append(`SOP2s[${idx}].sopModels[${j}].sopModelImageObj`, sopModel.sopModelImageObj);
             }
-          
+
             // 檢查檔案是否為文件對象，如果是，則添加；否則不做任何操作
             if (sopModel.sopModelFileObj instanceof File) {
               SOPFormData.append(`SOP2s[${idx}].sopModels[${j}].sopModelFileObj`, sopModel.sopModelFileObj);
             }
-          
+
             // 如果sopModelImage是URL或文件名，您可以選擇不添加到FormData或處理為文字字段
             if (typeof sopModel.sopModelImage === 'string') {
               SOPFormData.append(`SOP2s[${idx}].sopModels[${j}].sopModelImage`, sopModel.sopModelImage);
             }
-          
+
             // 如果sopModelFile是URL或文件名，您可以選擇不添加到FormData或處理為文字字段
             if (typeof sopModel.sopModelFile === 'string') {
               SOPFormData.append(`SOP2s[${idx}].sopModels[${j}].sopModelFile`, sopModel.sopModelFile);
@@ -342,12 +348,12 @@ export function SOPName({ onClose }) {
         }
 
         setSOPInfo(null); // Reset or update SOP information
-        setTimeout(() => {
-          window.location.href = '/knowledge';
-        }, 1000);
+        // setTimeout(() => {
+        //   window.location.href = '/knowledge';
+        // }, 1000);
       } catch (err) {
-        console.error('保存知識庫失败:', err);
-        toast.error(`保存失败，請稍后重试。錯誤詳情: ${err.message}`, {
+        console.error('保存知識庫失敗:', err);
+        toast.error(`保存失败，請稍後重試。錯誤詳情: ${err.message}`, {
           position: toast.POSITION.TOP_CENTER,
           autoClose: 2000,
           hideProgressBar: true,

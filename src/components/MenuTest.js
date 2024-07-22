@@ -1,104 +1,3 @@
-// import React, { useState } from "react";
-// import {
-//   DesktopOutlined,
-//   FileOutlined,
-//   PieChartOutlined,
-//   TeamOutlined,
-//   UserOutlined,
-// } from "@ant-design/icons";
-// import { Breadcrumb, Layout, Menu, theme } from "antd";
-// const { Header, Content, Footer, Sider } = Layout;
-// function getItem(label, key, icon, children) {
-//   return {
-//     key,
-//     icon,
-//     children,
-//     label,
-//   };
-// }
-// const items = [
-//   getItem("Option 1", "1", <PieChartOutlined />),
-//   getItem("Option 2", "2", <DesktopOutlined />),
-//   getItem("User", "sub1", <UserOutlined />, [
-//     getItem("Tom", "3"),
-//     getItem("Bill", "4"),
-//     getItem("Alex", "5"),
-//   ]),
-//   getItem("Team", "sub2", <TeamOutlined />, [
-//     getItem("Team 1", "6"),
-//     getItem("Team 2", "8"),
-//   ]),
-//   getItem("Files", "9", <FileOutlined />),
-// ];
-
-// const MenuTest = () => {
-//   const [collapsed, setCollapsed] = useState(false);
-//   const {
-//     token: { colorBgContainer, borderRadiusLG },
-//   } = theme.useToken();
-//   return (
-//     <Layout
-//       style={{
-//         minHeight: "100vh",
-//       }}
-//     >
-//       <Sider
-//         collapsible
-//         collapsed={collapsed}
-//         onCollapse={(value) => setCollapsed(value)}
-//       >
-//         <div className="demo-logo-vertical" />
-//         <Menu
-//           theme="dark"
-//           defaultSelectedKeys={["1"]}
-//           mode="inline"
-//           items={items}
-//         />
-//       </Sider>
-//       <Layout>
-//         <Header
-//           style={{
-//             padding: 0,
-//             background: colorBgContainer,
-//           }}
-//         />
-//         <Content
-//           style={{
-//             margin: "0 16px",
-//           }}
-//         >
-//           <Breadcrumb
-//             style={{
-//               margin: "16px 0",
-//             }}
-//           >
-//             <Breadcrumb.Item>User</Breadcrumb.Item>
-//             <Breadcrumb.Item>Bill</Breadcrumb.Item>
-//           </Breadcrumb>
-//           <div
-//             style={{
-//               padding: 24,
-//               minHeight: 360,
-//               background: colorBgContainer,
-//               borderRadius: borderRadiusLG,
-//             }}
-//           >
-//             Bill is a cat.
-//           </div>
-//         </Content>
-//         <Footer
-//           style={{
-//             textAlign: "center",
-//           }}
-//         >
-//           Ant Design ©{new Date().getFullYear()} Created by Ant UED
-//         </Footer>
-//       </Layout>
-//     </Layout>
-//   );
-// };
-// export default MenuTest;
-
 import React, { useEffect, useRef, useState } from 'react';
 import jsMind from 'jsmind';
 import 'jsmind/style/jsmind.css';
@@ -111,27 +10,12 @@ const MenuTest = ({ machineAddId, machineName, defaultZoom = 1 }) => {
   console.log('MachineAddId in MenuTest:', machineAddId); // Debug 輸出
   const jmContainerRef = useRef(null);
   const jmInstanceRef = useRef(null);
-  const [containerHeight, setContainerHeight] = useState('75vh');
+  const [containerHeight, setContainerHeight] = useState('97vh');
+  const [containerWidth, setContainerWidth] = useState('80vw'); // 添加寬度控制的狀態
+
   const [knowledgeBases, setKnowledgeBases] = useState([]);
 
-  const navigate = useNavigate();
-
-  // const handleNodeClick = (event, data) => {
-  //   console.log('Clicked node ID:', data.node.id);
-  //   if (data.node.isbutton) {
-  //     console.log('Node is a button:', data.node);
-  //     const parts = data.node.id.split('_button_');
-  //     const knowledgeBaseId = parts.length > 1 ? parts[1] : null;
-  //     console.log('Knowledge Base ID:', knowledgeBaseId);
-  //     if (knowledgeBaseId) {
-  //       navigate('/database', { state: { knowledgeBaseId: knowledgeBaseId } });
-  //     } else {
-  //       navigate('/database'); // 當沒有 knowledgeBaseId 時導航到一般的 database 頁面
-  //     }
-  //   } else {
-  //     console.log('Node is not a button');
-  //   }
-  // };  
+  const navigate = useNavigate(); 
 
   const handleNodeClick = (event, data) => {
     console.log('Clicked node ID:', data.node.id);
@@ -228,6 +112,22 @@ const MenuTest = ({ machineAddId, machineName, defaultZoom = 1 }) => {
 
     return nodes;
   };
+
+  useEffect(() => {
+    const resizeObserver = new ResizeObserver(entries => {
+      for (let entry of entries) {
+        adjustToFitContainer(); // 容器尺寸變化時調整心智圖
+      }
+    });
+  
+    if (jmContainerRef.current) {
+      resizeObserver.observe(jmContainerRef.current); // 監測心智圖容器
+    }
+  
+    return () => {
+      resizeObserver.disconnect(); // 清理，組件卸載時停止監測
+    };
+  }, []);// 只在組件掛載時設定一次  
 
   // 適應容器尺寸
   const adjustToFitContainer = () => {
@@ -329,32 +229,6 @@ const MenuTest = ({ machineAddId, machineName, defaultZoom = 1 }) => {
     }
   };
   
-  
-
-  const custom_node_render = (node, element) => {
-    console.log('Rendering node:', node);  // 檢查節點資料
-    if (node.isbutton && node.isHtml) {
-      element.innerHTML = `<button>${node.topic}</button>`;
-      const button = element.querySelector('button');
-      console.log('Button element:', button);  // 檢查按鈕元素是否存在
-
-      if (button) {
-        button.style.cursor = 'pointer';
-        button.addEventListener('click', (e) => {
-            e.stopPropagation();
-            console.log('Button clicked with knowledgeBaseId:', node.knowledgeBaseId); 
-            if (node.knowledgeBaseId) {
-                console.log('Navigating with ID:', node.knowledgeBaseId);
-                navigate('/database', { state: { knowledgeBaseId: node.knowledgeBaseId } });
-            } else {
-                navigate('/database');
-            }
-        });
-      }
-    }
-  };
-  
-
   // 獲取數據並渲染心智圖
   useEffect(() => {
     // 將 navigate 函數包裹在一個全局可訪問的函數中
@@ -408,6 +282,8 @@ const MenuTest = ({ machineAddId, machineName, defaultZoom = 1 }) => {
               width: 'auto',
               'background-color': '#13466b', // jsmind接受直接設置css，深藍節點背景
               color: '#fff', // jsmind接受直接設置css，白字體
+              alignItem: 'center',
+              justifyContent:'center',
             },
           ];
 
@@ -450,7 +326,7 @@ const MenuTest = ({ machineAddId, machineName, defaultZoom = 1 }) => {
     <div className="mindMap-container">
       <div
         ref={jmContainerRef}
-        style={{ width: '100%', height: containerHeight, overflow: 'hidden' }}
+        style={{ width: containerWidth, height: containerHeight, overflow: 'hidden' }}
       />
       <button
         onClick={() =>

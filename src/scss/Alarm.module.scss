@@ -240,7 +240,9 @@
 .mindMap-container {
   display: flex;
   flex-direction: column;
-  height: 100vh; // 让父容器占满整个视口高度
+  width: 70vw;
+  height: 80vh;
+  overflow: hidden;
 }
 
 .child {
