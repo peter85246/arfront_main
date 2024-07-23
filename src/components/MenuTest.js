@@ -201,26 +201,50 @@ const MenuTest = ({ machineAddId, machineName, defaultZoom = 1 }) => {
   };
 
   // 定義一個自定義節點渲染方法
+  // const customNodeRenderer = (node, element) => {
+  //   console.log('Rendering node:', node);  // 输出节点信息以便于调试
+  //   if (node.isbutton && node.isHtml) {
+  //     // 直接使用 innerHTML 插入带有 onclick 事件的按钮
+  //     element.innerHTML = `<button onclick="window.handleButtonClick('${node.knowledgeBaseId}')">${node.topic}</button>`;
+  
+  //     const button = element.querySelector('button');
+  //     console.log('Button element:', button);  // 检查按钮元素是否正确被创建
+    
+  //     if (button) {
+  //       button.style.cursor = 'pointer';  // 设置鼠标为手形指针
+  //       button.addEventListener('click', (e) => {
+  //         e.stopPropagation();  // 阻止事件冒泡
+  //         console.log('Button clicked with knowledgeBaseId:', node.knowledgeBaseId);  // 调试按钮点击
+  //         if (node.knowledgeBaseId) {
+  //           console.log('Navigating with ID:', node.knowledgeBaseId);
+  //           navigate('/database', { state: { knowledgeBaseId: node.knowledgeBaseId } });
+  //         } else {
+  //           navigate('/database');  // 当没有 knowledgeBaseId 时导航到一般的 database 页面
+  //         }
+  //       });
+  //     }
+  //   } else {
+  //     // 对于非按钮节点，使用普通的渲染方法
+  //     element.innerHTML = node.topic;
+  //   }
+  // };
+
+  // 定義一個自定義節點渲染方法
   const customNodeRenderer = (node, element) => {
     console.log('Rendering node:', node);  // 输出节点信息以便于调试
     if (node.isbutton && node.isHtml) {
-      // 直接使用 innerHTML 插入带有 onclick 事件的按钮
-      element.innerHTML = `<button onclick="window.handleButtonClick('${node.knowledgeBaseId}')">${node.topic}</button>`;
-  
-      const button = element.querySelector('button');
-      console.log('Button element:', button);  // 检查按钮元素是否正确被创建
-    
-      if (button) {
-        button.style.cursor = 'pointer';  // 设置鼠标为手形指针
-        button.addEventListener('click', (e) => {
-          e.stopPropagation();  // 阻止事件冒泡
-          console.log('Button clicked with knowledgeBaseId:', node.knowledgeBaseId);  // 调试按钮点击
-          if (node.knowledgeBaseId) {
-            console.log('Navigating with ID:', node.knowledgeBaseId);
-            navigate('/database', { state: { knowledgeBaseId: node.knowledgeBaseId } });
-          } else {
-            navigate('/database');  // 当没有 knowledgeBaseId 时导航到一般的 database 页面
-          }
+      // 使用 <a> 標籤替代 <button>
+      element.innerHTML = `<a href="#" id="link-${node.knowledgeBaseId}" class="mind-map-link">${node.topic}</a>`;
+
+      const link = element.querySelector(`#link-${node.knowledgeBaseId}`);
+      console.log('Link element:', link);  // 检查链接元素是否正确被创建
+
+      if (link) {
+        link.style.cursor = 'pointer';  // 设置鼠标为手形指针
+        link.addEventListener('click', (e) => {
+          e.preventDefault();  // 阻止默認事件
+          console.log('Link clicked with knowledgeBaseId:', node.knowledgeBaseId);  // 调试链接点击
+          navigate('/database', { state: { knowledgeBaseId: node.knowledgeBaseId } });
         });
       }
     } else {

@@ -1,6 +1,6 @@
 ﻿import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button, Form, InputGroup } from 'react-bootstrap';
+import { Button, Form, InputGroup, Row, Col, Modal } from 'react-bootstrap';
 import Spinner from 'react-bootstrap/Spinner';
 import { setWindowClass } from '../utils/helpers';
 import { ToastContainer, toast } from 'react-toastify';
@@ -20,6 +20,110 @@ function Login() {
     paw: '',
   });
 
+  const [showModal, setShowModal] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+
+  const [verificationCode, setVerificationCode] = useState(''); // 添加這行來初始化驗證碼狀態
+  const [verificationCodeSent, setVerificationCodeSent] = useState(false); // 追蹤驗證碼是否已發送
+  const [verificationSuccess, setVerificationSuccess] = useState(false);
+
+  const handleShowModal = () => setShowModal(true);
+  const handleCloseModal = () => {
+    // 重置所有與註冊相關的狀態
+    setShowModal(false);
+    setEmail('');
+    setPassword('');
+    setConfirmPassword('');
+    setVerificationCode('');
+    setVerificationCodeSent(false);
+    setVerificationSuccess(false);
+    setErrors({});
+  };
+
+  function isValidEmail(email) {
+    const re = /^[^\s@]+@(?:[^\s@]+\.)?(gmail\.com|yahoo\.com|hotmail\.com|outlook\.com|yahoo\.co\.uk|googlemail\.com|msn\.com|aol\.com|live\.com|icloud\.com)$/;
+    return re.test(String(email).toLowerCase());
+  }
+  
+  const handleEmailChange = (e) => {
+    const newEmail = e.target.value;
+    setEmail(newEmail);
+  
+    if (!isValidEmail(newEmail)) {
+      setErrors(prevErrors => ({ ...prevErrors, email: '請輸入有效的電子郵件地址' }));
+    } else {
+      setErrors(prevErrors => ({ ...prevErrors, email: '' }));
+    }
+  };
+
+  const handleRegister = (e) => {
+  e.preventDefault();
+  const newErrors = {};
+  
+  if (!email) {
+    newErrors.email = '電子郵件不能為空';
+  } else if (!isValidEmail(email)) {
+    newErrors.email = '請輸入有效的電子郵件地址';
+  }
+
+  if (!password) {
+    newErrors.password = '密碼不能為空';
+  } else if (password.length < 6) {
+    newErrors.password = '密碼至少需要6個字符';
+  }
+
+  if (password !== confirmPassword) {
+    newErrors.confirmPassword = '輸入的密碼不一致';
+  }
+
+  if (!verificationCode) {
+    newErrors.verificationCode = '驗證碼不能為空';
+  } else if (!verificationCodeSent) {
+    newErrors.verificationCode = '驗證碼未發送或已過期';
+  }
+
+  // if (!verificationCode) {
+  //   newErrors.verificationCode = '驗證碼不能為空';
+  // } else {
+  //   // const verificationResult = await checkVerificationCode(email, verificationCode);
+  //   if (!verificationResult.isValid) {
+  //     newErrors.verificationCode = '驗證碼錯誤或已過期';
+  //   }
+  // }
+
+  if (Object.keys(newErrors).length > 0) {
+    setErrors(newErrors);
+    return;
+  }
+
+    // 如果沒有錯誤，執行註冊邏輯
+    console.log('Registering:', email, password);
+    handleCloseModal();
+    toast.success('註冊成功！');
+  };
+
+  const handleSendVerificationCode = () => {
+    if (isValidEmail(email)) {
+      setVerificationCodeSent(true);
+      toast.success('驗證碼已發送到您的郵箱');
+    } else {
+      toast.error('請輸入有效的電子郵件地址');
+    }
+  };  
+
+  const handleVerifyCode = () => {
+    // 模擬檢查，例如假設"1234"是我們發送到用戶郵箱的驗證碼
+    if (verificationCode === "1234") {
+      setVerificationSuccess(true);
+      toast.success("驗證碼正確，現在您可以完成註冊。");
+    } else {
+      setVerificationSuccess(false);
+      toast.error("驗證碼錯誤，請重新輸入或重新獲取。");
+    }
+  };
+  
   const validator = new SimpleReactValidator({
     validators: {
       pawFormat: {
@@ -231,11 +335,103 @@ function Login() {
                 </Button>
               </div>
             </form>
+            <Row className="mt-3">
+              <Col className="text-center">
+              <Button variant="link" onClick={handleShowModal} style={{ textDecoration: 'none' }}>
+                創建Mail帳號
+                (Click Me)
+              </Button>
+              </Col>
+            </Row>
           </div>
         </div>
       </div>
 
       <ToastContainer />
+
+      {/* 新增的 Modal 組件 */}
+      <Modal show={showModal} onHide={handleCloseModal} backdrop="static">
+        <Modal.Header closeButton>
+          <Modal.Title>註冊帳號</Modal.Title>
+        </Modal.Header>
+          <Modal.Body>
+          <Form onSubmit={handleRegister}>
+            <Form.Group controlId="formBasicEmail">
+              <Form.Label>
+                <span className="text-danger">*</span>電子郵件
+              </Form.Label>
+              <Form.Control
+                type="email"
+                placeholder="輸入電子郵件"
+                required
+                onChange={handleEmailChange}
+                isInvalid={!!errors.email}
+              />
+              <Form.Control.Feedback type="invalid">
+                {errors.email}
+              </Form.Control.Feedback>
+            </Form.Group>
+            <Row className="mb-3">
+              <Col xs="auto">
+                <Button variant="outline-secondary" size="sm" onClick={handleSendVerificationCode} disabled={!isValidEmail(email)}>
+                  發送驗證碼
+                </Button>
+              </Col>
+              <Col xs="auto">
+                <Button variant="outline-primary" size="sm" onClick={handleVerifyCode} disabled={!verificationCode}>
+                  確認驗證碼
+                </Button>
+              </Col>
+            </Row>
+            {/* Verification code input */}
+            <Form.Group controlId="formVerificationCode">
+              <Form.Label><span className="text-danger">*</span>驗證碼</Form.Label>
+              <InputGroup className="mb-3">
+                <Form.Control
+                  type="text"
+                  placeholder="輸入驗證碼"
+                  required
+                  onChange={(e) => setVerificationCode(e.target.value)}
+                  isInvalid={!!errors.verificationCode}
+                />
+              </InputGroup>
+              <Form.Control.Feedback type="invalid">
+                {errors.verificationCode}
+              </Form.Control.Feedback>
+              {verificationSuccess && <div className="text-success">驗證成功！</div>}
+            </Form.Group>
+            <Form.Group controlId="formBasicPassword">
+              <Form.Label><span className="text-danger">*</span>密碼</Form.Label>
+              <Form.Control
+                type="password"
+                placeholder="密碼"
+                required
+                onChange={(e) => setPassword(e.target.value)}
+                isInvalid={!!errors.password}
+              />
+              <Form.Control.Feedback type="invalid">
+                {errors.password}
+              </Form.Control.Feedback>
+            </Form.Group>
+            <Form.Group controlId="formBasicConfirmPassword">
+              <Form.Label><span className="text-danger">*</span>再次輸入密碼</Form.Label>
+              <Form.Control
+                type="password"
+                placeholder="再次輸入密碼"
+                required
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                isInvalid={!!errors.confirmPassword}
+              />
+              <Form.Control.Feedback type="invalid">
+                {errors.confirmPassword}
+              </Form.Control.Feedback>
+            </Form.Group>
+            <Button variant="primary" type="submit">
+              註冊
+            </Button>
+          </Form>
+        </Modal.Body>
+      </Modal>
     </>
   );
 }
