@@ -113,27 +113,30 @@ export default function Database() {
       }
     }
 
-    for (const item of SOPData) {
-      if (item.soP2Image) {
-        const soP2ImageRes = await fetch(item.soP2Image);
+    for (const sop of SOPData) {
+      // 確保每個步驟的影像、備註影像和視頻都被處理
+      if (sop.soP2Image) {
+        const soP2ImageRes = await fetch(sop.soP2Image);
         const soP2ImageBlob = await soP2ImageRes.blob();
-        const soP2ImageName = item.soP2Image.split('/').pop();
-        const soP2ImageFile = new File([soP2ImageBlob], soP2ImageName, {
-          type: soP2ImageBlob.type,
-        });
-        item.soP2ImageObj = soP2ImageFile;
+        const soP2ImageName = sop.soP2Image.split('/').pop();
+        const soP2ImageFile = new File([soP2ImageBlob], soP2ImageName, { type: soP2ImageBlob.type });
+        sop.soP2ImageObj = soP2ImageFile;
       }
-
-      if (item.soP2RemarkImage) {
-        const soP2RemarkImageRes = await fetch(item.soP2RemarkImage);
+    
+      if (sop.soP2RemarkImage) {
+        const soP2RemarkImageRes = await fetch(sop.soP2RemarkImage);
         const soP2RemarkImageBlob = await soP2RemarkImageRes.blob();
-        const soP2RemarkImageName = item.soP2RemarkImage.split('/').pop();
-        const soP2RemarkImageFile = new File(
-          [soP2RemarkImageBlob],
-          soP2RemarkImageName,
-          { type: soP2RemarkImageBlob.type }
-        );
-        item.soP2RemarkImageObj = soP2RemarkImageFile;
+        const soP2RemarkImageName = sop.soP2RemarkImage.split('/').pop();
+        const soP2RemarkImageFile = new File([soP2RemarkImageBlob], soP2RemarkImageName, { type: soP2RemarkImageBlob.type });
+        sop.soP2RemarkImageObj = soP2RemarkImageFile;
+      }
+    
+      if (sop.sopVideo) {
+        const sopVideoRes = await fetch(sop.sopVideo);
+        const sopVideoBlob = await sopVideoRes.blob();
+        const sopVideoName = sop.sopVideo.split('/').pop();
+        const sopVideoFile = new File([sopVideoBlob], sopVideoName, { type: sopVideoBlob.type });
+        sop.sopVideoObj = sopVideoFile;
       }
     }
 
@@ -148,7 +151,12 @@ export default function Database() {
         knowledgeBaseToolsImageObj: knowledgeBaseToolsImageObj,
         knowledgeBasePositionImageObj: knowledgeBasePositionImageObj,
       },
-      sops: SOPData,
+      sops: SOPData.map(sop => ({
+        ...sop,
+        soP2ImageObj: sop.soP2ImageObj,
+        soP2RemarkImageObj: sop.soP2RemarkImageObj,
+        sopVideoObj: sop.sopVideoObj  // 確保影片檔案也被包括在內
+      }))
     });
 
     navigate('/document-editor', { state: { knowledgeInfo, SOPData } });

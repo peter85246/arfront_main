@@ -10,7 +10,7 @@ const MenuTest = ({ machineAddId, machineName, defaultZoom = 1 }) => {
   console.log('MachineAddId in MenuTest:', machineAddId); // Debug 輸出
   const jmContainerRef = useRef(null);
   const jmInstanceRef = useRef(null);
-  const [containerHeight, setContainerHeight] = useState('97vh');
+  const [containerHeight, setContainerHeight] = useState('100vh');
   const [containerWidth, setContainerWidth] = useState('80vw'); // 添加寬度控制的狀態
 
   const [knowledgeBases, setKnowledgeBases] = useState([]);
@@ -29,7 +29,6 @@ const MenuTest = ({ machineAddId, machineName, defaultZoom = 1 }) => {
       }
     }
   };
-  
 
   // 從後端獲取所有knowledgeBaseId與其Id下的所有資料
   useEffect(() => {
@@ -176,6 +175,8 @@ const MenuTest = ({ machineAddId, machineName, defaultZoom = 1 }) => {
 
     return () => {
       window.removeEventListener('resize', handleResize);
+      // 組件卸載時清理全局函數
+      window.handleButtonClick = null;
     };
   }, []); // 确保只在组件加载后执行一次
 
@@ -231,27 +232,19 @@ const MenuTest = ({ machineAddId, machineName, defaultZoom = 1 }) => {
 
   // 定義一個自定義節點渲染方法
   const customNodeRenderer = (node, element) => {
-    console.log('Rendering node:', node);  // 输出节点信息以便于调试
+    console.log('Rendering node:', node); // 輸出節點信息以便於調試
     if (node.isbutton && node.isHtml) {
-      // 使用 <a> 標籤替代 <button>
-      element.innerHTML = `<a href="#" id="link-${node.knowledgeBaseId}" class="mind-map-link">${node.topic}</a>`;
-
-      const link = element.querySelector(`#link-${node.knowledgeBaseId}`);
-      console.log('Link element:', link);  // 检查链接元素是否正确被创建
-
-      if (link) {
-        link.style.cursor = 'pointer';  // 设置鼠标为手形指针
-        link.addEventListener('click', (e) => {
-          e.preventDefault();  // 阻止默認事件
-          console.log('Link clicked with knowledgeBaseId:', node.knowledgeBaseId);  // 调试链接点击
-          navigate('/database', { state: { knowledgeBaseId: node.knowledgeBaseId } });
-        });
-      }
+      element.innerHTML = ''; // 清空現有的元素內容
+      const button = document.createElement('button'); // 創建一個新的按鈕元素
+      button.textContent = node.topic.replace(/<button>|<\/button>/gi, ''); // 設置按鈕的文字
+      button.onclick = () => navigate('/database', { state: { knowledgeBaseId: node.knowledgeBaseId } }); // 為按鈕添加點擊事件
+      button.style.cursor = 'pointer'; // 將鼠標樣式設為手形
+      element.appendChild(button); // 將按鈕添加到元素中
     } else {
-      // 对于非按钮节点，使用普通的渲染方法
-      element.innerHTML = node.topic;
+      element.innerHTML = node.topic; // 非按鈕節點使用普通渲染
     }
   };
+  
   
   // 獲取數據並渲染心智圖
   useEffect(() => {

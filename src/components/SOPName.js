@@ -96,19 +96,31 @@ export function SOPName({ onClose }) {
         formData.append('KnowledgeBases[0].knowledgeBase3DModelFileObj', null);
       }
 
-      // 當存在3D模型數據時添加到表單
+      // // 當存在3D模型數據時添加到表單
+      // if (SOPInfo.knowledgeInfo?.knowledgeBase3DModelImageObj) {
+      //   SOPInfo.knowledgeInfo.knowledgeBase3DModelImageObj.forEach(file => {
+      //     formData.append('KnowledgeBases[0].KnowledgeBase3DModelImageObj', file);
+      //   });
+      // }
+      
+      // if (SOPInfo.knowledgeInfo?.knowledgeBase3DModelFileObj) {
+      //   SOPInfo.knowledgeInfo.knowledgeBase3DModelFileObj.forEach(file => {
+      //     formData.append('KnowledgeBases[0].KnowledgeBase3DModelFileObj', file);
+      //   });
+      // }
+
+      // 處理3D模型圖片和文件的上傳
       if (SOPInfo.knowledgeInfo?.knowledgeBase3DModelImageObj) {
-        SOPInfo.knowledgeInfo.knowledgeBase3DModelImageObj.forEach(file => {
-          formData.append('KnowledgeBases[0].KnowledgeBase3DModelImageObj', file);
+        SOPInfo.knowledgeInfo.knowledgeBase3DModelImageObj.forEach((file, index) => {
+          formData.append(`KnowledgeBases[0].KnowledgeBase3DModelImageObj[${index}]`, file);
         });
       }
-      
+
       if (SOPInfo.knowledgeInfo?.knowledgeBase3DModelFileObj) {
-        SOPInfo.knowledgeInfo.knowledgeBase3DModelFileObj.forEach(file => {
-          formData.append('KnowledgeBases[0].KnowledgeBase3DModelFileObj', file);
+        SOPInfo.knowledgeInfo.knowledgeBase3DModelFileObj.forEach((file, index) => {
+          formData.append(`KnowledgeBases[0].KnowledgeBase3DModelFileObj[${index}]`, file);
         });
       }
-      
 
       // 如果有 KnowledgeBaseId，加入到 formData (編輯CRUD)
       if (SOPInfo.knowledgeBaseId) {
@@ -153,7 +165,11 @@ export function SOPName({ onClose }) {
                 }
               });
             }
-          } else {
+          } else if (![
+            'knowledgeBaseModelImageNames',
+            'knowledgeBaseToolsImageNames',
+            'knowledgeBasePositionImageNames'
+            ].includes(key)) {  // 檢查並排除不想提交的字段
             formData.append(`KnowledgeBases[${index}].${key}`, info[key]);
           }
         });
@@ -220,19 +236,16 @@ export function SOPName({ onClose }) {
         SOPFormData.append(`KnowledgeBaseId`, saveKnowledgeBaseRes.result);
 
         SOPInfo.sops.forEach((sop, idx) => {
+          // 確保所有布林值都被正確處理，不會提交undefined
+          const isDeletedSOPImage = sop.isDeletedSOPImage !== undefined ? sop.isDeletedSOPImage : false;
+          const isDeletedSOPRemarksImage = sop.isDeletedSOPRemarksImage !== undefined ? sop.isDeletedSOPRemarksImage : false;
+          const isDeletedSOPVideo = sop.isDeletedSOPVideo !== undefined ? sop.isDeletedSOPVideo : false;
+
           SOPFormData.append(`SOP2s[${idx}].deleted`, sop.deleted);
-          SOPFormData.append(
-            `SOP2s[${idx}].isDeletedSOPImage`,
-            sop.isDeletedSOPImage
-          );
-          SOPFormData.append(
-            `SOP2s[${idx}].isDeletedSOPRemarksImage`,
-            sop.isDeletedSOPRemarksImage
-          );
-          SOPFormData.append(
-            `SOP2s[${idx}].isDeletedSOPVideo`,
-            sop.isDeletedSOPVideo
-          );
+          SOPFormData.append(`SOP2s[${idx}].isDeletedSOPImage`, isDeletedSOPImage);
+          SOPFormData.append(`SOP2s[${idx}].isDeletedSOPRemarksImage`, isDeletedSOPRemarksImage);
+          SOPFormData.append(`SOP2s[${idx}].isDeletedSOPVideo`, isDeletedSOPVideo);
+
           SOPFormData.append(`SOP2s[${idx}].sopId`, sop.sopId);
           SOPFormData.append(`SOP2s[${idx}].soP2Image`, sop.soP2Image);
           SOPFormData.append(`SOP2s[${idx}].soP2ImageObj`, sop.soP2ImageObj);
@@ -248,12 +261,16 @@ export function SOPName({ onClose }) {
           SOPFormData.append(`SOP2s[${idx}].soP2Remark`, sop.soP2Remark);
           SOPFormData.append(`SOP2s[${idx}].soP2Step`, sop.soP2Step);
           SOPFormData.append(`SOP2s[${idx}].soP2Name`, sop.soP2Name);
-          SOPFormData.append(`SOP2s[${idx}].sopVideo`, sop.sopVideo);
-          SOPFormData.append(`SOP2s[${idx}].sopVideoObj`, sop.sopVideoObj);
           SOPFormData.append(`SOP2s[${idx}].PL1`, sop.sopplC1);
           SOPFormData.append(`SOP2s[${idx}].PL2`, sop.sopplC2);
           SOPFormData.append(`SOP2s[${idx}].PL3`, sop.sopplC3);
           SOPFormData.append(`SOP2s[${idx}].PL4`, sop.sopplC4);
+
+          // 確保添加檔案名稱和檔案物件
+          if (sop.sopVideoObj) {
+            SOPFormData.append(`SOP2s[${idx}].sopVideo`, sop.sopVideoObj.name); // 添加檔案名稱
+            SOPFormData.append(`SOP2s[${idx}].sopVideoObj`, sop.sopVideoObj); // 添加檔案物件
+          }
 
           // sop.sopModels.forEach((sopModel, j) => {
           //   SOPFormData.append(
@@ -308,22 +325,21 @@ export function SOPName({ onClose }) {
             SOPFormData.append(`SOP2s[${idx}].sopModels[${j}].sopModelFile`, sopModel.sopModelFile);
             SOPFormData.append(`SOP2s[${idx}].sopModels[${j}].sopModelFileObj`, sopModel.sopModelFileObj);
           
-             // 檢查圖片是否為文件對象，如果是，則添加；否則不做任何操作
-            if (sopModel.sopModelImageObj instanceof File) {
-              SOPFormData.append(`SOP2s[${idx}].sopModels[${j}].sopModelImageObj`, sopModel.sopModelImageObj);
-            }
-
-            // 檢查檔案是否為文件對象，如果是，則添加；否則不做任何操作
-            if (sopModel.sopModelFileObj instanceof File) {
-              SOPFormData.append(`SOP2s[${idx}].sopModels[${j}].sopModelFileObj`, sopModel.sopModelFileObj);
-            }
 
             // 如果sopModelImage是URL或文件名，您可以選擇不添加到FormData或處理為文字字段
             if (typeof sopModel.sopModelImage === 'string') {
               SOPFormData.append(`SOP2s[${idx}].sopModels[${j}].sopModelImage`, sopModel.sopModelImage);
             }
 
-            // 如果sopModelFile是URL或文件名，您可以選擇不添加到FormData或處理為文字字段
+            // 檢查圖片是否為文件對象，如果是，則添加；否則不做任何操作
+            if (sopModel.sopModelImageObj instanceof File) {
+              SOPFormData.append(`SOP2s[${idx}].sopModels[${j}].sopModelImageObj`, sopModel.sopModelImageObj);
+            }
+
+            if (sopModel.sopModelFileObj instanceof File) {
+              SOPFormData.append(`SOP2s[${idx}].sopModels[${j}].sopModelFileObj`, sopModel.sopModelFileObj);
+            }
+            
             if (typeof sopModel.sopModelFile === 'string') {
               SOPFormData.append(`SOP2s[${idx}].sopModels[${j}].sopModelFile`, sopModel.sopModelFile);
             }
@@ -353,7 +369,7 @@ export function SOPName({ onClose }) {
         // }, 1000);
       } catch (err) {
         console.error('保存知識庫失敗:', err);
-        toast.error(`保存失败，請稍後重試。錯誤詳情: ${err.message}`, {
+        toast.error(`保存失敗，請稍後重試。錯誤詳情: ${err.message}`, {
           position: toast.POSITION.TOP_CENTER,
           autoClose: 2000,
           hideProgressBar: true,
