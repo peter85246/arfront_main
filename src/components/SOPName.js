@@ -90,37 +90,41 @@ export function SOPName({ onClose }) {
       formData.append('KnowledgeBases[0].KnowledgeBaseSOPName', sop2Name);
 
       // 只有在創建新條目時，才添加3D模型相關字段 (編輯時不要帶此三個字段)
+      // if (!SOPInfo.knowledgeBaseId) {
+      //   formData.append('KnowledgeBases[0].knowledgeBase3DModelImage', []);
+      //   formData.append('KnowledgeBases[0].knowledgeBase3DModelFile', []);
+      //   formData.append('KnowledgeBases[0].knowledgeBase3DModelFileObj', null);
+      // }
+
+      // 只有在創建新條目時，才添加3D模型相關字段 (編輯時不要帶此三個字段)
       if (!SOPInfo.knowledgeBaseId) {
-        formData.append('KnowledgeBases[0].knowledgeBase3DModelImage', []);
-        formData.append('KnowledgeBases[0].knowledgeBase3DModelFile', []);
-        formData.append('KnowledgeBases[0].knowledgeBase3DModelFileObj', null);
+        // 為了示範，我們可以添加空字符串代替空陣列或null
+        formData.append('KnowledgeBases[0].knowledgeBase3DModelImage', '');
+        formData.append('KnowledgeBases[0].knowledgeBase3DModelFile', '');
+        // 如果有必要提交空文件對象，使用 Blob 創建一個空的 Blob 並傳遞
+        formData.append('KnowledgeBases[0].knowledgeBase3DModelFileObj', new Blob(), '');
+        // 增加對3D模型圖片對象的處理
+        formData.append('KnowledgeBases[0].knowledgeBase3DModelImageObj', new Blob(), '');
       }
 
-      // // 當存在3D模型數據時添加到表單
-      // if (SOPInfo.knowledgeInfo?.knowledgeBase3DModelImageObj) {
-      //   SOPInfo.knowledgeInfo.knowledgeBase3DModelImageObj.forEach(file => {
-      //     formData.append('KnowledgeBases[0].KnowledgeBase3DModelImageObj', file);
-      //   });
-      // }
-      
-      // if (SOPInfo.knowledgeInfo?.knowledgeBase3DModelFileObj) {
-      //   SOPInfo.knowledgeInfo.knowledgeBase3DModelFileObj.forEach(file => {
-      //     formData.append('KnowledgeBases[0].KnowledgeBase3DModelFileObj', file);
-      //   });
-      // }
 
-      // 處理3D模型圖片和文件的上傳
-      if (SOPInfo.knowledgeInfo?.knowledgeBase3DModelImageObj) {
+      // 確保3D模型圖片和文件的上傳只有在文件存在時才進行
+      if (SOPInfo.knowledgeInfo?.knowledgeBase3DModelImageObj?.length > 0) {
         SOPInfo.knowledgeInfo.knowledgeBase3DModelImageObj.forEach((file, index) => {
           formData.append(`KnowledgeBases[0].KnowledgeBase3DModelImageObj[${index}]`, file);
         });
+      } else {
+        console.log("No 3D model images to upload.");
       }
 
-      if (SOPInfo.knowledgeInfo?.knowledgeBase3DModelFileObj) {
+      if (SOPInfo.knowledgeInfo?.knowledgeBase3DModelFileObj?.length > 0) {
         SOPInfo.knowledgeInfo.knowledgeBase3DModelFileObj.forEach((file, index) => {
           formData.append(`KnowledgeBases[0].KnowledgeBase3DModelFileObj[${index}]`, file);
         });
+      } else {
+        console.log("No 3D model files to upload.");
       }
+
 
       // 如果有 KnowledgeBaseId，加入到 formData (編輯CRUD)
       if (SOPInfo.knowledgeBaseId) {
@@ -271,8 +275,6 @@ export function SOPName({ onClose }) {
             SOPFormData.append(`SOP2s[${idx}].sopVideo`, sop.sopVideoObj.name); // 添加檔案名稱
             SOPFormData.append(`SOP2s[${idx}].sopVideoObj`, sop.sopVideoObj); // 添加檔案物件
           }
-
-          // sop.sopModels.forEach((sopModel, j) => {
           //   SOPFormData.append(
           //     `SOP2s[${idx}].sopModels[${j}].sopModelId`,
           //     sopModel.sopModelId

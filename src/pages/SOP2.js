@@ -22,10 +22,26 @@ import {
 import { Space, ColorPicker, theme } from 'antd';
 import { generate, red, green, blue } from '@ant-design/colors';
 import { useStore } from '../zustand/store';
+import { useLocation } from 'react-router-dom';
 
 function SOP2() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const location = useLocation();
+  const { knowledgeInfo, SOPData } = location.state;
+
+  useEffect(() => {
+    if (location.state?.SOPData) {
+      console.log("Received SOP Data:", location.state.SOPData);
+      setSOPs(location.state.SOPData);
+      if (location.state.SOPData.length > 0) {
+        setSelectSOP(location.state.SOPData[0]); // 选择第一个SOP展示
+      }
+    } else {
+      console.log("No SOP Data received, calling refreshSOP");
+      refreshSOP(); // 如果没有传递SOPData，则调用refreshSOP获取数据
+    }
+  }, [location.state?.SOPData]);  // 只依赖 SOPData 改变
 
   const { SOPInfo, setSOPInfo } = useStore();
   console.log(SOPInfo);
@@ -467,40 +483,65 @@ function SOP2() {
   //#endregion
 
   //#region 儲存SOP
-  const handleSaveSOP = async () => {
-    // e.preventDefault();
-
-    setSaveSOPLoading(true);
-    console.log('sops', sops);
-    setSOPInfo((prev) => ({ ...prev, sops: sops }));
-    setIsSOPName((prev) => !prev);
-    // let saveSOPResponse = await apiSaveSOP(formData);
-    // if (saveSOPResponse) {
-    //   if (saveSOPResponse.code == "0000") {
-    //     refreshSOP();
-    //     toast.success(t("toast.save.success"), {
-    //       position: toast.POSITION.TOP_CENTER,
-    //       autoClose: 3000,
-    //       hideProgressBar: true,
-    //       closeOnClick: false,
-    //       pauseOnHover: false,
-    //       onClose: () => {},
-    //     });
-    //   } else {
-    //     toast.error(saveSOPResponse.message, {
-    //       position: toast.POSITION.TOP_CENTER,
-    //       autoClose: 5000,
-    //       hideProgressBar: true,
-    //       closeOnClick: false,
-    //       pauseOnHover: false,
-    //     });
-    //   }
-    //   setSaveSOPLoading(false);
-    // } else {
-    //   setSaveSOPLoading(false);
-    // }
-  };
+  // const handleSaveSOP = async () => {
+  //   // e.preventDefault();
+    
+  //   setSaveSOPLoading(true);
+  //   console.log('sops', sops);
+  //   setSOPInfo((prev) => ({ ...prev, sops: sops }));
+  //   setIsSOPName((prev) => !prev);
+  //   // let saveSOPResponse = await apiSaveSOP(formData);
+  //   // if (saveSOPResponse) {
+  //   //   if (saveSOPResponse.code == "0000") {
+  //   //     refreshSOP();
+  //   //     toast.success(t("toast.save.success"), {
+  //   //       position: toast.POSITION.TOP_CENTER,
+  //   //       autoClose: 3000,
+  //   //       hideProgressBar: true,
+  //   //       closeOnClick: false,
+  //   //       pauseOnHover: false,
+  //   //       onClose: () => {},
+  //   //     });
+  //   //   } else {
+  //   //     toast.error(saveSOPResponse.message, {
+  //   //       position: toast.POSITION.TOP_CENTER,
+  //   //       autoClose: 5000,
+  //   //       hideProgressBar: true,
+  //   //       closeOnClick: false,
+  //   //       pauseOnHover: false,
+  //   //     });
+  //   //   }
+  //   //   setSaveSOPLoading(false);
+  //   // } else {
+  //   //   setSaveSOPLoading(false);
+  //   // }
+  // };
   //#endregion
+
+  useEffect(() => {
+    console.log('Current SOPs state:', sops);
+  }, [sops]);
+  
+  const handleSaveSOP = async () => {
+    setSaveSOPLoading(true);
+    console.log('Before saving SOPs:', sops); // 確認保存前的數據
+
+    setSOPInfo(prev => {
+        console.log('Current SOPs in setSOPInfo:', sops);  // 檢查在 setSOPInfo 被調用時的 sops 狀態
+        return { ...prev, sops: sops };
+    });
+
+    // 等待一個事件循環，確保狀態更新已經入隊
+    setTimeout(() => {
+        console.log('After setSOPInfo SOPs:', SOPInfo.sops); // 檢查更新後的狀態
+        setIsSOPName(prev => !prev);
+        setSaveSOPLoading(false);
+    }, 0);
+  };
+
+  useEffect(() => {
+    console.log('SOPs updated:', sops);
+  }, [sops]);
 
   const handlePreview = () => {
     setSOPInfo((prev) => ({ ...prev, sops: sops }));

@@ -7,6 +7,8 @@ export const useStore = create()((set) => ({
       knowledgeBaseModelImageObj: [],
       knowledgeBaseToolsImageObj: [],
       knowledgeBasePositionImageObj: [],
+      knowledgeBase3DModelImageObj: [], // 新增3D模型圖片物件數據
+      knowledgeBase3DModelFileObj: [],  // 新增3D模型文件物件數據
     },
   },
 
@@ -25,4 +27,26 @@ export const useStore = create()((set) => ({
     set({ knowledgeBaseToolsImages: images }),
   setKnowledgeBasePositionImages: (images) =>
     set({ knowledgeBasePositionImages: images }),
+
+  // 新增設置3D模型圖片和文件的方法
+  setKnowledgeBase3DModelImageObj: (imageObjs) =>
+    set((state) => ({
+      SOPInfo: {
+        ...state.SOPInfo,
+        knowledgeInfo: {
+          ...state.SOPInfo.knowledgeInfo,
+          knowledgeBase3DModelImageObj: imageObjs,
+        },
+      },
+    })),
+  setKnowledgeBase3DModelFileObj: (fileObjs) =>
+    set((state) => ({
+      SOPInfo: {
+        ...state.SOPInfo,
+        knowledgeInfo: {
+          ...state.SOPInfo.knowledgeInfo,
+          knowledgeBase3DModelFileObj: fileObjs,
+        },
+      },
+    })),
 }));

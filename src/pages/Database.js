@@ -226,6 +226,19 @@ export default function Database() {
         setSOPData(sop);
       }
     };
+    // const getSOPInfo = async () => {
+    //   const res = await apiGetAllSOPByMachineAddId({ Id: machineAddId });
+    //   if (res?.message === '完全成功') {
+    //     const updatedSOPs = res.result.map(sop => ({
+    //       ...sop,
+    //       soP2ImageObj: new File([], sop.soP2Image),  // 將URL轉為File對象
+    //       soP2RemarkImageObj: new File([], sop.soP2RemarkImage),
+    //       sopVideoObj: new File([], sop.sopVideo)
+    //     }));
+    //     setSOPData(updatedSOPs);
+    //     setSOPInfo((prev) => ({ ...prev, sops: updatedSOPs }));
+    //   }
+    // };
     getSOPInfo();
   }, []);
 
