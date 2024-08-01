@@ -52,7 +52,7 @@ export function RepairDocument() {
       // savePdf();  // 確保在列印完成後保存 PDF 文件
     },
   });
-  
+
   // PDF 下載處理
   const handleDownloadPdf = async () => {
     setIsDownloading(true); // 開始下載，禁用按鈕和顯示轉圈圈
@@ -61,7 +61,7 @@ export function RepairDocument() {
       setTimeout(async () => {
         await generatePdf(); // 執行PDF生成的主要邏輯函數
         setIsDownloading(false); // 關閉轉圈圈狀態
-    }, 0); // 延遲X秒以等待樣式應用
+      }, 0); // 延遲X秒以等待樣式應用
     } else {
       console.log('Waiting for images to load...');
       setIsDownloading(false); // 若圖片未加載完成也要恢復按鈕
@@ -84,7 +84,10 @@ export function RepairDocument() {
       pageContent.classList.add('prepare-pdf');
 
       // 檢查確定是否有可見內容
-      if (!pageContent.innerText.trim() && pageContent.querySelectorAll('img').length === 0) {
+      if (
+        !pageContent.innerText.trim() &&
+        pageContent.querySelectorAll('img').length === 0
+      ) {
         continue; // 如果沒有文本或圖片，跳過此頁面 (避免空白頁產生)
       }
 
@@ -104,7 +107,14 @@ export function RepairDocument() {
       }
 
       // 添加圖片到 PDF，讓圖片完全佔滿版面
-      pdf.addImage(imgData, 'PNG', 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
+      pdf.addImage(
+        imgData,
+        'PNG',
+        0,
+        0,
+        pdf.internal.pageSize.getWidth(),
+        pdf.internal.pageSize.getHeight()
+      );
 
       contentAdded = true; // 標記已添加內容
     }
@@ -197,7 +207,17 @@ export function RepairDocument() {
           disabled={isDownloading}
           className={classNames(styles.button, styles['btn-pdf'])}
         >
-          {isDownloading ? <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" /> : '下載 PDF'}
+          {isDownloading ? (
+            <Spinner
+              as="span"
+              animation="border"
+              size="sm"
+              role="status"
+              aria-hidden="true"
+            />
+          ) : (
+            '下載 PDF'
+          )}
         </button>
       </div>
       <div className={styles['back-page']}>

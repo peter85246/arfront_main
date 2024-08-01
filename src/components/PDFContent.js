@@ -23,27 +23,27 @@ const PDFContent = React.forwardRef(
     const sopName =
       SOPData?.length > 0 ? SOPData[0].soP2Name : 'Default SOP Name';
 
-      function safeJsonParse(str) {
-        let result = str;
-        try {
-          let temp = JSON.parse(result);
-          while (typeof temp === 'string') {
-            result = temp;
-            temp = JSON.parse(result);
-          }
-          return temp; // 返回最後成功解析的 JSON 物件或值
-        } catch (e) {
-          console.error('Failed to parse JSON:', e);
-          return result; // 若解析失敗，返回最後一個成功解析前的字符串
+    function safeJsonParse(str) {
+      let result = str;
+      try {
+        let temp = JSON.parse(result);
+        while (typeof temp === 'string') {
+          result = temp;
+          temp = JSON.parse(result);
         }
+        return temp; // 返回最後成功解析的 JSON 物件或值
+      } catch (e) {
+        console.error('Failed to parse JSON:', e);
+        return result; // 若解析失敗，返回最後一個成功解析前的字符串
       }
+    }
 
-      function extractFileName(str) {
-        let result = str;
-        // 去除所有非必要的引號和轉義符
-        result = result.replace(/[\[\]"\\]+/g, '');
-        return result;
-      }
+    function extractFileName(str) {
+      let result = str;
+      // 去除所有非必要的引號和轉義符
+      result = result.replace(/[\[\]"\\]+/g, '');
+      return result;
+    }
 
     useEffect(() => {
       console.log('Received knowledgeInfo:', knowledgeInfo);
@@ -217,8 +217,10 @@ const PDFContent = React.forwardRef(
                     // 檢查 knowledgeBaseToolsImageNames 是否存在並有內容
                     if (knowledgeInfo.knowledgeBaseToolsImageNames) {
                       // 直接解析並提取文件名
-                        const fileNames = safeJsonParse(knowledgeInfo.knowledgeBaseToolsImageNames).map(extractFileName);
-                        return fileNames.map((fileName, idx) => (
+                      const fileNames = safeJsonParse(
+                        knowledgeInfo.knowledgeBaseToolsImageNames
+                      ).map(extractFileName);
+                      return fileNames.map((fileName, idx) => (
                         <div
                           className="flex gap-[4px] items-center"
                           style={{
@@ -307,7 +309,9 @@ const PDFContent = React.forwardRef(
                   {(() => {
                     if (knowledgeInfo.knowledgeBasePositionImageNames) {
                       // 直接解析並提取文件名
-                      const fileNames = safeJsonParse(knowledgeInfo.knowledgeBasePositionImageNames).map(extractFileName);
+                      const fileNames = safeJsonParse(
+                        knowledgeInfo.knowledgeBasePositionImageNames
+                      ).map(extractFileName);
                       return fileNames.map((fileName, idx) => (
                         <div
                           className="flex gap-[4px] items-center"

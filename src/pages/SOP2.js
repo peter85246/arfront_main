@@ -32,16 +32,16 @@ function SOP2() {
 
   useEffect(() => {
     if (location.state?.SOPData) {
-      console.log("Received SOP Data:", location.state.SOPData);
+      console.log('Received SOP Data:', location.state.SOPData);
       setSOPs(location.state.SOPData);
       if (location.state.SOPData.length > 0) {
         setSelectSOP(location.state.SOPData[0]); // 选择第一个SOP展示
       }
     } else {
-      console.log("No SOP Data received, calling refreshSOP");
+      console.log('No SOP Data received, calling refreshSOP');
       refreshSOP(); // 如果没有传递SOPData，则调用refreshSOP获取数据
     }
-  }, [location.state?.SOPData]);  // 只依赖 SOPData 改变
+  }, [location.state?.SOPData]); // 只依赖 SOPData 改变
 
   const { SOPInfo, setSOPInfo } = useStore();
   console.log(SOPInfo);
@@ -483,61 +483,101 @@ function SOP2() {
   //#endregion
 
   //#region 儲存SOP
-  // const handleSaveSOP = async () => {
-  //   // e.preventDefault();
-    
-  //   setSaveSOPLoading(true);
-  //   console.log('sops', sops);
-  //   setSOPInfo((prev) => ({ ...prev, sops: sops }));
-  //   setIsSOPName((prev) => !prev);
-  //   // let saveSOPResponse = await apiSaveSOP(formData);
-  //   // if (saveSOPResponse) {
-  //   //   if (saveSOPResponse.code == "0000") {
-  //   //     refreshSOP();
-  //   //     toast.success(t("toast.save.success"), {
-  //   //       position: toast.POSITION.TOP_CENTER,
-  //   //       autoClose: 3000,
-  //   //       hideProgressBar: true,
-  //   //       closeOnClick: false,
-  //   //       pauseOnHover: false,
-  //   //       onClose: () => {},
-  //   //     });
-  //   //   } else {
-  //   //     toast.error(saveSOPResponse.message, {
-  //   //       position: toast.POSITION.TOP_CENTER,
-  //   //       autoClose: 5000,
-  //   //       hideProgressBar: true,
-  //   //       closeOnClick: false,
-  //   //       pauseOnHover: false,
-  //   //     });
-  //   //   }
-  //   //   setSaveSOPLoading(false);
-  //   // } else {
-  //   //   setSaveSOPLoading(false);
-  //   // }
-  // };
+  const handleSaveSOP = async () => {
+    // e.preventDefault();
+
+    setSaveSOPLoading(true);
+    console.log('sops', sops);
+    setSOPInfo((prev) => ({ ...prev, sops: sops }));
+    setIsSOPName((prev) => !prev);
+    // let saveSOPResponse = await apiSaveSOP(formData);
+    // if (saveSOPResponse) {
+    //   if (saveSOPResponse.code == "0000") {
+    //     refreshSOP();
+    //     toast.success(t("toast.save.success"), {
+    //       position: toast.POSITION.TOP_CENTER,
+    //       autoClose: 3000,
+    //       hideProgressBar: true,
+    //       closeOnClick: false,
+    //       pauseOnHover: false,
+    //       onClose: () => {},
+    //     });
+    //   } else {
+    //     toast.error(saveSOPResponse.message, {
+    //       position: toast.POSITION.TOP_CENTER,
+    //       autoClose: 5000,
+    //       hideProgressBar: true,
+    //       closeOnClick: false,
+    //       pauseOnHover: false,
+    //     });
+    //   }
+    //   setSaveSOPLoading(false);
+    // } else {
+    //   setSaveSOPLoading(false);
+    // }
+  };
   //#endregion
 
-  useEffect(() => {
-    console.log('Current SOPs state:', sops);
-  }, [sops]);
-  
-  const handleSaveSOP = async () => {
-    setSaveSOPLoading(true);
-    console.log('Before saving SOPs:', sops); // 確認保存前的數據
+  // useEffect(() => {
+  //   console.log('Current SOPs state:', sops);
+  // }, [sops]);
 
-    setSOPInfo(prev => {
-        console.log('Current SOPs in setSOPInfo:', sops);  // 檢查在 setSOPInfo 被調用時的 sops 狀態
-        return { ...prev, sops: sops };
-    });
+  // const handleSaveSOP = async () => {
+  //   setSaveSOPLoading(true);
 
-    // 等待一個事件循環，確保狀態更新已經入隊
-    setTimeout(() => {
-        console.log('After setSOPInfo SOPs:', SOPInfo.sops); // 檢查更新後的狀態
-        setIsSOPName(prev => !prev);
-        setSaveSOPLoading(false);
-    }, 0);
-  };
+  //   const existingSopModels = sops.find(sop => sop.soP2Step === selectSOP.soP2Step)?.sopModels || [];
+  //   console.log('Existing sopModels at saving:', existingSopModels);
+
+  //   if (!existingSopModels.length) {
+  //     console.error("No sopModels found for the selected SOP with step:", selectSOP.soP2Step);
+  //     setSaveSOPLoading(false);
+  //     return;
+  //   }
+
+  //   const updatedSOPs = sops.map(sop => {
+  //     if (sop.soP2Step === selectSOP.soP2Step) {
+  //       return { ...selectSOP, sopModels: existingSopModels };
+  //     }
+  //     return sop;
+  //   });
+
+  //   console.log('Before updating SOPInfo:', SOPInfo);
+  //   setSOPInfo(prev => ({ ...prev, sops: updatedSOPs }));
+  //   console.log('After updating SOPInfo:', SOPInfo);
+
+  //   setSaveSOPLoading(false);
+  //   setIsSOPName(prev => !prev);
+  // };
+
+  //#region 儲存SOP (保留sopModels數據，但存取跳錯誤)
+  // 以下handleSaveSOP保存後有保留sopModels數據，但存取跳錯誤
+  // const handleSaveSOP = async () => {
+  //   setSaveSOPLoading(true);
+  //   const existingSopModels = sops.find(sop => sop.soP2Step === selectSOP.soP2Step)?.sopModels || [];
+
+  //   console.log('Existing sopModels at saving:', existingSopModels);
+
+  //   if (!existingSopModels.length) {
+  //     console.error("No sopModels found for the selected SOP with step:", selectSOP.soP2Step);
+  //     setSaveSOPLoading(false);
+  //     return;
+  //   }
+
+  //   setSOPs(prevSops => {
+  //     const updatedSOPs = prevSops.map(sop => {
+  //       if (sop.soP2Step === selectSOP.soP2Step) {
+  //         return { ...selectSOP, sopModels: existingSopModels };
+  //       }
+  //       return sop;
+  //     });
+  //     console.log('Updated SOPs:', updatedSOPs);  // Log the updated SOPs for debugging
+  //     return updatedSOPs;
+  //   });
+  //#endregion
+
+  //   setSaveSOPLoading(false);
+  //   setIsSOPName(prev => !prev);
+  // };
 
   useEffect(() => {
     console.log('SOPs updated:', sops);
@@ -545,7 +585,10 @@ function SOP2() {
 
   const handlePreview = () => {
     setSOPInfo((prev) => ({ ...prev, sops: sops }));
-    navigate('/preview', { state: { step: 'sop2' } });
+    // 確保狀態更新完成後再進行導航
+    setTimeout(() => {
+      navigate('/preview', { state: { step: 'sop2' } });
+    }, 0); // 小延時確保狀態更新
   };
 
   //#region 開啟上傳暫存3DModel Modal / 清空暫存3DModel
@@ -701,39 +744,45 @@ function SOP2() {
     let updatedSops = [...sops];
 
     // 檢查圖片和檔案是否皆已加載
-    if (selectTempModel && selectTempModel.tempModelImageObj && selectTempModel.tempModelFileObj) {
-        // 更新臨時模型列表
-        newTempModels[selectTempModelIndex] = selectTempModel;
-        setTempModels(newTempModels);
+    if (
+      selectTempModel &&
+      selectTempModel.tempModelImageObj &&
+      selectTempModel.tempModelFileObj
+    ) {
+      // 更新臨時模型列表
+      newTempModels[selectTempModelIndex] = selectTempModel;
+      setTempModels(newTempModels);
 
-        // 尋找當前選擇的SOP，並更新其sopModels
-        const updatedSopIndex = updatedSops.findIndex(sop => sop.soP2Step === selectSOP.soP2Step);
-        if (updatedSopIndex !== -1) {
-            updatedSops[updatedSopIndex] = {
-                ...updatedSops[updatedSopIndex],
-                sopModels: [
-                    ...updatedSops[updatedSopIndex].sopModels,
-                    {
-                        sopModelId: 0, // 根據實際情況可調整
-                        sopModelImage: selectTempModel.tempModelImageName,
-                        sopModelImageObj: selectTempModel.tempModelImageObj,
-                        sopModelFile: selectTempModel.tempModelFileName,
-                        sopModelFileObj: selectTempModel.tempModelFileObj,
-                    }
-                ]
-            };
-            setSOPs(updatedSops);
-            setSelectSOP(updatedSops[updatedSopIndex]); // 更新當前選擇的SOP
-        }
-
-        setShowSaveTempModelModal(false); // 關閉模態窗口
-    } else {
-        // 處理錯誤情況：更新錯誤狀態
-        let errors = {
-            tempModelImage: selectTempModel.tempModelImageObj ? '' : 'required',
-            tempModelFile: selectTempModel.tempModelFileObj ? '' : 'required'
+      // 尋找當前選擇的SOP，並更新其sopModels
+      const updatedSopIndex = updatedSops.findIndex(
+        (sop) => sop.soP2Step === selectSOP.soP2Step
+      );
+      if (updatedSopIndex !== -1) {
+        updatedSops[updatedSopIndex] = {
+          ...updatedSops[updatedSopIndex],
+          sopModels: [
+            ...updatedSops[updatedSopIndex].sopModels,
+            {
+              sopModelId: 0, // 根據實際情況可調整
+              sopModelImage: selectTempModel.tempModelImageName,
+              sopModelImageObj: selectTempModel.tempModelImageObj,
+              sopModelFile: selectTempModel.tempModelFileName,
+              sopModelFileObj: selectTempModel.tempModelFileObj,
+            },
+          ],
         };
-        setSelectTempModelErrors(errors);
+        setSOPs(updatedSops);
+        setSelectSOP(updatedSops[updatedSopIndex]); // 更新當前選擇的SOP
+      }
+
+      setShowSaveTempModelModal(false); // 關閉模態窗口
+    } else {
+      // 處理錯誤情況：更新錯誤狀態
+      let errors = {
+        tempModelImage: selectTempModel.tempModelImageObj ? '' : 'required',
+        tempModelFile: selectTempModel.tempModelFileObj ? '' : 'required',
+      };
+      setSelectTempModelErrors(errors);
     }
   };
   //#endregion

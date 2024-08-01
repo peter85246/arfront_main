@@ -102,6 +102,14 @@ export const apiChangePaw = (data) => fetchDataCall('ChangePaw', 'put', data); /
 export const apiSignIn = (data) => fetchDataCall('signIn', 'post', data); //使用者登入
 //#endregion
 
+//#region 註冊與驗證碼API
+export const apiSendVerificationCode = (email) =>
+  fetchDataCall('send-verification-code', 'post', { email });
+export const apiVerifyCode = (email, code) =>
+  fetchDataCall('verify-email', 'post', { email, code });
+export const apiSignUp = (data) => fetchDataCall('register-user', 'post', data);
+//#endregion
+
 //#region 使用者管理
 export const apiGetAllUserinfoByFilter = (data) =>
   fetchDataCall('GetAllUserinfoByFilter', 'post', data); //依據條件取得所有使用者列表
@@ -196,4 +204,3 @@ export const apiGetAllSOPByMachineAddId = (data) =>
 export const apiGetMachineAddMindMap = (data) =>
   fetchDataCall('GetMachineAddMindMap', 'get', data);
 //#endregion
-

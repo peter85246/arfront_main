@@ -261,9 +261,13 @@ export default function Alarm() {
         </div>
 
         {/* 右側心智圖區域 */}
-        <div className={styles['content-box-right-alarm']} id="alarm-mindMap"> 
-        <p className={styles['mark-text']}>▶ 點擊即可展開心智圖</p>
-          <div className={styles['mindmap']} onClick={handleMindMapClick} style={{marginTop: '-7em', marginLeft:'-10em'}}>
+        <div className={styles['content-box-right-alarm']} id="alarm-mindMap">
+          <p className={styles['mark-text']}>▶ 點擊即可展開心智圖</p>
+          <div
+            className={styles['mindmap']}
+            onClick={handleMindMapClick}
+            style={{ marginTop: '-7em', marginLeft: '-10em' }}
+          >
             <MenuTest
               key={selectedMachineId}
               machineAddId={selectedMachineId}

@@ -31,7 +31,6 @@ export default function Database() {
 
   const { knowledgeBaseId } = location.state || {}; // 從路由狀態獲取 knowledgeBaseId
   console.log('Database page loaded with ID:', knowledgeBaseId); // 确认 ID 是否被正确传递
-  
 
   useEffect(() => {
     if (knowledgeBaseId) {
@@ -119,23 +118,31 @@ export default function Database() {
         const soP2ImageRes = await fetch(sop.soP2Image);
         const soP2ImageBlob = await soP2ImageRes.blob();
         const soP2ImageName = sop.soP2Image.split('/').pop();
-        const soP2ImageFile = new File([soP2ImageBlob], soP2ImageName, { type: soP2ImageBlob.type });
+        const soP2ImageFile = new File([soP2ImageBlob], soP2ImageName, {
+          type: soP2ImageBlob.type,
+        });
         sop.soP2ImageObj = soP2ImageFile;
       }
-    
+
       if (sop.soP2RemarkImage) {
         const soP2RemarkImageRes = await fetch(sop.soP2RemarkImage);
         const soP2RemarkImageBlob = await soP2RemarkImageRes.blob();
         const soP2RemarkImageName = sop.soP2RemarkImage.split('/').pop();
-        const soP2RemarkImageFile = new File([soP2RemarkImageBlob], soP2RemarkImageName, { type: soP2RemarkImageBlob.type });
+        const soP2RemarkImageFile = new File(
+          [soP2RemarkImageBlob],
+          soP2RemarkImageName,
+          { type: soP2RemarkImageBlob.type }
+        );
         sop.soP2RemarkImageObj = soP2RemarkImageFile;
       }
-    
+
       if (sop.sopVideo) {
         const sopVideoRes = await fetch(sop.sopVideo);
         const sopVideoBlob = await sopVideoRes.blob();
         const sopVideoName = sop.sopVideo.split('/').pop();
-        const sopVideoFile = new File([sopVideoBlob], sopVideoName, { type: sopVideoBlob.type });
+        const sopVideoFile = new File([sopVideoBlob], sopVideoName, {
+          type: sopVideoBlob.type,
+        });
         sop.sopVideoObj = sopVideoFile;
       }
     }
@@ -151,12 +158,12 @@ export default function Database() {
         knowledgeBaseToolsImageObj: knowledgeBaseToolsImageObj,
         knowledgeBasePositionImageObj: knowledgeBasePositionImageObj,
       },
-      sops: SOPData.map(sop => ({
+      sops: SOPData.map((sop) => ({
         ...sop,
         soP2ImageObj: sop.soP2ImageObj,
         soP2RemarkImageObj: sop.soP2RemarkImageObj,
-        sopVideoObj: sop.sopVideoObj  // 確保影片檔案也被包括在內
-      }))
+        sopVideoObj: sop.sopVideoObj, // 確保影片檔案也被包括在內
+      })),
     });
 
     navigate('/document-editor', { state: { knowledgeInfo, SOPData } });

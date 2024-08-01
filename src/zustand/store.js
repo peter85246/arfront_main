@@ -8,7 +8,7 @@ export const useStore = create()((set) => ({
       knowledgeBaseToolsImageObj: [],
       knowledgeBasePositionImageObj: [],
       knowledgeBase3DModelImageObj: [], // 新增3D模型圖片物件數據
-      knowledgeBase3DModelFileObj: [],  // 新增3D模型文件物件數據
+      knowledgeBase3DModelFileObj: [], // 新增3D模型文件物件數據
     },
   },
 

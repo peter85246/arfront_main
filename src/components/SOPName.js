@@ -53,6 +53,14 @@ export function SOPName({ onClose }) {
     }
   };
 
+  // 這個函數可能在某個地方被定義，用以構建每個 SOP2s 的 3D 模型資訊
+  const formatT3DModels = (sop) => {
+    if (sop.T3DModels && Array.isArray(sop.T3DModels)) {
+      return JSON.stringify(sop.T3DModels);
+    }
+    return '[]'; // 當沒有模型數據時，返回一個空的 JSON 數組
+  };
+
   // 處理表單儲存事件
   const handleSave = async () => {
     console.log('handleSave is triggered');
@@ -61,6 +69,13 @@ export function SOPName({ onClose }) {
     const newErrors = {};
 
     const SOPFormData = new FormData();
+    // 检查并添加 KnowledgeBaseId
+    if (SOPInfo.knowledgeBaseId) {
+      SOPFormData.append('KnowledgeBaseId', SOPInfo.knowledgeBaseId.toString());
+      console.log('KnowledgeBaseId added:', SOPInfo.knowledgeBaseId);
+    } else {
+      console.log('KnowledgeBaseId is not set or is undefined');
+    }
     SOPFormData.append(`MachineAddId`, SOPInfo.machineAddId.toString());
 
     if (!sop2Name || sop2Name.trim() === '') {
@@ -96,39 +111,52 @@ export function SOPName({ onClose }) {
       //   formData.append('KnowledgeBases[0].knowledgeBase3DModelFileObj', null);
       // }
 
-      // 只有在創建新條目時，才添加3D模型相關字段 (編輯時不要帶此三個字段)
+      // 检查是否为新条目，如果是，使用空Blob占位
       if (!SOPInfo.knowledgeBaseId) {
-        // 為了示範，我們可以添加空字符串代替空陣列或null
-        formData.append('KnowledgeBases[0].knowledgeBase3DModelImage', '');
-        formData.append('KnowledgeBases[0].knowledgeBase3DModelFile', '');
-        // 如果有必要提交空文件對象，使用 Blob 創建一個空的 Blob 並傳遞
-        formData.append('KnowledgeBases[0].knowledgeBase3DModelFileObj', new Blob(), '');
-        // 增加對3D模型圖片對象的處理
-        formData.append('KnowledgeBases[0].knowledgeBase3DModelImageObj', new Blob(), '');
-      }
-
-
-      // 確保3D模型圖片和文件的上傳只有在文件存在時才進行
-      if (SOPInfo.knowledgeInfo?.knowledgeBase3DModelImageObj?.length > 0) {
-        SOPInfo.knowledgeInfo.knowledgeBase3DModelImageObj.forEach((file, index) => {
-          formData.append(`KnowledgeBases[0].KnowledgeBase3DModelImageObj[${index}]`, file);
-        });
+        formData.append('KnowledgeBases[0].KnowledgeBase3DModelImage', '');
+        formData.append('KnowledgeBases[0].KnowledgeBase3DModelFile', '');
+        formData.append(
+          'KnowledgeBases[0].KnowledgeBase3DModelFileObj',
+          new Blob(),
+          ''
+        );
+        formData.append(
+          'KnowledgeBases[0].KnowledgeBase3DModelImageObj',
+          new Blob(),
+          ''
+        );
       } else {
-        console.log("No 3D model images to upload.");
-      }
+        // 从sops中提取并处理所有3D模型图片和文件
+        const sopModels = SOPInfo.sops.flatMap((sop) => sop.sopModels);
+        let fileIncluded = false; // 標記是否包含至少一個文件
 
-      if (SOPInfo.knowledgeInfo?.knowledgeBase3DModelFileObj?.length > 0) {
-        SOPInfo.knowledgeInfo.knowledgeBase3DModelFileObj.forEach((file, index) => {
-          formData.append(`KnowledgeBases[0].KnowledgeBase3DModelFileObj[${index}]`, file);
+        sopModels.forEach((model, index) => {
+          if (model.sopModelImageObj instanceof File) {
+            formData.append(
+              `KnowledgeBases[0].KnowledgeBase3DModelImageObj[${index}]`,
+              model.sopModelImageObj
+            );
+            fileIncluded = true;
+          }
+          if (model.sopModelFileObj instanceof File) {
+            formData.append(
+              `KnowledgeBases[0].KnowledgeBase3DModelFileObj[${index}]`,
+              model.sopModelFileObj
+            );
+            fileIncluded = true;
+          }
         });
-      } else {
-        console.log("No 3D model files to upload.");
       }
-
 
       // 如果有 KnowledgeBaseId，加入到 formData (編輯CRUD)
-      if (SOPInfo.knowledgeBaseId) {
-        formData.append('KnowledgeBaseId', SOPInfo.knowledgeBaseId);
+      // if (SOPInfo.knowledgeBaseId) {
+      //   formData.append('KnowledgeBaseId', SOPInfo.knowledgeBaseId.toString());
+      // }
+
+      // 在此處添加代碼以檢查 formData 的內容
+      console.log('formData content before sending to the backend:');
+      for (let pair of formData.entries()) {
+        console.log(`${pair[0]}: ${pair[1]}`);
       }
 
       // 確保knowledgeInfo是一個陣列，並提供默認值
@@ -169,11 +197,14 @@ export function SOPName({ onClose }) {
                 }
               });
             }
-          } else if (![
-            'knowledgeBaseModelImageNames',
-            'knowledgeBaseToolsImageNames',
-            'knowledgeBasePositionImageNames'
-            ].includes(key)) {  // 檢查並排除不想提交的字段
+          } else if (
+            ![
+              'knowledgeBaseModelImageNames',
+              'knowledgeBaseToolsImageNames',
+              'knowledgeBasePositionImageNames',
+            ].includes(key)
+          ) {
+            // 檢查並排除不想提交的字段
             formData.append(`KnowledgeBases[${index}].${key}`, info[key]);
           }
         });
@@ -183,20 +214,30 @@ export function SOPName({ onClose }) {
       const validateFileName = (fileName) => {
         const validExtensions = ['jpg', 'jpeg', 'png']; // 可支持的文件類型擴展名
         const extension = fileName.split('.').pop().toLowerCase();
-        return validExtensions.includes(extension) ? fileName : `${fileName}.jpg`; // 若無擴展名，則預設為.jpg
+        return validExtensions.includes(extension)
+          ? fileName
+          : `${fileName}.jpg`; // 若無擴展名，則預設為.jpg
       };
 
       // 遍歷並附加每個圖片名稱，確保它們都包含有效的擴展名
       modelImageObj.forEach((name, idx) => {
-        formData.append(`KnowledgeBases[0].KnowledgeBaseModelImageNames[${idx}]`, name);
+        formData.append(
+          `KnowledgeBases[0].KnowledgeBaseModelImageNames[${idx}]`,
+          name
+        );
       });
       toolsImageObj.forEach((name, idx) => {
-        formData.append(`KnowledgeBases[0].KnowledgeBaseToolsImageNames[${idx}]`, name);
+        formData.append(
+          `KnowledgeBases[0].KnowledgeBaseToolsImageNames[${idx}]`,
+          name
+        );
       });
       positionImageObj.forEach((name, idx) => {
-        formData.append(`KnowledgeBases[0].KnowledgeBasePositionImageNames[${idx}]`, name);
+        formData.append(
+          `KnowledgeBases[0].KnowledgeBasePositionImageNames[${idx}]`,
+          name
+        );
       });
-
 
       // 檢查是否有文件被添加
       if (!fileIncluded) {
@@ -237,18 +278,35 @@ export function SOPName({ onClose }) {
           return;
         }
 
-        SOPFormData.append(`KnowledgeBaseId`, saveKnowledgeBaseRes.result);
+        // 在創建新記錄時設置 KnowledgeBaseId
+        // if (!SOPInfo.knowledgeBaseId && saveKnowledgeBaseRes.result) {
+        //     SOPFormData.set('KnowledgeBaseId', saveKnowledgeBaseRes.result.toString());
+        // }
 
         SOPInfo.sops.forEach((sop, idx) => {
           // 確保所有布林值都被正確處理，不會提交undefined
-          const isDeletedSOPImage = sop.isDeletedSOPImage !== undefined ? sop.isDeletedSOPImage : false;
-          const isDeletedSOPRemarksImage = sop.isDeletedSOPRemarksImage !== undefined ? sop.isDeletedSOPRemarksImage : false;
-          const isDeletedSOPVideo = sop.isDeletedSOPVideo !== undefined ? sop.isDeletedSOPVideo : false;
+          const isDeletedSOPImage =
+            sop.isDeletedSOPImage !== undefined ? sop.isDeletedSOPImage : false;
+          const isDeletedSOPRemarksImage =
+            sop.isDeletedSOPRemarksImage !== undefined
+              ? sop.isDeletedSOPRemarksImage
+              : false;
+          const isDeletedSOPVideo =
+            sop.isDeletedSOPVideo !== undefined ? sop.isDeletedSOPVideo : false;
 
           SOPFormData.append(`SOP2s[${idx}].deleted`, sop.deleted);
-          SOPFormData.append(`SOP2s[${idx}].isDeletedSOPImage`, isDeletedSOPImage);
-          SOPFormData.append(`SOP2s[${idx}].isDeletedSOPRemarksImage`, isDeletedSOPRemarksImage);
-          SOPFormData.append(`SOP2s[${idx}].isDeletedSOPVideo`, isDeletedSOPVideo);
+          SOPFormData.append(
+            `SOP2s[${idx}].isDeletedSOPImage`,
+            isDeletedSOPImage
+          );
+          SOPFormData.append(
+            `SOP2s[${idx}].isDeletedSOPRemarksImage`,
+            isDeletedSOPRemarksImage
+          );
+          SOPFormData.append(
+            `SOP2s[${idx}].isDeletedSOPVideo`,
+            isDeletedSOPVideo
+          );
 
           SOPFormData.append(`SOP2s[${idx}].sopId`, sop.sopId);
           SOPFormData.append(`SOP2s[${idx}].soP2Image`, sop.soP2Image);
@@ -275,79 +333,42 @@ export function SOPName({ onClose }) {
             SOPFormData.append(`SOP2s[${idx}].sopVideo`, sop.sopVideoObj.name); // 添加檔案名稱
             SOPFormData.append(`SOP2s[${idx}].sopVideoObj`, sop.sopVideoObj); // 添加檔案物件
           }
-          //   SOPFormData.append(
-          //     `SOP2s[${idx}].sopModels[${j}].sopModelId`,
-          //     sopModel.sopModelId
-          //   );
-          //   SOPFormData.append(
-          //     `SOP2s[${idx}].sopModels[${j}].deleted`,
-          //     sopModel.deleted
-          //   );
-          //   SOPFormData.append(
-          //     `SOP2s[${idx}].sopModels[${j}].sopId`,
-          //     sopModel.sopId
-          //   );
-          //   SOPFormData.append(
-          //     `SOP2s[${idx}].sopModels[${j}].sopModelImage`,
-          //     sopModel.sopModelImage
-          //   );
-          //   SOPFormData.append(
-          //     `SOP2s[${idx}].sopModels[${j}].sopModelImageObj`,
-          //     sopModel.sopModelImageObj
-          //   );
-          //   SOPFormData.append(
-          //     `SOP2s[${idx}].sopModels[${j}].sopModelFile`,
-          //     sopModel.sopModelFile
-          //   );
-          //   SOPFormData.append(
-          //     `SOP2s[${idx}].sopModels[${j}].sopModelFileObj`,
-          //     sopModel.sopModelFileObj
-          //   );
-          //   // 此處確保即使sopT3DModels為空也能傳遞空數組[]
-          //   // SOPFormData.append(`SOP2s[${idx}].sopModels[${j}].sopT3DModels`, JSON.stringify(sopModel.sopT3DModels || []));
-          //   // 处理 3D 模型数据，使用 JSON.stringify 确保格式正确
-          //   const t3dModelsData =
-          //     sop.T3DModels && Array.isArray(sop.T3DModels)
-          //       ? sop.T3DModels
-          //       : [];
-          //   formData.append(
-          //     `SOP2s[${idx}].T3DModels`,
-          //     JSON.stringify(t3dModelsData)
-          //   );
-          // });
-        
+
           sop.sopModels.forEach((sopModel, j) => {
-            SOPFormData.append(`SOP2s[${idx}].sopModels[${j}].sopModelId`, sopModel.sopModelId);
-            SOPFormData.append(`SOP2s[${idx}].sopModels[${j}].deleted`, sopModel.deleted);
-            SOPFormData.append(`SOP2s[${idx}].sopModels[${j}].sopId`, sopModel.sopId);
+            SOPFormData.append(
+              `SOP2s[${idx}].sopModels[${j}].sopModelId`,
+              sopModel.sopModelId
+            );
+            SOPFormData.append(
+              `SOP2s[${idx}].sopModels[${j}].deleted`,
+              sopModel.deleted
+            );
+            SOPFormData.append(
+              `SOP2s[${idx}].sopModels[${j}].sopId`,
+              sopModel.sopId
+            );
 
             // 將圖片和文件無條件加入到 FormData
-            SOPFormData.append(`SOP2s[${idx}].sopModels[${j}].sopModelImage`, sopModel.sopModelImage);
-            SOPFormData.append(`SOP2s[${idx}].sopModels[${j}].sopModelImageObj`, sopModel.sopModelImageObj);
-            SOPFormData.append(`SOP2s[${idx}].sopModels[${j}].sopModelFile`, sopModel.sopModelFile);
-            SOPFormData.append(`SOP2s[${idx}].sopModels[${j}].sopModelFileObj`, sopModel.sopModelFileObj);
-          
-
-            // 如果sopModelImage是URL或文件名，您可以選擇不添加到FormData或處理為文字字段
-            if (typeof sopModel.sopModelImage === 'string') {
-              SOPFormData.append(`SOP2s[${idx}].sopModels[${j}].sopModelImage`, sopModel.sopModelImage);
-            }
-
-            // 檢查圖片是否為文件對象，如果是，則添加；否則不做任何操作
-            if (sopModel.sopModelImageObj instanceof File) {
-              SOPFormData.append(`SOP2s[${idx}].sopModels[${j}].sopModelImageObj`, sopModel.sopModelImageObj);
-            }
-
-            if (sopModel.sopModelFileObj instanceof File) {
-              SOPFormData.append(`SOP2s[${idx}].sopModels[${j}].sopModelFileObj`, sopModel.sopModelFileObj);
-            }
-            
-            if (typeof sopModel.sopModelFile === 'string') {
-              SOPFormData.append(`SOP2s[${idx}].sopModels[${j}].sopModelFile`, sopModel.sopModelFile);
-            }
+            SOPFormData.append(
+              `SOP2s[${idx}].sopModels[${j}].sopModelImage`,
+              sopModel.sopModelImage
+            );
+            SOPFormData.append(
+              `SOP2s[${idx}].sopModels[${j}].sopModelImageObj`,
+              sopModel.sopModelImageObj
+            );
+            SOPFormData.append(
+              `SOP2s[${idx}].sopModels[${j}].sopModelFile`,
+              sopModel.sopModelFile
+            );
+            SOPFormData.append(
+              `SOP2s[${idx}].sopModels[${j}].sopModelFileObj`,
+              sopModel.sopModelFileObj
+            );
+            // 添加 T3DModels 數據
+            const t3dModelsData = formatT3DModels(sop); // 調用 formatT3DModels 來處理和格式化數據
+            SOPFormData.append(`SOP2s[${idx}].T3DModels`, t3dModelsData); // 加入到 FormData 中
           });
-          
-        
         });
 
         const saveSOPInfoRes = await apiSaveSOP2(SOPFormData);

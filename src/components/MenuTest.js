@@ -2,7 +2,10 @@ import React, { useEffect, useRef, useState } from 'react';
 import jsMind from 'jsmind';
 import 'jsmind/style/jsmind.css';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
-import { apiGetAllKnowledgeBaseByFilter, apiGetMachineAddMindMap } from '../utils/Api';
+import {
+  apiGetAllKnowledgeBaseByFilter,
+  apiGetMachineAddMindMap,
+} from '../utils/Api';
 import stylesAlarm from '../scss/Alarm.module.scss';
 import classNames from 'classnames';
 
@@ -15,7 +18,7 @@ const MenuTest = ({ machineAddId, machineName, defaultZoom = 1 }) => {
 
   const [knowledgeBases, setKnowledgeBases] = useState([]);
 
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   const handleNodeClick = (event, data) => {
     console.log('Clicked node ID:', data.node.id);
@@ -88,8 +91,8 @@ const MenuTest = ({ machineAddId, machineName, defaultZoom = 1 }) => {
           direction: childDirection,
           'font-size': 12,
           width: 'auto',
-          isbutton: true,  // 明确标记为按钮
-          isHtml: true,  // 标记节点为HTML内容
+          isbutton: true, // 明确标记为按钮
+          isHtml: true, // 标记节点为HTML内容
           knowledgeBaseId: kb.knowledgeBaseId,
         });
       });
@@ -113,20 +116,20 @@ const MenuTest = ({ machineAddId, machineName, defaultZoom = 1 }) => {
   };
 
   useEffect(() => {
-    const resizeObserver = new ResizeObserver(entries => {
+    const resizeObserver = new ResizeObserver((entries) => {
       for (let entry of entries) {
         adjustToFitContainer(); // 容器尺寸變化時調整心智圖
       }
     });
-  
+
     if (jmContainerRef.current) {
       resizeObserver.observe(jmContainerRef.current); // 監測心智圖容器
     }
-  
+
     return () => {
       resizeObserver.disconnect(); // 清理，組件卸載時停止監測
     };
-  }, []);// 只在組件掛載時設定一次  
+  }, []); // 只在組件掛載時設定一次
 
   // 適應容器尺寸
   const adjustToFitContainer = () => {
@@ -207,10 +210,10 @@ const MenuTest = ({ machineAddId, machineName, defaultZoom = 1 }) => {
   //   if (node.isbutton && node.isHtml) {
   //     // 直接使用 innerHTML 插入带有 onclick 事件的按钮
   //     element.innerHTML = `<button onclick="window.handleButtonClick('${node.knowledgeBaseId}')">${node.topic}</button>`;
-  
+
   //     const button = element.querySelector('button');
   //     console.log('Button element:', button);  // 检查按钮元素是否正确被创建
-    
+
   //     if (button) {
   //       button.style.cursor = 'pointer';  // 设置鼠标为手形指针
   //       button.addEventListener('click', (e) => {
@@ -237,15 +240,17 @@ const MenuTest = ({ machineAddId, machineName, defaultZoom = 1 }) => {
       element.innerHTML = ''; // 清空現有的元素內容
       const button = document.createElement('button'); // 創建一個新的按鈕元素
       button.textContent = node.topic.replace(/<button>|<\/button>/gi, ''); // 設置按鈕的文字
-      button.onclick = () => navigate('/database', { state: { knowledgeBaseId: node.knowledgeBaseId } }); // 為按鈕添加點擊事件
+      button.onclick = () =>
+        navigate('/database', {
+          state: { knowledgeBaseId: node.knowledgeBaseId },
+        }); // 為按鈕添加點擊事件
       button.style.cursor = 'pointer'; // 將鼠標樣式設為手形
       element.appendChild(button); // 將按鈕添加到元素中
     } else {
       element.innerHTML = node.topic; // 非按鈕節點使用普通渲染
     }
   };
-  
-  
+
   // 獲取數據並渲染心智圖
   useEffect(() => {
     // 將 navigate 函數包裹在一個全局可訪問的函數中
@@ -265,7 +270,7 @@ const MenuTest = ({ machineAddId, machineName, defaultZoom = 1 }) => {
             editable: false,
             theme: 'primary',
             mode: 'full',
-            support_html: true,  // 確保支持 HTML
+            support_html: true, // 確保支持 HTML
             view: {
               engine: 'canvas',
               hmargin: 100,
@@ -300,7 +305,7 @@ const MenuTest = ({ machineAddId, machineName, defaultZoom = 1 }) => {
               'background-color': '#13466b', // jsmind接受直接設置css，深藍節點背景
               color: '#fff', // jsmind接受直接設置css，白字體
               alignItem: 'center',
-              justifyContent:'center',
+              justifyContent: 'center',
             },
           ];
 
@@ -333,22 +338,24 @@ const MenuTest = ({ machineAddId, machineName, defaultZoom = 1 }) => {
         console.error('Error in displaying mind map:', error);
       });
 
-      return () => {
-        // 組件卸載時清理全局函數
-        window.handleButtonClick = null;
-      };
+    return () => {
+      // 組件卸載時清理全局函數
+      window.handleButtonClick = null;
+    };
   }, [machineAddId, machineName, defaultZoom, navigate]);
 
   return (
     <div className="mindMap-container">
       <div
         ref={jmContainerRef}
-        style={{ width: containerWidth, height: containerHeight, overflow: 'hidden' }}
+        style={{
+          width: containerWidth,
+          height: containerHeight,
+          overflow: 'hidden',
+        }}
       />
       <button
-        onClick={() =>
-          navigate('/database', { state: { knowledgeBaseId: 1 } })
-        }
+        onClick={() => navigate('/database', { state: { knowledgeBaseId: 1 } })}
       >
         Test Navigate to Database with ID 1
       </button>
