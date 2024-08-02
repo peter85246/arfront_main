@@ -22,6 +22,7 @@ import Database from './pages/Database';
 import Alarm from './pages/Alarm';
 import PageMindMap from './pages/PageMindMap';
 import GPT from './pages/GPT';
+import VendorsAccount from './components/VendorsAccount'; // 確保路徑正確
 
 import './App.css';
 import './index.css';
@@ -39,8 +40,9 @@ root.render(
   <Router>
     <Routes>
       <Route path="/" element={<Login />} />
+      <Route path="/vendorsAccount" element={<VendorsAccount />} /> //
+      新增的路由，指向 App 組件
       {/* <Route element={<PrivateRoute />}> */}
-
       <Route
         path="/pdfDemo"
         element={

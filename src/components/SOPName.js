@@ -70,16 +70,26 @@ export function SOPName({ onClose }) {
 
     const SOPFormData = new FormData();
     // 检查并添加 KnowledgeBaseId
+    // if (SOPInfo.knowledgeBaseId) {
+    //   SOPFormData.append('KnowledgeBaseId', SOPInfo.knowledgeBaseId.toString());
+    //   console.log('KnowledgeBaseId added:', SOPInfo.knowledgeBaseId);
+    // } else {
+    //   console.log('KnowledgeBaseId is not set or is undefined');
+    // }
+    // SOPFormData.append(`MachineAddId`, SOPInfo.machineAddId.toString());
+
+    // if (!sop2Name || sop2Name.trim() === '') {
+    //   newErrors.sop2Name = '必填项';
+    //   hasError = true;
+    // }
+
+    // 檢查 KnowledgeBaseId 是否存在，並且正確地添加到 FormData
     if (SOPInfo.knowledgeBaseId) {
       SOPFormData.append('KnowledgeBaseId', SOPInfo.knowledgeBaseId.toString());
       console.log('KnowledgeBaseId added:', SOPInfo.knowledgeBaseId);
     } else {
       console.log('KnowledgeBaseId is not set or is undefined');
-    }
-    SOPFormData.append(`MachineAddId`, SOPInfo.machineAddId.toString());
-
-    if (!sop2Name || sop2Name.trim() === '') {
-      newErrors.sop2Name = '必填项';
+      newErrors.knowledgeBaseId = 'KnowledgeBaseId is required';
       hasError = true;
     }
 
