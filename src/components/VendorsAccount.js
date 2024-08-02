@@ -13,11 +13,15 @@ import {
 import { Lock, Mail, Building, User, Phone, CheckSquare } from 'lucide-react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from 'react-router-dom';
+
 
 const LoginForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoggingIn, setIsLoggingIn] = useState(false); // 狀態表示是否正在登錄
+  
+  const navigate = useNavigate();
 
   const [verificationCode, setVerificationCode] = useState('');
   const [isVerifying, setIsVerifying] = useState(false);
@@ -31,10 +35,11 @@ const LoginForm = () => {
     setTimeout(() => {
       if (email === 'test@example.com' && password === 'password123') {
         toast.success('登錄成功!');
+        navigate('/login'); // 登錄成功後導航到/dashboard 或其他您指定的路由
       } else {
         toast.error('登錄失敗，電子郵件或密碼不正確!');
       }
-      setIsLoggingIn(false); // 登錄完成
+      setIsLoggingIn(false);
     }, 2000); // 2秒延遲以模擬服務器請求
   };
 
@@ -362,9 +367,10 @@ const RegisterForm = () => {
 export default function VendorsAccount() {
   const [activeTab, setActiveTab] = useState('login');
 
-  const handleTabSelect = (eventKey) => {
-    setActiveTab(eventKey);
+  const handleTabSelect = (tab) => {
+    setActiveTab(tab);
   };
+  
   return (
     <div className="d-flex align-items-center justify-content-center min-vh-100 bg-gradient-to-r from-blue-100 to-purple-100">
       <Card style={{ width: '400px' }} className="shadow-lg">
