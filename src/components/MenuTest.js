@@ -234,16 +234,17 @@ const MenuTest = ({ machineAddId, machineName, defaultZoom = 1 }) => {
   // };
 
   // 定義一個自定義節點渲染方法
-  const customNodeRenderer = (node, element) => {
+  const customNodeRenderer = (_, element, node) => {
     console.log('Rendering node:', node); // 輸出節點信息以便於調試
-    if (node.isbutton && node.isHtml) {
+    if (node.data.isbutton && node.data.isHtml) {
       element.innerHTML = ''; // 清空現有的元素內容
       const button = document.createElement('button'); // 創建一個新的按鈕元素
       button.textContent = node.topic.replace(/<button>|<\/button>/gi, ''); // 設置按鈕的文字
-      button.onclick = () =>
-        navigate('/database', {
-          state: { knowledgeBaseId: node.knowledgeBaseId },
-        }); // 為按鈕添加點擊事件
+      element.onclick = () => {
+        navigate('/database', { state: {
+          item: { machineAddId: machineAddId, knowledgeBaseId: node.data.knowledgeBaseId }
+        } })
+      }; // 為按鈕添加點擊事件
       button.style.cursor = 'pointer'; // 將鼠標樣式設為手形
       element.appendChild(button); // 將按鈕添加到元素中
     } else {
@@ -261,6 +262,7 @@ const MenuTest = ({ machineAddId, machineName, defaultZoom = 1 }) => {
 
     fetchData()
       .then((knowledgeBases) => {
+        console.log('Knowledge bases:', knowledgeBases);
         if (jmContainerRef.current) {
           jmContainerRef.current.style.overflow = 'hidden'; // 初次渲染時隱藏滾動條
         }
@@ -327,7 +329,7 @@ const MenuTest = ({ machineAddId, machineName, defaultZoom = 1 }) => {
 
           jmInstanceRef.current = new jsMind(options);
           jmInstanceRef.current.show(mind);
-          jmInstanceRef.current.add_event_listener('click', handleNodeClick);
+          // jmInstanceRef.current.add_event_listener('click', handleNodeClick);
 
           setTimeout(() => {
             adjustToFitContainer(); // 調整畫布尺寸以適應容器

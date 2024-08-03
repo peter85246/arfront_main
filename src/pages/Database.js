@@ -18,6 +18,7 @@ import { useStore } from '../zustand/store';
 export default function Database() {
   const location = useLocation();
   const item = location.state?.item; // 訪問傳遞的狀態
+
   const currentPage = location.state?.currentPage || 1; // 接收當前頁碼，默認為1
   const pageRow = location.state?.pageRow || 5; // 接收每頁行數，默認為5
 
@@ -214,6 +215,7 @@ export default function Database() {
       const res = await apiGetAllKnowledgeBaseByMachineAddId({
         Id: machineAddId,
       });
+      console.log(res)
       if (res?.message === '完全成功') {
         const knowledgeInfo = res.result.filter(
           (item) => item.knowledgeBaseId === knowledgeBaseId
@@ -304,7 +306,7 @@ export default function Database() {
               <table>
                 <thead>
                   <tr className={styles['row-title-database']}>
-                    <th>編號</th>
+                    {/* <th>編號</th> */}
                     <th>設備種類</th>
                     <th>設備部件</th>
                     <th>維修項目</th>
@@ -313,23 +315,14 @@ export default function Database() {
                 </thead>
                 <tbody>
                   {/* 根據資料庫內的KnowledgeeBaseId顯示 */}
-                  {/* {item ? (
+                  {knowledgeInfo ? (
                     <tr className={styles['row-database']}>
-                      <td>{item.knowledgeBaseId}</td>
-                      <td>{item.knowledgeBaseDeviceType}</td>
-                      <td>{item.knowledgeBaseDeviceParts}</td>
-                      <td>{item.knowledgeBaseRepairItems}</td>
-                      <td>{item.knowledgeBaseRepairType}</td>
-                    </tr> */}
-
-                  {item ? (
-                    <tr className={styles['row-database']}>
-                      <td>{(currentPage - 1) * pageRow + item.index + 1}</td>{' '}
+                      {/* <td>{(currentPage - 1) * pageRow + item.index + 1}</td>{' '} */}
                       {/* 自定義序列，顯示自動排序，不因刪除欄位而產生缺口 */}
-                      <td>{item.knowledgeBaseDeviceType}</td>
-                      <td>{item.knowledgeBaseDeviceParts}</td>
-                      <td>{item.knowledgeBaseRepairItems}</td>
-                      <td>{item.knowledgeBaseRepairType}</td>
+                      <td>{knowledgeInfo.knowledgeBaseDeviceType}</td>
+                      <td>{knowledgeInfo.knowledgeBaseDeviceParts}</td>
+                      <td>{knowledgeInfo.knowledgeBaseRepairItems}</td>
+                      <td>{knowledgeInfo.knowledgeBaseRepairType}</td>
                     </tr>
                   ) : (
                     <tr>
