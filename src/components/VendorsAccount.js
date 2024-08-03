@@ -14,33 +14,57 @@ import { Lock, Mail, Building, User, Phone, CheckSquare } from 'lucide-react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
-
+import axios from 'axios';
 
 const LoginForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoggingIn, setIsLoggingIn] = useState(false); // 狀態表示是否正在登錄
-  
+
   const navigate = useNavigate();
 
   const [verificationCode, setVerificationCode] = useState('');
   const [isVerifying, setIsVerifying] = useState(false);
 
+  // const handleLogin = (e) => {
+  //   e.preventDefault();
+  //   setIsLoggingIn(true); // 開始登錄
+  //   console.log('Login attempt with:', { email, password });
+
+  //   // 模擬登錄過程的延遲
+  //   setTimeout(() => {
+  //     if (email === 'test@example.com' && password === 'password123') {
+  //       toast.success('登錄成功!');
+  //       navigate('/login'); // 登錄成功後導航到login 或其他您指定的路由
+  //     } else {
+  //       toast.error('登錄失敗，電子郵件或密碼不正確!');
+  //     }
+  //     setIsLoggingIn(false);
+  //   }, 2000); // 2秒延遲以模擬服務器請求
+  // };
+
   const handleLogin = (e) => {
     e.preventDefault();
-    setIsLoggingIn(true); // 開始登錄
-    console.log('Login attempt with:', { email, password });
-
-    // 模擬登錄過程的延遲
-    setTimeout(() => {
-      if (email === 'test@example.com' && password === 'password123') {
-        toast.success('登錄成功!');
-        navigate('/login'); // 登錄成功後導航到/dashboard 或其他您指定的路由
-      } else {
-        toast.error('登錄失敗，電子郵件或密碼不正確!');
-      }
-      setIsLoggingIn(false);
-    }, 2000); // 2秒延遲以模擬服務器請求
+    setIsLoggingIn(true);
+    axios
+      .post('http://localhost:8098/api/VendorRegistration/login', {
+        email: email,
+        password: password,
+      })
+      .then((response) => {
+        const { code, message } = response.data;
+        if (code === '0000') {
+          toast.success('登錄成功!');
+          navigate('/login'); // 修改這裡導航到成功登錄後的路由
+        } else {
+          toast.error(message);
+        }
+        setIsLoggingIn(false);
+      })
+      .catch((error) => {
+        toast.error('登錄請求失敗: ' + error.message);
+        setIsLoggingIn(false);
+      });
   };
 
   return (
@@ -129,41 +153,107 @@ const RegisterForm = () => {
     }));
   };
 
+  // const handleSendCode = () => {
+  //   setIsSendingCode(true);
+  //   setTimeout(() => {
+  //     toast.info(`驗證碼發送到: ${formData.email}`);
+  //     setIsSendingCode(false);
+  //   }, 1000); // 模擬發送驗證碼的延遲
+  // };
   const handleSendCode = () => {
     setIsSendingCode(true);
-    setTimeout(() => {
-      toast.info(`驗證碼發送到: ${formData.email}`);
-      setIsSendingCode(false);
-    }, 1000); // 模擬發送驗證碼的延遲
+    axios
+      .post(
+        'http://localhost:8098/api/VendorRegistration/send-verification-code',
+        {
+          email: formData.email,
+        }
+      )
+      .then((response) => {
+        const { message } = response.data;
+        toast.info(message);
+        setIsSendingCode(false);
+      })
+      .catch((error) => {
+        toast.error('發送驗證碼失敗: ' + error.message);
+        setIsSendingCode(false);
+      });
   };
 
+  // const handleRegister = (e) => {
+  //   e.preventDefault();
+  //   setIsRegistering(true); // 開始註冊
+  //   console.log('Registration attempt with:', formData);
+
+  //   // 模擬註冊過程的延遲
+  //   setTimeout(() => {
+  //     setIsRegistering(false);
+  //     // 註冊成功提示
+  //     if (formData.verificationCode === '1234') {
+  //       toast.success('註冊成功!');
+  //     } else {
+  //       toast.error('註冊失敗，驗證碼不正確!');
+  //     }
+  //   }, 2000); // 註冊完成後解除禁用狀態
+  // };
   const handleRegister = (e) => {
     e.preventDefault();
-    setIsRegistering(true); // 開始註冊
-    console.log('Registration attempt with:', formData);
-
-    // 模擬註冊過程的延遲
-    setTimeout(() => {
-      setIsRegistering(false);
-      // 註冊成功提示
-      if (formData.verificationCode === '1234') {
-        toast.success('註冊成功!');
-      } else {
-        toast.error('註冊失敗，驗證碼不正確!');
-      }
-    }, 2000); // 註冊完成後解除禁用狀態
+    setIsRegistering(true);
+    axios.post('http://localhost:8098/api/VendorRegistration/register', {
+      companyName: formData.companyName,
+      contactName: formData.contactName,
+      email: formData.email,
+      phoneNumber: formData.phone,
+      industryType: formData.industry,
+      password: formData.password,
+      confirmPassword: formData.confirmPassword // 確認這個字段是否後端需要
+        .then((response) => {
+          const { code, message } = response.data;
+          if (code === '0000') {
+            toast.success('註冊成功!');
+          } else {
+            toast.error(message);
+          }
+          setIsRegistering(false);
+        })
+        .catch((error) => {
+          toast.error('註冊失敗: ' + error.message);
+          setIsRegistering(false);
+        }),
+    });
   };
 
+  // const handleVerifyCode = () => {
+  //   setIsVerifyingCode(true);
+  //   setTimeout(() => {
+  //     if (formData.verificationCode === '1234') {
+  //       toast.success('驗證成功!');
+  //     } else {
+  //       toast.error('驗證失敗! 驗證碼輸入錯誤。');
+  //     }
+  //     setIsVerifyingCode(false);
+  //   }, 1000); // 模擬驗證過程的延遲
+  // };
   const handleVerifyCode = () => {
     setIsVerifyingCode(true);
-    setTimeout(() => {
-      if (formData.verificationCode === '1234') {
-        toast.success('驗證成功!');
-      } else {
-        toast.error('驗證失敗! 驗證碼輸入錯誤。');
-      }
-      setIsVerifyingCode(false);
-    }, 1000); // 模擬驗證過程的延遲
+    axios
+      .post('http://localhost:8098/api/VendorRegistration/verify-email', {
+        email: formData.email,
+        verificationCode: formData.verificationCode,
+      })
+      .then((response) => {
+        const { code, message } = response.data;
+        if (code === '0000') {
+          toast.success('驗證成功!');
+        } else {
+          toast.error(message);
+        }
+        setIsVerifyingCode(false);
+      })
+      .catch((error) => {
+        toast.error('驗證失敗: ' + error.message);
+        setIsVerifyingCode(false);
+      });
   };
 
   return (
@@ -370,7 +460,7 @@ export default function VendorsAccount() {
   const handleTabSelect = (tab) => {
     setActiveTab(tab);
   };
-  
+
   return (
     <div className="d-flex align-items-center justify-content-center min-vh-100 bg-gradient-to-r from-blue-100 to-purple-100">
       <Card style={{ width: '400px' }} className="shadow-lg">

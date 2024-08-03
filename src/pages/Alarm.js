@@ -268,7 +268,7 @@ export default function Alarm() {
             onClick={handleMindMapClick}
             style={{ marginTop: '-7em', marginLeft: '-10em' }}
           >
-            <div className='pointer-events-none'>
+            <div className="pointer-events-none">
               <MenuTest
                 key={selectedMachineId}
                 machineAddId={selectedMachineId}

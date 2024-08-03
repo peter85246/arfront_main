@@ -215,7 +215,7 @@ export default function Database() {
       const res = await apiGetAllKnowledgeBaseByMachineAddId({
         Id: machineAddId,
       });
-      console.log(res)
+      console.log(res);
       if (res?.message === '完全成功') {
         const knowledgeInfo = res.result.filter(
           (item) => item.knowledgeBaseId === knowledgeBaseId

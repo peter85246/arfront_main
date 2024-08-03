@@ -39,7 +39,7 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <Router>
     <Routes>
-      <Route path="/login" element={<Login />} />
+      <Route path="/" element={<Login />} />
       <Route path="/vendorsAccount" element={<VendorsAccount />} /> //
       新增的路由，指向 App 組件
       {/* <Route element={<PrivateRoute />}> */}

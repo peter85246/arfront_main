@@ -234,16 +234,24 @@ const MenuTest = ({ machineAddId, machineName, defaultZoom = 1 }) => {
   // };
 
   // 定義一個自定義節點渲染方法
+  // jsmind Document文件說明：此 , element, node 用法須帶入3個變數， 沒用到，但須使用 _ 卡位置，主要利用後面的 element & node 來做set
   const customNodeRenderer = (_, element, node) => {
     console.log('Rendering node:', node); // 輸出節點信息以便於調試
+    // node.data.isbutton & node.data.isHtml 的data為重點，需加入此data撈取資料才能點選節點跳轉頁面
     if (node.data.isbutton && node.data.isHtml) {
       element.innerHTML = ''; // 清空現有的元素內容
       const button = document.createElement('button'); // 創建一個新的按鈕元素
       button.textContent = node.topic.replace(/<button>|<\/button>/gi, ''); // 設置按鈕的文字
       element.onclick = () => {
-        navigate('/database', { state: {
-          item: { machineAddId: machineAddId, knowledgeBaseId: node.data.knowledgeBaseId }
-        } })
+        navigate('/database', {
+          state: {
+            // 重點撈取資料位置，所需撈取的內容
+            item: {
+              machineAddId: machineAddId,
+              knowledgeBaseId: node.data.knowledgeBaseId,
+            },
+          },
+        });
       }; // 為按鈕添加點擊事件
       button.style.cursor = 'pointer'; // 將鼠標樣式設為手形
       element.appendChild(button); // 將按鈕添加到元素中

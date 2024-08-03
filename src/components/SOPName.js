@@ -70,26 +70,16 @@ export function SOPName({ onClose }) {
 
     const SOPFormData = new FormData();
     // 检查并添加 KnowledgeBaseId
-    // if (SOPInfo.knowledgeBaseId) {
-    //   SOPFormData.append('KnowledgeBaseId', SOPInfo.knowledgeBaseId.toString());
-    //   console.log('KnowledgeBaseId added:', SOPInfo.knowledgeBaseId);
-    // } else {
-    //   console.log('KnowledgeBaseId is not set or is undefined');
-    // }
-    // SOPFormData.append(`MachineAddId`, SOPInfo.machineAddId.toString());
-
-    // if (!sop2Name || sop2Name.trim() === '') {
-    //   newErrors.sop2Name = '必填项';
-    //   hasError = true;
-    // }
-
-    // 檢查 KnowledgeBaseId 是否存在，並且正確地添加到 FormData
     if (SOPInfo.knowledgeBaseId) {
       SOPFormData.append('KnowledgeBaseId', SOPInfo.knowledgeBaseId.toString());
       console.log('KnowledgeBaseId added:', SOPInfo.knowledgeBaseId);
     } else {
       console.log('KnowledgeBaseId is not set or is undefined');
-      newErrors.knowledgeBaseId = 'KnowledgeBaseId is required';
+    }
+    SOPFormData.append(`MachineAddId`, SOPInfo.machineAddId.toString());
+
+    if (!sop2Name || sop2Name.trim() === '') {
+      newErrors.sop2Name = '必填项';
       hasError = true;
     }
 
@@ -159,9 +149,9 @@ export function SOPName({ onClose }) {
       }
 
       // 如果有 KnowledgeBaseId，加入到 formData (編輯CRUD)
-      // if (SOPInfo.knowledgeBaseId) {
-      //   formData.append('KnowledgeBaseId', SOPInfo.knowledgeBaseId.toString());
-      // }
+      if (SOPInfo.knowledgeBaseId) {
+        formData.append('KnowledgeBaseId', SOPInfo.knowledgeBaseId.toString());
+      }
 
       // 在此處添加代碼以檢查 formData 的內容
       console.log('formData content before sending to the backend:');
@@ -289,9 +279,12 @@ export function SOPName({ onClose }) {
         }
 
         // 在創建新記錄時設置 KnowledgeBaseId
-        // if (!SOPInfo.knowledgeBaseId && saveKnowledgeBaseRes.result) {
-        //     SOPFormData.set('KnowledgeBaseId', saveKnowledgeBaseRes.result.toString());
-        // }
+        SOPFormData.set(
+          'KnowledgeBaseId',
+          SOPInfo.knowledgeInfo.knowledgeBaseId
+            ? SOPInfo.knowledgeInfo.knowledgeBaseId
+            : saveKnowledgeBaseRes.result.toString()
+        );
 
         SOPInfo.sops.forEach((sop, idx) => {
           // 確保所有布林值都被正確處理，不會提交undefined
