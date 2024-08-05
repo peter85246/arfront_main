@@ -311,7 +311,11 @@ export function SOPName({ onClose }) {
             isDeletedSOPVideo
           );
 
-          SOPFormData.append(`SOP2s[${idx}].sopId`, sop.sopId);
+          // SOPFormData.append(`SOP2s[${idx}].sopId`, sop.sopId);
+          // 如果soP2Id已定義並且不是新建項目，則添加到表單數據
+          if (sop.soP2Id !== undefined && sop.soP2Id !== null) {
+            SOPFormData.append(`SOP2s[${idx}].soP2Id`, sop.soP2Id);
+          }
           SOPFormData.append(`SOP2s[${idx}].soP2Image`, sop.soP2Image);
           SOPFormData.append(`SOP2s[${idx}].soP2ImageObj`, sop.soP2ImageObj);
           SOPFormData.append(
