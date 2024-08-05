@@ -43,6 +43,7 @@ const LoginForm = () => {
   //   }, 2000); // 2秒延遲以模擬服務器請求
   // };
 
+  //#region 信箱驗證方法 & API
   const handleLogin = (e) => {
     e.preventDefault();
     setIsLoggingIn(true);
@@ -54,18 +55,27 @@ const LoginForm = () => {
       .then((response) => {
         const { code, message } = response.data;
         if (code === '0000') {
-          toast.success('登錄成功!');
-          navigate('/login'); // 修改這裡導航到成功登錄後的路由
+          // 添加延遲效果
+          setTimeout(() => {
+            toast.success('登錄成功!');
+
+            // 添加延遲效果
+            setTimeout(() => {
+              navigate('/'); // 跳轉登入成功後的頁面
+              setIsLoggingIn(false);
+            }, 1000); // 1秒延遲
+          }, 500); // 0.5秒延遲顯示 登錄成功 消息
         } else {
           toast.error(message);
+          setIsLoggingIn(false);
         }
-        setIsLoggingIn(false);
       })
       .catch((error) => {
         toast.error('登錄請求失敗: ' + error.message);
         setIsLoggingIn(false);
       });
   };
+  //#endregion
 
   return (
     <Form onSubmit={handleLogin} style={{ backgroundColor: 'white' }}>
@@ -153,6 +163,30 @@ const RegisterForm = () => {
     }));
   };
 
+  //#region 驗證密碼和電子郵箱格式
+  const validateForm = () => {
+    const { password, confirmPassword, email } = formData;
+    const emailLocalPart = email.split('@')[0];
+
+    if (password.length < 6) {
+      toast.error('密碼長度至少為6個字符!');
+      return false;
+    }
+
+    if (password !== confirmPassword) {
+      toast.error('密碼和確認密碼不匹配!');
+      return false;
+    }
+
+    if (emailLocalPart.length < 6) {
+      toast.error('電子郵箱@之前至少為6個字符!');
+      return false;
+    }
+
+    return true;
+  };
+  //#endregion
+
   // const handleSendCode = () => {
   //   setIsSendingCode(true);
   //   setTimeout(() => {
@@ -160,6 +194,7 @@ const RegisterForm = () => {
   //     setIsSendingCode(false);
   //   }, 1000); // 模擬發送驗證碼的延遲
   // };
+  //#region 信箱驗證方法 & API
   const handleSendCode = () => {
     setIsSendingCode(true);
     axios
@@ -179,6 +214,7 @@ const RegisterForm = () => {
         setIsSendingCode(false);
       });
   };
+  //#endregion
 
   // const handleRegister = (e) => {
   //   e.preventDefault();
@@ -196,32 +232,49 @@ const RegisterForm = () => {
   //     }
   //   }, 2000); // 註冊完成後解除禁用狀態
   // };
+  //#region 註冊方法 & API
   const handleRegister = (e) => {
     e.preventDefault();
+
+    // 確認驗證通過
+    if (!validateForm()) {
+      return;
+    }
+
     setIsRegistering(true);
-    axios.post('http://localhost:8098/api/VendorRegistration/register', {
-      companyName: formData.companyName,
-      contactName: formData.contactName,
-      email: formData.email,
-      phoneNumber: formData.phone,
-      industryType: formData.industry,
-      password: formData.password,
-      confirmPassword: formData.confirmPassword // 確認這個字段是否後端需要
-        .then((response) => {
-          const { code, message } = response.data;
-          if (code === '0000') {
+    axios
+      .post('http://localhost:8098/api/VendorRegistration/register', {
+        companyName: formData.companyName,
+        contactName: formData.contactName,
+        email: formData.email,
+        phoneNumber: formData.phone,
+        industryType: formData.industry,
+        password: formData.password,
+        confirmPassword: formData.confirmPassword,
+      })
+      .then((response) => {
+        const { code, message } = response.data;
+        if (code === '0000') {
+          setTimeout(() => {
             toast.success('註冊成功!');
-          } else {
-            toast.error(message);
-          }
-          setIsRegistering(false);
-        })
-        .catch((error) => {
-          toast.error('註冊失敗: ' + error.message);
-          setIsRegistering(false);
-        }),
-    });
+            setTimeout(() => {
+              setIsRegistering(false); // 延長等待效果直到成功提示完畢
+            }, 1000); // 增加到3秒讓用戶有更明顯的感知
+          }, 500); // 成功訊息延遲
+        } else if (code === '1002') {
+          toast.error('該聯繫人姓名和電話已存在，請使用不同的聯繫人資料。');
+          setIsRegistering(false); // 立即停止轉圈圈
+        } else {
+          toast.error(message);
+          setIsRegistering(false); // 立即停止轉圈圈
+        }
+      })
+      .catch((error) => {
+        toast.error('註冊失敗: ' + error.message);
+        setIsRegistering(false); // 立即停止轉圈圈
+      });
   };
+  //#endregion
 
   // const handleVerifyCode = () => {
   //   setIsVerifyingCode(true);
@@ -304,7 +357,7 @@ const RegisterForm = () => {
             onChange={handleChange}
             required
           />
-          <Button
+          {/* <Button
             variant="outline-secondary"
             onClick={handleSendCode}
             disabled={isSendingCode}
@@ -321,10 +374,10 @@ const RegisterForm = () => {
             ) : (
               '發送驗證碼'
             )}
-          </Button>
+          </Button> */}
         </InputGroup>
       </FormGroup>
-      <FormGroup className="mb-3">
+      {/* <FormGroup className="mb-3">
         <Form.Label>驗證碼</Form.Label>
         <InputGroup>
           <InputGroup.Text>
@@ -357,7 +410,7 @@ const RegisterForm = () => {
             )}
           </Button>
         </InputGroup>
-      </FormGroup>
+      </FormGroup> */}
       <FormGroup className="mb-3">
         <Form.Label>聯繫電話</Form.Label>
         <InputGroup>
@@ -385,9 +438,13 @@ const RegisterForm = () => {
             required
           >
             <option value="">選擇行業</option>
-            <option value="it">IT</option>
-            <option value="finance">金融</option>
-            <option value="education">教育</option>
+            <option value="traditional_machining">傳統工具機</option>
+            <option value="ai_machine_tools">AI工具機</option>
+            <option value="smart_manufacturing">智能製造</option>
+            <option value="precision_engineering">精密工程</option>
+            <option value="industrial_automation">工業自動化</option>
+            <option value="robotics">機器人技術</option>
+            <option value="ai">AI相關</option>
             <option value="other">其他</option>
           </FormControl>
         </InputGroup>
@@ -462,7 +519,12 @@ export default function VendorsAccount() {
   };
 
   return (
-    <div className="d-flex align-items-center justify-content-center min-vh-100 bg-gradient-to-r from-blue-100 to-purple-100">
+    <div
+      className="d-flex align-items-center justify-content-center min-vh-100 min-vw-100"
+      style={{
+        background: 'linear-gradient(to right, #cce4f7, #d5c4f7)', // 原始的紫藍漸變顏色
+      }}
+    >
       <Card style={{ width: '400px' }} className="shadow-lg">
         <Card.Header
           className="text-center"
