@@ -165,8 +165,9 @@ const RegisterForm = () => {
 
   //#region 驗證密碼和電子郵箱格式
   const validateForm = () => {
-    const { password, confirmPassword, email } = formData;
+    const { password, confirmPassword, email, phone } = formData;
     const emailLocalPart = email.split('@')[0];
+    const phonePattern = /^[0-9]{10}$/; // 正則表達式，檢查是否為10位數字(聯繫電話)
 
     if (password.length < 6) {
       toast.error('密碼長度至少為6個字符!');
@@ -180,6 +181,11 @@ const RegisterForm = () => {
 
     if (emailLocalPart.length < 6) {
       toast.error('電子郵箱@之前至少為6個字符!');
+      return false;
+    }
+
+    if (!phonePattern.test(phone)) {
+      toast.error('聯繫電話必須是10位數字!');
       return false;
     }
 
