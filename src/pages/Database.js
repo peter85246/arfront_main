@@ -311,6 +311,7 @@ export default function Database() {
                     <th>設備部件</th>
                     <th>維修項目</th>
                     <th>維修類型</th>
+                    <th>檔案編號</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -323,6 +324,7 @@ export default function Database() {
                       <td>{knowledgeInfo.knowledgeBaseDeviceParts}</td>
                       <td>{knowledgeInfo.knowledgeBaseRepairItems}</td>
                       <td>{knowledgeInfo.knowledgeBaseRepairType}</td>
+                      <td>{knowledgeInfo.knowledgeBaseFileNo}</td>
                     </tr>
                   ) : (
                     <tr>
