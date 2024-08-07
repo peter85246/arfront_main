@@ -395,7 +395,9 @@ const PDFContent = React.forwardRef(
                     </div>
                     <div className={styles['content-section']}>
                       <p>Illustration(步驟說明)：</p>
-                      <div className={styles['step-content-box']}>
+                      <div className={styles['step-content-box']}
+                        style={{ maxWidth: '300px', wordWrap: 'break-word' }}
+                        >
                         {sop.soP2Message}
                       </div>
                     </div>

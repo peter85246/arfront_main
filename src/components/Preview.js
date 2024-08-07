@@ -81,14 +81,14 @@ export function Preview() {
           </div>
         </div>
       </section>
-      <div className={styles['buttons-container']}>
+      {/* <div className={styles['buttons-container']}>
         <button
           onClick={handlePrint}
           className={classNames(styles['button'], styles['btn-pdf'])}
         >
           印出
         </button>
-      </div>
+      </div> */}
       <div className={styles['back-page']}>
         <Link to="/knowledge" className={'fas fa-angle-left'}>
           {' '}
