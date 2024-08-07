@@ -377,6 +377,7 @@ const PDFContent = React.forwardRef(
                         styles['content-section'],
                         styles['image-container']
                       )}
+                      style={{ maxWidth: '25vw', wordWrap: 'break-word' }}
                     >
                       {sop.soP2Image ? (
                         <img
@@ -395,9 +396,10 @@ const PDFContent = React.forwardRef(
                     </div>
                     <div className={styles['content-section']}>
                       <p>Illustration(步驟說明)：</p>
-                      <div className={styles['step-content-box']}
-                        style={{ maxWidth: '300px', wordWrap: 'break-word' }}
-                        >
+                      <div
+                        className={styles['step-content-box']}
+                        style={{ maxWidth: '25vw', wordWrap: 'break-word' }}
+                      >
                         {sop.soP2Message}
                       </div>
                     </div>
@@ -405,7 +407,7 @@ const PDFContent = React.forwardRef(
                       <p>Remark(備註補充)：</p>
                       <div
                         className={styles['step-content-box']}
-                        style={{ maxWidth: '300px', wordWrap: 'break-word' }}
+                        style={{ maxWidth: '25vw', wordWrap: 'break-word' }}
                       >
                         {sop.soP2Remark && (
                           <>

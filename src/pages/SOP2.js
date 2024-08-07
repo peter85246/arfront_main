@@ -206,10 +206,10 @@ function SOP2() {
       sopVideo: '',
       sopVideoObj: null,
       isDeletedSOPVideo: false,
-      sopplC1: '',
-      sopplC2: '',
-      sopplC3: '',
-      sopplC4: '',
+      plC1: '', // 更新字段名稱
+      plC2: '', // 更新字段名稱
+      plC3: '', // 更新字段名稱
+      plC4: '', // 更新字段名稱
       sopModels: [],
     };
 
@@ -490,94 +490,8 @@ function SOP2() {
     console.log('sops', sops);
     setSOPInfo((prev) => ({ ...prev, sops: sops }));
     setIsSOPName((prev) => !prev);
-    // let saveSOPResponse = await apiSaveSOP(formData);
-    // if (saveSOPResponse) {
-    //   if (saveSOPResponse.code == "0000") {
-    //     refreshSOP();
-    //     toast.success(t("toast.save.success"), {
-    //       position: toast.POSITION.TOP_CENTER,
-    //       autoClose: 3000,
-    //       hideProgressBar: true,
-    //       closeOnClick: false,
-    //       pauseOnHover: false,
-    //       onClose: () => {},
-    //     });
-    //   } else {
-    //     toast.error(saveSOPResponse.message, {
-    //       position: toast.POSITION.TOP_CENTER,
-    //       autoClose: 5000,
-    //       hideProgressBar: true,
-    //       closeOnClick: false,
-    //       pauseOnHover: false,
-    //     });
-    //   }
-    //   setSaveSOPLoading(false);
-    // } else {
-    //   setSaveSOPLoading(false);
-    // }
   };
   //#endregion
-
-  // useEffect(() => {
-  //   console.log('Current SOPs state:', sops);
-  // }, [sops]);
-
-  // const handleSaveSOP = async () => {
-  //   setSaveSOPLoading(true);
-
-  //   const existingSopModels = sops.find(sop => sop.soP2Step === selectSOP.soP2Step)?.sopModels || [];
-  //   console.log('Existing sopModels at saving:', existingSopModels);
-
-  //   if (!existingSopModels.length) {
-  //     console.error("No sopModels found for the selected SOP with step:", selectSOP.soP2Step);
-  //     setSaveSOPLoading(false);
-  //     return;
-  //   }
-
-  //   const updatedSOPs = sops.map(sop => {
-  //     if (sop.soP2Step === selectSOP.soP2Step) {
-  //       return { ...selectSOP, sopModels: existingSopModels };
-  //     }
-  //     return sop;
-  //   });
-
-  //   console.log('Before updating SOPInfo:', SOPInfo);
-  //   setSOPInfo(prev => ({ ...prev, sops: updatedSOPs }));
-  //   console.log('After updating SOPInfo:', SOPInfo);
-
-  //   setSaveSOPLoading(false);
-  //   setIsSOPName(prev => !prev);
-  // };
-
-  //#region 儲存SOP (保留sopModels數據，但存取跳錯誤)
-  // 以下handleSaveSOP保存後有保留sopModels數據，但存取跳錯誤
-  // const handleSaveSOP = async () => {
-  //   setSaveSOPLoading(true);
-  //   const existingSopModels = sops.find(sop => sop.soP2Step === selectSOP.soP2Step)?.sopModels || [];
-
-  //   console.log('Existing sopModels at saving:', existingSopModels);
-
-  //   if (!existingSopModels.length) {
-  //     console.error("No sopModels found for the selected SOP with step:", selectSOP.soP2Step);
-  //     setSaveSOPLoading(false);
-  //     return;
-  //   }
-
-  //   setSOPs(prevSops => {
-  //     const updatedSOPs = prevSops.map(sop => {
-  //       if (sop.soP2Step === selectSOP.soP2Step) {
-  //         return { ...selectSOP, sopModels: existingSopModels };
-  //       }
-  //       return sop;
-  //     });
-  //     console.log('Updated SOPs:', updatedSOPs);  // Log the updated SOPs for debugging
-  //     return updatedSOPs;
-  //   });
-  //#endregion
-
-  //   setSaveSOPLoading(false);
-  //   setIsSOPName(prev => !prev);
-  // };
 
   useEffect(() => {
     console.log('SOPs updated:', sops);
@@ -1312,9 +1226,9 @@ function SOP2() {
                                   type="text"
                                   className="form-control"
                                   placeholder="PLC1"
-                                  name="sopplC1"
+                                  name="plC1" // 修改為與後端一致的名稱
                                   maxLength="10"
-                                  value={selectSOP.sopplC1}
+                                  value={selectSOP.plC1} // 修改為與後端一致的名稱
                                   onChange={(e) => handleSelectSOPChange(e)}
                                 />
                               </div>
@@ -1323,9 +1237,9 @@ function SOP2() {
                                   type="text"
                                   className="form-control"
                                   placeholder="PLC2"
-                                  name="sopplC2"
+                                  name="plC2"
                                   maxLength="10"
-                                  value={selectSOP.sopplC2}
+                                  value={selectSOP.plC2}
                                   onChange={(e) => handleSelectSOPChange(e)}
                                 />
                               </div>
@@ -1334,9 +1248,9 @@ function SOP2() {
                                   type="text"
                                   className="form-control"
                                   placeholder="PLC3"
-                                  name="sopplC3"
+                                  name="plC3"
                                   maxLength="10"
-                                  value={selectSOP.sopplC3}
+                                  value={selectSOP.plC3}
                                   onChange={(e) => handleSelectSOPChange(e)}
                                 />
                               </div>
@@ -1345,9 +1259,9 @@ function SOP2() {
                                   type="text"
                                   className="form-control"
                                   placeholder="PLC4"
-                                  name="sopplC4"
+                                  name="plC4"
                                   maxLength="10"
-                                  value={selectSOP.sopplC4}
+                                  value={selectSOP.plC4}
                                   onChange={(e) => handleSelectSOPChange(e)}
                                 />
                               </div>

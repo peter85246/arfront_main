@@ -312,10 +312,10 @@ export function SOPName({ onClose }) {
           SOPFormData.append(`SOP2s[${idx}].soP2Remark`, sop.soP2Remark);
           SOPFormData.append(`SOP2s[${idx}].soP2Step`, sop.soP2Step);
           SOPFormData.append(`SOP2s[${idx}].soP2Name`, sop.soP2Name);
-          SOPFormData.append(`SOP2s[${idx}].PL1`, sop.sopplC1);
-          SOPFormData.append(`SOP2s[${idx}].PL2`, sop.sopplC2);
-          SOPFormData.append(`SOP2s[${idx}].PL3`, sop.sopplC3);
-          SOPFormData.append(`SOP2s[${idx}].PL4`, sop.sopplC4);
+          SOPFormData.append(`SOP2s[${idx}].PLC1`, sop.plC1);
+          SOPFormData.append(`SOP2s[${idx}].PLC2`, sop.plC2);
+          SOPFormData.append(`SOP2s[${idx}].PLC3`, sop.plC3);
+          SOPFormData.append(`SOP2s[${idx}].PLC4`, sop.plC4);
 
           // 確保添加檔案名稱和檔案物件
           if (sop.sopVideoObj) {

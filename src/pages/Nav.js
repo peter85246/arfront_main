@@ -55,7 +55,10 @@ function Nav() {
   };
 
   return (
-    <aside className="main-sidebar elevation-4 sidebar-dark-primary" style={{ backgroundColor: '#011e36' }}>
+    <aside
+      className="main-sidebar elevation-4 sidebar-dark-primary"
+      style={{ backgroundColor: '#011e36' }}
+    >
       <Link to="/machine" className="brand-link">
         <span
           className="brand-text font-weight-light"
