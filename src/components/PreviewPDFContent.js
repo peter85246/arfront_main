@@ -307,6 +307,7 @@ const PreviewPDFContent = React.forwardRef(
                         styles['content-section'],
                         styles['image-container']
                       )}
+                      style={{ maxWidth: '25vw', wordWrap: 'break-word' }}
                     >
                       {sop.soP2ImageObj ? (
                         <img
@@ -326,7 +327,7 @@ const PreviewPDFContent = React.forwardRef(
                       <p>Illustration(步驟說明)：</p>
                       <div
                         className={styles['step-content-box']}
-                        style={{ maxWidth: '300px', wordWrap: 'break-word' }}
+                        style={{ maxWidth: '25vw', wordWrap: 'break-word' }}
                       >
                         {sop.soP2Message}
                       </div>
@@ -335,7 +336,7 @@ const PreviewPDFContent = React.forwardRef(
                       <p>Remark(備註補充)：</p>
                       <div
                         className={styles['step-content-box']}
-                        style={{ maxWidth: '300px', wordWrap: 'break-word' }}
+                        style={{ maxWidth: '25vw', wordWrap: 'break-word' }}
                       >
                         {sop.soP2Remark && (
                           <>
