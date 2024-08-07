@@ -55,7 +55,7 @@ function Nav() {
   };
 
   return (
-    <aside className="main-sidebar elevation-4 sidebar-dark-primary">
+    <aside className="main-sidebar elevation-4 sidebar-dark-primary" style={{ backgroundColor: '#011e36' }}>
       <Link to="/machine" className="brand-link">
         <span
           className="brand-text font-weight-light"
@@ -93,7 +93,8 @@ function Nav() {
                   style={{ cursor: 'pointer' }}
                   onClick={() => handleNavClick('userManage')} // 使用 handleNavClick 函數
                 >
-                  <i className="fas fa-users"></i>&nbsp;
+                  <i className="far fa-user" aria-hidden="true"></i>
+                  &nbsp;
                   <p>使用者管理</p>
                 </NavLink>
               </li>
@@ -143,7 +144,7 @@ function Nav() {
               </span>
             </li>
             {dropMenuOpen && (
-              <li style={{ background: '#4a4c5b', borderRadius: '5px' }}>
+              <li style={{ background: '#484b4e', borderRadius: '5px' }}>
                 <NavLink
                   className={(navData) =>
                     navData.isActive ? 'nav-link ' : 'nav-link'

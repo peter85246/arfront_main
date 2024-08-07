@@ -364,11 +364,6 @@ const MenuTest = ({ machineAddId, machineName, defaultZoom = 1 }) => {
           overflow: 'hidden',
         }}
       />
-      <button
-        onClick={() => navigate('/database', { state: { knowledgeBaseId: 1 } })}
-      >
-        Test Navigate to Database with ID 1
-      </button>
     </div>
   );
 };
