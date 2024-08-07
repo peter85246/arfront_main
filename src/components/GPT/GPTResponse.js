@@ -131,7 +131,8 @@ const GPTResponse = ({
 
   useEffect(() => {
     const parseContent = () => {
-      const regex = /\{([^}]*?\.(png|mp4))\}/g; // 更新正則表達式以匹配 png 和 mp4 文件
+      // const regex = /\{([^}]*?\.(png|mp4))\}/g; 
+      const regex = /\{\s*([^}]*?\.(png|mp4))\s*\}/g;// 更新正則表達式以匹配 png 和 mp4 文件
       let lastIndex = 0;
       let match;
       const parsedElements = [];

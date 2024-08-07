@@ -32,8 +32,14 @@ const ChatArea = ({
 
     setQuestion(selectedOption.label); // 更新顯示在user-question中的文字（只顯示選擇的選項label）
 
-    // 將完整訊息傳送給後台，包含"並加上圖片說明"
-    const messageWithImage = `${selectedOption.value}附上圖片說明`;
+    // 檢查選擇的選項是否需要附加 "附上圖片說明"
+    const shouldAppendImageDescription = !selectedOption.label.includes('德川公司');
+
+    // 根據條件組合後端消息
+    const messageWithImage = shouldAppendImageDescription
+    ? `${selectedOption.value} 附上圖片說明`
+    : selectedOption.value;
+  
     setMessageToBackend(messageWithImage); // 更新後端消息
     onInputChange(selectedOption.label); // 更新輸入值為選項的label
 
@@ -141,13 +147,13 @@ const ChatArea = ({
       ],
     },
     { value: '油壓缸檢查更換', label: '油壓缸檢查更換' },
+    { value: '電磁閥檢查及更換', label: '電磁閥檢查及更換' }, //bug閃文字
     {
       value: '壓力開關(IFM宜福門)調整及使用',
       label: '壓力開關(IFM宜福門)調整及使用',
     },
     { value: 'GXA-H安裝煞車環', label: 'GXA-H安裝煞車環' },
     { value: '更換氣壓缸', label: '更換氣壓缸' },
-    { value: '電磁閥檢查及更換', label: '電磁閥檢查及更換' }, //bug閃文字
     { value: 'GXA-S潤滑油更換', label: 'GXA-S潤滑油更換' },
   ];
 
