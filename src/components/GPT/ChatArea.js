@@ -33,13 +33,14 @@ const ChatArea = ({
     setQuestion(selectedOption.label); // 更新顯示在user-question中的文字（只顯示選擇的選項label）
 
     // 檢查選擇的選項是否需要附加 "附上圖片說明"
-    const shouldAppendImageDescription = !selectedOption.label.includes('德川公司');
+    const shouldAppendImageDescription =
+      !selectedOption.label.includes('德川公司');
 
     // 根據條件組合後端消息
     const messageWithImage = shouldAppendImageDescription
-    ? `${selectedOption.value} 附上圖片說明`
-    : selectedOption.value;
-  
+      ? `${selectedOption.value} 附上圖片說明`
+      : selectedOption.value;
+
     setMessageToBackend(messageWithImage); // 更新後端消息
     onInputChange(selectedOption.label); // 更新輸入值為選項的label
 

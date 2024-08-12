@@ -26,23 +26,6 @@ const LoginForm = () => {
   const [verificationCode, setVerificationCode] = useState('');
   const [isVerifying, setIsVerifying] = useState(false);
 
-  // const handleLogin = (e) => {
-  //   e.preventDefault();
-  //   setIsLoggingIn(true); // 開始登錄
-  //   console.log('Login attempt with:', { email, password });
-
-  //   // 模擬登錄過程的延遲
-  //   setTimeout(() => {
-  //     if (email === 'test@example.com' && password === 'password123') {
-  //       toast.success('登錄成功!');
-  //       navigate('/login'); // 登錄成功後導航到login 或其他您指定的路由
-  //     } else {
-  //       toast.error('登錄失敗，電子郵件或密碼不正確!');
-  //     }
-  //     setIsLoggingIn(false);
-  //   }, 2000); // 2秒延遲以模擬服務器請求
-  // };
-
   //#region 信箱驗證方法 & API
   const handleLogin = (e) => {
     e.preventDefault();
@@ -66,13 +49,17 @@ const LoginForm = () => {
             }, 1000); // 1秒延遲
           }, 500); // 0.5秒延遲顯示 登錄成功 消息
         } else {
-          toast.error(message);
-          setIsLoggingIn(false);
+          setTimeout(() => {
+            toast.error(message);
+            setIsLoggingIn(false); // 停止轉圈圈
+          }, 1000); // 延遲 0.5 秒後顯示錯誤消息
         }
       })
       .catch((error) => {
-        toast.error('登錄請求失敗: ' + error.message);
-        setIsLoggingIn(false);
+        setTimeout(() => {
+          toast.error('登錄請求失敗: ' + error.message);
+          setIsLoggingIn(false); // 停止轉圈圈
+        }, 1000); // 延遲 0.5 秒後顯示錯誤消息
       });
   };
   //#endregion
@@ -139,7 +126,7 @@ const LoginForm = () => {
   );
 };
 
-const RegisterForm = () => {
+const RegisterForm = ({ setActiveTab }) => {
   const [formData, setFormData] = useState({
     companyName: '',
     contactName: '',
@@ -150,10 +137,12 @@ const RegisterForm = () => {
     confirmPassword: '',
     verificationCode: '',
   });
+
   // 分開的狀態管理
   const [isSendingCode, setIsSendingCode] = useState(false); // "發送驗證碼" 按鈕的狀態
   const [isVerifyingCode, setIsVerifyingCode] = useState(false); // "驗證" 按鈕的狀態
   const [isRegistering, setIsRegistering] = useState(false); // "立即註冊" 按鈕的狀態
+  const [verificationPassed, setVerificationPassed] = useState(false); // 定義 註冊驗證碼 狀態及其設置函數
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -193,16 +182,9 @@ const RegisterForm = () => {
   };
   //#endregion
 
-  // const handleSendCode = () => {
-  //   setIsSendingCode(true);
-  //   setTimeout(() => {
-  //     toast.info(`驗證碼發送到: ${formData.email}`);
-  //     setIsSendingCode(false);
-  //   }, 1000); // 模擬發送驗證碼的延遲
-  // };
   //#region 信箱驗證方法 & API
   const handleSendCode = () => {
-    setIsSendingCode(true);
+    setIsSendingCode(true); // 啟動轉圈圈效果
     axios
       .post(
         'http://localhost:8098/api/VendorRegistration/send-verification-code',
@@ -222,28 +204,12 @@ const RegisterForm = () => {
   };
   //#endregion
 
-  // const handleRegister = (e) => {
-  //   e.preventDefault();
-  //   setIsRegistering(true); // 開始註冊
-  //   console.log('Registration attempt with:', formData);
-
-  //   // 模擬註冊過程的延遲
-  //   setTimeout(() => {
-  //     setIsRegistering(false);
-  //     // 註冊成功提示
-  //     if (formData.verificationCode === '1234') {
-  //       toast.success('註冊成功!');
-  //     } else {
-  //       toast.error('註冊失敗，驗證碼不正確!');
-  //     }
-  //   }, 2000); // 註冊完成後解除禁用狀態
-  // };
   //#region 註冊方法 & API
   const handleRegister = (e) => {
     e.preventDefault();
 
     // 確認驗證通過
-    if (!validateForm()) {
+    if (!validateForm() || !verificationPassed) {
       return;
     }
 
@@ -264,8 +230,9 @@ const RegisterForm = () => {
           setTimeout(() => {
             toast.success('註冊成功!');
             setTimeout(() => {
+              setActiveTab('login'); // 切換到登入標籤
               setIsRegistering(false); // 延長等待效果直到成功提示完畢
-            }, 1000); // 增加到3秒讓用戶有更明顯的感知
+            }, 1500); // 增加到3秒讓用戶有更明顯的感知
           }, 500); // 成功訊息延遲
         } else if (code === '1002') {
           toast.error('該聯繫人姓名和電話已存在，請使用不同的聯繫人資料。');
@@ -282,38 +249,36 @@ const RegisterForm = () => {
   };
   //#endregion
 
-  // const handleVerifyCode = () => {
-  //   setIsVerifyingCode(true);
-  //   setTimeout(() => {
-  //     if (formData.verificationCode === '1234') {
-  //       toast.success('驗證成功!');
-  //     } else {
-  //       toast.error('驗證失敗! 驗證碼輸入錯誤。');
-  //     }
-  //     setIsVerifyingCode(false);
-  //   }, 1000); // 模擬驗證過程的延遲
-  // };
+  //#region 提交Mail信箱收取到的驗證碼方法 & API
   const handleVerifyCode = () => {
     setIsVerifyingCode(true);
-    axios
-      .post('http://localhost:8098/api/VendorRegistration/verify-email', {
-        email: formData.email,
-        verificationCode: formData.verificationCode,
-      })
-      .then((response) => {
-        const { code, message } = response.data;
-        if (code === '0000') {
-          toast.success('驗證成功!');
-        } else {
-          toast.error(message);
-        }
-        setIsVerifyingCode(false);
-      })
-      .catch((error) => {
-        toast.error('驗證失敗: ' + error.message);
-        setIsVerifyingCode(false);
-      });
+    // 假設驗證需要一些處理時間
+    setTimeout(() => {
+      axios
+        .post('http://localhost:8098/api/VendorRegistration/verify-email', {
+          email: formData.email,
+          verificationCode: formData.verificationCode,
+        })
+        .then((response) => {
+          const { code, message } = response.data;
+          if (code === '0000') {
+            toast.success('驗證成功!');
+            setVerificationPassed(true); // 設置驗證通過狀態
+          } else {
+            toast.error(message);
+          }
+          // 添加延遲後關閉轉圈圈效果
+          setTimeout(() => {
+            setIsVerifyingCode(false);
+          }, 1000); // 額外延遲確保用戶可見
+        })
+        .catch((error) => {
+          toast.error('驗證失敗: ' + error.message);
+          setIsVerifyingCode(false);
+        });
+    }, 1000); // 延遲驗證模擬
   };
+  //#endregion
 
   return (
     <Form onSubmit={handleRegister} style={{ backgroundColor: 'white' }}>
@@ -363,7 +328,7 @@ const RegisterForm = () => {
             onChange={handleChange}
             required
           />
-          {/* <Button
+          <Button
             variant="outline-secondary"
             onClick={handleSendCode}
             disabled={isSendingCode}
@@ -380,10 +345,10 @@ const RegisterForm = () => {
             ) : (
               '發送驗證碼'
             )}
-          </Button> */}
+          </Button>
         </InputGroup>
       </FormGroup>
-      {/* <FormGroup className="mb-3">
+      <FormGroup className="mb-3">
         <Form.Label>驗證碼</Form.Label>
         <InputGroup>
           <InputGroup.Text>
@@ -416,7 +381,7 @@ const RegisterForm = () => {
             )}
           </Button>
         </InputGroup>
-      </FormGroup> */}
+      </FormGroup>
       <FormGroup className="mb-3">
         <Form.Label>聯繫電話</Form.Label>
         <InputGroup>
@@ -505,7 +470,7 @@ const RegisterForm = () => {
             e.target.style.backgroundColor = 'darkblue'; // 鼠標離開時調淺
           }
         }}
-        disabled={isRegistering}
+        disabled={!verificationPassed || isRegistering} // 確保在電子郵件驗證通過前不可點擊
       >
         {isRegistering ? (
           <Spinner as="span" animation="border" size="sm" />
@@ -613,7 +578,11 @@ export default function VendorsAccount() {
               註冊
             </Button>
           </div>
-          {activeTab === 'login' ? <LoginForm /> : <RegisterForm />}
+          {activeTab === 'login' ? (
+            <LoginForm />
+          ) : (
+            <RegisterForm setActiveTab={setActiveTab} />
+          )}
         </Card.Body>
       </Card>
       <ToastContainer
