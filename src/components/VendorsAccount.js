@@ -5,6 +5,7 @@ import {
   Tabs,
   Form,
   Button,
+  FormLabel,
   InputGroup,
   FormControl,
   FormGroup,
@@ -143,6 +144,7 @@ const RegisterForm = ({ setActiveTab }) => {
   const [isVerifyingCode, setIsVerifyingCode] = useState(false); // "驗證" 按鈕的狀態
   const [isRegistering, setIsRegistering] = useState(false); // "立即註冊" 按鈕的狀態
   const [verificationPassed, setVerificationPassed] = useState(false); // 定義 註冊驗證碼 狀態及其設置函數
+  const [showTooltip, setShowTooltip] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -456,6 +458,7 @@ const RegisterForm = ({ setActiveTab }) => {
         type="submit"
         variant="success"
         className="w-100"
+        title="註冊需先驗證電子郵件" // 當滑鼠懸停時會顯示這段文字
         style={{
           backgroundColor: isRegistering ? '#4169E1' : 'darkblue', // 原始深藍色為 #4169E1，淺藍色為 darkblue
           transition: 'background-color 0.3s ease',
@@ -525,6 +528,7 @@ export default function VendorsAccount() {
               }}
             >
               登錄或創建您的帳戶
+              <br />
             </p>
           </Card.Title>
         </Card.Header>
