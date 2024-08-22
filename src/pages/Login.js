@@ -6,7 +6,13 @@ import { setWindowClass } from '../utils/helpers';
 import { ToastContainer, toast } from 'react-toastify';
 import SimpleReactValidator from 'simple-react-validator';
 import reactStringReplace from 'react-string-replace';
-import { setAuthToken } from '../utils/TokenUtil';
+import {
+  setAuthToken,
+  checkValidator,
+  removeAuthToken,
+} from '../utils/TokenUtil'; // 確保這行正確導入
+import axios from 'axios';
+import { jwtDecode } from 'jwt-decode';
 import {
   apiSignIn,
   apiSendVerificationCode,
@@ -19,6 +25,8 @@ function Login() {
   const [isAuthLoading, setAuthLoading] = useState(false);
   const [account, setAccount] = useState(''); //帳號
   const paw = useRef(''); //密碼
+
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
 
   const [errors, setErrors] = useState({
     account: '',
@@ -264,30 +272,44 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (await checkValidator()) {
-      setAuthLoading(true);
+      setAuthLoading(true); // 啟動轉圈圈效果
 
       var sendData = {
         account: account,
         paw: paw.current.value,
       };
 
-      let signInResponse = await apiSignIn(sendData);
-      if (signInResponse) {
-        if (signInResponse.code == '0000') {
-          setAuthToken(signInResponse.result);
-          navigate('machine');
+      try {
+        let signInResponse = await apiSignIn(sendData);
+        if (signInResponse && signInResponse.code == '0000') {
+          // 添加延遲效果
+          setTimeout(() => {
+            setAuthToken(signInResponse.result);
+            toast.success('登入成功！');
+            // 添加延遲效果，導向指定頁面
+            setTimeout(() => {
+              navigate('machine');
+              setAuthLoading(false); // 登入成功後停止轉圈圈
+            }, 1000); // 1秒後導向 machine 頁面
+          }, 500); // 0.5秒後顯示登入成功消息
         } else {
-          toast.error(signInResponse.message, {
-            position: toast.POSITION.TOP_CENTER,
-            autoClose: 5000,
-            hideProgressBar: true,
-            closeOnClick: false,
-            pauseOnHover: false,
-          });
-          setAuthLoading(false);
+          setTimeout(() => {
+            toast.error(signInResponse.message, {
+              position: toast.POSITION.TOP_CENTER,
+              autoClose: 5000,
+              hideProgressBar: true,
+              closeOnClick: false,
+              pauseOnHover: false,
+            });
+            setAuthLoading(false); // 登入失敗停止轉圈圈
+          }, 1000); // 延遲 1 秒後顯示錯誤消息
         }
-      } else {
-        setAuthLoading(false);
+      } catch (error) {
+        console.error('Login error:', error);
+        setTimeout(() => {
+          toast.error('登入請求失敗: ' + error.message);
+          setAuthLoading(false); // 登入錯誤停止轉圈圈
+        }, 1000); // 延遲 1 秒後顯示錯誤消息
       }
     }
   };

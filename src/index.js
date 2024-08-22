@@ -46,145 +46,181 @@ root.render(
       <Route
         path="/pdfDemo"
         element={
-          <Home>
-            <PDFDemo />
-          </Home>
+          <PrivateRoute>
+            <Home>
+              <PDFDemo />
+            </Home>
+          </PrivateRoute>
         }
       />
       <Route
         path="/menuTest"
         element={
-          <Home>
-            <MenuTest />
-          </Home>
+          <PrivateRoute>
+            <Home>
+              <MenuTest />
+            </Home>
+          </PrivateRoute>
         }
       />
       <Route
         path="/machine"
         element={
-          <Home>
-            <Machine />
-          </Home>
+          <PrivateRoute>
+            <Home>
+              <Machine />
+            </Home>
+          </PrivateRoute>
         }
       />
       <Route
         path="/machineKnowledge"
         element={
-          <Home>
-            <MachineKnowledge />
-          </Home>
+          <PrivateRoute>
+            <Home>
+              <MachineKnowledge />
+            </Home>
+          </PrivateRoute>
         }
       />
       <Route
         path="/machine/:machineId/machineAlarm"
         element={
-          <Home>
-            <MachineAlarm />
-          </Home>
+          <PrivateRoute>
+            <Home>
+              <MachineAlarm />
+            </Home>
+          </PrivateRoute>
         }
       />
       <Route
         path="/machine/:machineId/machineAlarm/:machineAlarmId/SOP"
         element={
-          <Home>
-            <SOP />
-          </Home>
+          <PrivateRoute>
+            <Home>
+              <SOP />
+            </Home>
+          </PrivateRoute>
         }
       />
       <Route
         path="/machine/:machineId/machineIOTList"
         element={
-          <Home>
-            <MachineIOTList />
-          </Home>
+          <PrivateRoute>
+            <Home>
+              <MachineIOTList />
+            </Home>
+          </PrivateRoute>
         }
       />
       <Route
         path="/machine/:machineId/machineIOTList/:machineIOTId"
         element={
-          <Home>
-            <MachineIOT />
-          </Home>
+          <PrivateRoute>
+            <Home>
+              <MachineIOT />
+            </Home>
+          </PrivateRoute>
         }
       />
       <Route
         path="/userManage"
         element={
-          <Home>
-            <UserManage />
-          </Home>
+          <PrivateRoute>
+            <Home>
+              <UserManage />
+            </Home>
+          </PrivateRoute>
         }
       />
       <Route
         path="/knowledge"
         element={
-          <Home>
-            <Knowledge />
-          </Home>
+          <PrivateRoute>
+            <Home>
+              <Knowledge />
+            </Home>
+          </PrivateRoute>
         }
       />
       <Route
         path="/sop2"
         element={
-          <Home>
-            <SOP2 />
-          </Home>
+          <PrivateRoute>
+            <Home>
+              <SOP2 />
+            </Home>
+          </PrivateRoute>
         }
       />
       <Route
         path="/database"
         element={
-          <Home>
-            <Database />
-          </Home>
+          <PrivateRoute>
+            <Home>
+              <Database />
+            </Home>
+          </PrivateRoute>
         }
       />
       <Route
         path="/repairDocument"
         element={
-          <Home>
-            <RepairDocument />
-          </Home>
+          <PrivateRoute>
+            <Home>
+              <RepairDocument />
+            </Home>
+          </PrivateRoute>
         }
       />
       <Route
         path="/preview"
         element={
-          <Home>
-            <Preview />
-          </Home>
+          <PrivateRoute>
+            <Home>
+              <Preview />
+            </Home>
+          </PrivateRoute>
         }
       />
       <Route
         path="/document-editor"
         element={
-          <Home>
-            <DocumentEditor />
-          </Home>
+          <PrivateRoute>
+            <Home>
+              <DocumentEditor />
+            </Home>
+          </PrivateRoute>
         }
       />
       <Route
         path="/alarm"
         element={
-          <Home>
-            <Alarm />
-          </Home>
+          <PrivateRoute>
+            <Home>
+              <Alarm />
+            </Home>
+          </PrivateRoute>
         }
       />
       <Route
         path="/gpt"
         element={
-          <Home>
-            <GPT />
-          </Home>
+          <PrivateRoute>
+            <Home>
+              <GPT />
+            </Home>
+          </PrivateRoute>
         }
       />
       <Route
         path="/pageMindMap"
         element={
-          <Home>
-            <PageMindMap />
-          </Home>
+          <PrivateRoute>
+            <Home>
+              <PageMindMap />
+            </Home>
+          </PrivateRoute>
         }
       />
       {/* </Route> */}

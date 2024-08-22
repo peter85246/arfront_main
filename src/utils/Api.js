@@ -2,10 +2,12 @@
 import { getAuthToken, removeAuthToken, setAuthToken } from './TokenUtil';
 
 let getHeaders = () => {
+  const schema = localStorage.getItem('schema_name');
   return {
     'Content-Type': 'application/json',
     Accept: 'application/json',
     Authorization: 'Bearer ' + getAuthToken(),
+    'X-Schema-Name': schema || '', // 添加 schema 信息到請求頭
   };
 };
 

@@ -16,6 +16,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { setAuthToken } from '../utils/TokenUtil';
 
 const LoginForm = () => {
   const [email, setEmail] = useState('');
@@ -28,42 +29,88 @@ const LoginForm = () => {
   const [isVerifying, setIsVerifying] = useState(false);
 
   //#region 信箱驗證方法 & API
-  const handleLogin = (e) => {
+  // const handleLogin = (e) => {
+  //   e.preventDefault();
+  //   setIsLoggingIn(true);
+  //   axios
+  //     .post('http://localhost:8098/api/VendorRegistration/login', {
+  //       email: email,
+  //       password: password,
+  //     })
+  //     .then((response) => {
+  //       const { code, message } = response.data;
+  //       if (code === '0000') {
+  //         // 添加延遲效果
+  //         setTimeout(() => {
+  //           toast.success('登錄成功!');
+
+  //           // 添加延遲效果
+  //           setTimeout(() => {
+  //             navigate('/'); // 跳轉登入成功後的頁面
+  //             setIsLoggingIn(false);
+  //           }, 1000); // 1秒延遲
+  //         }, 500); // 0.5秒延遲顯示 登錄成功 消息
+  //       } else {
+  //         setTimeout(() => {
+  //           toast.error(message);
+  //           setIsLoggingIn(false); // 停止轉圈圈
+  //         }, 1000); // 延遲 0.5 秒後顯示錯誤消息
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       setTimeout(() => {
+  //         toast.error('登錄請求失敗: ' + error.message);
+  //         setIsLoggingIn(false); // 停止轉圈圈
+  //       }, 1000); // 延遲 0.5 秒後顯示錯誤消息
+  //     });
+  // };
+  //#endregion
+
+  const handleLogin = async (e) => {
     e.preventDefault();
     setIsLoggingIn(true);
-    axios
-      .post('http://localhost:8098/api/VendorRegistration/login', {
-        email: email,
-        password: password,
-      })
-      .then((response) => {
-        const { code, message } = response.data;
-        if (code === '0000') {
-          // 添加延遲效果
-          setTimeout(() => {
-            toast.success('登錄成功!');
-
-            // 添加延遲效果
-            setTimeout(() => {
-              navigate('/'); // 跳轉登入成功後的頁面
-              setIsLoggingIn(false);
-            }, 1000); // 1秒延遲
-          }, 500); // 0.5秒延遲顯示 登錄成功 消息
-        } else {
-          setTimeout(() => {
-            toast.error(message);
-            setIsLoggingIn(false); // 停止轉圈圈
-          }, 1000); // 延遲 0.5 秒後顯示錯誤消息
+    try {
+      const response = await axios.post(
+        'http://localhost:8098/api/VendorRegistration/login',
+        {
+          email: email,
+          password: password,
         }
-      })
-      .catch((error) => {
+      );
+      console.log('Login response:', response.data);
+      const { code, data } = response.data;
+      if (code === '0000' && data) {
+        localStorage.setItem('schema_name', data.schemaName);
+        localStorage.setItem('vendor_email', data.email);
+        localStorage.setItem('userId', data.userId.toString());
+        localStorage.setItem('token', data.token);
+
+        console.log('Login successful, using schema:', data.schemaName);
+        // 添加延遲效果
         setTimeout(() => {
-          toast.error('登錄請求失敗: ' + error.message);
+          toast.success('登錄成功!');
+          // 再次添加延遲效果，導向主頁
+          setTimeout(() => {
+            navigate('/');
+            setIsLoggingIn(false); // 停止轉圈圈
+          }, 1000); // 1秒後導向主頁
+        }, 500); // 0.5秒後顯示成功消息
+      } else {
+        setTimeout(() => {
+          toast.error(
+            '登錄失敗: ' + (data && data.message ? data.message : '未知錯誤')
+          );
           setIsLoggingIn(false); // 停止轉圈圈
-        }, 1000); // 延遲 0.5 秒後顯示錯誤消息
-      });
+        }, 1000); // 延遲顯示錯誤消息
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      setTimeout(() => {
+        toast.error('登錄失敗: 連接服務器失敗 ' + error.message);
+        setIsLoggingIn(false); // 停止轉圈圈
+      }, 1000); // 延遲顯示錯誤消息
+    }
   };
-  //#endregion
 
   return (
     <Form onSubmit={handleLogin} style={{ backgroundColor: 'white' }}>
