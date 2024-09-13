@@ -13,6 +13,7 @@ export default function PageMindMap() {
   const [isEditing, setIsEditing] = useState(false);
   const location = useLocation();
   const { machineAddId, modelSeries, machineName } = location.state || {};
+  const [displaySeries, setDisplaySeries] = useState('');
 
   // const [machineName, setMachineName] = useState('');
 
@@ -25,12 +26,39 @@ export default function PageMindMap() {
     ); // 檢查是否正確接收
   }, [machineAddId, modelSeries, machineName]);
 
-  // 設定 onSelect 函數以更新機器名稱
-  // const handleSelect = (selectedKeys, info) => {
-  //   if (info.node && info.node.title && !info.node.children) {
-  //     setMachineName(info.node.title.split('-')[1]); // 假設格式為 'CNC車床-CNC-CNC-77888'，並取第二階層 'CNC'
-  //   }
-  // };
+  useEffect(() => {
+    console.log(
+      'Received MachineAddId:',
+      machineAddId,
+      'Model Series:',
+      modelSeries
+    );
+  }, [machineAddId, modelSeries]);
+
+  useEffect(() => {
+    console.log('Received MachineAddId:', machineAddId);
+    console.log('Original Model Series:', modelSeries);
+
+    if (modelSeries) {
+      let series = modelSeries;
+      console.log('Initial series:', series);
+
+      // 移除可能的 "車床" 後綴，但保留其他所有字符
+      series = series.replace(/車床$/, '').trim();
+
+      // 添加 "系列" 後綴
+      const finalSeries = `${series}系列`;
+      console.log('Final display series:', finalSeries);
+      setDisplaySeries(finalSeries);
+    } else {
+      console.log('Model Series is undefined or null');
+      setDisplaySeries(t('pageMindMap.content.header')); // 使用默認值
+    }
+  }, [machineAddId, modelSeries, t]);
+
+  useEffect(() => {
+    console.log('Display Series has been set to:', displaySeries);
+  }, [displaySeries]);
 
   return (
     <div className={stylesAlarm.content}>
@@ -62,8 +90,8 @@ export default function PageMindMap() {
               <div className="content-header-text-color">
                 <h1>
                   <strong>
-                    {modelSeries ? `${modelSeries}` : ''}
-                    {t('pageMindMap.content.header')}
+                    {/* {modelSeries ? `${modelSeries}系列` : t('pageMindMap.content.header')} */}
+                    {displaySeries || t('pageMindMap.content.header')}
                     {/*系列*/}
                   </strong>
                 </h1>

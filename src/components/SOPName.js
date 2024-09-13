@@ -166,13 +166,13 @@ export function SOPName({ onClose }) {
                     .pop()
                     .toLowerCase();
                   if (!allowedExtensions.includes(fileExtension)) {
-                    toast.error(`不支持的文件類型: ${file.name}`, {
-                      position: toast.POSITION.TOP_CENTER,
-                      autoClose: 2000,
-                      hideProgressBar: true,
-                      closeOnClick: false,
-                      pauseOnHover: true,
-                    });
+                    // toast.error(`不支持的文件類型: ${file.name}`, {
+                    //   position: toast.POSITION.TOP_CENTER,
+                    //   autoClose: 2000,
+                    //   hideProgressBar: true,
+                    //   closeOnClick: false,
+                    //   pauseOnHover: true,
+                    // });
                   } else {
                     formData.append(`KnowledgeBases[${index}].${key}`, file);
                     fileIncluded = true;

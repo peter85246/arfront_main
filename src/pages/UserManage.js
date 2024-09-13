@@ -680,7 +680,8 @@ function UserManage() {
                       {showUserinfos.map((item, index) => {
                         return (
                           <tr key={index}>
-                            <td>{item.userId}</td>
+                            {/* <td>{item.userId}</td> */}
+                            <td>{(activePage - 1) * pageRow + index + 1}</td>
                             <td>{item.userName}</td>
                             <td>{item.userAccount}</td>
                             <td>{item.userLevelText}</td>

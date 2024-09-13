@@ -61,6 +61,48 @@ const PDFContent = React.forwardRef(
       console.log('No image data available or data is undefined');
     }
 
+    //#region 分段格式化函數
+    const formatSteps = (content) => {
+      if (!content) return [];
+
+      const parts = [];
+      let lastIndex = 0;
+
+      // 更新正则表达式，包括星号(*)、括号内编号、数字序号后的点（排除特定词之后的序号触发），以及英文段落结束后紧跟的中文字符开始
+      const regex =
+        /(\*\s)|\(\d+\)\s|(?<!remark\s)(?<!Remark\s)(?<!Illustration\s)(?<!illustration\s)(?<!敘述\s)(?<!備註\s)(?<!part\s)(\d+\.)\s(?![\d-])|[A-Za-z0-9]\.(?=[\u4e00-\u9fa5])/g;
+
+      let match;
+      while ((match = regex.exec(content)) !== null) {
+        let index = match.index;
+        // 处理星号、括号内编号和数字序号
+        if (
+          match[0].includes('*') ||
+          match[0].includes('(') ||
+          (match[0].match(/\d+\./) &&
+            !content
+              .substring(lastIndex, index)
+              .match(
+                /(remark|Remark|Illustration|illustration|敘述|備註|part)\s\d+\.$/i
+              ))
+        ) {
+          if (index !== 0) {
+            parts.push(content.substring(lastIndex, index).trim());
+            lastIndex = index;
+          }
+        }
+        // 处理英文结束和中文开始之间的转换
+        else if (match[0].match(/[A-Za-z0-9]\.(?=[\u4e00-\u9fa5])/)) {
+          parts.push(content.substring(lastIndex, index + 1).trim());
+          lastIndex = index + 1; // 从中文字符开始新段落
+        }
+      }
+      parts.push(content.substring(lastIndex).trim()); // 添加最后一部分文本
+
+      return parts;
+    };
+    //#endregion
+
     return (
       <div className={styles['content-box']} ref={ref}>
         {/* PDF內容放在這裡 */}
@@ -80,7 +122,7 @@ const PDFContent = React.forwardRef(
               <img
                 className={styles['logo-img']}
                 style={{ border: '1px solid #a0a0a0', borderRadius: '8px' }}
-                src={require('../public/圖片TS31103/LOGO.jpg')}
+                src={require('../HandBook-Logo2.png')}
                 alt="LOGO"
               />
             </div>
@@ -354,7 +396,7 @@ const PDFContent = React.forwardRef(
                   <img
                     className={styles['logo-img']}
                     style={{ border: '1px solid #a0a0a0', borderRadius: '8px' }}
-                    src={require('../public/圖片TS31103/LOGO.jpg')}
+                    src={require('../HandBook-Logo2.png')}
                     alt="LOGO"
                   />
                 </div>
@@ -400,7 +442,10 @@ const PDFContent = React.forwardRef(
                         className={styles['step-content-box']}
                         style={{ maxWidth: '25vw', wordWrap: 'break-word' }}
                       >
-                        {sop.soP2Message}
+                        {/* {sop.soP2Message} */}
+                        {formatSteps(sop.soP2Message).map((step, index) => (
+                          <p key={index}>{step}</p>
+                        ))}
                       </div>
                     </div>
                     <div className={styles['content-section']}>
@@ -411,7 +456,15 @@ const PDFContent = React.forwardRef(
                       >
                         {sop.soP2Remark && (
                           <>
-                            {sop.soP2Remark}
+                            {/* {sop.soP2Remark} */}
+                            {formatSteps(sop.soP2Remark).map(
+                              (remark, index) => (
+                                <p key={index}>
+                                  {remark}
+                                  <br />
+                                </p> // 備註部分也應用格式化並保留原有的換行
+                              )
+                            )}
                             <br />
                           </>
                         )}

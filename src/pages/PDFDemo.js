@@ -22,7 +22,7 @@ const Demo = () => {
                 </div>
                 <img
                   className={styles['logo-img']}
-                  src={require('../public/圖片TS31103/LOGO.jpg')}
+                  src={require('../HandBook-Logo2.png')}
                   alt="LOGO"
                 />
               </div>
@@ -109,7 +109,7 @@ const Demo = () => {
                 </div>
                 <img
                   className={styles['logo-img']}
-                  src={require('../public/圖片TS31103/LOGO.jpg')}
+                  src={require('../HandBook-Logo2.png')}
                   alt="LOGO"
                 />
               </div>

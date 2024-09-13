@@ -64,6 +64,10 @@ function MachineKnowledge() {
 
   //#region 初始載入
   useEffect(() => {
+    console.log(
+      'Current schema in MachineKnowledge:',
+      localStorage.getItem('schema_name')
+    );
     removeWindowClass('login-page');
 
     const fetchData = async () => {
@@ -76,6 +80,10 @@ function MachineKnowledge() {
 
   //#region 刷新機台列表
   const refreshMachineinfos = async (props) => {
+    console.log(
+      'Refreshing machine info with schema:',
+      localStorage.getItem('schema_name')
+    );
     const { machineType, name, series } = props || {};
     var sendData = {
       keyword: keyword,
@@ -339,6 +347,10 @@ function MachineKnowledge() {
 
   //#region 儲存機台
   const handleSaveMachineinfo = async (e) => {
+    console.log(
+      'Saving machine info with schema:',
+      localStorage.getItem('schema_name')
+    );
     e.preventDefault();
 
     // 檢查機台名稱是否唯一，但排除目前正在編輯的機台
@@ -630,9 +642,30 @@ function MachineKnowledge() {
                           />
                         )}
                         <div className="card-body">
-                          <h4 className="mb-0">{item.machineName}</h4>
-                          <h4 className="mb-0">{item.machineType}</h4>
-                          <h4 className="mb-0">{item.modelSeries}</h4>
+                          <h4 className="mb-0">
+                            <strong
+                              style={{ fontWeight: 'normal', color: '#1672ad' }}
+                            >
+                              {t('machineKnowledge.machineType')} :
+                            </strong>{' '}
+                            {item.machineType}
+                          </h4>
+                          <h4 className="mb-0">
+                            <strong
+                              style={{ fontWeight: 'normal', color: '#1672ad' }}
+                            >
+                              {t('machineKnowledge.modelSeries')} :
+                            </strong>{' '}
+                            {item.modelSeries}
+                          </h4>
+                          <h4 className="mb-0">
+                            <strong
+                              style={{ fontWeight: 'normal', color: '#1672ad' }}
+                            >
+                              {t('machineKnowledge.machineName')} :
+                            </strong>{' '}
+                            {item.machineName}
+                          </h4>
                         </div>
                       </div>
                     </div>

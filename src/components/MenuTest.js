@@ -86,13 +86,18 @@ const MenuTest = ({ machineAddId, machineName, defaultZoom = 1 }) => {
         const kbId = `${typeId}_button_${kb.knowledgeBaseId || 'general'}`;
         nodes.push({
           id: kbId,
-          topic: `<button>${kb.deviceType.trim() || 'General Info'}</button>`, // 将topic设置为HTML按钮
+          topic: `<button>${kb.repairItems.trim() || 'General Info'}</button>`,
+
+          /* 要在心智圖最後一階加入AlarmCode再更換為下列這行topic
+            // topic: `<button>${kb.repairItems.trim()}: ${kb.alarmCode || 'N/A'}</button>`,
+            */
+
           parentid: typeId,
           direction: childDirection,
           'font-size': 12,
           width: 'auto',
-          isbutton: true, // 明确标记为按钮
-          isHtml: true, // 标记节点为HTML内容
+          isbutton: true,
+          isHtml: true,
           knowledgeBaseId: kb.knowledgeBaseId,
         });
       });
@@ -242,6 +247,13 @@ const MenuTest = ({ machineAddId, machineName, defaultZoom = 1 }) => {
       element.innerHTML = ''; // 清空現有的元素內容
       const button = document.createElement('button'); // 創建一個新的按鈕元素
       button.textContent = node.topic.replace(/<button>|<\/button>/gi, ''); // 設置按鈕的文字
+
+      /* 要在心智圖最後一階加入AlarmCode再開啟下列三行
+      // button.style.whiteSpace = 'normal';  // 允許文本換行
+      // button.style.textAlign = 'left';     // 文本左對齊
+      // button.style.width = '100%';         // 按鈕寬度佔滿節點
+      */
+
       element.onclick = () => {
         navigate('/database', {
           state: {

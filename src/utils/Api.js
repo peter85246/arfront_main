@@ -1,13 +1,22 @@
 ﻿import axios from 'axios';
 import { getAuthToken, removeAuthToken, setAuthToken } from './TokenUtil';
 
+// 新增：设置用户 schema
+export const setUserSchema = (userId) => {
+  const schema = `user_${userId}`;
+  localStorage.setItem('schema_name', schema);
+  console.log(`Schema set to: ${schema}`);
+};
+
+// 修改：获取 headers，包括 schema
 let getHeaders = () => {
-  const schema = localStorage.getItem('schema_name');
+  const schema = localStorage.getItem('schema_name') || 'public';
+  console.log('Current Schema in Header:', schema);
   return {
     'Content-Type': 'application/json',
     Accept: 'application/json',
     Authorization: 'Bearer ' + getAuthToken(),
-    'X-Schema-Name': schema || '', // 添加 schema 信息到請求頭
+    'X-Schema-Name': schema,
   };
 };
 
@@ -25,6 +34,11 @@ export const fetchDataCall = async (
     params: null,
     data: null,
   };
+
+  console.log(
+    `Sending request to ${api} with schema:`,
+    config.headers['X-Schema-Name']
+  );
 
   if (method == 'get') {
     if (payload != null) {
@@ -61,22 +75,53 @@ export const fetchDataCall = async (
       }
     })
     .catch(function (error) {
-      console.log(error);
+      // console.log(error);
+      console.error(`Error in ${api}:`, error);
     });
 
   return apiReturn;
 };
 
+// export const fetchDataCallFile = async (api, method, data) => {
+//   let apiReturn = await axios
+//     .put(`${window.apiUrl}/api/${api}`, data, {
+//       headers: {
+//         'Content-Type': 'multipart/form-data',
+//         Accept: 'application/json',
+//         Authorization: 'Bearer ' + getAuthToken(),
+//       },
+//     })
+//     .then(async function (response) {
+//       if (response.data.token != null) {
+//         setAuthToken(response.data.token);
+//       }
+
+//       if (response.data.code == '1001') {
+//         removeAuthToken();
+//         window.location.href = '/';
+//       }
+//       return response.data;
+//     })
+//     .catch((error) => {
+//       console.log(error);
+//       console.log(JSON.stringify(error.response.data.errors));
+//     });
+//   return apiReturn;
+// };
+// 修改：fetchDataCallFile 函数，添加 schema
 export const fetchDataCallFile = async (api, method, data) => {
+  const headers = getHeaders();
+  headers['Content-Type'] = 'multipart/form-data';
+
+  console.log(
+    `Sending file request to ${api} with schema:`,
+    headers['X-Schema-Name']
+  );
+
   let apiReturn = await axios
-    .put(`${window.apiUrl}/api/${api}`, data, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-        Accept: 'application/json',
-        Authorization: 'Bearer ' + getAuthToken(),
-      },
-    })
+    .put(`${window.apiUrl}/api/${api}`, data, { headers })
     .then(async function (response) {
+      console.log(`Response from ${api}:`, response.data);
       if (response.data.token != null) {
         setAuthToken(response.data.token);
       }
@@ -88,8 +133,7 @@ export const fetchDataCallFile = async (api, method, data) => {
       return response.data;
     })
     .catch((error) => {
-      console.log(error);
-      console.log(JSON.stringify(error.response.data.errors));
+      console.error(`Error in ${api}:`, error);
     });
   return apiReturn;
 };
@@ -101,7 +145,14 @@ export const apiChangePaw = (data) => fetchDataCall('ChangePaw', 'put', data); /
 //#endregion
 
 //#region 登入
-export const apiSignIn = (data) => fetchDataCall('signIn', 'post', data); //使用者登入
+// export const apiSignIn = (data) => fetchDataCall('signIn', 'post', data); //使用者登入
+export const apiSignIn = async (data) => {
+  const response = await fetchDataCall('signIn', 'post', data);
+  if (response.code === '0000' && response.result && response.result.userId) {
+    setUserSchema(response.result.userId);
+  }
+  return response;
+};
 //#endregion
 
 //#region 註冊與驗證碼API
@@ -130,8 +181,32 @@ export const apiMachineOverview = (data) =>
   fetchDataCall('MachineOverview', 'post', data); //機台列表
 export const apiGetOneMachine = (data) =>
   fetchDataCall('GetOneMachine', 'post', data); //取得單一機台
-export const apiMachineInfo = (data) =>
-  fetchDataCallFile('MachineInfo', 'put', data); //新增/編輯機台
+// export const apiMachineInfo = (data) =>
+//   fetchDataCallFile('MachineInfo', 'put', data); //新增/編輯機台
+export const apiMachineInfo = async (formData) => {
+  console.log('Sending formData to MachineInfo API');
+  const headers = getHeaders();
+  delete headers['Content-Type']; // Let the browser set the correct content type for FormData
+
+  try {
+    const response = await axios.put(
+      `${window.apiUrl}/api/MachineInfo`,
+      formData,
+      { headers }
+    );
+    console.log('Response from MachineInfo API:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error in MachineInfo API:', error);
+    if (error.response) {
+      console.error('Response data:', error.response.data);
+      console.error('Response status:', error.response.status);
+      console.error('Response headers:', error.response.headers);
+    }
+    throw error;
+  }
+};
+
 export const apiDeleteMachine = (data) =>
   fetchDataCall('DeleteMachine', 'delete', data); //刪除機台
 export const apiGetOneMachineDevice = (data) =>

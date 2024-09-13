@@ -70,7 +70,7 @@ function Nav() {
       <div className="sidebar">
         <nav className="mt-2">
           <ul className="nav nav-pills nav-sidebar flex-column" role="menu">
-            {/* AR設備控制 */}
+            {/* 設備控制 */}
             <li className="nav-item">
               <NavLink
                 className={(navData) =>
@@ -81,7 +81,7 @@ function Nav() {
                 onClick={() => handleNavClick('machine')} // 使用 handleNavClick 函數
               >
                 <i className="fas fa-microchip"></i>&nbsp;
-                <p>AR設備控制</p>
+                <p>設備控制</p>
               </NavLink>
             </li>
 
@@ -238,7 +238,7 @@ export default Nav;
 //     {
 //       key: '/machine',
 //       icon: <DesktopOutlined />,
-//       label: <Link to="/machine">AR設備控制</Link>,
+//       label: <Link to="/machine">設備控制</Link>,
 //     },
 //     myUser && myUser.UserLevel !== 2 && {
 //       key: '/userManage',

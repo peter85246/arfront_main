@@ -32,9 +32,14 @@ const AlarmListTree = ({
   const onSelect = (selectedKeysValue, info) => {
     console.log('onSelect', info);
     setSelectedKeys(selectedKeysValue);
-    // 只有當節點是子節點（沒有子節點自己）時，才調用 onSelectMachineName
     if (info && info.node && !info.node.children) {
-      onSelectMachineName(info.node.title, info.node.key);
+      const fullName = info.node.title;
+      // 使用一個不太可能出現在實際數據中的分隔符
+      const parts = info.node.key.split('________');
+      // 假設 key 的格式為 "Type________Series________Name"
+      const series = parts.length > 1 ? parts[1] : '';
+      console.log('Selected series:', series);
+      onSelectMachineName(fullName, info.node.key, series);
       setSelectedMachineId(info.node.machineAddId);
     }
   };

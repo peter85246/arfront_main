@@ -405,6 +405,8 @@ function Machine() {
     if (await checkEditValidator()) {
       setSaveMachineinfoLoading(true);
 
+      console.log('Machine info before sending:', newMachineInfo);
+
       var formData = new FormData();
       formData.append('machineId', newMachineInfo.machineId);
       formData.append('machineCode', newMachineInfo.machineCode);
@@ -422,6 +424,11 @@ function Machine() {
         'isDeletedMachineFile',
         newMachineInfo.isDeletedMachineFile
       );
+
+      // 打印 FormData 内容
+      for (let [key, value] of formData.entries()) {
+        console.log(`${key}: ${value}`);
+      }
 
       let machineInfoResponse = await apiMachineInfo(formData);
       if (machineInfoResponse) {
@@ -694,7 +701,7 @@ function Machine() {
               <h1>
                 <strong>
                   {t('machine.content.header')}
-                  {/*AR設備控制*/}
+                  {/*設備控制*/}
                 </strong>
               </h1>
             </div>
@@ -771,9 +778,30 @@ function Machine() {
                           />
                         )}
                         <div className="card-body">
-                          <h3 className="mb-0"></h3>
-                          <h4 className="mb-0">{item.machineName}</h4>
-                          <h4 className="mb-0">{item.machineSpec}</h4>
+                          <h4 className="mb-0">
+                            <strong
+                              style={{ fontWeight: 'normal', color: '#1672ad' }}
+                            >
+                              {t('machine.machineCode')} :
+                            </strong>{' '}
+                            {item.machineCode}
+                          </h4>
+                          <h4 className="mb-0">
+                            <strong
+                              style={{ fontWeight: 'normal', color: '#1672ad' }}
+                            >
+                              {t('machine.machineName')} :
+                            </strong>{' '}
+                            {item.machineName}
+                          </h4>
+                          <h4 className="mb-0">
+                            <strong
+                              style={{ fontWeight: 'normal', color: '#1672ad' }}
+                            >
+                              {t('machine.machineSpec')} :
+                            </strong>{' '}
+                            {item.machineSpec}
+                          </h4>
                         </div>
                         <div className="card-footer">
                           <div className="text-muted flex justify-center gap-[12px]">

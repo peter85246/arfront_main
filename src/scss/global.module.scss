@@ -3028,8 +3028,7 @@ table th {
   }
 
   .buttons-container {
-    top: 5vh;
-    right: 1.5vw; /* 距離框框右邊的距離，可以根據需要調整 */
+    margin-right: 0vw; /* 距離框框右邊的距離，可以根據需要調整 */
     padding-top: 1.2em; /* 距離框框上邊的距離，可以根據需要調整 */
   }
 

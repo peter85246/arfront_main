@@ -23,7 +23,8 @@ function PrivateRoute({ children }) {
     // return <Navigate to="/" state={{ from: location }} replace />;
 
     console.log('User is not authenticated, redirecting to /vendorsAccount');
-    return <Navigate to="/vendorsAccount" state={{ from: location }} replace />;
+    // return <Navigate to="/vendorsAccount" state={{ from: location }} replace />;
+    return <Navigate to="/" state={{ from: location }} replace />; //配合修改根路徑
   }
 
   return children; // 如果验证通过，则渲染子组件

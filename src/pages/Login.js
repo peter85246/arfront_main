@@ -269,6 +269,52 @@ function Login() {
   //#endregion
 
   //#region 登入
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   if (await checkValidator()) {
+  //     setAuthLoading(true); // 啟動轉圈圈效果
+
+  //     var sendData = {
+  //       account: account,
+  //       paw: paw.current.value,
+  //     };
+
+  //     try {
+  //       let signInResponse = await apiSignIn(sendData);
+  //       if (signInResponse && signInResponse.code == '0000') {
+  //         // 添加延遲效果
+  //         setTimeout(() => {
+  //           setAuthToken(signInResponse.result);
+  //           toast.success('登入成功！');
+  //           // 添加延遲效果，導向指定頁面
+  //           setTimeout(() => {
+  //             navigate('machine');
+  //             setAuthLoading(false); // 登入成功後停止轉圈圈
+  //           }, 1000); // 1秒後導向 machine 頁面
+  //         }, 500); // 0.5秒後顯示登入成功消息
+  //       } else {
+  //         setTimeout(() => {
+  //           toast.error(signInResponse.message, {
+  //             position: toast.POSITION.TOP_CENTER,
+  //             autoClose: 5000,
+  //             hideProgressBar: true,
+  //             closeOnClick: false,
+  //             pauseOnHover: false,
+  //           });
+  //           setAuthLoading(false); // 登入失敗停止轉圈圈
+  //         }, 1000); // 延遲 1 秒後顯示錯誤消息
+  //       }
+  //     } catch (error) {
+  //       console.error('Login error:', error);
+  //       setTimeout(() => {
+  //         toast.error('登入請求失敗: ' + error.message);
+  //         setAuthLoading(false); // 登入錯誤停止轉圈圈
+  //       }, 1000); // 延遲 1 秒後顯示錯誤消息
+  //     }
+  //   }
+  // };
+  //#endregion
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (await checkValidator()) {
@@ -280,7 +326,11 @@ function Login() {
       };
 
       try {
-        let signInResponse = await apiSignIn(sendData);
+        // 从localStorage获取schemaName
+        const schemaName = localStorage.getItem('schema_name');
+
+        let signInResponse = await apiSignIn(sendData, schemaName); // 将schemaName传递给apiSignIn
+
         if (signInResponse && signInResponse.code == '0000') {
           // 添加延遲效果
           setTimeout(() => {
@@ -288,7 +338,7 @@ function Login() {
             toast.success('登入成功！');
             // 添加延遲效果，導向指定頁面
             setTimeout(() => {
-              navigate('machine');
+              navigate('/machineKnowledge');
               setAuthLoading(false); // 登入成功後停止轉圈圈
             }, 1000); // 1秒後導向 machine 頁面
           }, 500); // 0.5秒後顯示登入成功消息
@@ -313,7 +363,6 @@ function Login() {
       }
     }
   };
-  //#endregion
 
   setWindowClass('login-page');
 

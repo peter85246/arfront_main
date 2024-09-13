@@ -90,7 +90,7 @@
   "userManage.delete": "刪除使用者",
   "userManage.deleteContent": "您確定要刪除該筆資料嗎?",
 
-  "machine.content.header": "AR設備控制",
+  "machine.content.header": "設備控制",
   "machine.btn.add": "新增機台",
   "machine.addTitle": "新增機台",
   "machine.editTitle": "編輯機台",
@@ -154,7 +154,7 @@
   "machineDevice.machineDeviceMachineIP": "機台IP",
 
   "machineIOTList.content.header": "IOT管理",
-  "machineIOTList.backButton": "AR設備控制",
+  "machineIOTList.backButton": "設備控制",
   "machineIOTList.btn.add": "新增IOT",
   "machineIOTList.machineIOTId": "編號",
   "machineIOTList.fun": "功能",

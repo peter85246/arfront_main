@@ -39,9 +39,13 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <Router>
     <Routes>
-      <Route path="/" element={<Login />} />
-      <Route path="/vendorsAccount" element={<VendorsAccount />} /> //
-      新增的路由，指向 App 組件
+      {/* <Route path="/" element={<Login />} />
+      <Route path="/vendorsAccount" element={<VendorsAccount />} />  */}
+      // 新增的路由，指向 App 組件
+      <Route path="/" element={<VendorsAccount />} /> // 將根路徑設定為
+      VendorsAccount 頁面
+      <Route path="/login" element={<Login />} /> // 添加新路徑 "/login"
+      用於登錄頁面
       {/* <Route element={<PrivateRoute />}> */}
       <Route
         path="/pdfDemo"

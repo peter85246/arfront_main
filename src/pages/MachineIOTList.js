@@ -165,7 +165,7 @@ function MachineIOTList() {
                 <i className="fas fa-angle-left">
                   &nbsp;&nbsp;
                   {t('machineIOTList.backButton')}
-                  {/*AR設備控制*/}
+                  {/*設備控制*/}
                 </i>
               </a>
             </div>

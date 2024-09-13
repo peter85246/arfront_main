@@ -215,7 +215,7 @@ const ChatArea = ({
         id="prompt-select"
         styles={customStyles}
         value={selectedOption}
-        options={options_data}
+        // options={options_data}
         onChange={handleSelectChange}
         placeholder="Select the Question"
       />

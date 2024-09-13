@@ -29,23 +29,28 @@ export default function Alarm() {
   const { t } = useTranslation(); // i18n 語言翻譯函數
 
   // 選擇機台名稱時的處理函數
-  const handleSelectMachineName = (name, key) => {
-    const parts = key.split('-');
-    const modelSeriesKey = parts.slice(0, 2).join('-');
+  const handleSelectMachineName = (name, key, series) => {
+    const parts = key.split('_');
+    const modelSeriesKey = parts.slice(0, 2).join('_');
 
     setSelectedMachineName(name); // 更新選中的機台名稱
     setAlarmValue(name); // 更新按鈕顯示為選中的機台名稱
     setSelectedKey(key); // 更新選中的機台的 key
+    setSelectedModelSeriesKey(series);
 
     let selectedSeriesChildren = [];
     machineData.forEach((type) => {
       type.children.forEach((series) => {
         if (series.key === modelSeriesKey) {
-          selectedSeriesChildren = series.children.map((child) => child.title);
+          selectedSeriesChildren = series.children.map((child) => {
+            // 使用正则表达式移除名称中的英文前缀直到第一个中文字符
+            const refinedTitle = child.title.replace(/^[^\u4e00-\u9fa5]+/, '');
+            return refinedTitle;
+          });
         }
       });
     });
-    setMachineNames(selectedSeriesChildren); // 更新下拉菜單顯示同 modelSeries 下的所有機台名稱
+    setMachineNames(selectedSeriesChildren); // 更新下拉菜单显示同 modelSeries 下的所有机台名称
   };
 
   // 刷新機台信息的函數
@@ -87,7 +92,7 @@ export default function Alarm() {
       let typeNode = treeMap.get(item.machineType);
       let seriesMap = typeNode.seriesMap;
 
-      let seriesKey = `${item.machineType}-${item.modelSeries}`;
+      let seriesKey = `${item.machineType}_${item.modelSeries}`;
       if (!seriesMap.has(seriesKey)) {
         seriesMap.set(seriesKey, {
           title: item.modelSeries,
@@ -99,7 +104,7 @@ export default function Alarm() {
       let seriesNode = seriesMap.get(seriesKey);
       seriesNode.children.push({
         title: item.machineName,
-        key: `${seriesKey}-${item.machineName}`, // 確保key的唯一性
+        key: `${item.machineType}________${item.modelSeries}________${item.machineName}`,
         machineAddId: item.machineAddId,
       });
 
@@ -133,16 +138,28 @@ export default function Alarm() {
     setIsDeleting(true); // 設置為刪除模式
   };
 
-  // 使用 navigate 函數來進行程序化導航
+  // // 使用 navigate 函數來進行程序化導航
+  // const handleMindMapClick = () => {
+  //   if (selectedMachineId && selectedMachineName) {
+  //     const parts = selectedKey.split('_');
+  //     const modelSeries = parts.length > 1 ? parts[1] : ''; // 假設 key 的格式為 Type-Series-Name，並取第二部分
+  //     navigate('/pageMindMap', {
+  //       state: {
+  //         machineAddId: selectedMachineId,
+  //         modelSeries: modelSeries, // 將 modelSeries 傳遞
+  //         machineName: selectedMachineName, // 將 machineName 傳遞
+  //       },
+  //     });
+  //   }
+  // };
   const handleMindMapClick = () => {
     if (selectedMachineId && selectedMachineName) {
-      const parts = selectedKey.split('-');
-      const modelSeries = parts.length > 1 ? parts[1] : ''; // 假設 key 的格式為 Type-Series-Name，並取第二部分
+      console.log('Selected model series:', selectedModelSeriesKey);
       navigate('/pageMindMap', {
         state: {
           machineAddId: selectedMachineId,
-          modelSeries: modelSeries, // 將 modelSeries 傳遞
-          machineName: selectedMachineName, // 將 machineName 傳遞
+          modelSeries: selectedModelSeriesKey, // 使用完整的系列名稱
+          machineName: selectedMachineName,
         },
       });
     }
