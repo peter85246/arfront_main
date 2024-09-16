@@ -17,6 +17,12 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { setAuthToken } from '../utils/TokenUtil';
+import {
+  apiVendorSignIn,
+  apiVendorSignUp,
+  apiVendorSendVerificationCode,
+  apiVendorVerifyCode,
+} from '../utils/Api';
 
 const LoginForm = () => {
   const [email, setEmail] = useState('');
@@ -28,16 +34,23 @@ const LoginForm = () => {
   const [verificationCode, setVerificationCode] = useState('');
   const [isVerifying, setIsVerifying] = useState(false);
 
-  //#region 登入
   // const handleLogin = async (e) => {
   //   e.preventDefault();
   //   setIsLoggingIn(true);
+
+  //   const schemaName = localStorage.getItem('schema_name') || 'default_schema';
+
   //   try {
   //     const response = await axios.post(
   //       'http://localhost:8098/api/VendorRegistration/login',
   //       {
   //         email: email,
   //         password: password,
+  //       },
+  //       {
+  //         headers: {
+  //           'Schema-Name': schemaName, // 添加这行确保传递 schema 名称
+  //         },
   //       }
   //     );
   //     console.log('Login response:', response.data);
@@ -54,7 +67,7 @@ const LoginForm = () => {
   //         toast.success('登錄成功!');
   //         // 再次添加延遲效果，導向主頁
   //         setTimeout(() => {
-  //           navigate('/');
+  //           navigate('/login');
   //           setIsLoggingIn(false); // 停止轉圈圈
   //         }, 1000); // 1秒後導向主頁
   //       }, 500); // 0.5秒後顯示成功消息
@@ -74,59 +87,43 @@ const LoginForm = () => {
   //     }, 1000); // 延遲顯示錯誤消息
   //   }
   // };
-  //#endregion
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setIsLoggingIn(true);
 
-    const schemaName = localStorage.getItem('schema_name') || 'default_schema';
-
     try {
-      const response = await axios.post(
-        'http://localhost:8098/api/VendorRegistration/login',
-        {
-          email: email,
-          password: password,
-        },
-        {
-          headers: {
-            'Schema-Name': schemaName, // 添加这行确保传递 schema 名称
-          },
-        }
-      );
-      console.log('Login response:', response.data);
-      const { code, data } = response.data;
+      const response = await apiVendorSignIn({ email, password });
+      console.log('登錄響應:', response);
+      const { code, data } = response;
       if (code === '0000' && data) {
         localStorage.setItem('schema_name', data.schemaName);
         localStorage.setItem('vendor_email', data.email);
         localStorage.setItem('userId', data.userId.toString());
-        localStorage.setItem('token', data.token);
+        setAuthToken(data.token);
 
-        console.log('Login successful, using schema:', data.schemaName);
-        // 添加延遲效果
+        console.log('登錄成功,使用 schema:', data.schemaName);
         setTimeout(() => {
           toast.success('登錄成功!');
-          // 再次添加延遲效果，導向主頁
           setTimeout(() => {
             navigate('/login');
-            setIsLoggingIn(false); // 停止轉圈圈
-          }, 1000); // 1秒後導向主頁
-        }, 500); // 0.5秒後顯示成功消息
+            setIsLoggingIn(false);
+          }, 1000);
+        }, 500);
       } else {
         setTimeout(() => {
           toast.error(
             '登錄失敗: ' + (data && data.message ? data.message : '未知錯誤')
           );
-          setIsLoggingIn(false); // 停止轉圈圈
-        }, 1000); // 延遲顯示錯誤消息
+          setIsLoggingIn(false);
+        }, 1000);
       }
     } catch (error) {
-      console.error('Login error:', error);
+      console.error('登錄錯誤:', error);
       setTimeout(() => {
         toast.error('登錄失敗: 連接服務器失敗 ' + error.message);
-        setIsLoggingIn(false); // 停止轉圈圈
-      }, 1000); // 延遲顯示錯誤消息
+        setIsLoggingIn(false);
+      }, 1000);
     }
   };
 
@@ -250,39 +247,96 @@ const RegisterForm = ({ setActiveTab }) => {
   //#endregion
 
   //#region 信箱驗證方法 & API
-  const handleSendCode = () => {
-    setIsSendingCode(true); // 啟動轉圈圈效果
-    axios
-      .post(
-        'http://localhost:8098/api/VendorRegistration/send-verification-code',
-        {
-          email: formData.email,
-        }
-      )
-      .then((response) => {
-        const { message } = response.data;
-        toast.info(message);
-        setIsSendingCode(false);
-      })
-      .catch((error) => {
-        toast.error('發送驗證碼失敗: ' + error.message);
-        setIsSendingCode(false);
+  // const handleSendCode = () => {
+  //   setIsSendingCode(true); // 啟動轉圈圈效果
+  //   axios
+  //     .post(
+  //       'http://localhost:8098/api/VendorRegistration/send-verification-code',
+  //       {
+  //         email: formData.email,
+  //       }
+  //     )
+  //     .then((response) => {
+  //       const { message } = response.data;
+  //       toast.info(message);
+  //       setIsSendingCode(false);
+  //     })
+  //     .catch((error) => {
+  //       toast.error('發送驗證碼失敗: ' + error.message);
+  //       setIsSendingCode(false);
+  //     });
+  // };
+
+  const handleSendCode = async () => {
+    setIsSendingCode(true);
+    try {
+      const response = await apiVendorSendVerificationCode({
+        email: formData.email,
       });
+      const { message } = response;
+      toast.info(message);
+    } catch (error) {
+      toast.error('發送驗證碼失敗: ' + error.message);
+    } finally {
+      setIsSendingCode(false);
+    }
   };
   //#endregion
 
   //#region 註冊方法 & API
-  const handleRegister = (e) => {
+  // const handleRegister = (e) => {
+  //   e.preventDefault();
+
+  //   // 確認驗證通過
+  //   if (!validateForm() || !verificationPassed) {
+  //     return;
+  //   }
+
+  //   setIsRegistering(true);
+  //   axios
+  //     .post('http://localhost:8098/api/VendorRegistration/register', {
+  //       companyName: formData.companyName,
+  //       contactName: formData.contactName,
+  //       email: formData.email,
+  //       phoneNumber: formData.phone,
+  //       industryType: formData.industry,
+  //       password: formData.password,
+  //       confirmPassword: formData.confirmPassword,
+  //     })
+  //     .then((response) => {
+  //       const { code, message } = response.data;
+  //       if (code === '0000') {
+  //         setTimeout(() => {
+  //           toast.success('註冊成功!');
+  //           setTimeout(() => {
+  //             setActiveTab('login'); // 切換到登入標籤
+  //             setIsRegistering(false); // 延長等待效果直到成功提示完畢
+  //           }, 1500); // 增加到3秒讓用戶有更明顯的感知
+  //         }, 500); // 成功訊息延遲
+  //       } else if (code === '1002') {
+  //         toast.error('該聯繫人姓名和電話已存在，請使用不同的聯繫人資料。');
+  //         setIsRegistering(false); // 立即停止轉圈圈
+  //       } else {
+  //         toast.error(message);
+  //         setIsRegistering(false); // 立即停止轉圈圈
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       toast.error('註冊失敗: ' + error.message);
+  //       setIsRegistering(false); // 立即停止轉圈圈
+  //     });
+  // };
+
+  const handleRegister = async (e) => {
     e.preventDefault();
 
-    // 確認驗證通過
     if (!validateForm() || !verificationPassed) {
       return;
     }
 
     setIsRegistering(true);
-    axios
-      .post('http://localhost:8098/api/VendorRegistration/register', {
+    try {
+      const response = await apiVendorSignUp({
         companyName: formData.companyName,
         contactName: formData.contactName,
         email: formData.email,
@@ -290,60 +344,81 @@ const RegisterForm = ({ setActiveTab }) => {
         industryType: formData.industry,
         password: formData.password,
         confirmPassword: formData.confirmPassword,
-      })
-      .then((response) => {
-        const { code, message } = response.data;
-        if (code === '0000') {
-          setTimeout(() => {
-            toast.success('註冊成功!');
-            setTimeout(() => {
-              setActiveTab('login'); // 切換到登入標籤
-              setIsRegistering(false); // 延長等待效果直到成功提示完畢
-            }, 1500); // 增加到3秒讓用戶有更明顯的感知
-          }, 500); // 成功訊息延遲
-        } else if (code === '1002') {
-          toast.error('該聯繫人姓名和電話已存在，請使用不同的聯繫人資料。');
-          setIsRegistering(false); // 立即停止轉圈圈
-        } else {
-          toast.error(message);
-          setIsRegistering(false); // 立即停止轉圈圈
-        }
-      })
-      .catch((error) => {
-        toast.error('註冊失敗: ' + error.message);
-        setIsRegistering(false); // 立即停止轉圈圈
       });
+
+      const { code, message } = response;
+      if (code === '0000') {
+        setTimeout(() => {
+          toast.success('註冊成功!');
+          setTimeout(() => {
+            setActiveTab('login');
+            setIsRegistering(false);
+          }, 1500);
+        }, 500);
+      } else if (code === '1002') {
+        toast.error('該聯繫人姓名和電話已存在，請使用不同的聯繫人資料。');
+      } else {
+        toast.error(message);
+      }
+    } catch (error) {
+      toast.error('註冊失敗: ' + error.message);
+    } finally {
+      setIsRegistering(false);
+    }
   };
   //#endregion
 
   //#region 提交Mail信箱收取到的驗證碼方法 & API
-  const handleVerifyCode = () => {
+  // const handleVerifyCode = () => {
+  //   setIsVerifyingCode(true);
+  //   // 假設驗證需要一些處理時間
+  //   setTimeout(() => {
+  //     axios
+  //       .post('http://localhost:8098/api/VendorRegistration/verify-email', {
+  //         email: formData.email,
+  //         verificationCode: formData.verificationCode,
+  //       })
+  //       .then((response) => {
+  //         const { code, message } = response.data;
+  //         if (code === '0000') {
+  //           toast.success('驗證成功!');
+  //           setVerificationPassed(true); // 設置驗證通過狀態
+  //         } else {
+  //           toast.error(message);
+  //         }
+  //         // 添加延遲後關閉轉圈圈效果
+  //         setTimeout(() => {
+  //           setIsVerifyingCode(false);
+  //         }, 1000); // 額外延遲確保用戶可見
+  //       })
+  //       .catch((error) => {
+  //         toast.error('驗證失敗: ' + error.message);
+  //         setIsVerifyingCode(false);
+  //       });
+  //   }, 1000); // 延遲驗證模擬
+  // };
+
+  const handleVerifyCode = async () => {
     setIsVerifyingCode(true);
-    // 假設驗證需要一些處理時間
-    setTimeout(() => {
-      axios
-        .post('http://localhost:8098/api/VendorRegistration/verify-email', {
-          email: formData.email,
-          verificationCode: formData.verificationCode,
-        })
-        .then((response) => {
-          const { code, message } = response.data;
-          if (code === '0000') {
-            toast.success('驗證成功!');
-            setVerificationPassed(true); // 設置驗證通過狀態
-          } else {
-            toast.error(message);
-          }
-          // 添加延遲後關閉轉圈圈效果
-          setTimeout(() => {
-            setIsVerifyingCode(false);
-          }, 1000); // 額外延遲確保用戶可見
-        })
-        .catch((error) => {
-          toast.error('驗證失敗: ' + error.message);
-          setIsVerifyingCode(false);
-        });
-    }, 1000); // 延遲驗證模擬
+    try {
+      const response = await apiVendorVerifyCode({
+        email: formData.email,
+        verificationCode: formData.verificationCode,
+      });
+      const { code, message } = response;
+      if (code === '0000') {
+        toast.success('驗證成功!');
+        setVerificationPassed(true);
+      } else {
+        toast.error(message);
+      }
+    } catch (error) {
+      toast.error('驗證失敗: ' + error.message);
+    } finally {
+      setTimeout(() => {
+        setIsVerifyingCode(false);
+      }, 1000);
+    }
   };
   //#endregion
 

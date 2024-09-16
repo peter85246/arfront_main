@@ -65,6 +65,7 @@ function Nav() {
           style={{ marginLeft: '15px' }}
         >
           AR管理系統
+          {/* 精誠GAI工業大腦平台 */}
         </span>
       </Link>
       <div className="sidebar">
@@ -82,6 +83,7 @@ function Nav() {
               >
                 <i className="fas fa-microchip"></i>&nbsp;
                 <p>設備控制</p>
+                {/* <p>AR SOP</p> */}
               </NavLink>
             </li>
 

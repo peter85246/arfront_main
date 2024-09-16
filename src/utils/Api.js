@@ -281,3 +281,14 @@ export const apiGetAllSOPByMachineAddId = (data) =>
 export const apiGetMachineAddMindMap = (data) =>
   fetchDataCall('GetMachineAddMindMap', 'get', data);
 //#endregion
+
+//#region Mail帳號註冊
+export const apiVendorSignIn = (data) =>
+  fetchDataCall('VendorRegistration/login', 'post', data);
+export const apiVendorSignUp = (data) =>
+  fetchDataCall('VendorRegistration/register', 'post', data);
+export const apiVendorSendVerificationCode = (data) =>
+  fetchDataCall('VendorRegistration/send-verification-code', 'post', data);
+export const apiVendorVerifyCode = (data) =>
+  fetchDataCall('VendorRegistration/verify-email', 'post', data);
+//#endregion

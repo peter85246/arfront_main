@@ -175,6 +175,7 @@ export default function GPT({ options_data }) {
   return (
     <main>
       <h2>GPT</h2>
+      {/* <h2>Systex 工業GPT</h2> */}
       <div className={styles['content2']}>
         <div className={styles['button-function']}></div>
         <div className={styles['content-wrapper-gpt']}>
