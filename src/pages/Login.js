@@ -371,7 +371,7 @@ function Login() {
       <div className="login-box">
         <div className="card card-outline card-primary">
           <div className="card-header text-center">
-            <h1 style={{ fontSize: '25px' }}>AR管理系統</h1>
+            <h1 style={{ fontSize: '25px' }}>生成式AR售服平台</h1>
           </div>
           <div className="card-body">
             <p className="login-box-msg">登入</p>
@@ -465,13 +465,13 @@ function Login() {
             </form>
             <Row className="mt-3">
               <Col className="text-center">
-                <Button
+                {/* <Button
                   variant="link"
                   onClick={handleShowModal}
                   style={{ textDecoration: 'none' }}
                 >
                   創建Mail帳號 (Click Me)
-                </Button>
+                </Button> */}
               </Col>
             </Row>
           </div>
