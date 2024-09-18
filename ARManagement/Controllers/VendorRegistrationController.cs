@@ -228,9 +228,9 @@ public class VendorRegistrationController : ControllerBase
 
                 var mailMessage = new MailMessage
                 {
-                    From = new MailAddress(_smtpSettings.SenderEmail, "AR管理系統"), //修改"" 信封Title
-                    Subject = "AR管理系統驗證郵件", // 更改此處以設定郵件標題
-                    Body = $"您在AR管理系統中，所需要註冊的Mail信箱驗證碼是: {verificationCode}",
+                    From = new MailAddress(_smtpSettings.SenderEmail, "生成式AR售服平台"), //修改"" 信封Title
+                    Subject = "生成式AR售服平台系統驗證郵件", // 更改此處以設定郵件標題
+                    Body = $"您在生成式AR售服平台系統中，所需要註冊的Mail信箱驗證碼是: {verificationCode}",
                     IsBodyHtml = true,
                 };
                 mailMessage.To.Add(email);
