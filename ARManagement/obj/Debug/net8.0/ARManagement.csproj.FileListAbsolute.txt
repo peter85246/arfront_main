@@ -1,0 +1,308 @@
+Z:\Cases\Chen\Source Codes\armanagement\ARManagement\bin\Debug\net8.0\appsettings.Development.json
+Z:\Cases\Chen\Source Codes\armanagement\ARManagement\bin\Debug\net8.0\appsettings.json
+Z:\Cases\Chen\Source Codes\armanagement\ARManagement\bin\Debug\net8.0\Front\asset-manifest.json
+Z:\Cases\Chen\Source Codes\armanagement\ARManagement\bin\Debug\net8.0\Front\lang\zh-TW.json
+Z:\Cases\Chen\Source Codes\armanagement\ARManagement\bin\Debug\net8.0\Front\manifest.json
+Z:\Cases\Chen\Source Codes\armanagement\ARManagement\bin\Debug\net8.0\ARManagement.staticwebassets.runtime.json
+Z:\Cases\Chen\Source Codes\armanagement\ARManagement\bin\Debug\net8.0\ARManagement.exe
+Z:\Cases\Chen\Source Codes\armanagement\ARManagement\bin\Debug\net8.0\ARManagement.deps.json
+Z:\Cases\Chen\Source Codes\armanagement\ARManagement\bin\Debug\net8.0\ARManagement.runtimeconfig.json
+Z:\Cases\Chen\Source Codes\armanagement\ARManagement\bin\Debug\net8.0\ARManagement.dll
+Z:\Cases\Chen\Source Codes\armanagement\ARManagement\bin\Debug\net8.0\ARManagement.pdb
+Z:\Cases\Chen\Source Codes\armanagement\ARManagement\bin\Debug\net8.0\Dapper.dll
+Z:\Cases\Chen\Source Codes\armanagement\ARManagement\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+Z:\Cases\Chen\Source Codes\armanagement\ARManagement\bin\Debug\net8.0\Microsoft.DotNet.PlatformAbstractions.dll
+Z:\Cases\Chen\Source Codes\armanagement\ARManagement\bin\Debug\net8.0\Microsoft.Extensions.DependencyModel.dll
+Z:\Cases\Chen\Source Codes\armanagement\ARManagement\bin\Debug\net8.0\Microsoft.IdentityModel.JsonWebTokens.dll
+Z:\Cases\Chen\Source Codes\armanagement\ARManagement\bin\Debug\net8.0\Microsoft.IdentityModel.Logging.dll
+Z:\Cases\Chen\Source Codes\armanagement\ARManagement\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.dll
+Z:\Cases\Chen\Source Codes\armanagement\ARManagement\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+Z:\Cases\Chen\Source Codes\armanagement\ARManagement\bin\Debug\net8.0\Microsoft.IdentityModel.Tokens.dll
+Z:\Cases\Chen\Source Codes\armanagement\ARManagement\bin\Debug\net8.0\Microsoft.OpenApi.dll
+Z:\Cases\Chen\Source Codes\armanagement\ARManagement\bin\Debug\net8.0\Newtonsoft.Json.dll
+Z:\Cases\Chen\Source Codes\armanagement\ARManagement\bin\Debug\net8.0\Npgsql.dll
+Z:\Cases\Chen\Source Codes\armanagement\ARManagement\bin\Debug\net8.0\Swashbuckle.AspNetCore.Swagger.dll
+Z:\Cases\Chen\Source Codes\armanagement\ARManagement\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+Z:\Cases\Chen\Source Codes\armanagement\ARManagement\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+Z:\Cases\Chen\Source Codes\armanagement\ARManagement\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll
+Z:\Cases\Chen\Source Codes\armanagement\ARManagement\bin\Debug\net8.0\Models.dll
+Z:\Cases\Chen\Source Codes\armanagement\ARManagement\bin\Debug\net8.0\Models.pdb
+Z:\Cases\Chen\Source Codes\armanagement\ARManagement\obj\Debug\net8.0\ARManagement.csproj.AssemblyReference.cache
+Z:\Cases\Chen\Source Codes\armanagement\ARManagement\obj\Debug\net8.0\ARManagement.GeneratedMSBuildEditorConfig.editorconfig
+Z:\Cases\Chen\Source Codes\armanagement\ARManagement\obj\Debug\net8.0\ARManagement.AssemblyInfoInputs.cache
+Z:\Cases\Chen\Source Codes\armanagement\ARManagement\obj\Debug\net8.0\ARManagement.AssemblyInfo.cs
+Z:\Cases\Chen\Source Codes\armanagement\ARManagement\obj\Debug\net8.0\ARManagement.csproj.CoreCompileInputs.cache
+Z:\Cases\Chen\Source Codes\armanagement\ARManagement\obj\Debug\net8.0\ARManagement.MvcApplicationPartsAssemblyInfo.cs
+Z:\Cases\Chen\Source Codes\armanagement\ARManagement\obj\Debug\net8.0\ARManagement.MvcApplicationPartsAssemblyInfo.cache
+Z:\Cases\Chen\Source Codes\armanagement\ARManagement\obj\Debug\net8.0\staticwebassets.build.json
+Z:\Cases\Chen\Source Codes\armanagement\ARManagement\obj\Debug\net8.0\staticwebassets.development.json
+Z:\Cases\Chen\Source Codes\armanagement\ARManagement\obj\Debug\net8.0\staticwebassets\msbuild.ARManagement.Microsoft.AspNetCore.StaticWebAssets.props
+Z:\Cases\Chen\Source Codes\armanagement\ARManagement\obj\Debug\net8.0\staticwebassets\msbuild.build.ARManagement.props
+Z:\Cases\Chen\Source Codes\armanagement\ARManagement\obj\Debug\net8.0\staticwebassets\msbuild.buildMultiTargeting.ARManagement.props
+Z:\Cases\Chen\Source Codes\armanagement\ARManagement\obj\Debug\net8.0\staticwebassets\msbuild.buildTransitive.ARManagement.props
+Z:\Cases\Chen\Source Codes\armanagement\ARManagement\obj\Debug\net8.0\staticwebassets.pack.json
+Z:\Cases\Chen\Source Codes\armanagement\ARManagement\obj\Debug\net8.0\scopedcss\bundle\ARManagement.styles.css
+Z:\Cases\Chen\Source Codes\armanagement\ARManagement\obj\Debug\net8.0\ARManage.BB1AD3A5.Up2Date
+Z:\Cases\Chen\Source Codes\armanagement\ARManagement\obj\Debug\net8.0\ARManagement.dll
+Z:\Cases\Chen\Source Codes\armanagement\ARManagement\obj\Debug\net8.0\refint\ARManagement.dll
+Z:\Cases\Chen\Source Codes\armanagement\ARManagement\obj\Debug\net8.0\ARManagement.pdb
+Z:\Cases\Chen\Source Codes\armanagement\ARManagement\obj\Debug\net8.0\ARManagement.genruntimeconfig.cache
+Z:\Cases\Chen\Source Codes\armanagement\ARManagement\obj\Debug\net8.0\ref\ARManagement.dll
+Z:\Cases\Chen\Source Codes\armanagement\ARManagement\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.dll
+Z:\Cases\Chen\Source Codes\armanagement\ARManagement\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.Abstractions.dll
+Z:\Cases\Chen\Source Codes\armanagement\ARManagement\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.Relational.dll
+Z:\Cases\Chen\Source Codes\armanagement\ARManagement\bin\Debug\net8.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\appsettings.Development.json
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\publish\publish\publish\publish\publish\publish\publish\publish\web.config
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\publish\publish\publish\publish\publish\publish\publish\web.config
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\publish\publish\publish\publish\publish\publish\web.config
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\publish\publish\publish\publish\publish\web.config
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\publish\publish\publish\publish\web.config
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\publish\publish\publish\web.config
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\publish\publish\web.config
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\publish\web.config
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\appsettings.json
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\Front\asset-manifest.json
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\Front\lang\zh-TW.json
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\Front\manifest.json
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\publish\appsettings.Development.json
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\publish\appsettings.json
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\publish\ARManagement.deps.json
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\publish\ARManagement.runtimeconfig.json
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\publish\Front\asset-manifest.json
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\publish\Front\lang\zh-TW.json
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\publish\Front\manifest.json
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\publish\publish\appsettings.Development.json
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\publish\publish\appsettings.json
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\publish\publish\ARManagement.deps.json
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\publish\publish\ARManagement.runtimeconfig.json
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\publish\publish\Front\asset-manifest.json
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\publish\publish\Front\lang\zh-TW.json
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\publish\publish\Front\manifest.json
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\publish\publish\publish\appsettings.Development.json
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\publish\publish\publish\appsettings.json
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\publish\publish\publish\ARManagement.deps.json
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\publish\publish\publish\ARManagement.runtimeconfig.json
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\publish\publish\publish\Front\asset-manifest.json
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\publish\publish\publish\Front\lang\zh-TW.json
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\publish\publish\publish\Front\manifest.json
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\publish\publish\publish\publish\appsettings.Development.json
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\publish\publish\publish\publish\appsettings.json
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\publish\publish\publish\publish\ARManagement.deps.json
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\publish\publish\publish\publish\ARManagement.runtimeconfig.json
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\publish\publish\publish\publish\Front\asset-manifest.json
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\publish\publish\publish\publish\Front\lang\zh-TW.json
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\publish\publish\publish\publish\Front\manifest.json
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\publish\publish\publish\publish\publish\appsettings.Development.json
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\publish\publish\publish\publish\publish\appsettings.json
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\publish\publish\publish\publish\publish\ARManagement.deps.json
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\publish\publish\publish\publish\publish\ARManagement.runtimeconfig.json
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\publish\publish\publish\publish\publish\Front\asset-manifest.json
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\publish\publish\publish\publish\publish\Front\lang\zh-TW.json
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\publish\publish\publish\publish\publish\Front\manifest.json
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\publish\publish\publish\publish\publish\publish\appsettings.Development.json
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\publish\publish\publish\publish\publish\publish\appsettings.json
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\publish\publish\publish\publish\publish\publish\ARManagement.deps.json
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\publish\publish\publish\publish\publish\publish\ARManagement.runtimeconfig.json
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\publish\publish\publish\publish\publish\publish\Front\asset-manifest.json
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\publish\publish\publish\publish\publish\publish\Front\lang\zh-TW.json
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\publish\publish\publish\publish\publish\publish\Front\manifest.json
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\publish\publish\publish\publish\publish\publish\publish\appsettings.Development.json
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\publish\publish\publish\publish\publish\publish\publish\appsettings.json
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\publish\publish\publish\publish\publish\publish\publish\ARManagement.deps.json
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\publish\publish\publish\publish\publish\publish\publish\ARManagement.runtimeconfig.json
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\publish\publish\publish\publish\publish\publish\publish\Front\asset-manifest.json
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\publish\publish\publish\publish\publish\publish\publish\Front\lang\zh-TW.json
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\publish\publish\publish\publish\publish\publish\publish\Front\manifest.json
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\publish\publish\publish\publish\publish\publish\publish\publish\appsettings.Development.json
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\publish\publish\publish\publish\publish\publish\publish\publish\appsettings.json
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\publish\publish\publish\publish\publish\publish\publish\publish\ARManagement.deps.json
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\publish\publish\publish\publish\publish\publish\publish\publish\ARManagement.runtimeconfig.json
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\publish\publish\publish\publish\publish\publish\publish\publish\Front\asset-manifest.json
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\publish\publish\publish\publish\publish\publish\publish\publish\Front\lang\zh-TW.json
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\publish\publish\publish\publish\publish\publish\publish\publish\Front\manifest.json
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\publish\publish\publish\publish\publish\publish\publish\publish\wwwroot\resources\ResponseCode\ResponseCode.zh-TW.json
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\publish\publish\publish\publish\publish\publish\publish\wwwroot\resources\ResponseCode\ResponseCode.zh-TW.json
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\publish\publish\publish\publish\publish\publish\wwwroot\resources\ResponseCode\ResponseCode.zh-TW.json
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\publish\publish\publish\publish\publish\wwwroot\resources\ResponseCode\ResponseCode.zh-TW.json
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\publish\publish\publish\publish\wwwroot\resources\ResponseCode\ResponseCode.zh-TW.json
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\publish\publish\publish\wwwroot\resources\ResponseCode\ResponseCode.zh-TW.json
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\publish\publish\wwwroot\resources\ResponseCode\ResponseCode.zh-TW.json
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\publish\wwwroot\resources\ResponseCode\ResponseCode.zh-TW.json
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\ARManagement.staticwebassets.runtime.json
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\ARManagement.exe
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\ARManagement.deps.json
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\ARManagement.runtimeconfig.json
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\ARManagement.dll
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\ARManagement.pdb
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\Dapper.dll
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\Microsoft.DotNet.PlatformAbstractions.dll
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.dll
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.Abstractions.dll
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.Relational.dll
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\Microsoft.Extensions.DependencyModel.dll
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\Microsoft.IdentityModel.Logging.dll
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.dll
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\Microsoft.IdentityModel.Tokens.dll
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\Microsoft.OpenApi.dll
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\Newtonsoft.Json.dll
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\Npgsql.dll
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\Swashbuckle.AspNetCore.Swagger.dll
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\Models.dll
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\bin\Debug\net8.0\Models.pdb
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\obj\Debug\net8.0\ARManagement.csproj.AssemblyReference.cache
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\obj\Debug\net8.0\ARManagement.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\obj\Debug\net8.0\ARManagement.AssemblyInfoInputs.cache
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\obj\Debug\net8.0\ARManagement.AssemblyInfo.cs
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\obj\Debug\net8.0\ARManagement.csproj.CoreCompileInputs.cache
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\obj\Debug\net8.0\ARManagement.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\obj\Debug\net8.0\ARManagement.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\obj\Debug\net8.0\ARManagement.sourcelink.json
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\obj\Debug\net8.0\staticwebassets.build.json
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\obj\Debug\net8.0\staticwebassets.development.json
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\obj\Debug\net8.0\staticwebassets\msbuild.ARManagement.Microsoft.AspNetCore.StaticWebAssets.props
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\obj\Debug\net8.0\staticwebassets\msbuild.build.ARManagement.props
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\obj\Debug\net8.0\staticwebassets\msbuild.buildMultiTargeting.ARManagement.props
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\obj\Debug\net8.0\staticwebassets\msbuild.buildTransitive.ARManagement.props
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\obj\Debug\net8.0\staticwebassets.pack.json
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\obj\Debug\net8.0\scopedcss\bundle\ARManagement.styles.css
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\obj\Debug\net8.0\ARManagement.csproj.CopyComplete
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\obj\Debug\net8.0\ARManagement.dll
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\obj\Debug\net8.0\refint\ARManagement.dll
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\obj\Debug\net8.0\ARManagement.pdb
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\obj\Debug\net8.0\ARManagement.genruntimeconfig.cache
+C:\Users\user\Desktop\PRO360\後端檔案-Ubi備案\New Add 3DModel\slnARManagement\ARManagement\obj\Debug\net8.0\ref\ARManagement.dll
+C:\Users\user\Desktop\WebAR整合\交接文件\程式碼\slnARManagement\ARManagement\bin\Debug\net8.0\appsettings.Development.json
+C:\Users\user\Desktop\WebAR整合\交接文件\程式碼\slnARManagement\ARManagement\bin\Debug\net8.0\appsettings.json
+C:\Users\user\Desktop\WebAR整合\交接文件\程式碼\slnARManagement\ARManagement\bin\Debug\net8.0\Front\asset-manifest.json
+C:\Users\user\Desktop\WebAR整合\交接文件\程式碼\slnARManagement\ARManagement\bin\Debug\net8.0\Front\lang\zh-TW.json
+C:\Users\user\Desktop\WebAR整合\交接文件\程式碼\slnARManagement\ARManagement\bin\Debug\net8.0\Front\manifest.json
+C:\Users\user\Desktop\WebAR整合\交接文件\程式碼\slnARManagement\ARManagement\bin\Debug\net8.0\ARManagement.staticwebassets.runtime.json
+C:\Users\user\Desktop\WebAR整合\交接文件\程式碼\slnARManagement\ARManagement\bin\Debug\net8.0\ARManagement.exe
+C:\Users\user\Desktop\WebAR整合\交接文件\程式碼\slnARManagement\ARManagement\bin\Debug\net8.0\ARManagement.deps.json
+C:\Users\user\Desktop\WebAR整合\交接文件\程式碼\slnARManagement\ARManagement\bin\Debug\net8.0\ARManagement.runtimeconfig.json
+C:\Users\user\Desktop\WebAR整合\交接文件\程式碼\slnARManagement\ARManagement\bin\Debug\net8.0\ARManagement.dll
+C:\Users\user\Desktop\WebAR整合\交接文件\程式碼\slnARManagement\ARManagement\bin\Debug\net8.0\ARManagement.pdb
+C:\Users\user\Desktop\WebAR整合\交接文件\程式碼\slnARManagement\ARManagement\bin\Debug\net8.0\Dapper.dll
+C:\Users\user\Desktop\WebAR整合\交接文件\程式碼\slnARManagement\ARManagement\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\user\Desktop\WebAR整合\交接文件\程式碼\slnARManagement\ARManagement\bin\Debug\net8.0\Microsoft.DotNet.PlatformAbstractions.dll
+C:\Users\user\Desktop\WebAR整合\交接文件\程式碼\slnARManagement\ARManagement\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.dll
+C:\Users\user\Desktop\WebAR整合\交接文件\程式碼\slnARManagement\ARManagement\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.Abstractions.dll
+C:\Users\user\Desktop\WebAR整合\交接文件\程式碼\slnARManagement\ARManagement\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.Relational.dll
+C:\Users\user\Desktop\WebAR整合\交接文件\程式碼\slnARManagement\ARManagement\bin\Debug\net8.0\Microsoft.Extensions.DependencyModel.dll
+C:\Users\user\Desktop\WebAR整合\交接文件\程式碼\slnARManagement\ARManagement\bin\Debug\net8.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\user\Desktop\WebAR整合\交接文件\程式碼\slnARManagement\ARManagement\bin\Debug\net8.0\Microsoft.IdentityModel.Logging.dll
+C:\Users\user\Desktop\WebAR整合\交接文件\程式碼\slnARManagement\ARManagement\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.dll
+C:\Users\user\Desktop\WebAR整合\交接文件\程式碼\slnARManagement\ARManagement\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\Users\user\Desktop\WebAR整合\交接文件\程式碼\slnARManagement\ARManagement\bin\Debug\net8.0\Microsoft.IdentityModel.Tokens.dll
+C:\Users\user\Desktop\WebAR整合\交接文件\程式碼\slnARManagement\ARManagement\bin\Debug\net8.0\Microsoft.OpenApi.dll
+C:\Users\user\Desktop\WebAR整合\交接文件\程式碼\slnARManagement\ARManagement\bin\Debug\net8.0\Newtonsoft.Json.dll
+C:\Users\user\Desktop\WebAR整合\交接文件\程式碼\slnARManagement\ARManagement\bin\Debug\net8.0\Npgsql.dll
+C:\Users\user\Desktop\WebAR整合\交接文件\程式碼\slnARManagement\ARManagement\bin\Debug\net8.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll
+C:\Users\user\Desktop\WebAR整合\交接文件\程式碼\slnARManagement\ARManagement\bin\Debug\net8.0\Swashbuckle.AspNetCore.Swagger.dll
+C:\Users\user\Desktop\WebAR整合\交接文件\程式碼\slnARManagement\ARManagement\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+C:\Users\user\Desktop\WebAR整合\交接文件\程式碼\slnARManagement\ARManagement\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+C:\Users\user\Desktop\WebAR整合\交接文件\程式碼\slnARManagement\ARManagement\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll
+C:\Users\user\Desktop\WebAR整合\交接文件\程式碼\slnARManagement\ARManagement\bin\Debug\net8.0\Models.dll
+C:\Users\user\Desktop\WebAR整合\交接文件\程式碼\slnARManagement\ARManagement\bin\Debug\net8.0\Models.pdb
+C:\Users\user\Desktop\WebAR整合\交接文件\程式碼\slnARManagement\ARManagement\obj\Debug\net8.0\ARManagement.csproj.AssemblyReference.cache
+C:\Users\user\Desktop\WebAR整合\交接文件\程式碼\slnARManagement\ARManagement\obj\Debug\net8.0\ARManagement.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\user\Desktop\WebAR整合\交接文件\程式碼\slnARManagement\ARManagement\obj\Debug\net8.0\ARManagement.AssemblyInfoInputs.cache
+C:\Users\user\Desktop\WebAR整合\交接文件\程式碼\slnARManagement\ARManagement\obj\Debug\net8.0\ARManagement.AssemblyInfo.cs
+C:\Users\user\Desktop\WebAR整合\交接文件\程式碼\slnARManagement\ARManagement\obj\Debug\net8.0\ARManagement.csproj.CoreCompileInputs.cache
+C:\Users\user\Desktop\WebAR整合\交接文件\程式碼\slnARManagement\ARManagement\obj\Debug\net8.0\ARManagement.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\user\Desktop\WebAR整合\交接文件\程式碼\slnARManagement\ARManagement\obj\Debug\net8.0\ARManagement.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\user\Desktop\WebAR整合\交接文件\程式碼\slnARManagement\ARManagement\obj\Debug\net8.0\ARManagement.sourcelink.json
+C:\Users\user\Desktop\WebAR整合\交接文件\程式碼\slnARManagement\ARManagement\obj\Debug\net8.0\staticwebassets.build.json
+C:\Users\user\Desktop\WebAR整合\交接文件\程式碼\slnARManagement\ARManagement\obj\Debug\net8.0\staticwebassets.development.json
+C:\Users\user\Desktop\WebAR整合\交接文件\程式碼\slnARManagement\ARManagement\obj\Debug\net8.0\staticwebassets\msbuild.ARManagement.Microsoft.AspNetCore.StaticWebAssets.props
+C:\Users\user\Desktop\WebAR整合\交接文件\程式碼\slnARManagement\ARManagement\obj\Debug\net8.0\staticwebassets\msbuild.build.ARManagement.props
+C:\Users\user\Desktop\WebAR整合\交接文件\程式碼\slnARManagement\ARManagement\obj\Debug\net8.0\staticwebassets\msbuild.buildMultiTargeting.ARManagement.props
+C:\Users\user\Desktop\WebAR整合\交接文件\程式碼\slnARManagement\ARManagement\obj\Debug\net8.0\staticwebassets\msbuild.buildTransitive.ARManagement.props
+C:\Users\user\Desktop\WebAR整合\交接文件\程式碼\slnARManagement\ARManagement\obj\Debug\net8.0\staticwebassets.pack.json
+C:\Users\user\Desktop\WebAR整合\交接文件\程式碼\slnARManagement\ARManagement\obj\Debug\net8.0\scopedcss\bundle\ARManagement.styles.css
+C:\Users\user\Desktop\WebAR整合\交接文件\程式碼\slnARManagement\ARManagement\obj\Debug\net8.0\ARManagement.csproj.CopyComplete
+C:\Users\user\Desktop\WebAR整合\交接文件\程式碼\slnARManagement\ARManagement\obj\Debug\net8.0\ARManagement.dll
+C:\Users\user\Desktop\WebAR整合\交接文件\程式碼\slnARManagement\ARManagement\obj\Debug\net8.0\refint\ARManagement.dll
+C:\Users\user\Desktop\WebAR整合\交接文件\程式碼\slnARManagement\ARManagement\obj\Debug\net8.0\ARManagement.pdb
+C:\Users\user\Desktop\WebAR整合\交接文件\程式碼\slnARManagement\ARManagement\obj\Debug\net8.0\ARManagement.genruntimeconfig.cache
+C:\Users\user\Desktop\WebAR整合\交接文件\程式碼\slnARManagement\ARManagement\obj\Debug\net8.0\ref\ARManagement.dll
+C:\Users\user\Desktop\WebAR整合\交接文件\程式碼\slnARManagement\ARManagement\bin\Debug\net8.0\SendGrid.dll
+C:\Users\user\Desktop\WebAR整合\交接文件\程式碼\slnARManagement\ARManagement\bin\Debug\net8.0\StarkbankEcdsa.dll
+C:\Users\user\Desktop\WebAR整合\交接文件\程式碼\slnARManagement\ARManagement\bin\Debug\net8.0\Microsoft.AspNetCore.Cryptography.Internal.dll
+C:\Users\user\Desktop\WebAR整合\交接文件\程式碼\slnARManagement\ARManagement\bin\Debug\net8.0\Microsoft.AspNetCore.Cryptography.KeyDerivation.dll
+C:\Users\user\Desktop\WebAR整合\交接文件\程式碼\slnARManagement\ARManagement\bin\Debug\net8.0\Microsoft.AspNetCore.Identity.UI.dll
+C:\Users\user\Desktop\WebAR整合\交接文件\程式碼\slnARManagement\ARManagement\bin\Debug\net8.0\Microsoft.Extensions.FileProviders.Embedded.dll
+C:\Users\user\Desktop\WebAR整合\交接文件\程式碼\slnARManagement\ARManagement\bin\Debug\net8.0\Microsoft.Extensions.Identity.Core.dll
+C:\Users\user\Desktop\WebAR整合\交接文件\程式碼\slnARManagement\ARManagement\bin\Debug\net8.0\Microsoft.Extensions.Identity.Stores.dll
+C:\Users\user\Desktop\WebAR整合\交接文件\程式碼\slnARManagement\ARManagement\bin\Debug\net8.0\Microsoft.Extensions.Options.dll
+C:\Users\Administrator\Desktop\app\ARManagement\bin\Debug\net8.0\appsettings.Development.json
+C:\Users\Administrator\Desktop\app\ARManagement\bin\Debug\net8.0\appsettings.json
+C:\Users\Administrator\Desktop\app\ARManagement\bin\Debug\net8.0\Front\asset-manifest.json
+C:\Users\Administrator\Desktop\app\ARManagement\bin\Debug\net8.0\Front\lang\zh-TW.json
+C:\Users\Administrator\Desktop\app\ARManagement\bin\Debug\net8.0\Front\manifest.json
+C:\Users\Administrator\Desktop\app\ARManagement\bin\Debug\net8.0\ARManagement.staticwebassets.runtime.json
+C:\Users\Administrator\Desktop\app\ARManagement\bin\Debug\net8.0\ARManagement.exe
+C:\Users\Administrator\Desktop\app\ARManagement\bin\Debug\net8.0\ARManagement.deps.json
+C:\Users\Administrator\Desktop\app\ARManagement\bin\Debug\net8.0\ARManagement.runtimeconfig.json
+C:\Users\Administrator\Desktop\app\ARManagement\bin\Debug\net8.0\ARManagement.dll
+C:\Users\Administrator\Desktop\app\ARManagement\bin\Debug\net8.0\ARManagement.pdb
+C:\Users\Administrator\Desktop\app\ARManagement\bin\Debug\net8.0\Dapper.dll
+C:\Users\Administrator\Desktop\app\ARManagement\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\Administrator\Desktop\app\ARManagement\bin\Debug\net8.0\Microsoft.AspNetCore.Cryptography.Internal.dll
+C:\Users\Administrator\Desktop\app\ARManagement\bin\Debug\net8.0\Microsoft.AspNetCore.Cryptography.KeyDerivation.dll
+C:\Users\Administrator\Desktop\app\ARManagement\bin\Debug\net8.0\Microsoft.AspNetCore.Identity.UI.dll
+C:\Users\Administrator\Desktop\app\ARManagement\bin\Debug\net8.0\Microsoft.DotNet.PlatformAbstractions.dll
+C:\Users\Administrator\Desktop\app\ARManagement\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.dll
+C:\Users\Administrator\Desktop\app\ARManagement\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.Abstractions.dll
+C:\Users\Administrator\Desktop\app\ARManagement\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.Relational.dll
+C:\Users\Administrator\Desktop\app\ARManagement\bin\Debug\net8.0\Microsoft.Extensions.DependencyModel.dll
+C:\Users\Administrator\Desktop\app\ARManagement\bin\Debug\net8.0\Microsoft.Extensions.FileProviders.Embedded.dll
+C:\Users\Administrator\Desktop\app\ARManagement\bin\Debug\net8.0\Microsoft.Extensions.Identity.Core.dll
+C:\Users\Administrator\Desktop\app\ARManagement\bin\Debug\net8.0\Microsoft.Extensions.Identity.Stores.dll
+C:\Users\Administrator\Desktop\app\ARManagement\bin\Debug\net8.0\Microsoft.Extensions.Options.dll
+C:\Users\Administrator\Desktop\app\ARManagement\bin\Debug\net8.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\Administrator\Desktop\app\ARManagement\bin\Debug\net8.0\Microsoft.IdentityModel.Logging.dll
+C:\Users\Administrator\Desktop\app\ARManagement\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.dll
+C:\Users\Administrator\Desktop\app\ARManagement\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\Users\Administrator\Desktop\app\ARManagement\bin\Debug\net8.0\Microsoft.IdentityModel.Tokens.dll
+C:\Users\Administrator\Desktop\app\ARManagement\bin\Debug\net8.0\Microsoft.OpenApi.dll
+C:\Users\Administrator\Desktop\app\ARManagement\bin\Debug\net8.0\Newtonsoft.Json.dll
+C:\Users\Administrator\Desktop\app\ARManagement\bin\Debug\net8.0\Npgsql.dll
+C:\Users\Administrator\Desktop\app\ARManagement\bin\Debug\net8.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll
+C:\Users\Administrator\Desktop\app\ARManagement\bin\Debug\net8.0\SendGrid.dll
+C:\Users\Administrator\Desktop\app\ARManagement\bin\Debug\net8.0\StarkbankEcdsa.dll
+C:\Users\Administrator\Desktop\app\ARManagement\bin\Debug\net8.0\Swashbuckle.AspNetCore.Swagger.dll
+C:\Users\Administrator\Desktop\app\ARManagement\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+C:\Users\Administrator\Desktop\app\ARManagement\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+C:\Users\Administrator\Desktop\app\ARManagement\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll
+C:\Users\Administrator\Desktop\app\ARManagement\bin\Debug\net8.0\Models.dll
+C:\Users\Administrator\Desktop\app\ARManagement\bin\Debug\net8.0\Models.pdb
+C:\Users\Administrator\Desktop\app\ARManagement\obj\Debug\net8.0\ARManagement.csproj.AssemblyReference.cache
+C:\Users\Administrator\Desktop\app\ARManagement\obj\Debug\net8.0\ARManagement.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Administrator\Desktop\app\ARManagement\obj\Debug\net8.0\ARManagement.AssemblyInfoInputs.cache
+C:\Users\Administrator\Desktop\app\ARManagement\obj\Debug\net8.0\ARManagement.AssemblyInfo.cs
+C:\Users\Administrator\Desktop\app\ARManagement\obj\Debug\net8.0\ARManagement.csproj.CoreCompileInputs.cache
+C:\Users\Administrator\Desktop\app\ARManagement\obj\Debug\net8.0\ARManagement.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\Administrator\Desktop\app\ARManagement\obj\Debug\net8.0\ARManagement.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\Administrator\Desktop\app\ARManagement\obj\Debug\net8.0\staticwebassets.build.json
+C:\Users\Administrator\Desktop\app\ARManagement\obj\Debug\net8.0\staticwebassets.development.json
+C:\Users\Administrator\Desktop\app\ARManagement\obj\Debug\net8.0\staticwebassets\msbuild.ARManagement.Microsoft.AspNetCore.StaticWebAssets.props
+C:\Users\Administrator\Desktop\app\ARManagement\obj\Debug\net8.0\staticwebassets\msbuild.build.ARManagement.props
+C:\Users\Administrator\Desktop\app\ARManagement\obj\Debug\net8.0\staticwebassets\msbuild.buildMultiTargeting.ARManagement.props
+C:\Users\Administrator\Desktop\app\ARManagement\obj\Debug\net8.0\staticwebassets\msbuild.buildTransitive.ARManagement.props
+C:\Users\Administrator\Desktop\app\ARManagement\obj\Debug\net8.0\staticwebassets.pack.json
+C:\Users\Administrator\Desktop\app\ARManagement\obj\Debug\net8.0\scopedcss\bundle\ARManagement.styles.css
+C:\Users\Administrator\Desktop\app\ARManagement\obj\Debug\net8.0\ARManage.BB1AD3A5.Up2Date
+C:\Users\Administrator\Desktop\app\ARManagement\obj\Debug\net8.0\ARManagement.dll
+C:\Users\Administrator\Desktop\app\ARManagement\obj\Debug\net8.0\refint\ARManagement.dll
+C:\Users\Administrator\Desktop\app\ARManagement\obj\Debug\net8.0\ARManagement.pdb
+C:\Users\Administrator\Desktop\app\ARManagement\obj\Debug\net8.0\ARManagement.genruntimeconfig.cache
+C:\Users\Administrator\Desktop\app\ARManagement\obj\Debug\net8.0\ref\ARManagement.dll

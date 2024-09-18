@@ -1,0 +1,26 @@
+version: '3.9'
+
+services:
+  frontend:
+    container_name: frontend
+    # image: armanagementfront-app-update:latest # 改成指定 frontend 的映像檔名稱
+    build:
+      context: . # 這裡對應您的前端專案目錄
+      dockerfile: Dockerfile-frontend
+    ports:
+      - "10001:80" # 將Nginx的80端口映射到主機的8080端口
+    depends_on:
+      - backend # 確保後端容器先啟動
+    # environment:
+    #   - REACT_APP_API_URL=http://backend:8098 # 設置後端 API URL
+
+  backend:
+    container_name: backend
+    # image: app-backend:latest # 改成指定 backend 的映像檔名稱
+    build:
+      context: . # 這裡對應您的後端專案目錄
+      dockerfile: Dockerfile-backend
+    ports:
+      - "10002:8080" 
+      # - "8098:8098" 
+      # - "80:80" 

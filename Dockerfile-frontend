@@ -1,0 +1,35 @@
+# 基礎映像
+FROM node:20-alpine as builder
+
+# 設定工作目錄
+WORKDIR /app/arfront_main
+
+# 清理 npm 緩存
+RUN npm cache clean --force
+
+# 單獨複製 package.json 和 package-lock.json 以利用 Docker 的緩存機制
+COPY arfront_main/package*.json ./
+
+# 安裝依賴
+RUN npm install
+
+# 複製剩餘的專案文件
+COPY arfront_main ./
+
+# 構建應用
+RUN npm run build
+
+# 使用 Nginx 作為伺服器
+FROM nginx:alpine
+
+# 安裝 bash（僅在需要使用 bash 的情況下）
+RUN apk add --no-cache bash
+
+# 複製構建後的文件到 Nginx 的 html 目錄
+COPY --from=builder /app/arfront_main/build /usr/share/nginx/html
+
+# 暴露 Nginx 80 端口
+EXPOSE 80
+
+# 啟動 Nginx
+CMD ["nginx", "-g", "daemon off;"]

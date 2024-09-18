@@ -1,0 +1,37 @@
+{
+  "Version": 1,
+  "Hash": "Z/4aKCjQd9Oqwgxpv+NHAHRt+qU/nePYgRg/bZiKMTM=",
+  "Source": "ARManagement",
+  "BasePath": "_content/ARManagement",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [
+    {
+      "Name": "ARManagement\\wwwroot",
+      "Source": "ARManagement",
+      "ContentRoot": "C:\\Users\\user\\Desktop\\台科大-WebAR資料\\交接文件\\程式碼\\slnARManagement\\ARManagement\\wwwroot\\",
+      "BasePath": "_content/ARManagement",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": [
+    {
+      "Identity": "C:\\Users\\user\\Desktop\\台科大-WebAR資料\\交接文件\\程式碼\\slnARManagement\\ARManagement\\wwwroot\\resources\\ResponseCode\\ResponseCode.zh-TW.json",
+      "SourceId": "ARManagement",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\user\\Desktop\\台科大-WebAR資料\\交接文件\\程式碼\\slnARManagement\\ARManagement\\wwwroot\\",
+      "BasePath": "_content/ARManagement",
+      "RelativePath": "resources/ResponseCode/ResponseCode.zh-TW.json",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\resources\\ResponseCode\\ResponseCode.zh-TW.json"
+    }
+  ]
+}
