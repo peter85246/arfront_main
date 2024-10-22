@@ -100,6 +100,15 @@ const ChatArea = ({
     { value: 'GPT-4', label: 'GPT-4' },
   ];
 
+  // 精誠
+  // const options_data = [
+  //   { value: '介紹精誠科技', label: '介紹精誠科技' },
+  //   { value: '介紹精誠科技以「a Data Software Company」為公司定位', label: '介紹精誠科技以「a Data Software Company」為公司定位' },
+  //   { value: '介紹精誠的智慧財產保護措施', label: '介紹精誠的智慧財產保護措施' },
+  //   { value: '說明2023年的執行情形', label: '說明2023年的執行情形' },
+  //   { value: '說明2023年的管理成果', label: '說明2023年的管理成果' },
+  // ];
+
   // 德川
   const options_data = [
     { value: '德川公司介紹', label: '德川公司介紹' },

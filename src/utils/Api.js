@@ -1,6 +1,8 @@
 ﻿import axios from 'axios';
 import { getAuthToken, removeAuthToken, setAuthToken } from './TokenUtil';
 
+const CHUNK_SIZE = 5 * 1024 * 1024; // 5MB chunks
+
 // 新增：设置用户 schema
 export const setUserSchema = (userId) => {
   const schema = `user_${userId}`;
@@ -282,7 +284,7 @@ export const apiGetMachineAddMindMap = (data) =>
   fetchDataCall('GetMachineAddMindMap', 'get', data);
 //#endregion
 
-//#region Mail帳號註冊
+// Mail帳號註冊
 export const apiVendorSignIn = (data) =>
   fetchDataCall('VendorRegistration/login', 'post', data);
 export const apiVendorSignUp = (data) =>
@@ -291,4 +293,53 @@ export const apiVendorSendVerificationCode = (data) =>
   fetchDataCall('VendorRegistration/send-verification-code', 'post', data);
 export const apiVendorVerifyCode = (data) =>
   fetchDataCall('VendorRegistration/verify-email', 'post', data);
+//#endregion
+
+//#region 更新上傳 PDF 的方法
+export const apiUploadAndBackupPdf = async (file) => {
+  const schemaName = localStorage.getItem('schema_name') || 'public';
+  const totalChunks = Math.ceil(file.size / CHUNK_SIZE);
+  let fileName = '';
+
+  for (let chunkIndex = 0; chunkIndex < totalChunks; chunkIndex++) {
+    const chunk = file.slice(
+      chunkIndex * CHUNK_SIZE,
+      (chunkIndex + 1) * CHUNK_SIZE
+    );
+    const formData = new FormData();
+    formData.append('file', chunk, file.name);
+    formData.append('schemaName', schemaName);
+    formData.append('chunkIndex', chunkIndex.toString());
+    formData.append('totalChunks', totalChunks.toString());
+
+    try {
+      const response = await axios.put(
+        `${window.apiUrl}/api/Pdf/upload-chunk`,
+        formData,
+        {
+          headers: {
+            ...getHeaders(),
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
+
+      if (response.data.code !== '0000') {
+        throw new Error(response.data.message);
+      }
+
+      if (chunkIndex === totalChunks - 1) {
+        fileName = response.data.result; // 直接使用後端返回的文件名
+        console.log('Received file name from backend:', fileName); // 添加日誌
+        return { fileName, ...response.data };
+      }
+    } catch (error) {
+      console.error(
+        `Error uploading chunk ${chunkIndex + 1}/${totalChunks}:`,
+        error
+      );
+      throw error;
+    }
+  }
+};
 //#endregion

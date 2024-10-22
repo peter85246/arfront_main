@@ -2983,7 +2983,7 @@ table th {
   }
 
   .content-box-right {
-    width: 67.5vw;
+    width: 100%;
   }
 
   .content-box-right-alarm,
@@ -3013,7 +3013,8 @@ table th {
   }
 
   .content-box-middle {
-    width: 84.1vw;
+    // width: 84.1vw;
+    width: 100%;
   }
 
   .edit-container {

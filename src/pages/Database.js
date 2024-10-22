@@ -1,33 +1,39 @@
+import React, { useEffect, useState, useRef } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 import styles from '../scss/global.module.scss';
-import { useTranslation } from 'react-i18next'; //語系
-import { Link, useNavigate } from 'react-router-dom';
 import PdfContent from '../components/PDFContent';
-import { useLocation } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import { getAuthToken } from '../utils/TokenUtil';
-import { useDatabase } from '../components/useDatabse';
-import { apiSaveKnowledgeBase, apiSaveSOP2 } from '../utils/Api';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useStore } from '../zustand/store';
 import {
   apiGetAllKnowledgeBaseByMachineAddId,
   apiGetAllSOPByMachineAddId,
+  apiSaveKnowledgeBase,
+  apiSaveSOP2,
+  apiUploadAndBackupPdf,
 } from '../utils/Api';
-import { useEffect, useState } from 'react';
-import { useStore } from '../zustand/store';
+import html2canvas from 'html2canvas';
+import { jsPDF } from 'jspdf';
+import ReactDOM from 'react-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
+import Spinner from 'react-bootstrap/Spinner';
 
 export default function Database() {
   const location = useLocation();
-  const item = location.state?.item; // 訪問傳遞的狀態
+  const item = location.state?.item;
+  const { t } = useTranslation();
+  const { setSOPInfo } = useStore();
+  const navigate = useNavigate();
+  const [knowledgeInfo, setKnowledgeInfo] = useState([]);
+  const [SOPData, setSOPData] = useState([]);
+  const pdfRef = useRef(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const currentPage = location.state?.currentPage || 1; // 接收當前頁碼，默認為1
   const pageRow = location.state?.pageRow || 5; // 接收每頁行數，默認為5
 
-  const { t } = useTranslation();
-  const { setSOPInfo } = useStore();
-  const navigate = useNavigate(); // 使用 navigate 來處理導航
-
-  const [knowledgeInfo, setKnowledgeInfo] = useState([]);
-  const [SOPData, setSOPData] = useState([]);
   const { nodeId, nodeTopic } = location.state; // 從路由狀態中讀取數據
 
   const { knowledgeBaseId } = location.state || {}; // 從路由狀態獲取 knowledgeBaseId
@@ -251,6 +257,80 @@ export default function Database() {
     getSOPInfo();
   }, []);
 
+  const handleGeneratePdf = async () => {
+    setIsLoading(true);
+    try {
+      // 生成 PDF 內容
+      const pdfContent = (
+        <Router>
+          <PdfContent
+            ref={pdfRef}
+            item={item}
+            knowledgeInfo={knowledgeInfo}
+            SOPData={SOPData}
+            onAllImagesLoaded={() => {}}
+            onImageLoad={() => {}}
+          />
+        </Router>
+      );
+
+      const tempDiv = document.createElement('div');
+      document.body.appendChild(tempDiv);
+      ReactDOM.render(pdfContent, tempDiv);
+
+      await new Promise((resolve) => setTimeout(resolve, 2000)); // 等待 2 秒
+
+      const canvas = await html2canvas(tempDiv, {
+        scale: 2,
+        logging: true,
+        useCORS: true,
+        windowWidth: tempDiv.scrollWidth,
+        windowHeight: tempDiv.scrollHeight,
+      });
+
+      const pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'px',
+        format: [canvas.width, canvas.height],
+      });
+
+      pdf.addImage(
+        canvas.toDataURL('image/png'),
+        'PNG',
+        0,
+        0,
+        pdf.internal.pageSize.getWidth(),
+        pdf.internal.pageSize.getHeight()
+      );
+
+      // 生成 PDF blob
+      const pdfBlob = pdf.output('blob');
+
+      // 調用 API 上傳和備份 PDF
+      const response = await apiUploadAndBackupPdf(
+        new File([pdfBlob], '德川維修檔案.pdf', { type: 'application/pdf' })
+      );
+
+      console.log('從 apiUploadAndBackupPdf 收到的回應:', response);
+
+      document.body.removeChild(tempDiv);
+
+      // 導航到 RepairDocument 頁面
+      navigate('/repairDocument', {
+        state: {
+          item,
+          knowledgeInfo,
+          SOPData,
+        },
+      });
+    } catch (error) {
+      console.error('生成 PDF 時發生錯誤:', error);
+      toast.error('生成 PDF 時發生錯誤');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <>
       <main>
@@ -292,9 +372,23 @@ export default function Database() {
           </div>
           <div
             className={classNames(styles['button'], styles['btn-pdf'])}
-            onClick={() => navigate('/repairDocument', { state: { item } })}
+            onClick={handleGeneratePdf}
+            disabled={isLoading}
           >
-            PDF
+            {isLoading ? (
+              <>
+                <Spinner
+                  as="span"
+                  animation="border"
+                  size="sm"
+                  role="status"
+                  aria-hidden="true"
+                />
+                <span className="ms-2">讀取中...</span>
+              </>
+            ) : (
+              'PDF'
+            )}
           </div>
         </div>
 
@@ -358,6 +452,7 @@ export default function Database() {
           </div>
         </div>
       </main>
+      <ToastContainer />
     </>
   );
 }

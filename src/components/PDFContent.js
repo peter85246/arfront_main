@@ -427,6 +427,7 @@ const PDFContent = React.forwardRef(
                           style={{
                             width: '270px', // 直接在 style 中設定寬度
                             height: '230px', // 直接在 style 中設定高度
+                            // minHeight: '230px', // 直接在 style 中設定高度
                             objectFit: 'contain', // 保持圖片原始比例並填滿容器
                             borderRadius: '8px', // 如果需要圓角
                             border: '1px solid #c0c0c0', // 只有當圖片存在時顯示邊框
