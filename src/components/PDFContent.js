@@ -13,9 +13,14 @@ const PDFContent = React.forwardRef(
     const stepsPerPage = 4;
 
     // 创建分页数据
+    // const paginatedSOPData = [];
+    // for (let i = 0; i < SOPData?.length; i += stepsPerPage) {
+    //   paginatedSOPData.push(SOPData.slice(i, i + stepsPerPage));
+    // }
+    const filteredSOPData = SOPData.filter((sop) => sop.deleted !== 1);
     const paginatedSOPData = [];
-    for (let i = 0; i < SOPData?.length; i += stepsPerPage) {
-      paginatedSOPData.push(SOPData.slice(i, i + stepsPerPage));
+    for (let i = 0; i < filteredSOPData.length; i += stepsPerPage) {
+      paginatedSOPData.push(filteredSOPData.slice(i, i + stepsPerPage));
     }
 
     // SOPData 是一個包含多個 SOP 相關數據的陣列
@@ -38,12 +43,12 @@ const PDFContent = React.forwardRef(
       }
     }
 
-    function extractFileName(str) {
-      let result = str;
-      // 去除所有非必要的引號和轉義符
-      result = result.replace(/[\[\]"\\]+/g, '');
-      return result;
-    }
+    // 修改檔名處理函數，去除副檔名
+    const extractFileName = (fullName) => {
+      if (!fullName) return '';
+      // 移除路徑和副檔名，只保留檔案名稱
+      return fullName.split('/').pop().split('.')[0];
+    };
 
     useEffect(() => {
       console.log('Received knowledgeInfo:', knowledgeInfo);
@@ -137,10 +142,10 @@ const PDFContent = React.forwardRef(
               {Array.isArray(
                 safeJsonParse(knowledgeInfo.knowledgeBaseModelImageNames)
               )
-                ? safeJsonParse(
-                    knowledgeInfo.knowledgeBaseModelImageNames
-                  ).join(', ')
-                : knowledgeInfo.knowledgeBaseModelImageNames}
+                ? safeJsonParse(knowledgeInfo.knowledgeBaseModelImageNames)
+                    .map(extractFileName)
+                    .join(', ')
+                : extractFileName(knowledgeInfo.knowledgeBaseModelImageNames)}
             </label>
           </div>
           <div className={styles['model']} id="model">
@@ -425,7 +430,7 @@ const PDFContent = React.forwardRef(
                         <img
                           src={sop.soP2Image}
                           style={{
-                            width: '270px', // 直接在 style 中設定寬度
+                            width: '270px', // 直接在 style ���設定寬度
                             height: '230px', // 直接在 style 中設定高度
                             // minHeight: '230px', // 直接在 style 中設定高度
                             objectFit: 'contain', // 保持圖片原始比例並填滿容器

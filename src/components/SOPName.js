@@ -271,93 +271,110 @@ export function SOPName({ onClose }) {
 
         SOPInfo.sops.forEach((sop, idx) => {
           // 確保所有布林值都被正確處理，不會提交undefined
-          const isDeletedSOPImage =
-            sop.isDeletedSOPImage !== undefined ? sop.isDeletedSOPImage : false;
-          const isDeletedSOPRemarksImage =
-            sop.isDeletedSOPRemarksImage !== undefined
-              ? sop.isDeletedSOPRemarksImage
+          const isDeletedSOP2Image =
+            sop.isDeletedSOP2Image !== undefined
+              ? sop.isDeletedSOP2Image
+              : false;
+          const isDeletedSOP2RemarkImage =
+            sop.isDeletedSOP2RemarkImage !== undefined
+              ? sop.isDeletedSOP2RemarkImage
               : false;
           const isDeletedSOPVideo =
             sop.isDeletedSOPVideo !== undefined ? sop.isDeletedSOPVideo : false;
 
+          // 基本信息
+          if (sop.soP2Id !== undefined && sop.soP2Id !== null) {
+            SOPFormData.append(`SOP2s[${idx}].soP2Id`, sop.soP2Id);
+          }
           SOPFormData.append(`SOP2s[${idx}].deleted`, sop.deleted);
+          SOPFormData.append(`SOP2s[${idx}].soP2Step`, sop.soP2Step);
+          SOPFormData.append(`SOP2s[${idx}].soP2Message`, sop.soP2Message);
+          SOPFormData.append(`SOP2s[${idx}].soP2Name`, sop.soP2Name);
+          SOPFormData.append(`SOP2s[${idx}].soP2Remark`, sop.soP2Remark);
+
+          // 圖片相關字段
+          SOPFormData.append(`SOP2s[${idx}].soP2Image`, sop.soP2Image || '');
+          if (sop.soP2ImageObj) {
+            SOPFormData.append(`SOP2s[${idx}].soP2ImageObj`, sop.soP2ImageObj);
+          }
           SOPFormData.append(
-            `SOP2s[${idx}].isDeletedSOPImage`,
-            isDeletedSOPImage
+            `SOP2s[${idx}].soP2RemarkImage`,
+            sop.soP2RemarkImage || ''
+          );
+          if (sop.soP2RemarkImageObj) {
+            SOPFormData.append(
+              `SOP2s[${idx}].soP2RemarkImageObj`,
+              sop.soP2RemarkImageObj
+            );
+          }
+
+          // 刪除標記
+          SOPFormData.append(
+            `SOP2s[${idx}].isDeletedSOP2Image`,
+            isDeletedSOP2Image
           );
           SOPFormData.append(
-            `SOP2s[${idx}].isDeletedSOPRemarksImage`,
-            isDeletedSOPRemarksImage
+            `SOP2s[${idx}].isDeletedSOP2RemarkImage`,
+            isDeletedSOP2RemarkImage
           );
           SOPFormData.append(
             `SOP2s[${idx}].isDeletedSOPVideo`,
             isDeletedSOPVideo
           );
 
-          // 如果soP2Id已定義並且不是新建項目，則添加到表單數據
-          if (sop.soP2Id !== undefined && sop.soP2Id !== null) {
-            SOPFormData.append(`SOP2s[${idx}].soP2Id`, sop.soP2Id);
-          }
-          SOPFormData.append(`SOP2s[${idx}].soP2Image`, sop.soP2Image);
-          SOPFormData.append(`SOP2s[${idx}].soP2ImageObj`, sop.soP2ImageObj);
-          SOPFormData.append(
-            `SOP2s[${idx}].soP2RemarkImage`,
-            sop.soP2RemarkImage
-          );
-          SOPFormData.append(
-            `SOP2s[${idx}].soP2RemarkImageObj`,
-            sop.soP2RemarkImageObj
-          );
-          SOPFormData.append(`SOP2s[${idx}].soP2Message`, sop.soP2Message);
-          SOPFormData.append(`SOP2s[${idx}].soP2Remark`, sop.soP2Remark);
-          SOPFormData.append(`SOP2s[${idx}].soP2Step`, sop.soP2Step);
-          SOPFormData.append(`SOP2s[${idx}].soP2Name`, sop.soP2Name);
-          SOPFormData.append(`SOP2s[${idx}].PLC1`, sop.plC1);
-          SOPFormData.append(`SOP2s[${idx}].PLC2`, sop.plC2);
-          SOPFormData.append(`SOP2s[${idx}].PLC3`, sop.plC3);
-          SOPFormData.append(`SOP2s[${idx}].PLC4`, sop.plC4);
+          // PLC 相關
+          SOPFormData.append(`SOP2s[${idx}].PLC1`, sop.plC1 || '');
+          SOPFormData.append(`SOP2s[${idx}].PLC2`, sop.plC2 || '');
+          SOPFormData.append(`SOP2s[${idx}].PLC3`, sop.plC3 || '');
+          SOPFormData.append(`SOP2s[${idx}].PLC4`, sop.plC4 || '');
 
-          // 確保添加檔案名稱和檔案物件
+          // 影片相關
           if (sop.sopVideoObj) {
-            SOPFormData.append(`SOP2s[${idx}].sopVideo`, sop.sopVideoObj.name); // 添加檔案名稱
-            SOPFormData.append(`SOP2s[${idx}].sopVideoObj`, sop.sopVideoObj); // 添加檔案物件
+            SOPFormData.append(`SOP2s[${idx}].sopVideo`, sop.sopVideoObj.name);
+            SOPFormData.append(`SOP2s[${idx}].sopVideoObj`, sop.sopVideoObj);
           }
 
-          sop.sopModels.forEach((sopModel, j) => {
-            SOPFormData.append(
-              `SOP2s[${idx}].sopModels[${j}].sopModelId`,
-              sopModel.sopModelId
-            );
-            SOPFormData.append(
-              `SOP2s[${idx}].sopModels[${j}].deleted`,
-              sopModel.deleted
-            );
-            SOPFormData.append(
-              `SOP2s[${idx}].sopModels[${j}].sopId`,
-              sopModel.sopId
-            );
+          // 3D模型相關
+          if (sop.sopModels && Array.isArray(sop.sopModels)) {
+            sop.sopModels.forEach((sopModel, j) => {
+              SOPFormData.append(
+                `SOP2s[${idx}].sopModels[${j}].sopModelId`,
+                sopModel.sopModelId
+              );
+              SOPFormData.append(
+                `SOP2s[${idx}].sopModels[${j}].deleted`,
+                sopModel.deleted
+              );
+              SOPFormData.append(
+                `SOP2s[${idx}].sopModels[${j}].sopId`,
+                sopModel.sopId
+              );
+              SOPFormData.append(
+                `SOP2s[${idx}].sopModels[${j}].sopModelImage`,
+                sopModel.sopModelImage || ''
+              );
+              if (sopModel.sopModelImageObj) {
+                SOPFormData.append(
+                  `SOP2s[${idx}].sopModels[${j}].sopModelImageObj`,
+                  sopModel.sopModelImageObj
+                );
+              }
+              SOPFormData.append(
+                `SOP2s[${idx}].sopModels[${j}].sopModelFile`,
+                sopModel.sopModelFile || ''
+              );
+              if (sopModel.sopModelFileObj) {
+                SOPFormData.append(
+                  `SOP2s[${idx}].sopModels[${j}].sopModelFileObj`,
+                  sopModel.sopModelFileObj
+                );
+              }
+            });
+          }
 
-            // 將圖片和文件無條件加入到 FormData
-            SOPFormData.append(
-              `SOP2s[${idx}].sopModels[${j}].sopModelImage`,
-              sopModel.sopModelImage
-            );
-            SOPFormData.append(
-              `SOP2s[${idx}].sopModels[${j}].sopModelImageObj`,
-              sopModel.sopModelImageObj
-            );
-            SOPFormData.append(
-              `SOP2s[${idx}].sopModels[${j}].sopModelFile`,
-              sopModel.sopModelFile
-            );
-            SOPFormData.append(
-              `SOP2s[${idx}].sopModels[${j}].sopModelFileObj`,
-              sopModel.sopModelFileObj
-            );
-          });
-
-          const t3dModelsData = formatT3DModels(sop); // 調用 formatT3DModels 來處理和格式化數據
-          SOPFormData.append(`SOP2s[${idx}].T3DModels`, t3dModelsData); // 加入到 FormData 中
+          // T3D模型數據
+          const t3dModelsData = formatT3DModels(sop);
+          SOPFormData.append(`SOP2s[${idx}].T3DModels`, t3dModelsData);
         });
 
         const saveSOPInfoRes = await apiSaveSOP2(SOPFormData);

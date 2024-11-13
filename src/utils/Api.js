@@ -233,7 +233,29 @@ export const apiDeleteMachineAlarm = (data) =>
 //#region SOP
 export const apiGetAllSOPByMachineAlarmId = (data) =>
   fetchDataCall('GetAllSOPByMachineAlarmId', 'post', data); //依據AlarmId取得所有SOP
-export const apiSaveSOP = (data) => fetchDataCallFile('SaveSOP', 'put', data); //儲存SOP
+export const apiSaveSOP = async (data) => {
+  const formData = new FormData();
+
+  // 添加基本數據
+  Object.keys(data).forEach((key) => {
+    if (key !== 'sops') {
+      formData.append(key, data[key]);
+    }
+  });
+
+  // 特別處理sops數據，確保包含deleted標記
+  formData.append(
+    'sops',
+    JSON.stringify(
+      data.sops.map((sop) => ({
+        ...sop,
+        deleted: sop.deleted || 0,
+      }))
+    )
+  );
+
+  return await fetchDataCallFile('SOP2/SaveSOP2', 'put', formData);
+};
 //#endregion
 
 //#region 機台IOT
@@ -273,7 +295,19 @@ export const apiGetAllKnowledgeBaseByMachineAddId = (data) =>
   fetchDataCall('GetAllKnowledgeBaseByMachineAddId', 'post', data); //依據MachineAddId取得所有 故障說明
 export const apiSaveKnowledgeBase = (data) =>
   fetchDataCallFile('SaveKnowledgeBase', 'put', data); //儲存 故障說明 資訊
-export const apiSaveSOP2 = (data) => fetchDataCallFile('SaveSOP2', 'put', data); //新增SOP2
+export const apiSaveSOP2 = async (data) => {
+  try {
+    const response = await fetchDataCallFile('SaveSOP2', 'put', data);
+    return response;
+  } catch (error) {
+    console.error('Error in SaveSOP2:', error);
+    if (error.response) {
+      console.error('Response data:', error.response.data);
+      console.error('Response status:', error.response.status);
+    }
+    throw error;
+  }
+};
 
 export const apiGetAllSOPByMachineAddId = (data) =>
   fetchDataCall('GetAllSOPByMachineAddId', 'post', data); //取得SOP2

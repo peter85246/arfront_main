@@ -56,7 +56,7 @@ export function DocumentEditor() {
       knowledgeBaseAlarmOccasion: "", //故障發生時機
       knowledgeBaseModelImageObj: [], //Model機型圖片物件
       isDeletedKnowledgeBaseModelImage: false, //是否刪除Model機型圖片
-      knowledgeBaseToolsImageObj: [], //Tools工具圖片物件
+      knowledgeBaseToolsImageObj: [], //Tools具圖片物件
       isDeletedKnowledgeBaseToolsImage: false, //是否刪除Tools工具圖片
       knowledgeBasePositionImageObj: [], //Position位置圖片物件
       isDeletedKnowledgeBasePositionImage: false //是否刪除Position位置圖片
@@ -318,6 +318,57 @@ export function DocumentEditor() {
     getDocumentOptions();
 }, []);
 
+  // 共用的圖片容器樣式，用於所有三個區域
+  const ImageContainer = ({ images }) => (
+    <div 
+      className="w-[140px] flex flex-col gap-2 border rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200" 
+      style={{ 
+        padding: '8px',
+        backgroundColor: '#fff',
+        borderColor: '#e0e0e0',
+      }}
+    > 
+      <div 
+        style={{
+          borderRadius: '8px',
+          overflow: 'hidden',
+          boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+        }}
+      >
+        <img
+          src={images.img}
+          className={styles["uploaded-image"]}
+          style={{ 
+            objectFit: "contain",
+            objectPosition: "center",
+            height: "100px",
+            width: "100%",
+            borderRadius: '6px',
+            border: '1px solid #e0e0e0',
+          }}
+          alt="Uploaded Images"
+        />
+      </div>
+      <div 
+        className="w-full px-2 text-sm overflow-hidden text-ellipsis whitespace-nowrap cursor-not-allowed mt-1"
+        style={{ 
+          backgroundColor: '#f5f5f5',
+          border: '1px solid #e0e0e0',
+          borderRadius: '5px',
+          color: '#666',
+          height: '35px',
+          lineHeight: '35px',
+          pointerEvents: 'none',
+          userSelect: 'none',
+          boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.03)'
+        }}
+        title={images.name.split('.')[0]}
+      >
+        {images.name.split('.')[0]}
+      </div>
+    </div>
+  );
+
   return (
     <main>
       <div>
@@ -538,48 +589,13 @@ export function DocumentEditor() {
               data-id="modelImage"
               style={{
                 border: "1px solid #ccc", // 添加邊框類似 TextArea
-                minHeight: "150px", // 設定最小高度類似 TextArea
+                minHeight: "180px", // 設定最小高度類似 TextArea
                 backgroundColor: "#fff", // 背景顏色類似 TextArea
                 gap: "8px",
               }}
             >
               {knowledgeBaseModelImages.map((item, idx) => (
-                <div className="w-[120px] flex flex-col gap-[8px] border p-2 rounded">
-                  <img
-                    key={idx}
-                    src={item.img}
-                    className={styles["uploaded-image"]}
-                    style={{ 
-                      objectFit: "contain", // 使圖片完整顯示
-                      objectPosition: "center" // 中心對齊圖片
-                    }}
-                    alt="Uploaded Images"
-                    id="modelImage"
-                  />
-                  <input
-                    type="text"
-                    className="w-full"
-                    style={{ 
-                      width: '100%', 
-                      height: '30px', // 設定固定高度
-                      padding: '0 5px', // 左右內間距
-                      boxSizing: 'border-box', // 邊框和內間距包含在寬度內
-                      border: '1px solid #ccc', // 選擇性：添加邊框
-                      borderRadius: '5px'
-                    }}
-                    value={item.name}
-                    onChange={(e) => {
-                      const newName = e.target.value;
-                      setKnowledgeBaseModelImages((prev) =>
-                        prev.map((image, imageIdx) =>
-                          imageIdx === idx
-                            ? { ...image, name: newName }
-                            : image,
-                        ),
-                      );
-                    }}
-                  />
-                </div>
+                <ImageContainer key={idx} images={item} />
               ))}
             </div>
             <div
@@ -611,45 +627,13 @@ export function DocumentEditor() {
               data-id="toolsImage"
               style={{
                 border: "1px solid #ccc", // 添加邊框類似 TextArea
-                minHeight: "150px", // 設定最小高度類似 TextArea
+                minHeight: "180px", // 設定最小高度類似 TextArea
                 backgroundColor: "#fff", // 背景顏色類似 TextArea
                 gap: "8px",
               }}
             >
               {knowledgeBaseToolsImages.map((item, idx) => (
-                <div className="w-[120px] flex flex-col gap-[8px] border p-2 rounded">
-                  <img
-                    key={idx}
-                    src={item.img}
-                    className={styles["uploaded-image"]}
-                    style={{ objectFit: "contain"}}
-                    alt="Uploaded Images"
-                    id="modelImage"
-                  />
-                  <input
-                    type="text"
-                    className="w-full"
-                    style={{ 
-                      width: '100%', 
-                      height: '30px', // 設定固定高度
-                      padding: '0 5px', // 左右內間距
-                      boxSizing: 'border-box', // 邊框和內間距包含在寬度內
-                      border: '1px solid #ccc', // 選擇性：添加邊框
-                      borderRadius: '5px'
-                    }}
-                    value={item.name}
-                    onChange={(e) => {
-                      const newName = e.target.value;
-                      setKnowledgeBaseToolsImages((prev) =>
-                        prev.map((image, imageIdx) =>
-                          imageIdx === idx
-                            ? { ...image, name: newName }
-                            : image,
-                        ),
-                      );
-                    }}
-                  />
-                </div>
+                <ImageContainer key={idx} images={item} />
               ))}
             </div>
             <div
@@ -691,45 +675,13 @@ export function DocumentEditor() {
               data-id="positionImage"
               style={{
                 border: "1px solid #ccc", // 添加邊框類似 TextArea
-                minHeight: "150px", // 設定最小高度類似 TextArea
+                minHeight: "180px", // 設定最小高度類似 TextArea
                 backgroundColor: "#fff", // 背景顏色類似 TextArea
                 gap: "8px",
               }}
             >
               {knowledgeBasePositionImages.map((item, idx) => (
-                <div className="w-[120px] flex flex-col gap-[8px] border p-2 rounded">
-                  <img
-                    key={idx}
-                    src={item.img}
-                    className={styles["uploaded-image"]}
-                    style={{ objectFit: "contain"}}
-                    alt="Uploaded Images"
-                    id="modelImage"
-                  />
-                  <input
-                    type="text"
-                    className="w-full"
-                    style={{ 
-                      width: '100%', 
-                      height: '30px', // 設定固定高度
-                      padding: '0 5px', // 左右內間距
-                      boxSizing: 'border-box', // 邊框和內間距包含在寬度內
-                      border: '1px solid #ccc', // 選擇性：添加邊框
-                      borderRadius: '5px'
-                    }}
-                    value={item.name}
-                    onChange={(e) => {
-                      const newName = e.target.value;
-                      setKnowledgeBasePositionImages((prev) =>
-                        prev.map((image, imageIdx) =>
-                          imageIdx === idx
-                            ? { ...image, name: newName }
-                            : image,
-                        ),
-                      );
-                    }}
-                  />
-                </div>
+                <ImageContainer key={idx} images={item} />
               ))}
             </div>
             <div

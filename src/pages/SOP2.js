@@ -197,12 +197,12 @@ function SOP2() {
       soP2Name: '', //test
       soP2Image: '',
       soP2ImageObj: null,
-      isDeletedSOPImage: false,
+      isDeletedSOP2Image: false,
       /* 新增：sopRemarksMessage、sopRemarksImage、sopRemarksImageObj 三元素 */
       soP2Remark: '',
       soP2RemarkImage: '',
       soP2RemarkImageObj: null,
-      isDeletedSOPRemarksImage: false,
+      isDeletedSOP2RemarkImage: false,
       sopVideo: '',
       sopVideoObj: null,
       isDeletedSOPVideo: false,
@@ -225,40 +225,58 @@ function SOP2() {
   //#region 選擇SOP / 開啟刪除SOP modal
   const handleSelectSOP = (event, index) => {
     const target = event.target;
-
     if (target.classList.contains('fa-trash')) {
-      setSelectDeleteSOPIndex(index);
+      const activeSops = sops.filter((sop) => sop.deleted !== 1);
+      const actualSop = activeSops[index];
+      const actualIndex = sops.findIndex(
+        (sop) => sop.soP2Step === actualSop.soP2Step
+      );
+      setSelectDeleteSOPIndex(actualIndex);
       setShowDeleteSOPModal(true);
     } else {
-      let tempSOP = sops[index];
-      setSelectSOP(tempSOP);
-      inputImageRef.current.value = '';
-      inputVideoRef.current.value = '';
+      const activeSops = sops.filter((sop) => sop.deleted !== 1);
+      const selectedSOP = activeSops[index];
+
+      // 防止重複選擇相同的SOP
+      if (
+        selectedSOP &&
+        (!selectSOP || selectSOP.soP2Step !== selectedSOP.soP2Step)
+      ) {
+        setSelectSOP(selectedSOP);
+
+        // 重置輸入欄位
+        if (inputImageRef.current) inputImageRef.current.value = '';
+        if (inputVideoRef.current) inputVideoRef.current.value = '';
+      }
     }
   };
   //#endregion
 
   //#region 拖曳選單步驟
   const onDragEnd = (event) => {
-    const { source, destination } = event; //source：被拖曳的卡片原先的 DroppableId 與順序；destination：被拖曳的卡片最終的 DroppableId 與順序
+    const { source, destination } = event;
 
     if (!destination) {
       return;
     }
 
     let newSOPs = [...sops];
-    const [remove] = newSOPs.splice(source.index, 1);
-    newSOPs.splice(destination.index, 0, remove);
+    const activeSops = newSOPs.filter((sop) => sop.deleted !== 1);
+    const [removed] = activeSops.splice(source.index, 1);
+    activeSops.splice(destination.index, 0, removed);
 
-    //重新排序sopStep
-    var i = 0;
-    newSOPs.map((item, index) => {
-      if (item.deleted != 1) {
-        i++;
-        return (item.soP2Step = i);
-      } else {
-        return item;
-      }
+    // 重新排序步驟號
+    activeSops.forEach((sop, index) => {
+      sop.soP2Step = index + 1;
+    });
+
+    // 更新原始數組
+    newSOPs = newSOPs.map((sop) => {
+      if (sop.deleted === 1) return sop;
+      const updatedSop = activeSops.find(
+        (activeSop) => activeSop.sopId === sop.sopId
+      );
+      return updatedSop || sop;
     });
 
     setSOPs(newSOPs);
@@ -302,7 +320,7 @@ function SOP2() {
         img.onload = function () {
           newSelectSOP.soP2ImageObj = file;
           if (newSelectSOP.soP2Image != '') {
-            newSelectSOP.isDeletedSOPImage = true;
+            newSelectSOP.isDeletedSOP2Image = true;
           }
           setSelectSOP(newSelectSOP);
         };
@@ -317,9 +335,9 @@ function SOP2() {
     e.preventDefault();
     let newSelectSOP = { ...selectSOP };
 
-    newSelectSOP.soP2Image = '';
+    newSelectSOP.soP2Image = ''; // 保持與後端一致的大小寫
     newSelectSOP.soP2ImageObj = null;
-    newSelectSOP.isDeletedSOPImage = true;
+    newSelectSOP.isDeletedSOP2Image = true; // 保持與後端一致的大小寫
 
     setSelectSOP(newSelectSOP);
   };
@@ -397,7 +415,7 @@ function SOP2() {
         img.onload = function () {
           newSelectSOP.soP2RemarkImageObj = file;
           if (newSelectSOP.soP2RemarkImage != '') {
-            newSelectSOP.isDeletedSOPRemarksImage = true;
+            newSelectSOP.isDeletedSOP2RemarksImage = true;
           }
           setSelectSOP(newSelectSOP);
         };
@@ -412,9 +430,9 @@ function SOP2() {
     e.preventDefault();
     let newSelectSOP = { ...selectSOP };
 
-    newSelectSOP.soP2RemarkImage = '';
+    newSelectSOP.soP2RemarkImage = ''; // 保持與後端一致的大小寫
     newSelectSOP.soP2RemarkImageObj = null;
-    newSelectSOP.isDeletedSOPRemarksImage = true;
+    newSelectSOP.isDeletedSOP2RemarkImage = true; // 保持與後端一致的大小寫
 
     setSelectSOP(newSelectSOP);
   };
@@ -422,18 +440,22 @@ function SOP2() {
 
   //#region 更新SOPs
   useEffect(() => {
-    console.log(selectSOP);
     if (selectSOP != null) {
-      let index = -1;
       let newSOPs = [...sops];
-      if (selectSOP.sopId > 0) {
-        index = newSOPs.findIndex((x) => x.sopId == selectSOP.sopId);
-      } else {
-        index = newSOPs.findIndex((x) => x.soP2Step == selectSOP.soP2Step);
-      }
+      const index = newSOPs.findIndex(
+        (sop) => sop.deleted !== 1 && sop.soP2Step === selectSOP.soP2Step
+      );
 
-      newSOPs[index] = selectSOP;
-      setSOPs(newSOPs);
+      if (index !== -1) {
+        // 確保不會重複添加相同的SOP
+        newSOPs = newSOPs.map((sop) => {
+          if (sop.deleted !== 1 && sop.soP2Step === selectSOP.soP2Step) {
+            return selectSOP;
+          }
+          return sop;
+        });
+        setSOPs(newSOPs);
+      }
     }
   }, [selectSOP]);
   //#endregion
@@ -443,42 +465,61 @@ function SOP2() {
   // }, [sops]);
 
   //#region 關閉刪除SOP Modal
-  const handleCloseDeleteSOPModal = async (e) => {
-    if (e) {
-      e.preventDefault();
-    }
-    setSelectDeleteSOPIndex(-1);
+  const handleCloseDeleteSOPModal = () => {
     setShowDeleteSOPModal(false);
+    setSelectDeleteSOPIndex(-1);
   };
   //#endregion
 
   //#region 刪除SOP
-  const handleSaveDeleteSOP = async (e) => {
-    let newSOPs = [...sops];
-    let tempSOP = newSOPs[selectDeleteSOPIndex];
+  const handleSaveDeleteSOP = async () => {
+    if (selectDeleteSOPIndex !== -1) {
+      let newSOPs = [...sops];
+      const deletedSOP = newSOPs[selectDeleteSOPIndex];
 
-    if (tempSOP.sopId > 0) {
-      tempSOP.deleted = 1;
-      newSOPs[selectDeleteSOPIndex] = tempSOP;
-    } else {
-      newSOPs.splice(selectDeleteSOPIndex, 1);
-    }
-
-    var i = 0;
-    newSOPs.map((item, index) => {
-      if (item.deleted != 1) {
-        i++;
-        return (item.soP2Step = i);
+      if (deletedSOP.sopId > 0) {
+        deletedSOP.deleted = 1;
+        newSOPs[selectDeleteSOPIndex] = deletedSOP;
       } else {
-        return item;
+        newSOPs.splice(selectDeleteSOPIndex, 1);
       }
-    });
 
-    setSOPs(newSOPs);
-    if (tempSOP.soP2Step == selectSOP.soP2Step) {
-      setSelectSOP(newSOPs[selectDeleteSOPIndex - 1]);
+      // 重新排序未刪除的步驟
+      const activeSOPs = newSOPs.filter((sop) => sop.deleted !== 1);
+      activeSOPs.forEach((sop, index) => {
+        sop.soP2Step = index + 1;
+      });
+
+      // 更新原始數組中未刪除的SOP的步驟號
+      newSOPs = newSOPs.map((sop) => {
+        if (sop.deleted === 1) return sop;
+        const updatedSop = activeSOPs.find(
+          (activeSop) => activeSop.sopId === sop.sopId
+        );
+        return updatedSop || sop;
+      });
+
+      setSOPs(newSOPs);
+
+      // 更新選中的SOP
+      if (selectSOP && selectSOP.soP2Step === deletedSOP.soP2Step) {
+        const previousSOP = activeSOPs.find(
+          (sop) => sop.soP2Step === deletedSOP.soP2Step - 1
+        );
+        setSelectSOP(previousSOP || activeSOPs[0] || null);
+      }
+
+      setShowDeleteSOPModal(false);
+      setSelectDeleteSOPIndex(-1);
+
+      toast.success('刪除成功!', {
+        position: toast.POSITION.TOP_CENTER,
+        autoClose: 2000,
+        hideProgressBar: true,
+        closeOnClick: false,
+        pauseOnHover: true,
+      });
     }
-    setShowDeleteSOPModal(false);
   };
   //#endregion
 
@@ -769,6 +810,78 @@ function SOP2() {
   };
   //#endregion
 
+  //#region 新增確認刪除的處理函數
+  const handleConfirmDeleteSOP = () => {
+    if (selectDeleteSOPIndex !== -1) {
+      let newSOPs = [...sops];
+      const currentStep = newSOPs[selectDeleteSOPIndex].soP2Step;
+
+      // 標記當前步驟為已刪除
+      newSOPs[selectDeleteSOPIndex].deleted = 1;
+
+      // 重新排序剩餘步驟
+      reorderSOPSteps(newSOPs);
+
+      // 找到前一個未刪除的步驟
+      const previousStep = newSOPs
+        .filter((sop) => sop.deleted !== 1 && sop.soP2Step < currentStep)
+        .pop();
+
+      // 如果找到前一個步驟，則選中它
+      if (previousStep) {
+        setSelectSOP(previousStep);
+      } else {
+        // 如果沒有前一個步驟，找第一個未刪除的步驟
+        const firstAvailableStep = newSOPs.find((sop) => sop.deleted !== 1);
+        setSelectSOP(firstAvailableStep || null);
+      }
+
+      setSOPs(newSOPs);
+      setShowDeleteSOPModal(false);
+      setSelectDeleteSOPIndex(-1);
+
+      // 顯示刪除成功提示
+      toast.success('刪除成功!', {
+        position: toast.POSITION.TOP_CENTER,
+        autoClose: 2000,
+        hideProgressBar: true,
+        closeOnClick: false,
+        pauseOnHover: true,
+      });
+    }
+  };
+  //#endregion
+
+  //#region 新增重新排序函數
+  const reorderSOPSteps = (sops) => {
+    let stepCount = 1;
+    sops.forEach((sop) => {
+      if (sop.deleted !== 1) {
+        sop.soP2Step = stepCount++;
+      }
+    });
+    return sops;
+  };
+  //#endregion
+
+  const validateSOP = (sop) => {
+    // 驗證必要字段
+    if (!sop.soP2Step || !sop.soP2Message) {
+      return false;
+    }
+
+    // 驗證圖片刪除標記與實際狀態是否一致
+    if (sop.isDeletedSOP2Image && sop.soP2Image !== '') {
+      return false;
+    }
+
+    if (sop.isDeletedSOP2RemarkImage && sop.soP2RemarkImage !== '') {
+      return false;
+    }
+
+    return true;
+  };
+
   return (
     <>
       <section className="content-header">
@@ -876,54 +989,48 @@ function SOP2() {
                         {...provided.dragHandleProps}
                         ref={provided.innerRef}
                       >
-                        {sops.map((item, index) => {
-                          if (item.deleted == 0) {
-                            return (
-                              <Draggable
-                                key={index}
-                                draggableId={item.soP2Step.toString()}
-                                index={index}
-                              >
-                                {(provided) => (
+                        {sops
+                          .filter((item) => item.deleted !== 1) // 只顯示未刪除的項目
+                          .map((item, index) => (
+                            <Draggable
+                              key={index}
+                              draggableId={item.soP2Step.toString()}
+                              index={index}
+                            >
+                              {(provided) => (
+                                <div
+                                  {...provided.draggableProps}
+                                  {...provided.dragHandleProps}
+                                  ref={provided.innerRef}
+                                >
                                   <div
-                                    {...provided.draggableProps}
-                                    {...provided.dragHandleProps}
-                                    ref={provided.innerRef}
+                                    className={`card ${
+                                      item.soP2Step === selectSOP?.soP2Step
+                                        ? 'bg-info'
+                                        : ''
+                                    }`}
+                                    style={{ cursor: 'pointer' }}
                                   >
                                     <div
-                                      className={`card ${
-                                        item.soP2Step == selectSOP.soP2Step
-                                          ? 'bg-info'
-                                          : ''
-                                      }`}
-                                      style={{ cursor: 'pointer' }}
+                                      className="card-body"
+                                      onClick={(e) => handleSelectSOP(e, index)}
                                     >
-                                      <div
-                                        className="card-body"
-                                        onClick={(e) =>
-                                          handleSelectSOP(e, index)
-                                        }
-                                      >
-                                        <div className="row">
-                                          <div className="col-10">
-                                            <span>Step {item.soP2Step}</span>
-                                          </div>
-                                          {index != 0 ? (
-                                            <div className="col-2">
-                                              <i className="fas fa-trash"></i>
-                                            </div>
-                                          ) : (
-                                            <></>
-                                          )}
+                                      <div className="row">
+                                        <div className="col-10">
+                                          <span>Step {item.soP2Step}</span>
                                         </div>
+                                        {index !== 0 && (
+                                          <div className="col-2">
+                                            <i className="fas fa-trash"></i>
+                                          </div>
+                                        )}
                                       </div>
                                     </div>
                                   </div>
-                                )}
-                              </Draggable>
-                            );
-                          }
-                        })}
+                                </div>
+                              )}
+                            </Draggable>
+                          ))}
                         {provided.placeholder}
                       </div>
                     )}
@@ -949,10 +1056,7 @@ function SOP2() {
                         <div className="col-12">
                           <div className="form-group">
                             <div className={styles['text-area-container']}>
-                              <label>
-                                {t('sop.sopMessage')}
-                                {/*步驟說明*/}
-                              </label>
+                              <label>{t('sop.sopMessage')}</label>
                               <textarea
                                 className="form-control"
                                 rows="8"
@@ -962,28 +1066,11 @@ function SOP2() {
                                 onChange={(e) => handleSelectSOPChange(e)}
                                 style={{ color: textColor }}
                               ></textarea>
-
-                              {/* <div
-                                className={styles['color-picker-container-sop']}
-                              >
-                                <Space direction="vertical">
-                                  <ColorPicker
-                                    defaultValue={textColor}
-                                    size="small"
-                                    onChange={(color) =>
-                                      setTextColor(color.hex)
-                                    }
-                                  />
-                                </Space>
-                              </div> */}
                             </div>
                           </div>
                           <div className="form-group">
                             <div className={styles['text-area-container']}>
-                              <label>
-                                {t('sop.sopRemarksMessage')}
-                                {/*備註說明*/}
-                              </label>
+                              <label>{t('sop.sopRemarksMessage')}</label>
                               <textarea
                                 className="form-control"
                                 rows="8"
@@ -1623,44 +1710,35 @@ function SOP2() {
       {/*delete topic modal - start*/}
       <Modal
         show={showDeleteSOPModal}
-        onHide={(e) => handleCloseDeleteSOPModal(e)}
+        onHide={handleCloseDeleteSOPModal}
         backdrop="static"
       >
         <Modal.Header closeButton>
-          <Modal.Title>
-            {t('sop.deleteSOP')}
-            {/*刪除SOP*/}
-          </Modal.Title>
+          <Modal.Title>{t('sop.deleteSOP')}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <p>
-            {t('sop.deleteContent')}
-            {/*您確定要刪除該筆資料嗎?*/}
-          </p>
+          <p>{t('sop.deleteContent')}</p>
         </Modal.Body>
         <Modal.Footer>
           <button
             type="button"
             className="btn btn-secondary"
-            onClick={(e) => handleCloseDeleteSOPModal(e)}
+            onClick={handleCloseDeleteSOPModal}
           >
             {t('btn.cancel')}
-            {/*取消*/}
           </button>
           <button
             type="button"
             className="btn btn-primary"
-            onClick={(e) => handleSaveDeleteSOP(e)}
+            onClick={handleConfirmDeleteSOP}
           >
-            <span>
-              {t('btn.confirm')}
-              {/*確定*/}
-            </span>
+            <span>{t('btn.confirm')}</span>
           </button>
         </Modal.Footer>
       </Modal>
-      {/*delete machine modal - end*/}
+
       {isSOPName && <SOPName onClose={() => setIsSOPName(false)} />}
+      <ToastContainer />
     </>
   );
 }
