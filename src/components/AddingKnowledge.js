@@ -73,10 +73,36 @@ export function AddingKnowledge({ onClose }) {
   };
 
   // 驗證選擇的機台種類和型號系列是否符合機台名稱的前綴
+  // const validateSelection = (name, type, series) => {
+  //   const typePrefix = type.substring(0, Math.min(3, type.length)); // 取前三個字符或更少，避免越界
+  //   const seriesPrefix = series.substring(0, Math.min(3, series.length));
+  //   return name.startsWith(typePrefix) && name.startsWith(seriesPrefix);
+  // };
+
+  // 修改驗證函數
+  // const validateSelection = (name, type, series) => {
+  //   // 如果任一值為空，直接返回 true
+  //   if (!name || !type || !series) return true;
+    
+  //   // 清理字符串，移除空格並轉換為小寫
+  //   const cleanName = name.toLowerCase().trim();
+  //   const cleanType = type.toLowerCase().trim();
+  //   const cleanSeries = series.toLowerCase().trim();
+    
+  //   // 獲取機台名稱的前綴（第一個連字符之前的部分）
+  //   const namePrefix = cleanName.split('-')[0];
+    
+  //   // 檢查機台種類和型號系列是否包含相同的前綴
+  //   const hasCommonPrefix = cleanType.includes(namePrefix) || 
+  //                         namePrefix.includes(cleanType) || 
+  //                         cleanSeries.includes(namePrefix) || 
+  //                         namePrefix.includes(cleanSeries);
+    
+  //   return hasCommonPrefix;
+  // };
+
   const validateSelection = (name, type, series) => {
-    const typePrefix = type.substring(0, Math.min(3, type.length)); // 取前三個字符或更少，避免越界
-    const seriesPrefix = series.substring(0, Math.min(3, series.length));
-    return name.startsWith(typePrefix) && name.startsWith(seriesPrefix);
+    return true; // 不做任何驗證，直接返回 true
   };
 
   // 處理下拉選單選擇變更事件
