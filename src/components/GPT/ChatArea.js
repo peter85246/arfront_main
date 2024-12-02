@@ -225,7 +225,7 @@ const ChatArea = ({
         id="prompt-select"
         styles={customStyles}
         value={selectedOption}
-        // options={options_data}
+        // options={options_data} //選項打開
         onChange={handleSelectChange}
         placeholder="Select the Question"
       />
