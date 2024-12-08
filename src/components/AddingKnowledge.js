@@ -83,21 +83,21 @@ export function AddingKnowledge({ onClose }) {
   // const validateSelection = (name, type, series) => {
   //   // 如果任一值為空，直接返回 true
   //   if (!name || !type || !series) return true;
-    
+
   //   // 清理字符串，移除空格並轉換為小寫
   //   const cleanName = name.toLowerCase().trim();
   //   const cleanType = type.toLowerCase().trim();
   //   const cleanSeries = series.toLowerCase().trim();
-    
+
   //   // 獲取機台名稱的前綴（第一個連字符之前的部分）
   //   const namePrefix = cleanName.split('-')[0];
-    
+
   //   // 檢查機台種類和型號系列是否包含相同的前綴
-  //   const hasCommonPrefix = cleanType.includes(namePrefix) || 
-  //                         namePrefix.includes(cleanType) || 
-  //                         cleanSeries.includes(namePrefix) || 
+  //   const hasCommonPrefix = cleanType.includes(namePrefix) ||
+  //                         namePrefix.includes(cleanType) ||
+  //                         cleanSeries.includes(namePrefix) ||
   //                         namePrefix.includes(cleanSeries);
-    
+
   //   return hasCommonPrefix;
   // };
 
