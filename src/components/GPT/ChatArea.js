@@ -27,32 +27,46 @@ const ChatArea = ({
   // 處理 Q&A 選項變更並提交
   const handleSelectChange = async (selectedOption) => {
     console.log('Selected Option:', selectedOption);
-
-    setSelectedOption(selectedOption); // 更新選中的選項
-    setResponse(''); // 重置回應內容
-    setIsLoading(true); // 保留加載狀態
-    setQuestion(selectedOption.label); // 更新顯示在user-question中的文字（只顯示選擇的選項label）
-
+    console.log('Selected Model:', selectedModel); // 添加這行來查看選中的模型
+  
+    setSelectedOption(selectedOption);
+    setResponse('');
+    setIsLoading(true);
+    setQuestion(selectedOption.label);
+  
     // 檢查選擇的選項是否需要附加 "附上圖片說明"
-    const shouldAppendImageDescription =
-      !selectedOption.label.includes('德川公司');
-
-    // 根據條件組合後端消息
+    const shouldAppendImageDescription = !selectedOption.label.includes('德川公司');
+  
+    // 只發送問題內容到 conversation
     const messageWithImage = shouldAppendImageDescription
-      ? `${selectedModel.value}：${selectedOption.value} 附上圖片說明`
-      : `${selectedModel.value}：${selectedOption.value}`;
-
+      ? `${selectedOption.value} 附上圖片說明`
+      : `${selectedOption.value}`;
+  
     console.log('Message to Backend:', messageWithImage);
-
-    setMessageToBackend(messageWithImage); // 更新後端消息
-    onInputChange(selectedOption.label); // 更新輸入值為選項的label
-
-    // 使用異步函數等待狀態更新後提交
-    await new Promise((resolve) => setTimeout(resolve, 500)); // 微小的延遲確保狀態更新
-
-    // 添加日誌來確認發送
-    console.log('Submitting to backend:', messageWithImage);
-    onSubmit(messageWithImage); // 直接傳遞選項的值進行提交
+    setMessageToBackend(messageWithImage);
+    onInputChange(selectedOption.label);
+  
+    // 發送模型選擇到 collections
+    try {
+      console.log('Sending model to collections:', selectedModel.value); // 添加這行來查看發送的內容
+      await fetch('http://localhost:5000/collections', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ model: selectedModel.value }),
+      }).then(response => {
+        console.log('Collections response:', response.status); // 添加這行來查看響應狀態
+        return response.json();
+      }).then(data => {
+        console.log('Collections response data:', data); // 添加這行來查看響應數據
+      });
+    } catch (error) {
+      console.error('Failed to send model to collections:', error);
+    }
+  
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    onSubmit(messageWithImage);
   };
 
   // 加入點擊時的 Loading 效果
@@ -78,19 +92,32 @@ const ChatArea = ({
   };
 
   const handleSubmission = () => {
-    // 檢查 input 是否有內容或 selectedOption 是否被選擇
     if (input.trim() === '' && !selectedOption) {
       window.alert('Please enter some Text or select a Question~!');
     } else {
-      enterLoading(0); // 加入Loading效果
-      const submitValue =
-        input.trim() !== ''
-          ? `${selectedModel.value}：${input}`
-          : messageToBackend;
-
-      // 添加日誌來確認發送
-      console.log('Submitting to backend:', submitValue);
-      onSubmit(submitValue); // 使用 input 或 selectedOption 的值提交
+      enterLoading(0);
+      const submitValue = input.trim() !== '' ? input : messageToBackend;
+  
+      // 發送模型選擇到 collections
+      try {
+        console.log('Sending model to collections (submission):', selectedModel.value); // 添加這行
+        fetch('http://localhost:5000/collections', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ model: selectedModel.value }),
+        }).then(response => {
+          console.log('Collections submission response:', response.status); // 添加這行
+          return response.json();
+        }).then(data => {
+          console.log('Collections submission data:', data); // 添加這行
+        });
+      } catch (error) {
+        console.error('Failed to send model to collections:', error);
+      }
+  
+      onSubmit(submitValue);
     }
   };
 
