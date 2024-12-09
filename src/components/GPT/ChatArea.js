@@ -26,10 +26,11 @@ const ChatArea = ({
 
   // 處理 Q&A 選項變更並提交
   const handleSelectChange = async (selectedOption) => {
+    console.log('Selected Option:', selectedOption);
+
     setSelectedOption(selectedOption); // 更新選中的選項
     setResponse(''); // 重置回應內容
     setIsLoading(true); // 保留加載狀態
-
     setQuestion(selectedOption.label); // 更新顯示在user-question中的文字（只顯示選擇的選項label）
 
     // 檢查選擇的選項是否需要附加 "附上圖片說明"
@@ -38,14 +39,19 @@ const ChatArea = ({
 
     // 根據條件組合後端消息
     const messageWithImage = shouldAppendImageDescription
-      ? `${selectedOption.value} 附上圖片說明`
-      : selectedOption.value;
+      ? `${selectedModel.value}：${selectedOption.value} 附上圖片說明`
+      : `${selectedModel.value}：${selectedOption.value}`;
+
+    console.log('Message to Backend:', messageWithImage);
 
     setMessageToBackend(messageWithImage); // 更新後端消息
     onInputChange(selectedOption.label); // 更新輸入值為選項的label
 
     // 使用異步函數等待狀態更新後提交
     await new Promise((resolve) => setTimeout(resolve, 500)); // 微小的延遲確保狀態更新
+
+    // 添加日誌來確認發送
+    console.log('Submitting to backend:', messageWithImage);
     onSubmit(messageWithImage); // 直接傳遞選項的值進行提交
   };
 
@@ -77,7 +83,13 @@ const ChatArea = ({
       window.alert('Please enter some Text or select a Question~!');
     } else {
       enterLoading(0); // 加入Loading效果
-      const submitValue = input.trim() !== '' ? input : messageToBackend; // 使用 messageToBackend 來提交
+      const submitValue =
+        input.trim() !== ''
+          ? `${selectedModel.value}：${input}`
+          : messageToBackend;
+
+      // 添加日誌來確認發送
+      console.log('Submitting to backend:', submitValue);
       onSubmit(submitValue); // 使用 input 或 selectedOption 的值提交
     }
   };
