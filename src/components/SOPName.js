@@ -409,6 +409,14 @@ export function SOPName({ onClose }) {
     }
   };
 
+  // 添加新的鍵盤事件處理函數，按Enter鍵儲存
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleSave();
+    }
+  };
+
   return (
     <div>
       <Modal
@@ -425,7 +433,7 @@ export function SOPName({ onClose }) {
             <Form.Label>帳號</Form.Label>
             <Form.Control placeholder="最高管理員" disabled />
           </Form.Group>
-          <Form>
+          <Form onSubmit={(e) => e.preventDefault()}>
             <Form.Group className="mb-3">
               <Form.Label>
                 <span className="text-danger">*</span> SOP名稱
@@ -437,6 +445,7 @@ export function SOPName({ onClose }) {
                 value={sop2Name}
                 onChange={handleEditChange}
                 onBlur={handleEditBlur}
+                onKeyDown={handleKeyDown} // 添加新的鍵盤事件處理函數，按Enter鍵儲存
                 autoComplete="off"
               />
               {errors.sop2Name && (
