@@ -227,6 +227,16 @@ root.render(
           </PrivateRoute>
         }
       />
+      <Route
+        path="/repairDocument"
+        element={
+          <PrivateRoute>
+            <Home>
+              <RepairDocument />
+            </Home>
+          </PrivateRoute>
+        }
+      />
       {/* </Route> */}
     </Routes>
     <Assistant />

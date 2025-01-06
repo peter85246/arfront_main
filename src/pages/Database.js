@@ -19,6 +19,8 @@ import { jsPDF } from 'jspdf';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router } from 'react-router-dom';
 import Spinner from 'react-bootstrap/Spinner';
+import { pdf } from '@react-pdf/renderer';
+import PDFDocument from '../components/PDFDocument';
 
 export default function Database() {
   const location = useLocation();
@@ -260,60 +262,24 @@ export default function Database() {
   const handleGeneratePdf = async () => {
     setIsLoading(true);
     try {
-      // 生成 PDF 內容
-      const pdfContent = (
-        <Router>
-          <PdfContent
-            ref={pdfRef}
-            item={item}
-            knowledgeInfo={knowledgeInfo}
-            SOPData={SOPData}
-            onAllImagesLoaded={() => {}}
-            onImageLoad={() => {}}
-          />
-        </Router>
-      );
+      // 使用 Promise.all 來並行處理 PDF 生成和延遲
+      await Promise.all([
+        // PDF 生成邏輯
+        (async () => {
+          const pdfBlob = await pdf(
+            <PDFDocument knowledgeInfo={knowledgeInfo} SOPData={SOPData} />
+          ).toBlob();
 
-      const tempDiv = document.createElement('div');
-      document.body.appendChild(tempDiv);
-      ReactDOM.render(pdfContent, tempDiv);
+          const fileName = `${knowledgeInfo.knowledgeBaseFileNo || 'repair'}_document.pdf`;
+          const pdfFile = new File([pdfBlob], fileName, {
+            type: 'application/pdf',
+          });
 
-      await new Promise((resolve) => setTimeout(resolve, 2000)); // 等待 2 秒
-
-      const canvas = await html2canvas(tempDiv, {
-        scale: 2,
-        logging: true,
-        useCORS: true,
-        windowWidth: tempDiv.scrollWidth,
-        windowHeight: tempDiv.scrollHeight,
-      });
-
-      const pdf = new jsPDF({
-        orientation: 'portrait',
-        unit: 'px',
-        format: [canvas.width, canvas.height],
-      });
-
-      pdf.addImage(
-        canvas.toDataURL('image/png'),
-        'PNG',
-        0,
-        0,
-        pdf.internal.pageSize.getWidth(),
-        pdf.internal.pageSize.getHeight()
-      );
-
-      // 生成 PDF blob
-      const pdfBlob = pdf.output('blob');
-
-      // 調用 API 上傳和備份 PDF
-      const response = await apiUploadAndBackupPdf(
-        new File([pdfBlob], '德川維修檔案.pdf', { type: 'application/pdf' })
-      );
-
-      console.log('從 apiUploadAndBackupPdf 收到的回應:', response);
-
-      document.body.removeChild(tempDiv);
+          await apiUploadAndBackupPdf(pdfFile);
+        })(),
+        // 延遲 3 秒
+        new Promise((resolve) => setTimeout(resolve, 2000)),
+      ]);
 
       // 導航到 RepairDocument 頁面
       navigate('/repairDocument', {
@@ -323,9 +289,23 @@ export default function Database() {
           SOPData,
         },
       });
+
+      // toast.success('PDF已成功生成並備份！', {
+      //   position: toast.POSITION.TOP_CENTER,
+      //   autoClose: 2000,
+      //   hideProgressBar: true,
+      //   closeOnClick: false,
+      //   pauseOnHover: true,
+      // });
     } catch (error) {
       console.error('生成 PDF 時發生錯誤:', error);
-      toast.error('生成 PDF 時發生錯誤');
+      toast.error('生成 PDF 時發生錯誤', {
+        position: toast.POSITION.TOP_CENTER,
+        autoClose: 2000,
+        hideProgressBar: true,
+        closeOnClick: false,
+        pauseOnHover: true,
+      });
     } finally {
       setIsLoading(false);
     }
@@ -409,7 +389,7 @@ export default function Database() {
                   </tr>
                 </thead>
                 <tbody>
-                  {/* 根據資料庫內的KnowledgeeBaseId顯示 */}
+                  {/* ��據資料庫內的KnowledgeeBaseId顯示 */}
                   {knowledgeInfo ? (
                     <tr className={styles['row-database']}>
                       {/* <td>{(currentPage - 1) * pageRow + item.index + 1}</td>{' '} */}
@@ -438,7 +418,7 @@ export default function Database() {
                 >
                   ▶ 點擊PDF按鈕即可進行放大預覽 & 印出
                 </p>
-                {/* <!-- 新增放大按鈕 --> */}
+                {/* <!-- 新���放大按鈕 --> */}
                 {/* <a
                   href="repairDocument"
                   className={styles['btn-enlarge']}

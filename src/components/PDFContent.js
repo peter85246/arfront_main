@@ -67,13 +67,32 @@ const PDFContent = React.forwardRef(
     }
 
     //#region 分段格式化函數
+    const processText = (text) => {
+      if (!text) return [];
+
+      // 分割文本並保持原有的換行
+      return text
+        .split(/(?<=[\u4e00-\u9fa5])|(?=[\u4e00-\u9fa5])|(?<=\s)|(?=\s)/g)
+        .filter((word) => word.trim().length > 0)
+        .map((word) => ({
+          text: word,
+          isHighlighted: isHighlightedText(word),
+        }));
+    };
+
+    // 檢查是否需要高亮顯示
+    const isHighlightedText = (word) => {
+      // 檢查是否是編號或包含 mm 的數字
+      const isNumber = /^(\d+\.|[\(（]\d+[\)）])(?!\d+\.\d+)/.test(word);
+      const hasMM = /(?:\d+\.?\d*|\(\d+\.?\d*\))(?:\s)?mm/.test(word);
+      return isNumber || hasMM;
+    };
+
     const formatSteps = (content) => {
       if (!content) return [];
 
       const parts = [];
       let lastIndex = 0;
-
-      // 更新正则表达式，包括星号(*)、括号内编号、数字序号后的点（排除特定词之后的序号触发），以及英文段落结束后紧跟的中文字符开始
       const regex =
         /(\*\s)|\(\d+\)\s|(?<!remark\s)(?<!Remark\s)(?<!Illustration\s)(?<!illustration\s)(?<!敘述\s)(?<!備註\s)(?<!part\s)(\d+\.)\s(?![\d-])|[A-Za-z0-9]\.(?=[\u4e00-\u9fa5])/g;
 
@@ -102,11 +121,33 @@ const PDFContent = React.forwardRef(
           lastIndex = index + 1; // 从中文字符开始新段落
         }
       }
-      parts.push(content.substring(lastIndex).trim()); // 添加最后一部分文本
+      parts.push(content.substring(lastIndex).trim());
 
-      return parts;
+      // 對每個部分進行文字處理
+      return parts.map((part) => processText(part));
     };
     //#endregion
+
+    // 添加新的樣式
+    const highlightedTextStyle = {
+      color: 'red',
+    };
+
+    // 修改文字渲染部分
+    const renderText = (textParts) => {
+      return textParts.map((part, partIndex) => (
+        <p key={partIndex}>
+          {part.map((word, wordIndex) => (
+            <span
+              key={`${partIndex}-${wordIndex}`}
+              style={word.isHighlighted ? highlightedTextStyle : null}
+            >
+              {word.text}
+            </span>
+          ))}
+        </p>
+      ));
+    };
 
     return (
       <div className={styles['content-box']} ref={ref}>
@@ -430,7 +471,7 @@ const PDFContent = React.forwardRef(
                         <img
                           src={sop.soP2Image}
                           style={{
-                            width: '270px', // 直接在 style ���設定寬度
+                            width: '270px', // 直接在 style 中設定寬度
                             height: '230px', // 直接在 style 中設定高度
                             // minHeight: '230px', // 直接在 style 中設定高度
                             objectFit: 'contain', // 保持圖片原始比例並填滿容器
@@ -448,10 +489,7 @@ const PDFContent = React.forwardRef(
                         className={styles['step-content-box']}
                         style={{ maxWidth: '25vw', wordWrap: 'break-word' }}
                       >
-                        {/* {sop.soP2Message} */}
-                        {formatSteps(sop.soP2Message).map((step, index) => (
-                          <p key={index}>{step}</p>
-                        ))}
+                        {renderText(formatSteps(sop.soP2Message))}
                       </div>
                     </div>
                     <div className={styles['content-section']}>
@@ -460,20 +498,8 @@ const PDFContent = React.forwardRef(
                         className={styles['step-content-box']}
                         style={{ maxWidth: '25vw', wordWrap: 'break-word' }}
                       >
-                        {sop.soP2Remark && (
-                          <>
-                            {/* {sop.soP2Remark} */}
-                            {formatSteps(sop.soP2Remark).map(
-                              (remark, index) => (
-                                <p key={index}>
-                                  {remark}
-                                  <br />
-                                </p> // 備註部分也應用格式化並保留原有的換行
-                              )
-                            )}
-                            <br />
-                          </>
-                        )}
+                        {sop.soP2Remark &&
+                          renderText(formatSteps(sop.soP2Remark))}
                         {sop.soP2RemarkImage ? (
                           <img
                             src={sop.soP2RemarkImage}

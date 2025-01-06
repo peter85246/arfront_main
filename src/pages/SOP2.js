@@ -252,7 +252,38 @@ function SOP2() {
   };
   //#endregion
 
-  //#region 拖曳選單步驟
+  // //#region 拖曳選單步驟
+  // const onDragEnd = (event) => {
+  //   const { source, destination } = event;
+
+  //   if (!destination) {
+  //     return;
+  //   }
+
+  //   let newSOPs = [...sops];
+  //   const activeSops = newSOPs.filter((sop) => sop.deleted !== 1);
+  //   const [removed] = activeSops.splice(source.index, 1);
+  //   activeSops.splice(destination.index, 0, removed);
+
+  //   // 重新排序步驟號
+  //   activeSops.forEach((sop, index) => {
+  //     sop.soP2Step = index + 1;
+  //   });
+
+  //   // 更新原始數組
+  //   newSOPs = newSOPs.map((sop) => {
+  //     if (sop.deleted === 1) return sop;
+  //     const updatedSop = activeSops.find(
+  //       (activeSop) => activeSop.sopId === sop.sopId
+  //     );
+  //     return updatedSop || sop;
+  //   });
+
+  //   setSOPs(newSOPs);
+  // };
+  // //#endregion
+
+  //#region 拖曳選單步驟 (加入重新排序 step 的邏輯)
   const onDragEnd = (event) => {
     const { source, destination } = event;
 
@@ -261,22 +292,17 @@ function SOP2() {
     }
 
     let newSOPs = [...sops];
-    const activeSops = newSOPs.filter((sop) => sop.deleted !== 1);
-    const [removed] = activeSops.splice(source.index, 1);
-    activeSops.splice(destination.index, 0, removed);
+    const [remove] = newSOPs.splice(source.index, 1);
+    newSOPs.splice(destination.index, 0, remove);
 
-    // 重新排序步驟號
-    activeSops.forEach((sop, index) => {
-      sop.soP2Step = index + 1;
-    });
-
-    // 更新原始數組
+    // 重新排序未刪除的步驟
+    let stepCount = 1;
     newSOPs = newSOPs.map((sop) => {
-      if (sop.deleted === 1) return sop;
-      const updatedSop = activeSops.find(
-        (activeSop) => activeSop.sopId === sop.sopId
-      );
-      return updatedSop || sop;
+      if (sop.deleted !== 1) {
+        sop.soP2Step = stepCount++;
+        return sop;
+      }
+      return sop;
     });
 
     setSOPs(newSOPs);

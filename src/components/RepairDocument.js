@@ -10,6 +10,10 @@ import PdfContent from './PDFContent';
 import PDFBackUp from './PDFBackUp';
 import { useTranslation } from 'react-i18next'; //語系
 import Spinner from 'react-bootstrap/Spinner';
+import { PDFDownloadLink } from '@react-pdf/renderer';
+import PDFDocument from './PDFDocument';
+import { pdf } from '@react-pdf/renderer';
+
 import { toast } from 'react-toastify';
 import {
   apiGetAllKnowledgeBaseByMachineAddId,
@@ -52,23 +56,71 @@ export function RepairDocument() {
   };
 
   const handleDownloadPdf = async () => {
-    if (imagesLoaded < totalImages) {
-      console.log('等待圖片加載完成...');
-      return;
-    }
-
     setIsGeneratingPdf(true);
     try {
-      await generateAndUploadPdf(pdfRef, () => {});
-      // 移除這裡的成功 toast
-      // toast.success('PDF 已成功生成並下載');
+      if (!knowledgeInfo || !SOPData) {
+        throw new Error('缺少必要數據');
+      }
+
+      // 使用 Promise.all 來並行處理 PDF 生成和延遲
+      const [pdfBlob] = await Promise.all([
+        // PDF 生成邏輯
+        pdf(
+          <PDFDocument knowledgeInfo={knowledgeInfo} SOPData={SOPData} />
+        ).toBlob(),
+        // 延遲 3 秒
+        new Promise((resolve) => setTimeout(resolve, 2000)),
+      ]);
+
+      // 創建檔案名稱
+      const fileName = `${knowledgeInfo.knowledgeBaseFileNo || 'repair'}_document.pdf`;
+
+      // 創建 PDF 文件
+      const pdfFile = new File([pdfBlob], fileName, {
+        type: 'application/pdf',
+      });
+
+      // 調用 API 上傳和備份 PDF
+      const response = await apiUploadAndBackupPdf(pdfFile);
+      console.log('從 apiUploadAndBackupPdf 收到的回應:', response);
+
+      // 創建下載連結
+      const url = URL.createObjectURL(pdfBlob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+
+      toast.success('PDF 已下載成功！', {
+        position: toast.POSITION.TOP_CENTER,
+        autoClose: 2000,
+        hideProgressBar: true,
+        closeOnClick: false,
+        pauseOnHover: true,
+      });
     } catch (error) {
       console.error('生成 PDF 時發生錯誤:', error);
-      toast.error('生成 PDF 時發生錯誤');
+      toast.error('生成 PDF 時發生錯誤', {
+        position: toast.POSITION.TOP_CENTER,
+        autoClose: 2000,
+        hideProgressBar: true,
+        closeOnClick: false,
+        pauseOnHover: true,
+      });
     } finally {
       setIsGeneratingPdf(false);
     }
   };
+
+  // 確保數據加載完成後再顯示下載按鈕
+  useEffect(() => {
+    if (knowledgeInfo && SOPData) {
+      console.log('Data loaded:', { knowledgeInfo, SOPData });
+    }
+  }, [knowledgeInfo, SOPData]);
 
   useEffect(() => {
     console.log('Received item:', item);
@@ -163,6 +215,8 @@ export function RepairDocument() {
             onAllImagesLoaded={handleAllImagesLoaded}
             onImageLoad={handleImageLoad}
           />
+          {/* 使用 PDFDocument 作為預覽 */}
+          {/* <PDFDocument knowledgeInfo={knowledgeInfo} SOPData={SOPData} /> */}
         </div>
       </div>
     </main>

@@ -28,24 +28,25 @@ const ChatArea = ({
   const handleSelectChange = async (selectedOption) => {
     console.log('Selected Option:', selectedOption);
     console.log('Selected Model:', selectedModel); // 添加這行來查看選中的模型
-  
+
     setSelectedOption(selectedOption);
     setResponse('');
     setIsLoading(true);
     setQuestion(selectedOption.label);
-  
+
     // 檢查選擇的選項是否需要附加 "附上圖片說明"
-    const shouldAppendImageDescription = !selectedOption.label.includes('德川公司');
-  
+    const shouldAppendImageDescription =
+      !selectedOption.label.includes('德川公司');
+
     // 只發送問題內容到 conversation
     const messageWithImage = shouldAppendImageDescription
       ? `${selectedOption.value} 附上圖片說明`
       : `${selectedOption.value}`;
-  
+
     console.log('Message to Backend:', messageWithImage);
     setMessageToBackend(messageWithImage);
     onInputChange(selectedOption.label);
-  
+
     // 發送模型選擇到 collections
     try {
       console.log('Sending model to collections:', selectedModel.value); // 添加這行來查看發送的內容
@@ -55,16 +56,18 @@ const ChatArea = ({
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ model: selectedModel.value }),
-      }).then(response => {
-        console.log('Collections response:', response.status); // 添加這行來查看響應狀態
-        return response.json();
-      }).then(data => {
-        console.log('Collections response data:', data); // 添加這行來查看響應數據
-      });
+      })
+        .then((response) => {
+          console.log('Collections response:', response.status); // 添加這行來查看響應狀態
+          return response.json();
+        })
+        .then((data) => {
+          console.log('Collections response data:', data); // 添加這行來查看響應數據
+        });
     } catch (error) {
       console.error('Failed to send model to collections:', error);
     }
-  
+
     await new Promise((resolve) => setTimeout(resolve, 500));
     onSubmit(messageWithImage);
   };
@@ -97,26 +100,31 @@ const ChatArea = ({
     } else {
       enterLoading(0);
       const submitValue = input.trim() !== '' ? input : messageToBackend;
-  
+
       // 發送模型選擇到 collections
       try {
-        console.log('Sending model to collections (submission):', selectedModel.value); // 添加這行
+        console.log(
+          'Sending model to collections (submission):',
+          selectedModel.value
+        ); // 添加這行
         fetch('http://localhost:5000/collections', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({ model: selectedModel.value }),
-        }).then(response => {
-          console.log('Collections submission response:', response.status); // 添加這行
-          return response.json();
-        }).then(data => {
-          console.log('Collections submission data:', data); // 添加這行
-        });
+        })
+          .then((response) => {
+            console.log('Collections submission response:', response.status); // 添加這行
+            return response.json();
+          })
+          .then((data) => {
+            console.log('Collections submission data:', data); // 添加這行
+          });
       } catch (error) {
         console.error('Failed to send model to collections:', error);
       }
-  
+
       onSubmit(submitValue);
     }
   };
