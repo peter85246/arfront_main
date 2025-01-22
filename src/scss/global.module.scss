@@ -1924,37 +1924,51 @@ table th {
 /* ----------------- Alarm Page ----------------- */
 .content-box-left-alarm {
   padding: 0px;
-  width: 25vw; /* 使用視口寬度的百分比 */
+  width: 25vw;
   height: 80vh;
   left: 1em;
   margin-top: 0;
-  transition: width 0.3s ease-in-out; /* 平滑過渡效果 */
+  transition: width 0.3s ease-in-out;
   border-radius: 15px;
   background-color: #ffffff;
-  top: 1em; /* 要釘選的位置，例如在頁面頂部 */
+  top: 1em;
   position: relative;
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
-  overflow-y: auto; /* 當內容超出容器時顯示垂直滾動條 */
+  display: flex; // 添加：使用 flex 布局
+  flex-direction: column; // 添加：垂直方向排列
+  overflow: hidden; // 修改：防止內容溢出
+}
+
+.title-bar {
+  flex-shrink: 0; // 添加：防止標題欄縮小
+  // ... 其他現有的 title-bar 樣式 ...
+}
+
+.menu {
+  flex: 1; // 添加：讓選單區域填滿剩餘空間
+  overflow: hidden; // 添加：防止內容溢出
 }
 
 .alarm-list {
-  max-height: 80%; /* 最大高度設為父容器高度的 80% */
-  overflow-y: auto; /* 當內容超過最大高度時，顯示滾動條 */
+  height: 100%; // 修改：使用完整高度
+  overflow-y: auto; // 保持滾動功能
+  padding: 10px;
 }
 
-.content-box-left-alarm::-webkit-scrollbar {
-  width: 13px;
+// 添加滾動條樣式
+.alarm-list::-webkit-scrollbar {
+  width: 16px;
   margin-top: 5px;
 }
 
-.content-box-left-alarm::-webkit-scrollbar-thumb {
+.alarm-list::-webkit-scrollbar-thumb {
   background-color: #8b8b8b;
   border: 3px solid transparent;
   border-radius: 20px;
   background-clip: padding-box;
 }
 
-.content-box-left-alarm::-webkit-scrollbar-track {
+.alarm-list::-webkit-scrollbar-track {
   background-color: #f0f0f0;
   border: 3px solid transparent;
   border-radius: 20px;
@@ -2120,7 +2134,7 @@ table th {
   justify-content: space-between; /* 空間平均分配 */
   align-items: center; /* 垂直置中 */
   background-color: #1d6faa; /* 背景顏色 */
-  padding: 0px 0px 5px 15px; /* 內邊距 */
+  padding: 0px 0px 10px 15px; /* 內邊距 */
   margin-top: -5px;
 }
 
