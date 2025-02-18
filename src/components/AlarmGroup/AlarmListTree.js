@@ -32,7 +32,24 @@ const AlarmListTree = ({
   const onSelect = (selectedKeysValue, info) => {
     console.log('onSelect', info);
     setSelectedKeys(selectedKeysValue);
-    if (info && info.node && !info.node.children) {
+
+    // 添加展開/收起邏輯
+    if (info.node.children) {
+      const key = info.node.key;
+      const newExpandedKeys = [...expandedKeys];
+      const index = newExpandedKeys.indexOf(key);
+
+      if (index > -1) {
+        // 如果已經展開，則收起
+        newExpandedKeys.splice(index, 1);
+      } else {
+        // 如果未展開，則展開
+        newExpandedKeys.push(key);
+      }
+
+      setExpandedKeys(newExpandedKeys);
+    } else {
+      // 如果是葉子節點，執行原有的選擇邏輯
       const fullName = info.node.title;
       // 使用一個不太可能出現在實際數據中的分隔符
       const parts = info.node.key.split('________');

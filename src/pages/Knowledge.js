@@ -368,35 +368,28 @@ export default function Knowledge() {
                   </tr>
                 </thead>
                 <tbody>
-                  {showKnowledgeBases && showKnowledgeBases.length > 0 ? (
-                    <>
-                      {showKnowledgeBases.map((item, index) => {
-                        return (
-                          <tr
-                            key={item.knowledgeBaseId}
-                            className={styles['row']}
-                            onClick={() => handleRowClick(item, index)}
-                          >
-                            <td>{(currentPage - 1) * pageRow + index + 1}</td>
-                            {/* <td>{item.knowledgeBaseId}</td> */}
-                            <td>{item.knowledgeBaseDeviceType}</td>
-                            <td>{item.knowledgeBaseDeviceParts}</td>
-                            <td>{item.knowledgeBaseRepairItems}</td>
-                            <td>{item.knowledgeBaseRepairType}</td>
-                            <td>{item.knowledgeBaseFileNo}</td>
-                          </tr>
-                        );
-                      })}
-                    </>
+                  {!showKnowledgeBases || showKnowledgeBases.length === 0 ? (
+                    <tr>
+                      <td colSpan="6" style={{ textAlign: 'center' }}>
+                        {t('table.empty')}
+                        {/*查無資料*/}
+                      </td>
+                    </tr>
                   ) : (
-                    <>
-                      <tr>
-                        <td colSpan="6" style={{ textAlign: 'center' }}>
-                          {t('table.empty')}
-                          {/*查無資料*/}
-                        </td>
+                    showKnowledgeBases.map((item, index) => (
+                      <tr
+                        key={item.knowledgeBaseId}
+                        className={styles['row']}
+                        onClick={() => handleRowClick(item, index)}
+                      >
+                        <td>{(currentPage - 1) * pageRow + index + 1}</td>
+                        <td>{item.knowledgeBaseDeviceType}</td>
+                        <td>{item.knowledgeBaseDeviceParts}</td>
+                        <td>{item.knowledgeBaseRepairItems}</td>
+                        <td>{item.knowledgeBaseRepairType}</td>
+                        <td>{item.knowledgeBaseFileNo}</td>
                       </tr>
-                    </>
+                    ))
                   )}
                 </tbody>
               </table>

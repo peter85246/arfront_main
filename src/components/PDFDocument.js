@@ -9,11 +9,23 @@ import {
   Font,
 } from '@react-pdf/renderer';
 
-// 註冊字體
+// // 註冊字體
+// Font.register({
+//   family: 'NotoSansCJK',
+//   src: '/fonts/NotoSansTC-Regular.ttf',
+//   format: 'truetype',
+// });
+
+// 使用本地字體
 Font.register({
   family: 'NotoSansCJK',
-  src: '/fonts/NotoSansTC-Regular.ttf',
-  format: 'truetype',
+  src: '/fonts/NotoSansTC-Regular.otf', // 使用本地路徑
+});
+
+// 備用字體設置（如果需要的話）
+Font.register({
+  family: 'Fallback',
+  src: '/fonts/NotoSansTC-Regular.otf', // 使用相同的字體作為備用
 });
 
 // 工具函數
@@ -307,7 +319,7 @@ const styles = StyleSheet.create({
     width: '35%',
     paddingLeft: '1mm',
     display: 'flex',
-    justifyContent: 'center', // ��直置中
+    justifyContent: 'center', // 垂直置中
     paddingVertical: '3mm', // 上下間距
   },
   illustrationItem: {
@@ -499,17 +511,7 @@ const styles = StyleSheet.create({
 
 // 在 PDFDocument 組件中的渲染部分
 const PDFDocument = ({ knowledgeInfo, SOPData }) => {
-  // 計算每頁實際需要的高度
-  const calculatePageHeight = (stepsCount) => {
-    const headerHeight = 48; // 標題區域高度（mm）
-    const stepHeight = 75; // 將每個步驟的高度從 60mm 增加到 75mm
-    const totalHeight = headerHeight + stepsCount * stepHeight;
-
-    // 確保高度不超過 277mm（A4 高度減去邊距）
-    return Math.min(totalHeight, 277);
-  };
-
-  // 優化內容長度檢查函數
+  // 修改 checkContentLength 函數的判斷標準
   const checkContentLength = (text) => {
     if (!text) return { isLong: false, length: 0 };
 
@@ -517,20 +519,19 @@ const PDFDocument = ({ knowledgeInfo, SOPData }) => {
     const newLines = (text.match(/\n/g) || []).length;
     const chineseChars = (text.match(/[\u4e00-\u9fa5]/g) || []).length;
 
-    // 調整計算方式，降低對長度的敏感度
-    const estimatedHeight =
-      Math.ceil(
-        (baseLength * 0.6 + // 降低基本長度的權重
-          newLines * 25 + // 調整換行的影響
-          chineseChars * 1.2) / // 調整中文字符的權重
-          100
-      ) * 10;
+    // 調整計算方式，更準確地評估內容長度
+    const estimatedLength = baseLength + newLines * 20 + chineseChars * 1.2;
 
     return {
-      isLong: estimatedHeight > 45,
-      estimatedHeight: estimatedHeight,
-      needsFullPage: estimatedHeight > 80,
-      needsExtraLargePage: estimatedHeight > 120,
+      isLong: estimatedLength > 300,
+      estimatedHeight: Math.ceil(estimatedLength / 10),
+      needsFullPage: estimatedLength > 600,
+      contentSize:
+        estimatedLength <= 200
+          ? 'small'
+          : estimatedLength <= 400
+            ? 'medium'
+            : 'large',
     };
   };
 
@@ -543,67 +544,34 @@ const PDFDocument = ({ knowledgeInfo, SOPData }) => {
     let currentHeight = 48;
     const maxPageHeight = 277;
 
-    // 修改：檢查兩個步驟是否可以合併的函數，增加寬鬆模式參數
-    const canCombineSteps = (step1, step2, isLastTwo = false) => {
-      const step1IllustrationCheck = checkContentLength(step1.soP2Message);
-      const step1RemarkCheck = checkContentLength(step1.soP2Remark);
-      const step2IllustrationCheck = checkContentLength(step2.soP2Message);
-      const step2RemarkCheck = checkContentLength(step2.soP2Remark);
+    const shouldStartNewPage = (currentSteps, nextStep) => {
+      if (currentSteps.length === 0) return false;
+      if (currentSteps.length >= 3) return true;
 
-      // 計算合併後的總高度
-      const combinedHeight =
-        Math.max(
-          step1IllustrationCheck.estimatedHeight,
-          step1RemarkCheck.estimatedHeight
-        ) +
-        Math.max(
-          step2IllustrationCheck.estimatedHeight,
-          step2RemarkCheck.estimatedHeight
-        );
+      const nextStepCheck = checkContentLength(nextStep.soP2Message);
+      const currentPageContentSize = currentSteps.reduce((size, step) => {
+        const stepCheck = checkContentLength(step.soP2Message);
+        return size + (stepCheck.contentSize === 'large' ? 2 : 1);
+      }, 0);
 
-      // 為最後兩個步驟提供更寬鬆的條件
-      if (isLastTwo) {
-        // 檢查文字內容長度
-        const totalTextLength =
-          (step1.soP2Message?.length || 0) +
-          (step1.soP2Remark?.length || 0) +
-          (step2.soP2Message?.length || 0) +
-          (step2.soP2Remark?.length || 0);
+      // 內容較多時，限制每頁步驟數
+      if (nextStepCheck.contentSize === 'large') return true;
+      if (
+        currentPageContentSize +
+          (nextStepCheck.contentSize === 'large' ? 2 : 1) >
+        3
+      )
+        return true;
 
-        // 如果總文字長度在合理範圍內，允許合併
-        return totalTextLength <= 800 && combinedHeight <= 225; // 增加高度限制
-      }
-
-      // 一般情況的合併條件保持不變
-      return (
-        combinedHeight <= 120 &&
-        !step1IllustrationCheck.needsExtraLargePage &&
-        !step1RemarkCheck.needsExtraLargePage &&
-        !step2IllustrationCheck.needsExtraLargePage &&
-        !step2RemarkCheck.needsExtraLargePage
-      );
+      return false;
     };
 
     for (let i = 0; i < SOPData.length; i++) {
       const step = SOPData[i];
-      const nextStep = i < SOPData.length - 1 ? SOPData[i + 1] : null;
-      const isLastTwo = i === SOPData.length - 2; // 檢查是否為最後兩個步驟
+      const stepCheck = checkContentLength(step.soP2Message);
 
-      const illustrationCheck = checkContentLength(step.soP2Message);
-      const remarkCheck = checkContentLength(step.soP2Remark);
-
-      const needsFullPage =
-        illustrationCheck.needsExtraLargePage ||
-        remarkCheck.needsExtraLargePage ||
-        illustrationCheck.estimatedHeight + remarkCheck.estimatedHeight > 90;
-
-      // 檢查是否可以與下一步驟合併
-      if (
-        (needsFullPage || isLastTwo) &&
-        nextStep &&
-        canCombineSteps(step, nextStep, isLastTwo)
-      ) {
-        // 如果當前頁面有其他內容，先保存
+      // 內容較多時獨立成頁
+      if (stepCheck.needsFullPage) {
         if (currentPage.length > 0) {
           result.push({
             steps: currentPage,
@@ -611,53 +579,26 @@ const PDFDocument = ({ knowledgeInfo, SOPData }) => {
           });
           currentPage = [];
         }
-
-        // 合併當前步驟和下一步驟
-        currentPage = [step, nextStep];
-        // 根據是否為最後兩個步驟調整高度
-        currentHeight = isLastTwo ? 48 + 180 : 48 + 150;
-        i++; // 跳過下一步驟
-
-        // 保存合併後的頁面
-        result.push({
-          steps: currentPage,
-          height: currentHeight,
-          isCombined: true,
-          isLastTwo: isLastTwo,
-        });
-        currentPage = [];
-        currentHeight = 48;
-        continue;
-      }
-
-      // 原有的分頁邏輯保持不變
-      if (needsFullPage) {
-        if (currentPage.length > 0) {
-          result.push({
-            steps: currentPage,
-            height: currentHeight,
-          });
-        }
         result.push({
           steps: [step],
           height: maxPageHeight,
           isFullPage: true,
         });
+        continue;
+      }
+
+      // 檢查是否需要開始新頁
+      if (shouldStartNewPage(currentPage, step)) {
+        result.push({
+          steps: currentPage,
+          height: currentHeight,
+        });
         currentPage = [];
         currentHeight = 48;
-      } else {
-        if (currentHeight + 75 > maxPageHeight) {
-          result.push({
-            steps: currentPage,
-            height: currentHeight,
-          });
-          currentPage = [step];
-          currentHeight = 48 + 75;
-        } else {
-          currentPage.push(step);
-          currentHeight += 75;
-        }
       }
+
+      currentPage.push(step);
+      currentHeight += stepCheck.contentSize === 'large' ? 100 : 75;
     }
 
     // 處理最後一頁
@@ -737,10 +678,7 @@ const PDFDocument = ({ knowledgeInfo, SOPData }) => {
                   </Text>
                 </View>
               </View>
-              <Image
-                style={styles.logo}
-                src={require('../HandBook-Logo2.png')}
-              />
+              <Image style={styles.logo} src={require('../Company Logo.jpg')} />
             </View>
             <View style={styles.sopContainer}>
               <Text style={styles.sopSection}>
@@ -871,7 +809,7 @@ const PDFDocument = ({ knowledgeInfo, SOPData }) => {
                 </View>
                 <Image
                   style={styles.logo}
-                  src={require('../HandBook-Logo2.png')}
+                  src={require('../Company Logo.jpg')}
                 />
               </View>
               <View style={styles.sopContainer}>

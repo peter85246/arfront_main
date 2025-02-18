@@ -78,7 +78,7 @@ const PreviewPDFContent = React.forwardRef(
               <img
                 className={styles['logo-img']}
                 style={{ border: '1px solid #a0a0a0', borderRadius: '8px' }}
-                src={require('../HandBook-Logo2.png')}
+                src={require('../Company Logo.jpg')}
                 alt="LOGO"
               />
             </div>
@@ -335,7 +335,7 @@ const PreviewPDFContent = React.forwardRef(
                   <img
                     className={styles['logo-img']}
                     style={{ border: '1px solid #a0a0a0', borderRadius: '8px' }}
-                    src={require('../HandBook-Logo2.png')}
+                    src={require('../Company Logo.jpg')}
                     alt="LOGO"
                   />
                 </div>
