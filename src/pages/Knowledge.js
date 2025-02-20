@@ -79,6 +79,10 @@ export default function Knowledge() {
     userAgainPaw: '',
   });
 
+  // 添加加載狀態
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+
   // 篩選資料
   const filterData = (e) => {
     const searchInput = e.target.value?.toLowerCase();
@@ -155,28 +159,30 @@ export default function Knowledge() {
 
   //#region 刷新知識庫列表
   const refreshKnowledgeBases = async () => {
-    var sendData = {
-      keyword: keyword,
-    };
-
+    setIsLoading(true);
+    setError(null);
+    
     try {
-      let knowledgeBasesResponse =
-        await apiGetAllKnowledgeBaseByFilter(sendData);
-      console.log('Knowledge bases response:', knowledgeBasesResponse);
+      let knowledgeBasesResponse = await apiGetAllKnowledgeBaseByFilter({ keyword });
+      console.log('API 響應數據:', knowledgeBasesResponse);
 
-      if (knowledgeBasesResponse && knowledgeBasesResponse.code === '0000') {
+      if (knowledgeBasesResponse?.code === '0000' && Array.isArray(knowledgeBasesResponse.result)) {
         setKnowledgeBases(knowledgeBasesResponse.result);
         setRawKnowledgeBases(knowledgeBasesResponse.result);
-        setShowKnowledgeBases(knowledgeBasesResponse.result.slice(0, pageRow));
-        console.log('Knowledge bases set successfully.');
+        
+        // 計算起始索引
+        const startIndex = (activePage - 1) * pageRow;
+        setShowKnowledgeBases(knowledgeBasesResponse.result.slice(startIndex, startIndex + pageRow));
       } else {
-        console.error(
-          'Failed to fetch knowledge bases, code:',
-          knowledgeBasesResponse.code
-        );
+        setError('數據格式不正確');
+        toast.error('獲取數據失敗');
       }
     } catch (error) {
-      console.error('Error fetching knowledge bases:', error);
+      console.error('數據加載錯誤:', error);
+      setError('網絡請求失敗');
+      toast.error('系統錯誤');
+    } finally {
+      setIsLoading(false);
     }
   };
   //#endregion
@@ -218,12 +224,22 @@ export default function Knowledge() {
   const [pages, setPages] = useState([]); //保存頁碼按鈕
 
   const handleChangePage = (number) => {
-    console.log('Changing page to', number);
-    setActivePage(number);
-    setCurrentPage(number); // 更新當前頁碼
-    const start = (number - 1) * pageRow;
-    const end = number * pageRow;
-    setShowKnowledgeBases(knowledgeBases.slice(start, end));
+    try {
+      setActivePage(number);
+      setCurrentPage(number);
+      
+      if (knowledgeBases?.length > 0) {
+        const start = (number - 1) * pageRow;
+        const end = start + pageRow;
+        const newShowData = knowledgeBases.slice(start, end);
+        
+        console.log(`分頁數據: ${start + 1} 到 ${end}, 當前數據量: ${newShowData.length}`);
+        setShowKnowledgeBases(newShowData);
+      }
+    } catch (error) {
+      console.error('分頁處理錯誤:', error);
+      toast.error('分頁處理失敗');
+    }
   };
   //#endregion
 
@@ -284,6 +300,17 @@ export default function Knowledge() {
       },
     });
   };
+
+  useEffect(() => {
+    console.log('數據狀態:', {
+      總數據量: knowledgeBases?.length || 0,
+      當前頁數據: showKnowledgeBases?.length || 0,
+      當前頁碼: currentPage,
+      每頁條數: pageRow,
+      加載狀態: isLoading,
+      錯誤信息: error
+    });
+  }, [knowledgeBases, showKnowledgeBases, currentPage, isLoading, error]);
 
   return (
     <>
@@ -368,11 +395,22 @@ export default function Knowledge() {
                   </tr>
                 </thead>
                 <tbody>
-                  {!showKnowledgeBases || showKnowledgeBases.length === 0 ? (
+                  {isLoading ? (
+                    <tr>
+                      <td colSpan="6" style={{ textAlign: 'center' }}>
+                        <div>數據加載中...</div>
+                      </td>
+                    </tr>
+                  ) : error ? (
+                    <tr>
+                      <td colSpan="6" style={{ textAlign: 'center' }}>
+                        <div style={{ color: 'red' }}>{error}</div>
+                      </td>
+                    </tr>
+                  ) : !showKnowledgeBases?.length ? (
                     <tr>
                       <td colSpan="6" style={{ textAlign: 'center' }}>
                         {t('table.empty')}
-                        {/*查無資料*/}
                       </td>
                     </tr>
                   ) : (
@@ -383,11 +421,11 @@ export default function Knowledge() {
                         onClick={() => handleRowClick(item, index)}
                       >
                         <td>{(currentPage - 1) * pageRow + index + 1}</td>
-                        <td>{item.knowledgeBaseDeviceType}</td>
-                        <td>{item.knowledgeBaseDeviceParts}</td>
-                        <td>{item.knowledgeBaseRepairItems}</td>
-                        <td>{item.knowledgeBaseRepairType}</td>
-                        <td>{item.knowledgeBaseFileNo}</td>
+                        <td>{item.knowledgeBaseDeviceType || '-'}</td>
+                        <td>{item.knowledgeBaseDeviceParts || '-'}</td>
+                        <td>{item.knowledgeBaseRepairItems || '-'}</td>
+                        <td>{item.knowledgeBaseRepairType || '-'}</td>
+                        <td>{item.knowledgeBaseFileNo || '-'}</td>
                       </tr>
                     ))
                   )}
